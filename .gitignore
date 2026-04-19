@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+.venv/
+
+# Deliverables — generated at build time, not committed
+deliverables/*.zip
+
+# Large binary assets — store in Google Drive instead
+assets/images/*.png
+assets/images/*.jpg
+assets/images/*.jpeg
+
+# Secrets
+*.key
+*.pem
+secrets.json

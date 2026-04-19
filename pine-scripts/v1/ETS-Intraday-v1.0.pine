@@ -1,0 +1,135 @@
+//@version=5
+strategy(
+  title              = "EasyTradeSetup — Nifty/BankNifty Intraday v1.0",
+  shorttitle         = "ETS-Intraday",
+  overlay            = true,
+  initial_capital    = 100000,
+  default_qty_type   = strategy.fixed,
+  default_qty_value  = 75,
+  commission_type    = strategy.commission.percent,
+  commission_value   = 0.03,
+  slippage           = 2,
+  calc_on_every_tick = false
+)
+
+// ══════════════════════════════════════════
+//  INPUTS
+// ══════════════════════════════════════════
+var string G1 = "EMA Settings"
+emaFastLen = input.int(9,  "Fast EMA Period", minval=1, group=G1)
+emaSlowLen = input.int(21, "Slow EMA Period", minval=1, group=G1)
+
+var string G2 = "Supertrend"
+stATRLen  = input.int(10,    "ATR Period",     minval=1, group=G2)
+stATRMult = input.float(3.0, "ATR Multiplier", step=0.1, group=G2)
+
+var string G3 = "RSI Filter"
+rsiLength    = input.int(14, "RSI Length",        minval=1,   group=G3)
+rsiLongFloor = input.int(45, "Min RSI for Long",  minval=1, maxval=100, group=G3,
+                 tooltip="Only take long if RSI is above this value")
+rsiShortCeil = input.int(55, "Max RSI for Short", minval=1, maxval=100, group=G3,
+                 tooltip="Only take short if RSI is below this value")
+
+var string G4 = "Session Filter (IST)"
+tradeSession = input.session("0920-1500", "Trading Session", group=G4)
+
+var string G5 = "Risk Management"
+slPercent = input.float(0.5, "Stop Loss %",       minval=0.1, step=0.05, group=G5)
+rrRatio   = input.float(1.5, "Reward:Risk Ratio", minval=0.5, step=0.1,  group=G5)
+
+// ══════════════════════════════════════════
+//  CORE CALCULATIONS
+// ══════════════════════════════════════════
+emaFast = ta.ema(close, emaFastLen)
+emaSlow = ta.ema(close, emaSlowLen)
+rsi     = ta.rsi(close, rsiLength)
+
+[stValue, stDirection] = ta.supertrend(stATRMult, stATRLen)
+bullST = stDirection < 0
+bearST = stDirection > 0
+
+inSession = not na(time(timeframe.period, tradeSession))
+bullTrend = emaFast > emaSlow
+bearTrend = emaFast < emaSlow
+
+// ══════════════════════════════════════════
+//  ENTRY CONDITIONS
+// ══════════════════════════════════════════
+longSetup  = bullTrend and bullST and rsi >= rsiLongFloor and rsi <= 70 and inSession
+shortSetup = bearTrend and bearST and rsi <= rsiShortCeil and rsi >= 30 and inSession
+
+longTrigger  = longSetup  and not longSetup[1]
+shortTrigger = shortSetup and not shortSetup[1]
+
+// ══════════════════════════════════════════
+//  STRATEGY EXECUTION
+// ══════════════════════════════════════════
+if longTrigger and strategy.position_size == 0
+    sl = close * (1 - slPercent / 100)
+    tp = close * (1 + slPercent / 100 * rrRatio)
+    strategy.entry("Long", strategy.long)
+    strategy.exit("Long-Exit", "Long", stop=sl, limit=tp,
+                  comment_loss="SL Hit", comment_profit="TP Hit")
+
+if shortTrigger and strategy.position_size == 0
+    sl = close * (1 + slPercent / 100)
+    tp = close * (1 - slPercent / 100 * rrRatio)
+    strategy.entry("Short", strategy.short)
+    strategy.exit("Short-Exit", "Short", stop=sl, limit=tp,
+                  comment_loss="SL Hit", comment_profit="TP Hit")
+
+// Early exit on Supertrend flip
+if strategy.position_size > 0 and bearST
+    strategy.close("Long", comment="ST Flip")
+if strategy.position_size < 0 and bullST
+    strategy.close("Short", comment="ST Flip")
+
+// EOD square-off
+if not inSession and strategy.position_size != 0
+    strategy.close_all(comment="EOD Close")
+
+// ══════════════════════════════════════════
+//  VISUALS
+// ══════════════════════════════════════════
+plot(emaFast, "EMA 9",  color=#2196F3, linewidth=2)
+plot(emaSlow, "EMA 21", color=#FF9800, linewidth=2)
+
+stColor = bullST ? color.new(#00C853, 0) : color.new(#F44336, 0)
+plot(stValue, "Supertrend", color=stColor, linewidth=2)
+
+plotshape(longTrigger,  "BUY",  shape.labelup,   location.belowbar,
+          color.new(#00C853, 0), text="BUY",  textcolor=color.white, size=size.normal)
+plotshape(shortTrigger, "SELL", shape.labeldown, location.abovebar,
+          color.new(#F44336, 0), text="SELL", textcolor=color.white, size=size.normal)
+
+bgcolor(inSession ? color.new(bullTrend ? #00C853 : #F44336, 94) : na,
+        title="Session Trend BG")
+
+// ══════════════════════════════════════════
+//  INFO PANEL
+// ══════════════════════════════════════════
+var table panel = table.new(position.top_right, 2, 5,
+  bgcolor      = color.new(#0D1117, 10),
+  border_color = color.new(#30363D, 60),
+  border_width = 1,
+  frame_color  = color.new(#58A6FF, 60),
+  frame_width  = 1)
+
+if barstate.islast
+    table.cell(panel, 0, 0, "EasyTradeSetup",
+               text_color=#58A6FF, text_size=size.small, bgcolor=color.new(#161B22,0))
+    table.cell(panel, 1, 0, "v1.0",
+               text_color=#58A6FF, text_size=size.small, bgcolor=color.new(#161B22,0))
+    table.cell(panel, 0, 1, "Trend",      text_color=#8B949E, text_size=size.small)
+    table.cell(panel, 1, 1, bullTrend ? "▲ BULL" : "▼ BEAR",
+               text_color=bullTrend ? #00C853 : #F44336, text_size=size.small)
+    table.cell(panel, 0, 2, "Supertrend", text_color=#8B949E, text_size=size.small)
+    table.cell(panel, 1, 2, bullST ? "▲ LONG" : "▼ SHORT",
+               text_color=bullST ? #00C853 : #F44336, text_size=size.small)
+    table.cell(panel, 0, 3, "RSI",        text_color=#8B949E, text_size=size.small)
+    table.cell(panel, 1, 3, str.tostring(math.round(rsi, 1)),
+               text_color=rsi > 65 ? #F44336 : rsi < 35 ? #00C853 : #E6EDF3,
+               text_size=size.small)
+    table.cell(panel, 0, 4, "Session",    text_color=#8B949E, text_size=size.small)
+    table.cell(panel, 1, 4, inSession ? "● ACTIVE" : "● CLOSED",
+               text_color=inSession ? #00C853 : #8B949E, text_size=size.small)
