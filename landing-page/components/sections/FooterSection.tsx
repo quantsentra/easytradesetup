@@ -16,7 +16,7 @@ export default function FooterSection() {
             Stop trading on gut feel. Get a setup that gives you a clear edge, every single day.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button href="#pricing" size="lg">Get the Pack — ₹999 →</Button>
+            <Button href="#pricing" size="lg">Get the Pack — from ₹999 →</Button>
             <Button href="#pricing" variant="secondary" size="lg">See All Tiers</Button>
           </div>
         </div>
@@ -29,13 +29,16 @@ export default function FooterSection() {
             <div className="w-5 h-5 rounded-md bg-accent-blue/20 border border-accent-blue/30 flex items-center justify-center">
               <span className="text-accent-blue text-[10px] font-black">E</span>
             </div>
-            <span>© 2025 EasyTradeSetup</span>
+            <span>© 2026 EasyTradeSetup</span>
           </div>
 
-          <div className="flex items-center gap-4">
-            <a href="mailto:support@easytradesetup.com" className="hover:text-ink-muted transition-colors">
-              support@easytradesetup.com
-            </a>
+          <div className="flex items-center flex-wrap justify-center gap-x-4 gap-y-1">
+            <a href="/checklist" className="hover:text-ink-muted transition-colors">Free Checklist</a>
+            <a href="/strategy/ets-momentum" className="hover:text-ink-muted transition-colors">Strategy</a>
+            <a href="/contact" className="hover:text-ink-muted transition-colors">Contact</a>
+            <a href="/terms" className="hover:text-ink-muted transition-colors">Terms</a>
+            <a href="/refund" className="hover:text-ink-muted transition-colors">Refund Policy</a>
+            <a href="/delivery" className="hover:text-ink-muted transition-colors">Delivery Policy</a>
           </div>
 
           <p className="text-center sm:text-right max-w-xs">

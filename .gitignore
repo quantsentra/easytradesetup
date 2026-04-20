@@ -23,3 +23,5 @@ assets/images/*.jpeg
 *.key
 *.pem
 secrets.json
+
+.vercel

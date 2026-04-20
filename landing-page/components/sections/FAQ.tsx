@@ -16,11 +16,19 @@ const faqs = [
   },
   {
     q: 'How do I get the files after buying?',
-    a: 'Gumroad sends your download link instantly via email after payment. No waiting, no manual delivery.',
+    a: 'You receive an email instantly after payment with your download link. No waiting, no manual delivery.',
   },
   {
     q: 'Can I use this on the 5-minute chart?',
-    a: 'Yes. The script has a session filter that works on any timeframe. We recommend 15-min for beginners due to fewer false signals.',
+    a: 'Yes. The script works on any timeframe. We recommend 15-min for beginners — fewer false signals and less screen time required.',
+  },
+  {
+    q: 'Is the strategy guide available in regional languages?',
+    a: 'The Strategy PDF is in English, but the rules are simple and clearly numbered. Any trader, regardless of language background, can follow this system.',
+  },
+  {
+    q: 'Is this for Options trading or Futures?',
+    a: 'The signal generates on the Nifty/BankNifty index chart — you can use it for both Futures or ATM Options. The PDF includes guidance for both.',
   },
   {
     q: 'What is your refund policy?',

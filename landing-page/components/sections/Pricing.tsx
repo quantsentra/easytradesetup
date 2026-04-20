@@ -1,55 +1,13 @@
-const tiers = [
-  {
-    name: 'Basic',
-    price: '₹999',
-    usd: '$12',
-    popular: false,
-    features: [
-      '1 Strategy (ETS Momentum Setup)',
-      '1 Pine Script (TradingView v5)',
-      'PDF Strategy Guide (18+ pages)',
-      'Quick-Start Checklist',
-      'Installation Guide',
-    ],
-    cta: 'Buy Basic',
-    href: 'GUMROAD_BASIC_URL',
-    style: 'border-border',
-    ctaStyle: 'secondary' as const,
-  },
-  {
-    name: 'Pro',
-    price: '₹1,999',
-    usd: '$24',
-    popular: true,
-    features: [
-      '2 Strategies',
-      '2 Pine Scripts',
-      'PDF Strategy Guides',
-      'Trade Journal Template',
-      'Risk Calculator (Excel)',
-    ],
-    cta: 'Buy Pro',
-    href: 'GUMROAD_PRO_URL',
-    style: 'border-glow',
-    ctaStyle: 'primary' as const,
-  },
-  {
-    name: 'Expert',
-    price: '₹3,999',
-    usd: '$48',
-    popular: false,
-    features: [
-      '5 Strategies',
-      '5 Pine Scripts',
-      'Master Strategy Playbook',
-      '30 Live Trade Examples',
-      'Lifetime Updates',
-    ],
-    cta: 'Buy Expert',
-    href: 'GUMROAD_EXPERT_URL',
-    style: 'border-border',
-    ctaStyle: 'secondary' as const,
-  },
+'use client'
+
+const features = [
+  { icon: '🥇', text: 'Golden Indicator Pine Script v7 (TradingView v5)' },
+  { icon: '📐', text: '8 tools built-in — Lifeline EMA, ADR CD Zones, CPR Pivots, Momentum Candles, MTF H/L, Careful Candle + more' },
+  { icon: '📘', text: 'Trade Logic PDF — entry rules, exit rules, real chart examples' },
+  { icon: '🧮', text: 'Risk Calculator — web portal, free forever' },
+  { icon: '📡', text: 'Free Daily Market Updates — AI-powered pre/post market analysis, delivered via email & Telegram' },
+  { icon: '🌐', text: 'Works on any symbol, any timeframe, any market globally' },
+  { icon: '♾️', text: 'Lifetime access · one-time payment · no subscription ever' },
 ]
 
 export default function Pricing() {
@@ -57,62 +15,51 @@ export default function Pricing() {
     <section id="pricing" className="py-24 bg-bg-surface/40 border-y border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight">Choose Your Pack</h2>
-          <p className="mt-3 text-ink-muted">One-time payment. Instant delivery. No subscription ever.</p>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-tight">One Product. Everything Included.</h2>
+          <p className="mt-3 text-ink-muted">One-time payment · Instant delivery · No subscription · Ever</p>
+          <div className="mt-4 inline-flex items-center gap-2 bg-accent-blue/10 border border-accent-blue/20 rounded-full px-4 py-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent-blue animate-pulse" />
+            <span className="text-xs text-accent-blue font-medium">Payment coming soon — get notified when we launch</span>
+          </div>
         </div>
 
-        <div className="grid sm:grid-cols-3 gap-5 items-stretch">
-          {tiers.map(({ name, price, usd, popular, features, cta, href, style, ctaStyle }) => (
-            <div
-              key={name}
-              className={`relative rounded-card border p-6 flex flex-col bg-bg-surface ${style} ${
-                popular ? 'shadow-glow' : ''
-              } transition-all duration-300 hover:-translate-y-1`}
-            >
-              {popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="px-3 py-1 rounded-full bg-accent-blue text-black text-xs font-bold">
-                    ★ Most Popular
-                  </span>
-                </div>
-              )}
-
-              <div className="mb-6">
-                <div className="text-xs font-semibold text-ink-muted uppercase tracking-widest mb-2">{name}</div>
-                <div className="flex items-end gap-2">
-                  <span className="text-4xl font-black text-ink">{price}</span>
-                  <span className="text-ink-faint text-sm mb-1">/ {usd}</span>
-                </div>
-              </div>
-
-              <ul className="space-y-3 flex-1 mb-8">
-                {features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm">
-                    <span className="text-accent-green mt-0.5 flex-shrink-0">✓</span>
-                    <span className="text-ink-muted">{f}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`block text-center py-3 px-6 rounded-xl font-bold text-sm transition-all duration-200 ${
-                  ctaStyle === 'primary'
-                    ? 'bg-accent-green text-black hover:bg-accent-green/90 shadow-glow-green'
-                    : 'bg-bg-raised border border-border text-ink hover:border-accent-blue/40'
-                }`}
-              >
-                {cta} →
-              </a>
+        <div className="max-w-xl mx-auto">
+          <div className="relative rounded-card border-glow bg-bg-surface shadow-glow p-8 flex flex-col">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+              <span className="px-4 py-1 rounded-full bg-accent-blue text-black text-xs font-bold tracking-wide">
+                ★ Golden Indicator Pack
+              </span>
             </div>
-          ))}
-        </div>
 
-        <p className="mt-8 text-center text-xs text-ink-faint">
-          Secure checkout via Gumroad · Instant download link via email
-        </p>
+            <div className="text-center mb-8 mt-2">
+              <div className="flex items-end justify-center gap-2">
+                <span className="text-6xl font-black text-ink">₹2,499</span>
+                <span className="text-ink-faint text-sm mb-2">one-time</span>
+              </div>
+              <p className="text-ink-muted text-sm mt-2">Pay once. Use forever.</p>
+            </div>
+
+            <ul className="space-y-4 mb-10">
+              {features.map(({ icon, text }) => (
+                <li key={text} className="flex items-start gap-3 text-sm">
+                  <span className="text-lg flex-shrink-0 leading-tight">{icon}</span>
+                  <span className="text-ink-muted leading-relaxed">{text}</span>
+                </li>
+              ))}
+            </ul>
+
+            <a
+              href="/contact"
+              className="block text-center py-4 px-8 rounded-xl font-bold text-base transition-all duration-200 bg-accent-green text-black hover:bg-accent-green/90 shadow-glow-green"
+            >
+              Get Notified When We Launch →
+            </a>
+
+            <p className="mt-4 text-center text-xs text-ink-faint">
+              UPI · Net Banking · Cards · All Indian payment methods · Instant delivery via email
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   )
