@@ -8,7 +8,6 @@ const testimonials = [
     quote:
       'Tried 3 paid courses before this — none gave me actual entry rules. This PDF has exactly what to check before pressing buy. That\'s all I needed. Setup took 8 minutes on a free TradingView account.',
     rating: 5,
-    tier: 'Basic Pack',
   },
   {
     initials: 'DS',
@@ -17,16 +16,14 @@ const testimonials = [
     quote:
       'The pre-trade checklist is what I use every morning. Takes 45 seconds and stops me from taking impulsive trades. Already saved me from two bad entries this week alone.',
     rating: 5,
-    tier: 'Pro Pack',
   },
   {
     initials: 'VT',
     name: 'Vikram T.',
     location: 'Delhi · Salaried Professional',
     quote:
-      'Was skeptical at ₹999 — feels too cheap. But the 3-confirmation logic is actually solid. Haven\'t touched another indicator since. Consistent process for the first time in 2 years of trading.',
+      'Was skeptical at first — feels too simple. But the 3-confirmation logic is actually solid. Haven\'t touched another indicator since. Consistent process for the first time in 2 years of trading.',
     rating: 5,
-    tier: 'Pro Pack',
   },
 ]
 
@@ -64,11 +61,14 @@ export default function Testimonials() {
         </FadeIn>
 
         <div className="grid md:grid-cols-3 gap-5">
-          {testimonials.map(({ initials, name, location, quote, rating, tier }, i) => (
+          {testimonials.map(({ initials, name, location, quote, rating }, i) => (
             <FadeIn key={name} delay={0.1 + i * 0.12}>
-              <div className="bg-bg-surface border border-border rounded-card p-6 flex flex-col gap-4 hover:border-border/80 hover:-translate-y-0.5 transition-all duration-300 h-full">
+              <div className="bg-bg-surface border border-border rounded-card p-6 flex flex-col gap-4 h-full
+                hover:border-accent-blue/25 hover:-translate-y-2 hover:shadow-2xl hover:shadow-accent-blue/5
+                transition-all duration-300 group cursor-default">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-accent-blue/15 border border-accent-blue/20 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full bg-accent-blue/15 border border-accent-blue/20 flex items-center justify-center flex-shrink-0
+                    group-hover:bg-accent-blue/25 group-hover:border-accent-blue/40 group-hover:scale-110 transition-all duration-300">
                     <span className="text-accent-blue text-xs font-black">{initials}</span>
                   </div>
                   <div className="min-w-0">
@@ -85,7 +85,7 @@ export default function Testimonials() {
 
                 <div className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-accent-green" />
-                  <span className="text-[10px] font-semibold text-ink-faint uppercase tracking-widest">{tier}</span>
+                  <span className="text-[10px] font-semibold text-ink-faint uppercase tracking-widest">Golden Indicator</span>
                 </div>
               </div>
             </FadeIn>

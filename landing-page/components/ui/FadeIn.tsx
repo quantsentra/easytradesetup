@@ -6,9 +6,18 @@ interface FadeInProps {
   className?: string
   delay?: number
   direction?: 'up' | 'down' | 'left' | 'right' | 'none'
+  scale?: boolean
 }
 
-export default function FadeIn({ children, className = '', delay = 0, direction = 'up' }: FadeInProps) {
+const offsets: Record<string, string> = {
+  up:    'translateY(32px)',
+  down:  'translateY(-24px)',
+  left:  'translateX(32px)',
+  right: 'translateX(-32px)',
+  none:  'translateY(0)',
+}
+
+export default function FadeIn({ children, className = '', delay = 0, direction = 'up', scale = true }: FadeInProps) {
   const ref = useRef<HTMLDivElement>(null)
   const [visible, setVisible] = useState(false)
 
@@ -17,19 +26,15 @@ export default function FadeIn({ children, className = '', delay = 0, direction 
     if (!el) return
     const obs = new IntersectionObserver(
       ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect() } },
-      { rootMargin: '-80px' }
+      { rootMargin: '-60px' }
     )
     obs.observe(el)
     return () => obs.disconnect()
   }, [])
 
-  const offsets: Record<string, string> = {
-    up:    'translateY(24px)',
-    down:  'translateY(-24px)',
-    left:  'translateX(24px)',
-    right: 'translateX(-24px)',
-    none:  'none',
-  }
+  const transform = visible
+    ? 'none'
+    : `${offsets[direction]}${scale ? ' scale(0.97)' : ''}`
 
   return (
     <div
@@ -37,8 +42,9 @@ export default function FadeIn({ children, className = '', delay = 0, direction 
       className={className}
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? 'none' : offsets[direction],
-        transition: `opacity 0.55s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.55s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
+        transform,
+        transition: `opacity 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}s, transform 0.65s cubic-bezier(0.22,1,0.36,1) ${delay}s`,
+        willChange: 'opacity, transform',
       }}
     >
       {children}

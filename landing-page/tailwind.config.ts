@@ -42,12 +42,33 @@ const config: Config = {
         'glow-green': '0 0 24px rgba(0,200,83,0.12)',
       },
       animation: {
-        'fade-up': 'fadeUp 0.5s ease forwards',
+        'fade-up':    'fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'fade-down':  'fadeDown 0.55s cubic-bezier(0.22, 1, 0.36, 1) both',
+        'float':      'float 7s ease-in-out infinite',
+        'float-slow': 'float 9s ease-in-out infinite',
+        'glow-pulse': 'glowPulse 4s ease-in-out infinite',
+        'shimmer':    'shimmer 2.5s linear infinite',
       },
       keyframes: {
         fadeUp: {
-          '0%':   { opacity: '0', transform: 'translateY(16px)' },
+          '0%':   { opacity: '0', transform: 'translateY(28px) scale(0.97)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        fadeDown: {
+          '0%':   { opacity: '0', transform: 'translateY(-16px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%':      { transform: 'translateY(-18px)' },
+        },
+        glowPulse: {
+          '0%, 100%': { boxShadow: '0 0 24px rgba(88,166,255,0.1), inset 0 0 24px rgba(88,166,255,0.02)' },
+          '50%':      { boxShadow: '0 0 60px rgba(88,166,255,0.25), 0 0 80px rgba(0,200,83,0.08), inset 0 0 32px rgba(88,166,255,0.06)' },
+        },
+        shimmer: {
+          '0%':   { backgroundPosition: '-200% center' },
+          '100%': { backgroundPosition:  '200% center' },
         },
       },
     },

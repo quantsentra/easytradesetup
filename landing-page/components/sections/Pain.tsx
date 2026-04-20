@@ -19,8 +19,11 @@ export default function Pain() {
         <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
           {pains.map((pain, i) => (
             <FadeIn key={pain} delay={0.1 + i * 0.09}>
-              <div className="flex gap-3 items-start bg-bg-surface border border-border rounded-card p-5 hover:border-accent-red/30 transition-colors duration-200">
-                <span className="mt-0.5 text-accent-red font-bold text-lg leading-none flex-shrink-0">✕</span>
+              <div className="flex gap-3 items-start bg-bg-surface border border-border rounded-card p-5 group
+                hover:border-accent-red/40 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-accent-red/5
+                transition-all duration-300 cursor-default">
+                <span className="mt-0.5 text-accent-red font-bold text-lg leading-none flex-shrink-0
+                  group-hover:scale-110 transition-transform duration-200">✕</span>
                 <p className="text-ink-muted text-sm leading-relaxed">{pain}</p>
               </div>
             </FadeIn>
