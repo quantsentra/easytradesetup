@@ -3,8 +3,7 @@ import Button from '../ui/Button'
 export default function FooterSection() {
   return (
     <>
-      {/* Final CTA */}
-      <section className="py-24 text-center bg-grid relative overflow-hidden">
+      <section className="py-14 sm:py-24 text-center bg-grid relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full bg-accent-blue/5 blur-[100px]" />
         </div>
@@ -16,13 +15,12 @@ export default function FooterSection() {
             Stop trading on gut feel. Get a setup that gives you a clear edge, every single day.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button href="#pricing" size="lg">Get the Pack — from ₹999 →</Button>
-            <Button href="#pricing" variant="secondary" size="lg">See All Tiers</Button>
+            <Button href="#pricing" size="lg">Get the Golden Indicator — ₹2,499 →</Button>
+            <Button href="/checklist" variant="secondary" size="lg">Free Checklist First</Button>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t border-border py-8 bg-bg-surface/40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-faint">
           <div className="flex items-center gap-2">

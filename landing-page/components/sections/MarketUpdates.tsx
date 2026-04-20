@@ -22,14 +22,13 @@ const sampleUpdate = {
 
 function ChartPlaceholder({ label }: { label: string }) {
   return (
-    <div className="relative aspect-video rounded-xl border border-border bg-bg-raised flex items-center justify-center overflow-hidden group">
+    <div className="relative aspect-video rounded-xl border border-border bg-bg-raised flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/5 to-accent-green/5" />
       <div className="text-center z-10">
         <div className="text-3xl mb-2">📊</div>
         <div className="text-xs text-ink-faint">{label}</div>
         <div className="text-xs text-ink-faint/60 mt-1">Published daily at 9:00 AM &amp; 4:00 PM IST</div>
       </div>
-      {/* Fake chart lines */}
       <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 400 225" preserveAspectRatio="none">
         <polyline points="0,180 40,160 80,150 120,130 160,120 200,100 240,90 280,70 320,80 360,60 400,50"
           fill="none" stroke="#6572f8" strokeWidth="2" />
@@ -44,24 +43,22 @@ function UpdateCard() {
   const u = sampleUpdate
   return (
     <div className="rounded-card border border-border bg-bg-surface overflow-hidden">
-      {/* Header */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-bg-raised">
-        <div className="flex items-center gap-3">
-          <span className="text-xs font-bold text-ink-muted uppercase tracking-widest">{u.symbol}</span>
-          <span className="text-xs text-ink-faint">{u.date}</span>
+        <div className="flex items-center gap-3 min-w-0">
+          <span className="text-xs font-bold text-ink-muted uppercase tracking-widest flex-shrink-0">{u.symbol}</span>
+          <span className="text-xs text-ink-faint truncate">{u.date}</span>
         </div>
-        <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${
+        <span className={`text-xs font-bold px-2.5 py-1 rounded-full flex-shrink-0 ml-2 ${
           u.result === 'win' ? 'bg-accent-green/10 text-accent-green' : 'bg-accent-orange/10 text-accent-orange'
         }`}>
           {u.result === 'win' ? '✓' : '—'} {u.move}
         </span>
       </div>
 
-      {/* Charts */}
-      <div className="grid sm:grid-cols-2 gap-4 p-5">
+      <div className="grid sm:grid-cols-2 gap-4 p-4 sm:p-5">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-accent-blue" />
+            <span className="w-2 h-2 rounded-full bg-accent-blue flex-shrink-0" />
             <span className="text-xs font-semibold text-ink">Pre-Market View</span>
             <span className="text-xs text-ink-faint ml-auto">{u.preMarket.time}</span>
           </div>
@@ -71,7 +68,7 @@ function UpdateCard() {
 
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="w-2 h-2 rounded-full bg-accent-green" />
+            <span className="w-2 h-2 rounded-full bg-accent-green flex-shrink-0" />
             <span className="text-xs font-semibold text-ink">Post-Market Analysis</span>
             <span className="text-xs text-ink-faint ml-auto">{u.postMarket.time}</span>
           </div>
@@ -111,7 +108,7 @@ export default function MarketUpdates() {
   const [active, setActive] = useState<Tab>('today')
 
   return (
-    <section id="market-updates" className="py-24 border-b border-border">
+    <section id="market-updates" className="py-14 sm:py-24 border-b border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 bg-accent-green/10 border border-accent-green/20 rounded-full px-4 py-1.5 mb-4">
@@ -125,7 +122,6 @@ export default function MarketUpdates() {
           </p>
         </div>
 
-        {/* Tabs */}
         <div className="flex gap-1 bg-bg-raised border border-border rounded-xl p-1 max-w-xs mx-auto mb-8">
           {tabs.map(({ id, label }) => (
             <button
@@ -151,7 +147,7 @@ export default function MarketUpdates() {
             <div className="font-bold text-ink">Pre-Market</div>
             <div className="text-ink-muted text-xs mt-1">Published by 9:00 AM IST every trading day</div>
           </div>
-          <div className="border-x border-border">
+          <div className="sm:border-x sm:border-border">
             <div className="font-bold text-ink">AI-Powered</div>
             <div className="text-ink-muted text-xs mt-1">GPT-4o analysis using the Golden Indicator</div>
           </div>

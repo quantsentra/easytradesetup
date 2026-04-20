@@ -3,12 +3,11 @@ import { useEffect, useState } from 'react'
 import { Command } from 'cmdk'
 
 const commands = [
-  { label: 'Strategy',  href: '#strategy',  icon: '📈' },
-  { label: 'Pricing',   href: '#pricing',   icon: '💰' },
-  { label: 'FAQ',       href: '#faq',       icon: '❓' },
-  { label: 'Buy Basic — ₹999',  href: 'https://quantsentra.gumroad.com/l/ets-basic',  icon: '🛒' },
-  { label: 'Buy Pro — ₹1,999',  href: 'https://quantsentra.gumroad.com/l/ets-pro',    icon: '🛒' },
-  { label: 'Buy Expert — ₹3,999', href: 'https://quantsentra.gumroad.com/l/ets-expert', icon: '🛒' },
+  { label: 'Indicator',     href: '#strategy',        icon: '📈' },
+  { label: 'Pricing',       href: '#pricing',          icon: '💰' },
+  { label: 'FAQ',           href: '#faq',              icon: '❓' },
+  { label: 'Get Notified — ₹2,499', href: '/contact', icon: '🛒' },
+  { label: 'Free Checklist',        href: '/checklist', icon: '📋' },
   { label: 'Email Support', href: 'mailto:support@easytradesetup.com', icon: '✉️' },
 ]
 
@@ -55,8 +54,10 @@ export default function CommandPalette() {
                   setOpen(false)
                   if (href.startsWith('#')) {
                     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+                  } else if (href.startsWith('mailto:')) {
+                    window.location.href = href
                   } else {
-                    window.open(href, '_blank', 'noopener,noreferrer')
+                    window.location.href = href
                   }
                 }}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-ink-muted cursor-pointer hover:bg-bg-raised hover:text-ink transition-colors data-[selected=true]:bg-bg-raised data-[selected=true]:text-ink"

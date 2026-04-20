@@ -71,7 +71,7 @@ function ChartCard({ label, outcome, tag, tagColor, note }: typeof results[0]) {
 
 export default function Strategy() {
   return (
-    <section id="strategy" className="py-24 bg-bg-surface/40 border-y border-border">
+    <section id="strategy" className="py-14 sm:py-24 bg-bg-surface/40 border-y border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight">The Results Speak.</h2>

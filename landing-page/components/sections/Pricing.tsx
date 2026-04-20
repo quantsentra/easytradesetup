@@ -1,5 +1,3 @@
-'use client'
-
 const features = [
   { icon: '🥇', text: 'Golden Indicator Pine Script v7 (TradingView v5)' },
   { icon: '📐', text: 'Proprietary multi-layer signal engine — covers trend, momentum, levels, session timing, and volume' },
@@ -12,7 +10,7 @@ const features = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-24 bg-bg-surface/40 border-y border-border">
+    <section id="pricing" className="py-14 sm:py-24 bg-bg-surface/40 border-y border-border">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="text-center mb-14">
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight">One Product. Everything Included.</h2>

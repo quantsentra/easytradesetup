@@ -50,7 +50,7 @@ export default function ChartDemo() {
   const offsetX = (W - totalW) / 2
 
   return (
-    <section className="py-24 border-b border-border overflow-hidden">
+    <section className="py-14 sm:py-24 border-b border-border overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 32 }}

@@ -17,7 +17,7 @@ export default function Nav() {
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll)
+    window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
@@ -34,19 +34,19 @@ export default function Nav() {
             <span className="font-bold text-ink tracking-tight">EasyTradeSetup</span>
           </div>
 
-          <div className="hidden sm:flex items-center gap-6 text-sm text-ink-muted">
+          <div className="hidden md:flex items-center gap-5 text-sm text-ink-muted">
             {navLinks.map(({ href, label }) => (
-              <a key={href} href={href} className="hover:text-ink transition-colors">{label}</a>
+              <a key={href} href={href} className="hover:text-ink transition-colors whitespace-nowrap">{label}</a>
             ))}
           </div>
 
           <div className="flex items-center gap-3">
-            <Button href="#pricing" size="sm" className="hidden sm:inline-flex">
+            <Button href="#pricing" size="sm" className="hidden md:inline-flex">
               Get the Pack →
             </Button>
             <button
               onClick={() => setOpen(true)}
-              className="sm:hidden flex flex-col gap-1.5 p-2"
+              className="md:hidden flex flex-col gap-1.5 p-2"
               aria-label="Open menu"
             >
               <span className="w-5 h-px bg-ink block" />
@@ -76,7 +76,7 @@ export default function Nav() {
             </nav>
             <div className="mt-6">
               <Button href="#pricing" size="lg" className="w-full text-center justify-center" onClick={() => setOpen(false)}>
-                Get the Pack →
+                Get the Pack — ₹2,499 →
               </Button>
             </div>
           </Drawer.Content>

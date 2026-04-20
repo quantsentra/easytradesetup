@@ -53,7 +53,7 @@ export default function HowItWorks() {
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
   return (
-    <section className="py-24 border-b border-border" ref={ref}>
+    <section className="py-14 sm:py-24 border-b border-border" ref={ref}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -67,9 +67,9 @@ export default function HowItWorks() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-3 gap-6 relative">
+        <div className="grid md:grid-cols-3 gap-6 relative">
           {/* Connector line — desktop only */}
-          <div className="hidden sm:block absolute top-10 left-[calc(33.33%+12px)] right-[calc(33.33%+12px)] h-px bg-gradient-to-r from-accent-blue/30 via-accent-green/30 to-accent-orange/30" />
+          <div className="hidden md:block absolute top-10 left-[calc(33.33%+12px)] right-[calc(33.33%+12px)] h-px bg-gradient-to-r from-accent-blue/30 via-accent-green/30 to-accent-orange/30" />
 
           {steps.map(({ num, title, time, desc, detail, color, icon }, i) => (
             <motion.div

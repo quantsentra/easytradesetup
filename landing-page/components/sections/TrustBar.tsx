@@ -50,10 +50,10 @@ const items = [
 export default function TrustBar() {
   return (
     <section className="border-y border-border bg-bg-surface/30">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
-        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-border">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-0 sm:divide-x sm:divide-border">
           {items.map(({ icon, label, sub, color }) => (
-            <div key={label} className="flex items-center gap-2.5 px-4 first:pl-0 last:pr-0 py-2">
+            <div key={label} className="flex items-center gap-2.5 px-3 sm:px-4 py-2">
               <span className={color}>{icon}</span>
               <div className="min-w-0">
                 <div className="text-xs font-semibold text-ink truncate">{label}</div>

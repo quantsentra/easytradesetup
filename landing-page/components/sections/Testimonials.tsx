@@ -1,6 +1,4 @@
-'use client'
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import FadeIn from '../ui/FadeIn'
 
 const testimonials = [
   {
@@ -57,69 +55,49 @@ function StarRating({ count }: { count: number }) {
 }
 
 export default function Testimonials() {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-
   return (
-    <section className="py-24 border-b border-border bg-bg-surface/20" ref={ref}>
+    <section className="py-14 sm:py-24 border-b border-border bg-bg-surface/20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-14"
-        >
+        <FadeIn className="text-center mb-14">
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight">What Traders Are Saying</h2>
           <p className="mt-3 text-ink-muted">Real feedback. No paid reviews. No profit claims.</p>
-        </motion.div>
+        </FadeIn>
 
-        <div className="grid sm:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 gap-5">
           {testimonials.map(({ initials, name, location, quote, rating, tier }, i) => (
-            <motion.div
-              key={name}
-              initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 + i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="bg-bg-surface border border-border rounded-card p-6 flex flex-col gap-4 hover:border-border/80 hover:-translate-y-0.5 transition-all duration-300"
-            >
-              {/* Header */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-accent-blue/15 border border-accent-blue/20 flex items-center justify-center flex-shrink-0">
-                  <span className="text-accent-blue text-xs font-black">{initials}</span>
+            <FadeIn key={name} delay={0.1 + i * 0.12}>
+              <div className="bg-bg-surface border border-border rounded-card p-6 flex flex-col gap-4 hover:border-border/80 hover:-translate-y-0.5 transition-all duration-300 h-full">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-accent-blue/15 border border-accent-blue/20 flex items-center justify-center flex-shrink-0">
+                    <span className="text-accent-blue text-xs font-black">{initials}</span>
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-ink">{name}</div>
+                    <div className="text-[11px] text-ink-faint truncate">{location}</div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <div className="text-sm font-semibold text-ink">{name}</div>
-                  <div className="text-[11px] text-ink-faint truncate">{location}</div>
+
+                <StarRating count={rating} />
+
+                <p className="text-sm text-ink-muted leading-relaxed flex-1">
+                  &ldquo;{quote}&rdquo;
+                </p>
+
+                <div className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-green" />
+                  <span className="text-[10px] font-semibold text-ink-faint uppercase tracking-widest">{tier}</span>
                 </div>
               </div>
-
-              {/* Rating */}
-              <StarRating count={rating} />
-
-              {/* Quote */}
-              <p className="text-sm text-ink-muted leading-relaxed flex-1">
-                &ldquo;{quote}&rdquo;
-              </p>
-
-              {/* Tier badge */}
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-green" />
-                <span className="text-[10px] font-semibold text-ink-faint uppercase tracking-widest">{tier}</span>
-              </div>
-            </motion.div>
+            </FadeIn>
           ))}
         </div>
 
-        {/* Disclaimer */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.45, delay: 0.55 }}
-          className="mt-8 text-center text-[11px] text-ink-faint"
-        >
-          Reviews reflect individual experiences. Trading results depend on market conditions and personal discipline.
-          EasyTradeSetup does not guarantee profitability.
-        </motion.p>
+        <FadeIn delay={0.45} className="mt-8 text-center">
+          <p className="text-[11px] text-ink-faint">
+            Reviews reflect individual experiences. Trading results depend on market conditions and personal discipline.
+            EasyTradeSetup does not guarantee profitability.
+          </p>
+        </FadeIn>
       </div>
     </section>
   )

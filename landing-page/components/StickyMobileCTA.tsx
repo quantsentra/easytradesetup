@@ -13,11 +13,11 @@ export default function StickyMobileCTA() {
   if (!visible) return null
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 sm:hidden">
+    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
       <div className="bg-bg-primary/95 backdrop-blur-md border-t border-border px-4 py-3 flex items-center gap-3">
         <div className="flex-1 min-w-0">
-          <div className="text-[11px] text-ink-faint truncate">ETS Intraday Momentum Pack</div>
-          <div className="text-sm font-black text-ink">from ₹999</div>
+          <div className="text-[11px] text-ink-faint truncate">Golden Indicator Pack</div>
+          <div className="text-sm font-black text-ink">₹2,499 · One-time</div>
         </div>
         <a
           href="#pricing"
