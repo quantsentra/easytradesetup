@@ -26,9 +26,9 @@ export default function Hero() {
         </h1>
 
         <p className="mt-6 text-base sm:text-lg text-ink-muted max-w-2xl mx-auto leading-relaxed">
-          The <strong className="text-ink">Golden Indicator</strong> combines 8 precision tools — Lifeline EMA, ADR CD Zones, CPR Pivots,
-          Momentum Candles, MTF High/Low levels, and Careful Candle detection — into one clean TradingView script.
-          Works on any symbol, any timeframe, anywhere in the world.
+          The <strong className="text-ink">Golden Indicator</strong> is a proprietary TradingView script built from years of
+          live trading. It tells you exactly when to enter, when to wait, and when to exit —
+          on any symbol, any timeframe, anywhere in the world.
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3">

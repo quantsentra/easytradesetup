@@ -2,7 +2,7 @@
 
 const features = [
   { icon: '🥇', text: 'Golden Indicator Pine Script v7 (TradingView v5)' },
-  { icon: '📐', text: '8 tools built-in — Lifeline EMA, ADR CD Zones, CPR Pivots, Momentum Candles, MTF H/L, Careful Candle + more' },
+  { icon: '📐', text: 'Proprietary multi-layer signal engine — covers trend, momentum, levels, session timing, and volume' },
   { icon: '📘', text: 'Trade Logic PDF — entry rules, exit rules, real chart examples' },
   { icon: '🧮', text: 'Risk Calculator — web portal, free forever' },
   { icon: '📡', text: 'Free Daily Market Updates — AI-powered pre/post market analysis, delivered via email & Telegram' },

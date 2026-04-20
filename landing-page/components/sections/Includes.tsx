@@ -6,7 +6,7 @@ const items = [
   {
     icon: '🥇',
     title: 'Golden Indicator Script',
-    desc: '8 precision tools in one Pine Script v5 file. Copy, paste into TradingView — works on any symbol, any timeframe, instantly.',
+    desc: 'Proprietary Pine Script v5. Copy, paste into TradingView — signals appear on your chart instantly. Works on any symbol, any timeframe.',
   },
   {
     icon: '📘',
