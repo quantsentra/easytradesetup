@@ -16,7 +16,7 @@ function ChartMockup() {
       <div className="absolute -inset-4 bg-accent-blue/[0.08] blur-[70px] rounded-full pointer-events-none" />
 
       {/* Browser frame */}
-      <div className="relative rounded-2xl border border-border bg-bg-surface shadow-2xl shadow-black/50 overflow-hidden">
+      <div className="relative rounded-2xl shadow-2xl shadow-black/60 overflow-hidden glass">
         {/* Browser chrome */}
         <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border bg-bg-raised">
           <div className="flex gap-1.5">
@@ -49,7 +49,7 @@ function ChartMockup() {
       </div>
 
       {/* Floating badge: Big Buyer Zone signal */}
-      <div className="absolute -bottom-4 -left-3 sm:-left-5 bg-bg-surface border border-border rounded-xl px-3 py-2 shadow-xl shadow-black/40 animate-float-slow [animation-delay:1s]">
+      <div className="absolute -bottom-4 -left-3 sm:-left-5 glass rounded-xl px-3 py-2 shadow-xl shadow-black/40 animate-float-slow [animation-delay:1s]">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-accent-green/20 border border-accent-green/30 flex items-center justify-center flex-shrink-0">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -64,7 +64,7 @@ function ChartMockup() {
       </div>
 
       {/* Floating badge: live price */}
-      <div className="absolute -top-3 -right-3 sm:-right-5 bg-bg-surface border border-border rounded-xl px-3 py-2 shadow-xl shadow-black/40 animate-float [animation-delay:2s]">
+      <div className="absolute -top-3 -right-3 sm:-right-5 glass rounded-xl px-3 py-2 shadow-xl shadow-black/40 animate-float [animation-delay:2s]">
         <div className="text-[10px] font-bold text-accent-green">24,557.80 ▲</div>
         <div className="text-[9px] text-ink-faint">NIFTY · +14.20 today</div>
       </div>
@@ -74,13 +74,14 @@ function ChartMockup() {
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center bg-grid pt-16 overflow-hidden">
+    <section className="relative min-h-screen flex items-center aurora-bg bg-grid pt-16 overflow-hidden">
       {/* Floating glow orbs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/3 left-1/4 -translate-y-1/2">
-          <div className="w-[600px] h-[600px] rounded-full bg-accent-blue/[0.07] blur-[140px] animate-float" />
+          <div className="w-[600px] h-[600px] rounded-full bg-accent-blue/[0.06] blur-[140px] animate-float" />
         </div>
-        <div className="absolute bottom-10 right-1/4 w-[350px] h-[350px] rounded-full bg-accent-green/[0.05] blur-[90px] animate-float-slow [animation-delay:2.5s]" />
+        <div className="absolute bottom-10 right-1/4 w-[350px] h-[350px] rounded-full bg-accent-green/[0.04] blur-[90px] animate-float-slow [animation-delay:2.5s]" />
+        <div className="absolute top-1/4 right-1/3 w-[250px] h-[250px] rounded-full bg-accent-purple/[0.04] blur-[80px] animate-float [animation-delay:4s]" />
       </div>
 
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 lg:py-28 w-full">
