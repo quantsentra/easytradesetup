@@ -4,7 +4,6 @@
 
 @layer base {
   :root {
-    --font-inter: ui-sans-serif, system-ui;
     --sk-focus-color: #0071e3;
   }
 
@@ -36,15 +35,24 @@
   a:focus-visible {
     border-radius: inherit;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer components {
   .container-x {
-    @apply max-w-[980px] mx-auto px-6 md:px-10;
+    @apply max-w-[980px] mx-auto px-5 sm:px-6 md:px-10;
   }
 
   .container-wide {
-    @apply max-w-[1200px] mx-auto px-6 md:px-10;
+    @apply max-w-[1200px] mx-auto px-5 sm:px-6 md:px-10;
   }
 
   .h-hero {
@@ -102,14 +110,35 @@
   }
 
   .card-apple {
-    @apply bg-page rounded-[18px];
+    @apply bg-page rounded-2xl;
   }
 
   .card-white {
-    @apply bg-surface rounded-[18px];
+    @apply bg-surface rounded-2xl;
   }
 
   .card-elevated {
-    @apply bg-surface rounded-[18px] shadow-card;
+    @apply bg-surface rounded-2xl shadow-card;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100]
+           focus:bg-ink focus:text-white focus:px-4 focus:py-2 focus:rounded-lg focus:text-caption;
+  }
+}
+
+@layer utilities {
+  .ticker-track {
+    animation: ticker-scroll 40s linear infinite;
+  }
+
+  .ticker-track:hover,
+  .ticker-track:focus-within {
+    animation-play-state: paused;
+  }
+
+  @keyframes ticker-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
   }
 }

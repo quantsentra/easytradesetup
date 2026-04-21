@@ -9,17 +9,17 @@ const steps = [
 export default function HowItWorks() {
   return (
     <section className="bg-page">
-      <div className="container-wide py-20 md:py-28">
+      <div className="container-wide py-16 sm:py-20 md:py-28">
         <SectionHeader
           eyebrow="How it works"
           title={<>Three steps. Under a minute.</>}
         />
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
           {steps.map((s) => (
-            <div key={s.n} className="card-white p-10">
-              <div className="text-micro font-semibold text-blue-link">{s.n}</div>
-              <h3 className="mt-4 h-tile">{s.title}</h3>
+            <div key={s.n} className="card-white p-6 sm:p-8 md:p-10">
+              <div className="text-micro font-semibold text-blue-link tracking-wider">{s.n}</div>
+              <h3 className="mt-3 sm:mt-4 h-tile">{s.title}</h3>
               <p className="mt-3 text-caption text-muted leading-relaxed">{s.body}</p>
             </div>
           ))}

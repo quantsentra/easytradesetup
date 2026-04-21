@@ -12,5 +12,5 @@ export default function Card({ children, className = "", variant = "white" }: Pr
     page: "card-apple",
     elevated: "card-elevated",
   }[variant];
-  return <div className={`${v} p-8 md:p-10 ${className}`}>{children}</div>;
+  return <div className={`${v} p-6 sm:p-8 md:p-10 ${className}`}>{children}</div>;
 }

@@ -14,7 +14,7 @@ export default function Badge({ children, tone = "default", className = "" }: Pr
   };
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-pill px-2.5 py-1 text-micro font-medium ${tones[tone]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-0.5 text-micro font-medium tracking-tight ${tones[tone]} ${className}`}
     >
       {children}
     </span>

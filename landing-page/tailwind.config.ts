@@ -1,5 +1,16 @@
 import type { Config } from "tailwindcss";
 
+const appleStack = [
+  "-apple-system",
+  "BlinkMacSystemFont",
+  "SF Pro Display",
+  "SF Pro Text",
+  "Helvetica Neue",
+  "Helvetica",
+  "Arial",
+  "sans-serif",
+];
+
 const config: Config = {
   content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
@@ -10,7 +21,7 @@ const config: Config = {
         surface: "#ffffff",
         "surface-alt": "#fafafc",
         "surface-active": "#ededf2",
-        "rule": "rgba(0, 0, 0, 0.08)",
+        rule: "rgba(0, 0, 0, 0.08)",
         blue: {
           DEFAULT: "#0071e3",
           link: "#0066cc",
@@ -23,37 +34,19 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "SF Pro Display",
-          "var(--font-inter)",
-          "Helvetica Neue",
-          "Helvetica",
-          "Arial",
-          "sans-serif",
-        ],
-        text: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "SF Pro Text",
-          "var(--font-inter)",
-          "Helvetica Neue",
-          "Helvetica",
-          "Arial",
-          "sans-serif",
-        ],
+        display: appleStack,
+        text: appleStack,
       },
       fontSize: {
-        "display-hero": ["clamp(2.5rem, 5.5vw, 3.5rem)", { lineHeight: "1.07", letterSpacing: "-0.005em" }],
-        "display-section": ["clamp(2rem, 4vw, 2.5rem)", { lineHeight: "1.1", letterSpacing: "-0.003em" }],
-        "display-tile": ["1.75rem", { lineHeight: "1.14", letterSpacing: "0.007em" }],
-        "card-title": ["1.3125rem", { lineHeight: "1.19", letterSpacing: "0.011em" }],
-        "body-lg": ["1.0625rem", { lineHeight: "1.47", letterSpacing: "-0.022em" }],
-        "body": ["1.0625rem", { lineHeight: "1.47", letterSpacing: "-0.022em" }],
-        "caption": ["0.875rem", { lineHeight: "1.29", letterSpacing: "-0.016em" }],
-        "micro": ["0.75rem", { lineHeight: "1.33", letterSpacing: "-0.01em" }],
-        "nano": ["0.625rem", { lineHeight: "1.47", letterSpacing: "-0.008em" }],
+        "display-hero":    ["clamp(2.25rem, 5.5vw, 3.5rem)", { lineHeight: "1.07", letterSpacing: "-0.005em" }],
+        "display-section": ["clamp(1.75rem, 4vw, 2.5rem)",    { lineHeight: "1.1",  letterSpacing: "-0.003em" }],
+        "display-tile":    ["clamp(1.375rem, 2.5vw, 1.75rem)", { lineHeight: "1.14", letterSpacing: "0.007em"  }],
+        "card-title":      ["1.3125rem", { lineHeight: "1.19", letterSpacing: "0.011em" }],
+        "body-lg":         ["1.0625rem", { lineHeight: "1.47", letterSpacing: "-0.022em" }],
+        "body":            ["1.0625rem", { lineHeight: "1.47", letterSpacing: "-0.022em" }],
+        "caption":         ["0.875rem",  { lineHeight: "1.29", letterSpacing: "-0.016em" }],
+        "micro":           ["0.75rem",   { lineHeight: "1.33", letterSpacing: "-0.01em"  }],
+        "nano":            ["0.625rem",  { lineHeight: "1.47", letterSpacing: "-0.008em" }],
       },
       borderRadius: {
         pill: "980px",
@@ -63,6 +56,9 @@ const config: Config = {
         soft: "rgba(0, 0, 0, 0.08) 0px 2px 12px 0px",
       },
     },
+  },
+  future: {
+    hoverOnlyWhenSupported: true,
   },
   plugins: [],
 };

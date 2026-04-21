@@ -14,21 +14,21 @@ const tools = [
 export default function ToolsBento() {
   return (
     <section className="bg-surface">
-      <div className="container-wide py-20 md:py-28">
+      <div className="container-wide py-16 sm:py-20 md:py-28">
         <SectionHeader
           eyebrow="The 8 tools"
           title={<>Everything on one chart.</>}
           lede="Each tool runs natively inside the Pine Script. No separate subscriptions. No conflicting signals. One coherent view."
         />
 
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="mt-10 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {tools.map((t) => (
             <div
               key={t.n}
-              className="card-apple p-8 flex flex-col min-h-[220px]"
+              className="card-apple p-6 sm:p-7 md:p-8 flex flex-col min-h-[180px] sm:min-h-[220px] transition-colors hover:bg-[#eeeef1]"
             >
-              <div className="text-micro font-semibold text-blue-link">{t.n}</div>
-              <h3 className="mt-4 h-card">{t.name}</h3>
+              <div className="text-micro font-semibold text-blue-link tracking-wider">{t.n}</div>
+              <h3 className="mt-3 sm:mt-4 h-card">{t.name}</h3>
               <p className="mt-2 text-caption text-muted leading-relaxed">{t.desc}</p>
             </div>
           ))}
