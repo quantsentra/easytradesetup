@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Price from "@/components/ui/Price";
 
 export default function FinalCTA() {
   return (
@@ -15,7 +16,7 @@ export default function FinalCTA() {
             href="/checkout"
             className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body hover:brightness-110 transition-all w-full sm:w-auto"
           >
-            Get Golden Indicator — ₹2,499 →
+            <Price variant="cta" />
           </Link>
           <Link href="/product" className="link-apple chevron">
             Explore the tools
@@ -23,7 +24,7 @@ export default function FinalCTA() {
         </div>
 
         <p className="mt-5 text-caption text-muted-faint">
-          One-time payment · Instant email delivery · Not SEBI-registered advice
+          One-time payment · Instant email delivery · Educational tool, not investment advice
         </p>
       </div>
     </section>

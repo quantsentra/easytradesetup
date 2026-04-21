@@ -9,10 +9,10 @@ export default function RiskDisclosure() {
             Risk Disclosure
           </div>
           <p className="text-caption text-muted leading-relaxed">
-            Trading in F&amp;O instruments involves significant financial risk. Past performance of any strategy
-            is not indicative of future results. EasyTradeSetup products are for educational purposes only and
-            do not constitute SEBI-registered investment advice. Trade only with capital you can afford to lose.
-            See the full{" "}
+            Trading in financial instruments — stocks, F&amp;O, commodities, forex, crypto — involves significant
+            risk. Past performance of any strategy is not indicative of future results. EasyTradeSetup products
+            are for educational purposes only and do not constitute investment advice. For Indian users: we are
+            not SEBI-registered. Trade only with capital you can afford to lose. Full{" "}
             <Link href="/legal/disclaimer" className="link-apple">trading disclaimer</Link>.
           </p>
         </div>

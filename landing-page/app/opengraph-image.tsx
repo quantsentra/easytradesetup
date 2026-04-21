@@ -102,13 +102,17 @@ export default async function OG() {
           >
             <div
               style={{
-                fontSize: 80,
-                fontWeight: 800,
+                display: "flex",
+                alignItems: "baseline",
+                gap: 18,
                 color: "#0071e3",
                 letterSpacing: -2,
+                fontWeight: 800,
               }}
             >
-              ₹2,499
+              <span style={{ fontSize: 74 }}>₹2,499</span>
+              <span style={{ fontSize: 36, color: "rgba(0,0,0,0.45)" }}>·</span>
+              <span style={{ fontSize: 74 }}>$49</span>
             </div>
             <div
               style={{
@@ -117,9 +121,10 @@ export default async function OG() {
                 textTransform: "uppercase",
                 letterSpacing: 3,
                 color: "rgba(0,0,0,0.45)",
+                marginTop: 4,
               }}
             >
-              One-time
+              One-time · India / Rest of world
             </div>
           </div>
         </div>

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
+import Price from "@/components/ui/Price";
 
 export const metadata: Metadata = {
   title: "Checkout",
-  description: "Secure one-time payment for Golden Indicator.",
+  description: "Secure one-time payment for Golden Indicator. India ₹2,499 · Global $49.",
 };
 
 export default function CheckoutPage() {
@@ -23,9 +24,10 @@ export default function CheckoutPage() {
               <path d="M12 8v5 M12 16h.01" stroke="#b7791f" strokeWidth="2" strokeLinecap="round" />
             </svg>
             <div className="text-caption leading-relaxed text-[#7a5a0f]">
-              <strong className="font-semibold">Not SEBI-registered investment advice.</strong> Golden Indicator is a
+              <strong className="font-semibold">Educational tool, not investment advice.</strong> Golden Indicator is a
               chart tool, not a signal service. You decide every trade. Past performance does not guarantee future
-              results. Trading in F&amp;O involves substantial risk of loss. Read our full{" "}
+              results. Trading in financial instruments involves substantial risk of loss. Indian users — we are not
+              SEBI-registered. Read our full{" "}
               <Link href="/legal/disclaimer" className="underline">trading disclaimer</Link> before purchase.
             </div>
           </div>
@@ -66,15 +68,15 @@ export default function CheckoutPage() {
               </div>
               <div className="mt-6 flex items-baseline justify-between text-body">
                 <span className="text-muted">Subtotal</span>
-                <span className="tabular-nums text-ink">₹2,499</span>
+                <span className="tabular-nums text-ink"><Price variant="amount" /></span>
               </div>
               <div className="mt-2 flex items-baseline justify-between text-body">
-                <span className="text-muted">GST</span>
+                <span className="text-muted">Taxes</span>
                 <span className="tabular-nums text-ink">Included</span>
               </div>
               <div className="mt-6 pt-6 hairline-t flex items-baseline justify-between">
                 <span className="h-card">Total</span>
-                <span className="h-tile text-blue-link">₹2,499</span>
+                <span className="h-tile text-blue-link"><Price variant="amount" /></span>
               </div>
 
               <ul className="mt-6 pt-6 hairline-t space-y-2.5 text-caption text-muted">

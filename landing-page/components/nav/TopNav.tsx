@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Price from "@/components/ui/Price";
 
 const navItems = [
   { href: "/product", label: "Product" },
@@ -61,7 +62,7 @@ export default function TopNav() {
             href="/checkout"
             className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-3.5 py-1.5 text-caption font-normal hover:brightness-110 transition-all"
           >
-            Get access — ₹2,499
+            Get access — <Price variant="amount" />
           </Link>
         </div>
 
@@ -109,7 +110,7 @@ export default function TopNav() {
               onClick={() => setOpen(false)}
               className="mt-6 inline-flex items-center justify-center rounded-lg bg-blue text-white px-5 py-3 font-normal"
             >
-              Get access — ₹2,499
+              Get access — <Price variant="amount" />
             </Link>
           </div>
         </div>

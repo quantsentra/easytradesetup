@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
+import Price from "@/components/ui/Price";
 import { strategies, findStrategy } from "@/lib/strategies";
 
 export const dynamicParams = false;
@@ -89,7 +90,7 @@ export default async function StrategyPage({
             <p className="mt-3 text-caption text-muted">All the filters this setup needs are built in.</p>
             <div className="mt-6">
               <Link href="/checkout" className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body">
-                Get Golden Indicator — ₹2,499 →
+                <Price variant="cta" />
               </Link>
             </div>
           </div>

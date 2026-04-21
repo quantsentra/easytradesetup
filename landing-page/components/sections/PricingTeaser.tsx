@@ -1,12 +1,14 @@
 import Link from "next/link";
+import Price from "@/components/ui/Price";
 
 const included = [
   "TradingView Pine Script v5",
   "8 integrated tools",
   "Any symbol, any timeframe",
   "Trade logic PDF (50+ pages)",
-  "Risk calculator (Google Sheets)",
-  "Daily pre-market updates",
+  "Real TradingView chart screenshots of setups",
+  "Risk calculator (web tool)",
+  "Daily market notes (India + global)",
   "Lifetime updates included",
 ];
 
@@ -19,7 +21,7 @@ export default function PricingTeaser() {
             One price · One SKU
           </p>
           <h2 className="mt-3 sm:mt-4 h-hero">
-            ₹2,499 once. Yours forever.
+            <Price variant="amount-once" />. Yours forever.
           </h2>
           <p className="mt-4 sm:mt-5 text-body-lg text-muted max-w-xl mx-auto">
             Pine script, Trade-logic PDF, Risk calculator, Daily market updates. Lifetime access.
@@ -41,7 +43,7 @@ export default function PricingTeaser() {
               href="/checkout"
               className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body hover:brightness-110 transition-all w-full sm:w-auto"
             >
-              Get Golden Indicator — ₹2,499 →
+              <Price variant="cta" />
             </Link>
             <Link href="/pricing" className="link-apple chevron">
               See what&apos;s included
@@ -65,7 +67,7 @@ export default function PricingTeaser() {
               <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
                 <path d="M2 7l3 3 7-7" stroke="#2da44e" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              Not SEBI-registered advice
+              Educational tool only
             </span>
           </div>
         </div>

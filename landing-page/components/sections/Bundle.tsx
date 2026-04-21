@@ -5,25 +5,37 @@ const items = [
     n: "01",
     name: "Golden Indicator",
     tag: "Pine Script v5",
-    desc: "Proprietary signal engine. Drops into any TradingView chart. Works on any symbol, any timeframe.",
+    desc: "Proprietary signal engine. Drops into any TradingView chart. Works on any symbol, any timeframe — NIFTY, SPX, Gold, BTC, EUR/USD, any stock.",
   },
   {
     n: "02",
+    name: "TradingView Chart Gallery",
+    tag: "Real setups",
+    desc: "Screenshots of the indicator on live charts across markets — NIFTY, Gold, SPX, crypto, forex. See it before you buy it.",
+  },
+  {
+    n: "03",
     name: "Trade Logic PDF",
     tag: "50+ pages",
     desc: "Entry rules, exit rules, real chart examples, and the risk framework behind every signal.",
   },
   {
-    n: "03",
+    n: "04",
     name: "Risk Calculator",
     tag: "Web tool",
-    desc: "Position-sizing calculator with your account size and current volatility. Free lifetime access.",
+    desc: "Position-sizing calculator using your account size and current volatility. Works in INR, USD, EUR, or any currency. Free lifetime access.",
   },
   {
-    n: "04",
-    name: "Daily Market Updates",
-    tag: "Email + Telegram",
-    desc: "Pre-market bias, key levels, and post-close recap delivered every trading day. Free forever.",
+    n: "05",
+    name: "Daily Market Notes",
+    tag: "Email",
+    desc: "Pre-market bias and post-close recap. India plus global (SPX, Gold, BTC). Delivered every trading day. Free forever.",
+  },
+  {
+    n: "06",
+    name: "Lifetime updates",
+    tag: "Included",
+    desc: "Every future revision of the script delivered free. No paid v2. No tier upgrades. Buy once, keep forever.",
   },
 ];
 
@@ -37,7 +49,7 @@ export default function Bundle() {
           lede="Proprietary signal engine plus everything you need to run it. No guesswork. No setup headaches."
         />
 
-        <div className="mt-10 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="mt-10 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {items.map((it) => (
             <div
               key={it.n}

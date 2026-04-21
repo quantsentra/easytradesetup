@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
+import Price from "@/components/ui/Price";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "₹2,499 one-time. Lifetime access to Golden Indicator. No subscription, no tiers, no hidden costs.",
+  description:
+    "One-time payment. Lifetime access to Golden Indicator. India ₹2,499 · Rest of world $49. No subscription, no tiers, no hidden costs.",
 };
 
 const included = [
@@ -39,12 +41,14 @@ export default function PricingPage() {
               Lifetime access
             </p>
             <div className="mt-6 flex items-baseline justify-center gap-3">
-              <span className="font-display font-semibold text-[96px] md:text-[120px] leading-none text-ink">₹2,499</span>
+              <span className="font-display font-semibold text-[96px] md:text-[120px] leading-none text-ink">
+                <Price variant="amount" />
+              </span>
             </div>
-            <p className="mt-2 text-caption text-muted-faint">One-time · INR · incl. GST</p>
+            <p className="mt-2 text-caption text-muted-faint">One-time · taxes included</p>
             <div className="mt-10 flex flex-wrap justify-center gap-5">
               <Link href="/checkout" className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body">
-                Get Golden Indicator — ₹2,499 →
+                <Price variant="cta" />
               </Link>
               <Link href="/contact" className="link-apple chevron">
                 Talk first

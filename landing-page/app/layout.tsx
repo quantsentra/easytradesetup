@@ -11,15 +11,17 @@ export const metadata: Metadata = {
     template: "%s · EasyTradeSetup",
   },
   description:
-    "Golden Indicator — proprietary TradingView Pine Script with 8 built-in tools for NSE F&O and global markets. Instant delivery, ₹2,499 one-time.",
+    "Golden Indicator — proprietary TradingView Pine Script with 8 built-in tools for global markets: equities, F&O, commodities, forex, crypto. Any symbol, any timeframe. India ₹2,499 · Global $49. One-time payment.",
   keywords: [
     "TradingView indicator",
     "Pine Script",
+    "global markets",
     "NSE F&O",
-    "Nifty",
-    "BankNifty",
-    "intraday trading",
-    "Indian stock market",
+    "SPX",
+    "XAU gold indicator",
+    "BTC indicator",
+    "forex indicator",
+    "intraday trading tool",
   ],
   authors: [{ name: "EasyTradeSetup" }],
   openGraph: {
@@ -33,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "EasyTradeSetup — Golden Indicator",
-    description: "One indicator. Eight tools. Every market. ₹2,499 one-time.",
+    description: "One indicator. Eight tools. Every market. India ₹2,499 · Global $49. One-time payment.",
   },
   robots: { index: true, follow: true },
 };

@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Bundle from "@/components/sections/Bundle";
+import Price from "@/components/ui/Price";
 
 export const metadata: Metadata = {
   title: "Product — Golden Indicator",
   description:
-    "Golden Indicator — a proprietary TradingView Pine Script with an integrated signal engine for NSE F&O and global markets. Pine + PDF + Risk Calculator + daily market updates. One-time ₹2,499.",
+    "Golden Indicator — a proprietary TradingView Pine Script with an integrated signal engine for global markets. Pine + Chart gallery + PDF + Risk Calculator + daily notes. India ₹2,499 · Global $49.",
 };
 
 const promises = [
@@ -17,8 +18,8 @@ const promises = [
   },
   {
     n: "02",
-    title: "Any symbol. Any timeframe.",
-    body: "Tuned for NSE F&O, runs cleanly on US equities, commodities, forex, and major crypto. 1-minute to weekly. Your chart, your call.",
+    title: "Any symbol. Any timeframe. Any market.",
+    body: "Runs cleanly on NSE F&O, US equities, commodities, forex, and major crypto. 1-minute to weekly. Built global-first.",
   },
   {
     n: "03",
@@ -35,7 +36,7 @@ const promises = [
 const specs: Array<[string, string]> = [
   ["Language",   "Pine Script v5"],
   ["Platform",   "TradingView (any plan)"],
-  ["Symbols",    "NSE · BSE · US · Forex · Crypto"],
+  ["Symbols",    "Global · NSE · US · Forex · Crypto · Commodities"],
   ["Timeframes", "1m → 1W"],
   ["Alerts",     "Built-in alertcondition()"],
   ["Delivery",   "Email (.pine file + PDF)"],
@@ -88,7 +89,7 @@ export default function ProductPage() {
             href="/checkout"
             className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body hover:brightness-110 transition-all"
           >
-            Buy Golden Indicator — ₹2,499
+            <Price variant="cta" />
           </Link>
         </div>
       </section>
