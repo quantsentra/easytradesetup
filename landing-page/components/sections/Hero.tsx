@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Badge from '../ui/Badge'
 import Button from '../ui/Button'
 
@@ -9,158 +10,63 @@ const stats = [
 ]
 
 function ChartMockup() {
-  type Candle = { x: number; o: number; h: number; l: number; c: number; bull: boolean }
-  const candles: Candle[] = [
-    { x: 30,  o: 68, h: 72, l: 65, c: 70, bull: true },
-    { x: 58,  o: 70, h: 74, l: 68, c: 69, bull: false },
-    { x: 86,  o: 69, h: 71, l: 64, c: 65, bull: false },
-    { x: 114, o: 65, h: 67, l: 60, c: 62, bull: false },
-    { x: 142, o: 62, h: 68, l: 61, c: 67, bull: true },
-    { x: 170, o: 67, h: 73, l: 66, c: 72, bull: true },
-    { x: 198, o: 72, h: 78, l: 71, c: 76, bull: true },
-    { x: 226, o: 76, h: 82, l: 75, c: 80, bull: true },
-    { x: 254, o: 80, h: 84, l: 77, c: 79, bull: false },
-    { x: 282, o: 79, h: 81, l: 74, c: 76, bull: false },
-    { x: 310, o: 76, h: 78, l: 70, c: 72, bull: false },
-    { x: 338, o: 72, h: 74, l: 67, c: 73, bull: true },
-    { x: 366, o: 73, h: 80, l: 72, c: 79, bull: true },
-    { x: 394, o: 79, h: 86, l: 78, c: 85, bull: true },
-    { x: 422, o: 85, h: 90, l: 84, c: 88, bull: true },
-    { x: 450, o: 88, h: 92, l: 84, c: 86, bull: false },
-  ]
-
-  const scaleY = (v: number) => 160 - ((v - 55) / 45) * 130
-
   return (
-    <div className="relative w-full max-w-[580px] mx-auto lg:mx-0 animate-fade-up [animation-delay:320ms]">
+    <div className="relative w-full max-w-[600px] mx-auto lg:mx-0 animate-fade-up [animation-delay:320ms]">
       {/* Glow behind mockup */}
-      <div className="absolute inset-0 -inset-x-8 bg-accent-blue/[0.08] blur-[60px] rounded-full pointer-events-none" />
+      <div className="absolute -inset-4 bg-accent-blue/[0.08] blur-[70px] rounded-full pointer-events-none" />
 
       {/* Browser frame */}
-      <div className="relative rounded-2xl border border-border bg-bg-surface shadow-2xl shadow-black/40 overflow-hidden">
+      <div className="relative rounded-2xl border border-border bg-bg-surface shadow-2xl shadow-black/50 overflow-hidden">
         {/* Browser chrome */}
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-border bg-bg-raised">
+        <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border bg-bg-raised">
           <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-red-500/60" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
-            <div className="w-3 h-3 rounded-full bg-green-500/60" />
+            <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+            <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+            <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
           </div>
-          <div className="flex-1 mx-3 bg-bg-surface border border-border rounded-md px-3 py-1 text-[10px] text-ink-faint font-mono">
-            tradingview.com · NIFTY 50 · 15m
+          <div className="flex-1 mx-3 bg-bg-surface border border-border rounded-md px-3 py-1 text-[10px] text-ink-faint font-mono truncate">
+            tradingview.com · NIFTY 50 · 5m · SANSETO Trade Master v7
           </div>
-          <div className="w-2 h-2 rounded-full bg-accent-green animate-pulse" />
+          <div className="flex items-center gap-1">
+            <div className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
+            <span className="text-[9px] text-accent-green font-medium">LIVE</span>
+          </div>
         </div>
 
-        {/* Chart area */}
-        <div className="bg-[#0d1117] p-4">
-          {/* Top bar: symbol + timeframes */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-ink">NIFTY 50</span>
-              <span className="text-[10px] text-ink-faint">·</span>
-              <span className="text-[10px] text-accent-blue font-semibold">15</span>
-              {['5','1H','4H','D'].map(t => (
-                <span key={t} className="text-[10px] text-ink-faint hover:text-ink cursor-pointer">{t}</span>
-              ))}
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="px-2 py-0.5 rounded bg-accent-blue/15 border border-accent-blue/25 text-[9px] text-accent-blue font-bold">
-                Golden Indicator v2
-              </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" />
-            </div>
-          </div>
-
-          {/* SVG Chart */}
-          <svg viewBox="0 0 480 170" className="w-full" style={{ height: '180px' }}>
-            {/* Grid lines */}
-            {[0.2, 0.4, 0.6, 0.8].map((t, i) => (
-              <line key={i} x1="0" y1={170 * t} x2="480" y2={170 * t}
-                stroke="#ffffff08" strokeWidth="1" />
-            ))}
-
-            {/* EMA line */}
-            <polyline
-              points={candles.map(({ x, c }) => `${x},${scaleY(c)}`).join(' ')}
-              fill="none" stroke="#6572f8" strokeWidth="1.5" strokeDasharray="4,2" opacity="0.5"
-            />
-
-            {/* Candles */}
-            {candles.map(({ x, o, h, l, c, bull }, i) => {
-              const top = scaleY(Math.max(o, c))
-              const bot = scaleY(Math.min(o, c))
-              const height = Math.max(bot - top, 2)
-              const color = bull ? '#22c55e' : '#ef4444'
-              return (
-                <g key={i}>
-                  <line x1={x} y1={scaleY(h)} x2={x} y2={scaleY(l)}
-                    stroke={color} strokeWidth="1" opacity="0.7" />
-                  <rect x={x - 8} y={top} width="16" height={height}
-                    fill={color} opacity={bull ? '0.85' : '0.75'} rx="1" />
-                </g>
-              )
-            })}
-
-            {/* Buy signal at candle index 6 (x=198) */}
-            <g>
-              <polygon points="198,148 193,158 203,158" fill="#22c55e" opacity="0.95" />
-              <text x="198" y="168" textAnchor="middle" fontSize="7" fill="#22c55e" fontWeight="bold">BUY</text>
-            </g>
-
-            {/* Buy signal at candle index 13 (x=394) */}
-            <g>
-              <polygon points="394,118 389,128 399,128" fill="#22c55e" opacity="0.95" />
-              <text x="394" y="138" textAnchor="middle" fontSize="7" fill="#22c55e" fontWeight="bold">BUY</text>
-            </g>
-
-            {/* Exit signal at candle index 15 (x=450) */}
-            <g>
-              <polygon points="450,55 445,46 455,46" fill="#6572f8" opacity="0.95" />
-              <text x="450" y="44" textAnchor="middle" fontSize="7" fill="#6572f8" fontWeight="bold">EXIT</text>
-            </g>
-
-            {/* Profit annotation */}
-            <rect x="310" y="10" width="80" height="20" rx="4" fill="#22c55e" opacity="0.15" />
-            <rect x="310" y="10" width="80" height="20" rx="4" fill="none" stroke="#22c55e" strokeWidth="0.5" opacity="0.4" />
-            <text x="350" y="23" textAnchor="middle" fontSize="8" fill="#22c55e" fontWeight="bold">+127 pts ↑</text>
-          </svg>
-
-          {/* Bottom stats bar */}
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
-            {[
-              { label: 'Signal', value: 'LONG', color: 'text-accent-green' },
-              { label: 'Trend', value: 'Bullish', color: 'text-accent-green' },
-              { label: 'Momentum', value: 'Strong', color: 'text-accent-blue' },
-              { label: 'Level', value: 'Near S1', color: 'text-ink-muted' },
-            ].map(({ label, value, color }) => (
-              <div key={label} className="text-center">
-                <div className={`text-[10px] font-bold ${color}`}>{value}</div>
-                <div className="text-[9px] text-ink-faint mt-0.5">{label}</div>
-              </div>
-            ))}
-          </div>
+        {/* Real chart image */}
+        <div className="relative bg-white overflow-hidden">
+          <Image
+            src="/chart.png"
+            alt="SANSETO Trade Master v7 — Nifty 50 live chart showing Big Buyer Zone, resistance levels, and trend signals"
+            width={1204}
+            height={896}
+            className="w-full h-auto block"
+            priority
+          />
+          {/* Subtle overlay gradient at bottom for blending */}
+          <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-bg-surface/30 to-transparent pointer-events-none" />
         </div>
       </div>
 
-      {/* Floating badge: signal card */}
-      <div className="absolute -bottom-4 -left-4 bg-bg-surface border border-border rounded-xl px-3 py-2 shadow-xl shadow-black/30 animate-float-slow [animation-delay:1s]">
+      {/* Floating badge: Big Buyer Zone signal */}
+      <div className="absolute -bottom-4 -left-3 sm:-left-5 bg-bg-surface border border-border rounded-xl px-3 py-2 shadow-xl shadow-black/40 animate-float-slow [animation-delay:1s]">
         <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded-full bg-accent-green/20 border border-accent-green/30 flex items-center justify-center">
+          <div className="w-6 h-6 rounded-full bg-accent-green/20 border border-accent-green/30 flex items-center justify-center flex-shrink-0">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
               <path d="M2 5l2 2 4-4" stroke="#22c55e" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
           <div>
-            <div className="text-[10px] font-bold text-ink">Signal Confirmed</div>
-            <div className="text-[9px] text-ink-faint">3/3 conditions met</div>
+            <div className="text-[10px] font-bold text-ink">Big Buyer Zone Active</div>
+            <div className="text-[9px] text-ink-faint">Support held · +179 pts</div>
           </div>
         </div>
       </div>
 
-      {/* Floating badge: accuracy */}
-      <div className="absolute -top-3 -right-3 bg-bg-surface border border-border rounded-xl px-3 py-2 shadow-xl shadow-black/30 animate-float [animation-delay:2s]">
-        <div className="text-[10px] font-bold text-accent-blue">+310 pts</div>
-        <div className="text-[9px] text-ink-faint">BankNifty · Today</div>
+      {/* Floating badge: live price */}
+      <div className="absolute -top-3 -right-3 sm:-right-5 bg-bg-surface border border-border rounded-xl px-3 py-2 shadow-xl shadow-black/40 animate-float [animation-delay:2s]">
+        <div className="text-[10px] font-bold text-accent-green">24,557.80 ▲</div>
+        <div className="text-[9px] text-ink-faint">NIFTY · +14.20 today</div>
       </div>
     </div>
   )
