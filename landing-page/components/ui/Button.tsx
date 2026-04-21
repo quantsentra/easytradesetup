@@ -5,21 +5,21 @@ interface ButtonProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 const variants = {
-  primary:   'bg-accent-green text-black font-bold hover:bg-accent-green/90 shadow-glow-green',
-  secondary: 'bg-bg-surface text-ink border border-border hover:border-accent-blue/40 hover:bg-bg-raised',
-  ghost:     'text-ink-muted hover:text-ink hover:bg-bg-surface',
+  primary:   'bg-gold text-black font-bold hover:bg-gold-light',
+  secondary: 'bg-transparent text-ink border border-[rgba(255,255,255,0.11)] hover:border-[rgba(255,255,255,0.22)] hover:bg-bg-raised',
+  ghost:     'text-ink-muted hover:text-ink',
 }
 
 const sizes = {
-  sm: 'px-4 py-2 text-sm rounded-xl',
-  md: 'px-6 py-3 text-base rounded-xl',
-  lg: 'px-8 py-4 text-lg rounded-2xl',
+  sm: 'px-4 py-2 text-sm rounded-lg',
+  md: 'px-5 py-2.5 text-sm rounded-lg',
+  lg: 'px-7 py-3.5 text-base rounded-xl',
 }
 
 export default function Button({ variant = 'primary', size = 'md', children, className = '', ...props }: ButtonProps) {
   return (
     <a
-      className={`inline-flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer select-none ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer select-none tracking-tight ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
       {children}

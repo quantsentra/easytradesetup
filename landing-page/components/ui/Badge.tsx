@@ -1,19 +1,15 @@
 interface BadgeProps {
   children: React.ReactNode
-  variant?: 'blue' | 'green' | 'red' | 'orange'
+  variant?: 'blue' | 'green' | 'red' | 'orange' | 'gold' | 'neutral'
 }
 
-const variantMap = {
-  blue:   'bg-accent-blue/10 text-accent-blue border-accent-blue/20',
-  green:  'bg-accent-green/10 text-accent-green border-accent-green/20',
-  red:    'bg-accent-red/10 text-accent-red border-accent-red/20',
-  orange: 'bg-accent-orange/10 text-accent-orange border-accent-orange/20',
-}
-
-export default function Badge({ children, variant = 'blue' }: BadgeProps) {
-  return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border tracking-wide ${variantMap[variant]}`}>
-      {children}
-    </span>
-  )
+export default function Badge({ children, variant = 'neutral' }: BadgeProps) {
+  const base = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium border tracking-widest uppercase'
+  if (variant === 'gold') {
+    return <span className={`${base} bg-gold-faint text-gold border-gold/20`}>{children}</span>
+  }
+  if (variant === 'green') {
+    return <span className={`${base} bg-signal-up/10 text-signal-up border-signal-up/20`}>{children}</span>
+  }
+  return <span className={`${base} bg-bg-raised text-ink-muted border-[rgba(255,255,255,0.07)]`}>{children}</span>
 }

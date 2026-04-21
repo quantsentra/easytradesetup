@@ -1,76 +1,71 @@
 import FadeIn from '../ui/FadeIn'
 
-const features = [
-  { icon: '🥇', text: 'Golden Indicator Pine Script v5 (TradingView)' },
-  { icon: '📐', text: 'Multi-layer signal engine — trend, momentum, levels, session timing, volume' },
-  { icon: '📘', text: 'Trade Logic PDF — entry rules, exit rules, real chart examples' },
-  { icon: '🧮', text: 'Risk Calculator — web portal, free forever' },
-  { icon: '📡', text: 'Free Daily Market Updates — AI-powered pre/post market analysis via email & Telegram' },
-  { icon: '🌐', text: 'Works on any symbol, any timeframe, any market globally' },
-  { icon: '♾️', text: 'Lifetime access · one-time payment · no subscription ever' },
+const items = [
+  'Golden Indicator Pine Script v5 — TradingView',
+  'Multi-layer signal engine (trend, momentum, levels, volume, session timing)',
+  'Trade Logic PDF — entry rules, exit rules, real chart examples',
+  'Risk Calculator — position size, R:R, risk % (free forever)',
+  'Daily AI-powered market updates — email & Telegram',
+  'Works on any symbol, any timeframe, any market globally',
+  'Lifetime access — one-time payment, no subscription ever',
 ]
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-14 sm:py-24 border-y border-border relative overflow-hidden">
-      <div className="absolute inset-0 aurora-purple opacity-60 pointer-events-none" />
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6">
+    <section id="pricing" className="py-20 sm:py-32 border-t border-[rgba(255,255,255,0.07)]">
+      <div className="max-w-5xl mx-auto px-5 sm:px-6">
 
-        <FadeIn className="text-center mb-14">
-          <span className="inline-block text-xs font-bold tracking-widest uppercase text-accent-purple/80 mb-3">Pricing</span>
-          <h2 className="text-3xl sm:text-4xl font-black tracking-tight">One Product. Everything Included.</h2>
-          <p className="mt-3 text-ink-muted">One-time payment · Instant delivery · No subscription · Ever</p>
-          <div className="mt-4 inline-flex items-center gap-2 glass rounded-full px-4 py-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent-blue animate-pulse" />
-            <span className="text-xs text-accent-blue font-medium">Payment coming soon — get notified when we launch</span>
+        <FadeIn className="mb-14 text-center">
+          <span className="label text-ink-faint">Pricing</span>
+          <h2 className="mt-3 text-3xl sm:text-4xl font-black tracking-[-0.03em]">One Product. Everything Included.</h2>
+          <p className="mt-2 text-ink-muted text-[15px]">One-time payment · Instant delivery · No subscription · Ever</p>
+          <div className="mt-4 inline-flex items-center gap-2 border border-[rgba(255,255,255,0.07)] rounded-full px-4 py-1.5 bg-bg-surface">
+            <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse-soft" />
+            <span className="text-[11px] font-mono text-ink-muted">Payment live soon — get notified below</span>
           </div>
         </FadeIn>
 
-        <FadeIn delay={0.15} className="max-w-lg mx-auto">
-          {/* Border beam wrapper */}
-          <div className="border-beam rounded-[20px] animate-glow-pulse">
-            <div className="glass rounded-[20px] p-8 flex flex-col relative overflow-hidden">
+        <FadeIn delay={0.1} className="max-w-md mx-auto">
+          <div className="rounded-2xl border border-gold/25 bg-bg-surface overflow-hidden shadow-gold">
 
-              {/* Top badge */}
-              <div className="absolute -top-px left-1/2 -translate-x-1/2">
-                <span className="px-4 py-1 rounded-b-lg bg-gradient-to-r from-accent-blue via-accent-purple to-accent-green text-black text-xs font-black tracking-wide">
-                  ★ Golden Indicator Pack
-                </span>
+            {/* Header */}
+            <div className="border-b border-[rgba(255,255,255,0.07)] px-8 pt-8 pb-6">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-gold">Golden Indicator Pack</span>
+                <span className="text-[10px] font-mono text-ink-faint">★ v7</span>
               </div>
+              <div className="flex items-end gap-2 mt-4">
+                <span className="text-5xl font-black font-mono text-ink tracking-tight">₹2,499</span>
+                <span className="text-ink-muted text-sm mb-1.5">one-time</span>
+              </div>
+              <p className="text-[13px] text-ink-muted mt-1.5">Pay once. Use forever.</p>
+            </div>
 
-              {/* Background glow */}
-              <div className="absolute inset-0 bg-gradient-to-br from-accent-blue/[0.03] via-accent-purple/[0.03] to-accent-green/[0.03] rounded-[20px] pointer-events-none" />
-
-              <div className="text-center mb-8 mt-4 relative">
-                <div className="flex items-end justify-center gap-2">
-                  <span className="text-5xl sm:text-6xl font-black text-ink">₹2,499</span>
-                  <span className="text-ink-faint text-sm mb-3">one-time</span>
+            {/* Item list */}
+            <div className="px-8 py-6 space-y-3">
+              {items.map((item, i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <svg className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 16 16">
+                    <path d="M3 8l3.5 3.5L13 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-[13px] text-ink-muted leading-relaxed">{item}</span>
                 </div>
-                <p className="text-ink-muted text-sm mt-1">Pay once. Use forever.</p>
-              </div>
+              ))}
+            </div>
 
-              <ul className="space-y-3.5 mb-10 relative">
-                {features.map(({ icon, text }) => (
-                  <li key={text} className="flex items-start gap-3 text-sm">
-                    <span className="text-base flex-shrink-0 leading-tight mt-0.5">{icon}</span>
-                    <span className="text-ink-muted leading-relaxed">{text}</span>
-                  </li>
-                ))}
-              </ul>
-
+            {/* CTA */}
+            <div className="px-8 pb-8">
               <a
                 href="/contact"
-                className="relative block text-center py-4 px-8 rounded-xl font-bold text-base transition-all duration-200
-                  bg-accent-green text-black hover:bg-accent-green/90 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-accent-green/25
-                  shadow-glow-green"
+                className="block w-full text-center bg-gold text-black font-bold text-[15px] py-4 rounded-xl hover:bg-gold-light transition-colors duration-150 tracking-tight"
               >
                 Get Notified When We Launch →
               </a>
-
-              <p className="mt-4 text-center text-xs text-ink-faint relative">
-                UPI · Net Banking · Cards · All Indian payment methods · Instant delivery via email
+              <p className="mt-3 text-center text-[11px] font-mono text-ink-faint">
+                UPI · Net Banking · Cards · All Indian payment methods
               </p>
             </div>
+
           </div>
         </FadeIn>
 
