@@ -5,37 +5,37 @@ const items = [
     n: "01",
     name: "Golden Indicator",
     tag: "Pine Script v5",
-    desc: "Proprietary signal engine. Drops into any TradingView chart. Works on any symbol, any timeframe — NIFTY, SPX, Gold, BTC, EUR/USD, any stock.",
+    desc: "See where real buyers and sellers are active. One signal engine replaces a dozen cluttered indicators.",
   },
   {
     n: "02",
     name: "TradingView Chart Gallery",
     tag: "Real setups",
-    desc: "Screenshots of the indicator on live charts across markets — NIFTY, Gold, SPX, crypto, forex. See it before you buy it.",
+    desc: "Learn how professionals read the same chart you're looking at. Real markets, annotated.",
   },
   {
     n: "03",
     name: "Trade Logic PDF",
     tag: "50+ pages",
-    desc: "Entry rules, exit rules, real chart examples, and the risk framework behind every signal.",
+    desc: "Clear rules. No guessing. No confusion. Entries, exits, and the risk framework in plain language.",
   },
   {
     n: "04",
     name: "Risk Calculator",
     tag: "Web tool",
-    desc: "Position-sizing calculator using your account size and current volatility. Works in INR, USD, EUR, or any currency. Free lifetime access.",
+    desc: "Protect your capital before you chase profits. Position sizing in your own currency, built in.",
   },
   {
     n: "05",
     name: "Daily Market Notes",
     tag: "Email",
-    desc: "Pre-market bias and post-close recap. India plus global (SPX, Gold, BTC). Delivered every trading day. Free forever.",
+    desc: "Know what matters before the market opens. India plus global — SPX, Gold, BTC.",
   },
   {
     n: "06",
-    name: "Lifetime updates",
+    name: "Lifetime Updates",
     tag: "Included",
-    desc: "Every future revision of the script delivered free. No paid v2. No tier upgrades. Buy once, keep forever.",
+    desc: "The system evolves as markets evolve. Every future revision delivered to you, free of charge.",
   },
 ];
 
@@ -45,8 +45,8 @@ export default function Bundle() {
       <div className="container-wide py-16 sm:py-20 md:py-28">
         <SectionHeader
           eyebrow="What you get"
-          title={<>The complete bundle.</>}
-          lede="Proprietary signal engine plus everything you need to run it. No guesswork. No setup headaches."
+          title={<>Everything you need. Nothing you don&apos;t.</>}
+          lede="No more switching indicators. No more conflicting signals. Just one system that shows you what actually matters."
         />
 
         <div className="mt-10 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -66,8 +66,7 @@ export default function Bundle() {
         </div>
 
         <p className="mt-10 sm:mt-12 text-center text-caption text-muted-faint max-w-2xl mx-auto">
-          Internal methodology proprietary. Signal logic not disclosed. Bundle delivered as a
-          sealed package — install, run, trade.
+          Delivered as a sealed package. Installable in under a minute. Yours for life.
         </p>
       </div>
     </section>

@@ -3,18 +3,18 @@ import SectionHeader from "@/components/ui/SectionHeader";
 const principles = [
   {
     n: "01",
-    title: "No signals. Ever.",
-    body: "We don't send buy/sell calls. The chart tells you. You decide. No Telegram ping telling you to go long at 2:47 PM.",
+    title: "No signals",
+    body: "Because blindly following signals loses money. We hand you a chart tool, not a leash.",
   },
   {
     n: "02",
-    title: "No subscriptions.",
-    body: "One-time ₹2,499. Lifetime access. No auto-renewal, no tiered plans, no upsells after purchase.",
+    title: "No subscriptions",
+    body: "You own what you buy. Forever. No auto-renewals. No tiered plans. No silent drain on your account.",
   },
   {
     n: "03",
-    title: "No performance promises.",
-    body: "Trading involves real risk of loss. Golden Indicator is a chart tool, not a money printer. We won't tell you otherwise.",
+    title: "No fake performance claims",
+    body: "Markets change. We teach you how to read them — not how to swallow yesterday's win rate as tomorrow's promise.",
   },
 ];
 
@@ -23,9 +23,9 @@ export default function Principles() {
     <section className="bg-surface">
       <div className="container-wide py-16 sm:py-20 md:py-28">
         <SectionHeader
-          eyebrow="What we stand for"
-          title={<>Three things we refuse to do.</>}
-          lede="In a category full of hype, pump groups, and recurring fees — here is what EasyTradeSetup will never ship."
+          eyebrow="How we operate"
+          title={<>We don&apos;t sell shortcuts.</>}
+          lede="In a category full of hype, pump groups, and recurring fees, here is what EasyTradeSetup will never ship."
         />
 
         <div className="mt-10 sm:mt-14 grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
@@ -39,8 +39,7 @@ export default function Principles() {
         </div>
 
         <p className="mt-8 sm:mt-10 text-center text-nano text-muted-faint max-w-2xl mx-auto">
-          Customer testimonials will be published here post-launch, with explicit written permission and
-          clearly dated purchase records. Until then — no fabricated quotes.
+          Customer testimonials will be published here post-launch, with written permission and verifiable purchase records.
         </p>
       </div>
     </section>

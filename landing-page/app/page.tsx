@@ -1,5 +1,6 @@
 import Hero from "@/components/sections/Hero";
-import Ticker from "@/components/ui/Ticker";
+import WhoFor from "@/components/sections/WhoFor";
+import CleanVsNoisy from "@/components/sections/CleanVsNoisy";
 import Bundle from "@/components/sections/Bundle";
 import HowItWorks from "@/components/sections/HowItWorks";
 import Principles from "@/components/sections/Principles";
@@ -10,8 +11,9 @@ import FinalCTA from "@/components/sections/FinalCTA";
 export default function HomePage() {
   return (
     <>
-      <Ticker />
       <Hero />
+      <WhoFor />
+      <CleanVsNoisy />
       <Bundle />
       <HowItWorks />
       <Principles />

@@ -1,9 +1,21 @@
 import SectionHeader from "@/components/ui/SectionHeader";
 
 const steps = [
-  { n: "01", title: "Buy once", body: "Single one-time payment of ₹2,499. No subscription, no recurring charges, no feature tiers." },
-  { n: "02", title: "Receive instantly", body: "Pine script, trade-logic PDF, and risk calculator delivered to your inbox in seconds." },
-  { n: "03", title: "Paste into TradingView", body: "Open Pine Editor, paste the script, save, and add to any chart. Any symbol, any timeframe." },
+  {
+    n: "01",
+    title: "Buy once",
+    body: "No subscriptions. No upsells. A single one-time payment and the product is yours.",
+  },
+  {
+    n: "02",
+    title: "Download instantly",
+    body: "Indicator, guide, risk calculator, and market notes — all delivered straight to your inbox.",
+  },
+  {
+    n: "03",
+    title: "Apply and trade",
+    body: "Works on any chart. Any market. Immediately. Paste the script, save, and read price with clarity.",
+  },
 ];
 
 export default function HowItWorks() {
@@ -12,10 +24,10 @@ export default function HowItWorks() {
       <div className="container-wide py-16 sm:py-20 md:py-28">
         <SectionHeader
           eyebrow="How it works"
-          title={<>Three steps. Under a minute.</>}
+          title={<>Start in less than 60 seconds.</>}
         />
 
-        <div className="mt-10 sm:mt-12 grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+        <div className="mt-10 sm:mt-14 grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
           {steps.map((s) => (
             <div key={s.n} className="card-white p-6 sm:p-8 md:p-10">
               <div className="text-micro font-semibold text-blue-link tracking-wider">{s.n}</div>
