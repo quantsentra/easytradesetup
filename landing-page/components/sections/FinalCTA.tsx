@@ -23,7 +23,7 @@ export default function FinalCTA() {
         </div>
 
         <p className="mt-5 text-caption text-muted-faint">
-          7-day refund · Instant email delivery · Not SEBI-registered advice
+          One-time payment · Instant email delivery · Not SEBI-registered advice
         </p>
       </div>
     </section>

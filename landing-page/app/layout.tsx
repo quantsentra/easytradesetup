@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import TopNav from "@/components/nav/TopNav";
 import Footer from "@/components/nav/Footer";
-import WhatsAppFab from "@/components/ui/WhatsAppFab";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -53,7 +52,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <TopNav />
         <main id="main">{children}</main>
         <Footer />
-        <WhatsAppFab />
       </body>
     </html>
   );

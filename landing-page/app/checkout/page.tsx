@@ -26,8 +26,7 @@ export default function CheckoutPage() {
               <strong className="font-semibold">Not SEBI-registered investment advice.</strong> Golden Indicator is a
               chart tool, not a signal service. You decide every trade. Past performance does not guarantee future
               results. Trading in F&amp;O involves substantial risk of loss. Read our full{" "}
-              <Link href="/legal/disclaimer" className="underline">trading disclaimer</Link> and{" "}
-              <Link href="/legal/refund" className="underline">7-day refund policy</Link> before purchase.
+              <Link href="/legal/disclaimer" className="underline">trading disclaimer</Link> before purchase.
             </div>
           </div>
 
@@ -81,9 +80,9 @@ export default function CheckoutPage() {
               <ul className="mt-6 pt-6 hairline-t space-y-2.5 text-caption text-muted">
                 {[
                   "Instant email delivery on launch",
-                  "7-day no-questions refund",
                   "Encrypted payment via Razorpay / UPI",
                   "Lifetime updates included",
+                  "One-time payment · no subscription",
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-2">
                     <svg width="14" height="14" viewBox="0 0 14 14" className="mt-1 flex-shrink-0" aria-hidden>

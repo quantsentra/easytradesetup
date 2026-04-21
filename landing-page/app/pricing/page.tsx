@@ -51,7 +51,7 @@ export default function PricingPage() {
               </Link>
             </div>
             <p className="mt-6 text-micro text-muted-faint">
-              Instant delivery via email. 7-day refund window.
+              Instant delivery via email. Lifetime access.
             </p>
           </div>
         </div>

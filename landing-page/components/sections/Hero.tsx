@@ -96,7 +96,7 @@ export default function Hero() {
         </div>
 
         <p className="mt-3 text-caption text-muted-faint">
-          7-day refund · One-time payment · Not SEBI-registered advice
+          One-time payment · Instant delivery · Not SEBI-registered advice
         </p>
 
         <div className="mt-10 sm:mt-14 md:mt-20 relative mx-auto max-w-[880px]">

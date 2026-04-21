@@ -53,7 +53,7 @@ export default function PricingTeaser() {
               <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
                 <path d="M2 7l3 3 7-7" stroke="#2da44e" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              7-day refund
+              One-time payment
             </span>
             <span className="inline-flex items-center gap-1.5">
               <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
