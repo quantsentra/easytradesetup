@@ -29,8 +29,7 @@ test.describe('Homepage', () => {
     const pricingSection = page.locator('#pricing')
     await pricingSection.scrollIntoViewIfNeeded()
     const text = await pricingSection.textContent()
-    expect(text).toContain('₹999')
-    expect(text).toContain('₹1,999')
+    expect(text).toContain('₹2,499')
     expect(text).not.toContain('$')
   })
 

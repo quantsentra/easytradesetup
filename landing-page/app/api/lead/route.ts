@@ -4,7 +4,10 @@ import { Resend } from 'resend'
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
-  const resend = new Resend(process.env.RESEND_API_KEY!)
+  if (!process.env.RESEND_API_KEY) {
+    return NextResponse.json({ error: 'Service unavailable' }, { status: 503 })
+  }
+  const resend = new Resend(process.env.RESEND_API_KEY)
 
   let email: string
   try {
@@ -75,7 +78,7 @@ function buildChecklistEmail(email: string): string {
         <strong style="color:#E6EDF3;">Want the full system?</strong><br/>
         The ETS Momentum Pack includes the TradingView Pine Script that generates BUY/SELL labels
         automatically when all 3 conditions align — so you never miss a signal.
-        Starting at <strong style="color:#58A6FF;">₹999</strong>.<br/><br/>
+        One-time payment of <strong style="color:#58A6FF;">₹2,499</strong>.<br/><br/>
         <a href="https://www.easytradesetup.com/#pricing" style="color:#58A6FF;text-decoration:none;font-weight:600;">View the pack →</a>
       </p>
     </div>
