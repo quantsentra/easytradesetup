@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import TopNav from "@/components/nav/TopNav";
 import Footer from "@/components/nav/Footer";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <TopNav />
         <main id="main">{children}</main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );

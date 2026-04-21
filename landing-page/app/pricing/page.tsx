@@ -20,7 +20,7 @@ const notIncluded = [
   "Trading signals or tips",
   "Guaranteed returns",
   "Managed account service",
-  "Telegram-style pump group",
+  "Daily buy/sell alerts",
 ];
 
 export default function PricingPage() {
@@ -44,7 +44,7 @@ export default function PricingPage() {
             <p className="mt-2 text-caption text-muted-faint">One-time · INR · incl. GST</p>
             <div className="mt-10 flex flex-wrap justify-center gap-5">
               <Link href="/checkout" className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body">
-                Buy ₹2,499
+                Get Golden Indicator — ₹2,499 →
               </Link>
               <Link href="/contact" className="link-apple chevron">
                 Talk first

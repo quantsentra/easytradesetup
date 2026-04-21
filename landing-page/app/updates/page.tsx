@@ -269,23 +269,35 @@ export default function UpdatesPage() {
           <nav className="flex items-center gap-1.5 text-muted-faint text-nano uppercase tracking-widest">
             <span>Markets</span>
             <Icon d={ICONS.chevronRight} size={12} />
-            <span className="text-blue-link font-semibold">Public Research Feed</span>
+            <span className="text-blue-link font-semibold">Daily Market Notes</span>
           </nav>
 
           <div className="mt-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="h-hero">Institutional Research</h1>
+              <h1 className="h-hero">Daily Market Notes</h1>
               <p className="mt-2 text-body-lg text-muted max-w-2xl">
-                Professional market structure and daily execution notes. Verified public record.
+                Pre-market structure, session levels, and end-of-day observations. Educational only.
               </p>
             </div>
 
             <div className="inline-flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-rule shadow-soft self-start md:self-center">
               <span className="w-2 h-2 rounded-full bg-blue animate-pulse" />
               <span className="text-nano font-bold text-ink uppercase tracking-widest">
-                Portal Live
+                Feed Live
               </span>
             </div>
+          </div>
+
+          <div className="mt-5 rounded-xl border border-[#f0c36d] bg-[#fff8e6] px-4 py-3 flex items-start gap-3">
+            <svg width="16" height="16" viewBox="0 0 24 24" className="flex-shrink-0 mt-0.5" aria-hidden>
+              <circle cx="12" cy="12" r="10" fill="none" stroke="#b7791f" strokeWidth="1.8" />
+              <path d="M12 8v5 M12 16h.01" stroke="#b7791f" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <p className="text-caption leading-relaxed text-[#7a5a0f]">
+              <strong className="font-semibold">Sample / illustrative entries.</strong> Real daily notes begin
+              at product launch. Dates, prices, and flow commentary below are placeholder examples to preview
+              the feed format. Not trade recommendations.
+            </p>
           </div>
         </div>
       </section>
@@ -425,7 +437,7 @@ function DayCard({ day }: { day: DayFeed }) {
             <div className="min-w-0">
               <h3 className="text-body font-bold text-ink truncate">{symbol.code}</h3>
               <span className="text-nano font-bold text-muted-faint uppercase tracking-widest mt-0.5 block">
-                Institutional View · {symbol.lastUpdate}
+                Author&apos;s view · {symbol.lastUpdate}
               </span>
             </div>
           </div>
@@ -497,7 +509,7 @@ function DayCard({ day }: { day: DayFeed }) {
               href="/checkout"
               className="text-nano font-bold text-blue uppercase tracking-widest underline decoration-2 underline-offset-4 hover:no-underline"
             >
-              Terminal View
+              Get Access
             </Link>
             <button
               aria-label="Bookmark"

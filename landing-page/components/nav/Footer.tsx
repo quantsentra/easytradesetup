@@ -1,4 +1,5 @@
 import Link from "next/link";
+import RiskDisclosure from "@/components/ui/RiskDisclosure";
 
 const cols = [
   {
@@ -21,9 +22,10 @@ const cols = [
     title: "Resources",
     links: [
       { href: "/docs", label: "Documentation" },
-      { href: "/docs/install", label: "TradingView Install" },
+      { href: "/docs/install",   label: "TradingView Install" },
       { href: "/docs/risk-calc", label: "Risk Calculator" },
-      { href: "/docs/faq", label: "FAQ" },
+      { href: "/docs/faq",       label: "FAQ" },
+      { href: "/docs/changelog", label: "Changelog" },
     ],
   },
   {
@@ -39,7 +41,9 @@ const cols = [
 
 export default function Footer() {
   return (
-    <footer className="bg-page hairline-t mt-16 sm:mt-20">
+    <>
+      <RiskDisclosure />
+      <footer className="bg-page hairline-t mt-0">
       <div className="container-wide py-10 sm:py-12">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 text-caption">
           <div className="col-span-2 sm:col-span-3 md:col-span-1">
@@ -81,5 +85,6 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+    </>
   );
 }

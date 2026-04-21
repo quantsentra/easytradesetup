@@ -80,9 +80,9 @@ export default function CheckoutPage() {
               <ul className="mt-6 pt-6 hairline-t space-y-2.5 text-caption text-muted">
                 {[
                   "Instant email delivery on launch",
-                  "Encrypted payment via Razorpay / UPI",
                   "Lifetime updates included",
                   "One-time payment · no subscription",
+                  "No recurring charges, ever",
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-2">
                     <svg width="14" height="14" viewBox="0 0 14 14" className="mt-1 flex-shrink-0" aria-hidden>

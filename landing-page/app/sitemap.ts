@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/docs/install",
     "/docs/risk-calc",
     "/docs/faq",
+    "/docs/changelog",
     "/updates",
     "/about",
     "/contact",

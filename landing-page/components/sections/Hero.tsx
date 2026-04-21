@@ -85,7 +85,7 @@ export default function Hero() {
             href="/checkout"
             className="order-1 sm:order-2 inline-flex items-center justify-center rounded-lg bg-blue text-white px-5 py-2 text-body font-normal hover:brightness-110 transition-all w-full sm:w-auto"
           >
-            Buy ₹2,499
+            Get Golden Indicator — ₹2,499 →
           </Link>
           <Link
             href="/product"

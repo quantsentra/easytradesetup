@@ -89,7 +89,7 @@ export default async function StrategyPage({
             <p className="mt-3 text-caption text-muted">All the filters this setup needs are built in.</p>
             <div className="mt-6">
               <Link href="/checkout" className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body">
-                Buy ₹2,499
+                Get Golden Indicator — ₹2,499 →
               </Link>
             </div>
           </div>

@@ -41,7 +41,7 @@ export default function PricingTeaser() {
               href="/checkout"
               className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body hover:brightness-110 transition-all w-full sm:w-auto"
             >
-              Buy ₹2,499
+              Get Golden Indicator — ₹2,499 →
             </Link>
             <Link href="/pricing" className="link-apple chevron">
               See what&apos;s included
