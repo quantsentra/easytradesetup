@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
+import { OFFER_LABEL } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Checkout",
-  description: "Secure one-time payment for Golden Indicator. India ₹2,499 · Global $49.",
+  description: "Secure one-time payment for Golden Indicator. Inaugural offer: $49 / ₹4,599 (retail $149 / ₹13,999).",
 };
 
 export default function CheckoutPage() {
@@ -32,8 +33,8 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div className="md:col-span-3 card-apple p-6 sm:p-8 md:p-10">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+            <div className="lg:col-span-3 card-apple p-6 sm:p-8 md:p-10">
               <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">Payment</div>
               <p className="mt-5 text-body text-muted leading-relaxed">
                 Payment processing is not yet live. Reserve your copy below — you&apos;ll be notified the moment checkout
@@ -60,15 +61,23 @@ export default function CheckoutPage() {
               </p>
             </div>
 
-            <aside className="md:col-span-2 card-apple p-6 sm:p-8 md:p-10">
+            <aside className="lg:col-span-2 card-apple p-6 sm:p-8 md:p-10">
               <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">Order summary</div>
               <div className="mt-6 pb-6 hairline-b">
                 <div className="text-body text-ink font-medium">Golden Indicator</div>
                 <div className="mt-1 text-caption text-muted">Lifetime access</div>
               </div>
               <div className="mt-6 flex items-baseline justify-between text-body">
-                <span className="text-muted">Subtotal</span>
-                <span className="tabular-nums text-ink"><Price variant="amount" /></span>
+                <span className="text-muted">Retail</span>
+                <span className="tabular-nums text-muted-faint line-through decoration-muted-faint/60">
+                  <Price variant="retail" />
+                </span>
+              </div>
+              <div className="mt-2 flex items-center justify-between text-body">
+                <span className="text-muted">Offer applied</span>
+                <span className="inline-flex items-center gap-1.5 bg-[#e7f7ee] text-[#0a7a3a] px-2.5 py-0.5 rounded-full text-nano font-bold uppercase tracking-widest border border-[#cdebd8]">
+                  {OFFER_LABEL}
+                </span>
               </div>
               <div className="mt-2 flex items-baseline justify-between text-body">
                 <span className="text-muted">Taxes</span>

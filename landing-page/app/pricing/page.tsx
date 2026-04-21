@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
+import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "One-time payment. Lifetime access to Golden Indicator. India ₹2,499 · Rest of world $49. No subscription, no tiers, no hidden costs.",
+    "Golden Indicator — inaugural launch offer. Retail $149 / ₹13,999, today $49 / ₹4,599. One-time payment. Lifetime access. No subscription, no hidden costs.",
 };
 
 const included = [
@@ -36,12 +37,19 @@ export default function PricingPage() {
 
       <section className="bg-surface">
         <div className="container-wide py-16 md:py-20">
-          <div className="card-apple p-10 md:p-16 max-w-[880px] mx-auto text-center">
-            <p className="text-micro font-semibold text-blue-link uppercase tracking-wider">
-              Lifetime access
+          <div className="card-apple p-6 sm:p-10 md:p-16 max-w-[880px] mx-auto text-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue/10 border border-blue/20 px-3 py-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" aria-hidden />
+              <span className="text-nano font-bold text-blue-link uppercase tracking-widest">
+                {OFFER_LABEL} · {OFFER_TAGLINE}
+              </span>
+            </div>
+
+            <p className="mt-5 text-caption text-muted-faint">
+              Retail <span className="line-through decoration-muted-faint/60 decoration-[1.5px]"><Price variant="retail" /></span>
             </p>
-            <div className="mt-6 flex items-baseline justify-center gap-3">
-              <span className="font-display font-semibold text-[96px] md:text-[120px] leading-none text-ink">
+            <div className="mt-3 flex items-baseline justify-center gap-3">
+              <span className="font-display font-semibold text-[56px] sm:text-[80px] md:text-[96px] lg:text-[120px] leading-none text-ink">
                 <Price variant="amount" />
               </span>
             </div>

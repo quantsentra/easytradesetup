@@ -16,7 +16,7 @@ export default async function OG() {
           flexDirection: "column",
           background:
             "linear-gradient(135deg, #f5f5f7 0%, #ffffff 55%, #e4ecff 100%)",
-          padding: 80,
+          padding: 72,
           fontFamily: "sans-serif",
           color: "#1d1d1f",
         }}
@@ -26,7 +26,7 @@ export default async function OG() {
             display: "flex",
             alignItems: "center",
             gap: 16,
-            fontSize: 24,
+            fontSize: 22,
             fontWeight: 600,
             color: "#0071e3",
             textTransform: "uppercase",
@@ -43,7 +43,7 @@ export default async function OG() {
               alignItems: "center",
               justifyContent: "center",
               color: "#fff",
-              fontSize: 28,
+              fontSize: 26,
               fontWeight: 800,
             }}
           >
@@ -54,19 +54,32 @@ export default async function OG() {
 
         <div
           style={{
-            marginTop: 60,
-            fontSize: 96,
+            marginTop: 50,
+            fontSize: 104,
             fontWeight: 800,
             letterSpacing: -3,
-            lineHeight: 1.05,
+            lineHeight: 1.0,
             maxWidth: 1020,
             display: "flex",
             flexDirection: "column",
           }}
         >
-          <span>One indicator.</span>
-          <span style={{ color: "#0071e3" }}>Eight tools.</span>
-          <span>Every market.</span>
+          <span>Trade with clarity.</span>
+          <span style={{ color: "#0071e3" }}>Not noise.</span>
+        </div>
+
+        <div
+          style={{
+            marginTop: 36,
+            fontSize: 26,
+            color: "rgba(0,0,0,0.65)",
+            fontWeight: 500,
+            maxWidth: 920,
+            lineHeight: 1.35,
+            display: "flex",
+          }}
+        >
+          One intelligent indicator that replaces clutter, confusion, and guesswork — across every market.
         </div>
 
         <div
@@ -75,22 +88,43 @@ export default async function OG() {
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "space-between",
-            paddingTop: 40,
+            paddingTop: 32,
           }}
         >
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              fontSize: 28,
-              color: "rgba(0,0,0,0.7)",
-              fontWeight: 500,
+              gap: 10,
             }}
           >
-            <span>Proprietary TradingView Pine Script</span>
-            <span style={{ fontSize: 22, marginTop: 8, color: "rgba(0,0,0,0.55)" }}>
-              Lifetime access · One-time payment · NSE F&O + global markets
-            </span>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "6px 14px",
+                borderRadius: 999,
+                background: "rgba(0,113,227,0.1)",
+                border: "1px solid rgba(0,113,227,0.25)",
+                color: "#0066cc",
+                fontSize: 18,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: 2,
+              }}
+            >
+              Inaugural offer · Don&apos;t miss it
+            </div>
+            <div
+              style={{
+                fontSize: 20,
+                color: "rgba(0,0,0,0.5)",
+                fontWeight: 500,
+              }}
+            >
+              One-time payment · Lifetime access
+            </div>
           </div>
 
           <div
@@ -105,26 +139,30 @@ export default async function OG() {
                 display: "flex",
                 alignItems: "baseline",
                 gap: 18,
-                color: "#0071e3",
-                letterSpacing: -2,
-                fontWeight: 800,
+                color: "rgba(0,0,0,0.4)",
+                fontSize: 30,
+                fontWeight: 600,
+                textDecoration: "line-through",
               }}
             >
-              <span style={{ fontSize: 74 }}>₹2,499</span>
-              <span style={{ fontSize: 36, color: "rgba(0,0,0,0.45)" }}>·</span>
-              <span style={{ fontSize: 74 }}>$49</span>
+              <span>$149</span>
+              <span style={{ fontSize: 24 }}>·</span>
+              <span>₹13,999</span>
             </div>
             <div
               style={{
-                fontSize: 22,
-                fontWeight: 600,
-                textTransform: "uppercase",
-                letterSpacing: 3,
-                color: "rgba(0,0,0,0.45)",
+                display: "flex",
+                alignItems: "baseline",
+                gap: 18,
+                color: "#0071e3",
+                letterSpacing: -2,
+                fontWeight: 800,
                 marginTop: 4,
               }}
             >
-              One-time · India / Rest of world
+              <span style={{ fontSize: 80 }}>$49</span>
+              <span style={{ fontSize: 38, color: "rgba(0,0,0,0.45)" }}>·</span>
+              <span style={{ fontSize: 80 }}>₹4,599</span>
             </div>
           </div>
         </div>

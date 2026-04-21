@@ -45,7 +45,7 @@ export default function Footer() {
       <RiskDisclosure />
       <footer className="bg-page hairline-t mt-0">
       <div className="container-wide py-10 sm:py-12">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8 text-caption">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-6 gap-y-10 md:gap-8 text-caption">
           <div className="col-span-2 sm:col-span-3 md:col-span-1">
             <Link href="/" className="text-ink font-medium">
               EasyTradeSetup

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Price from "@/components/ui/Price";
+import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 const included = [
   "Works on stocks, forex, crypto, commodities, and indices",
@@ -15,14 +16,18 @@ export default function PricingTeaser() {
     <section className="bg-page">
       <div className="container-wide py-16 sm:py-20 md:py-28">
         <div className="card-white p-6 sm:p-10 md:p-16 max-w-[900px] mx-auto text-center">
-          <p className="text-micro font-semibold text-blue-link uppercase tracking-wider">
-            Pricing
-          </p>
-          <h2 className="mt-3 sm:mt-4 h-hero">
-            <Price variant="amount-once" />. No catch.
+          <div className="inline-flex items-center gap-2 rounded-full bg-blue/10 border border-blue/20 px-3 py-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" aria-hidden />
+            <span className="text-nano font-bold text-blue-link uppercase tracking-widest">
+              {OFFER_LABEL} · {OFFER_TAGLINE}
+            </span>
+          </div>
+
+          <h2 className="mt-4 sm:mt-5 h-hero">
+            <Price variant="strike-offer" />
           </h2>
-          <p className="mt-4 sm:mt-5 text-body-lg text-muted max-w-xl mx-auto">
-            Less than the cost of one bad trade. One payment — and the product is yours for life.
+          <p className="mt-3 sm:mt-4 text-body-lg text-muted max-w-xl mx-auto">
+            Inaugural launch price — over 60% off retail. One payment, yours for life.
           </p>
 
           <ul className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 max-w-xl mx-auto text-left">

@@ -42,7 +42,7 @@ export default function ContactPage() {
                 <input
                   name="name"
                   required
-                  className="bg-surface border border-rule rounded-lg px-4 py-3 text-body text-ink focus:outline-none focus:border-blue transition-colors"
+                  className="bg-surface border border-rule rounded-lg px-4 py-3.5 md:py-3 text-body text-ink focus:outline-none focus:border-blue transition-colors"
                   placeholder="Your name"
                 />
               </label>
@@ -52,7 +52,7 @@ export default function ContactPage() {
                   name="email"
                   type="email"
                   required
-                  className="bg-surface border border-rule rounded-lg px-4 py-3 text-body text-ink focus:outline-none focus:border-blue transition-colors"
+                  className="bg-surface border border-rule rounded-lg px-4 py-3.5 md:py-3 text-body text-ink focus:outline-none focus:border-blue transition-colors"
                   placeholder="you@example.com"
                 />
               </label>

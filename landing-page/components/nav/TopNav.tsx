@@ -70,7 +70,7 @@ export default function TopNav() {
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="md:hidden w-9 h-9 inline-flex flex-col items-center justify-center gap-[5px]"
+          className="md:hidden w-11 h-11 -mr-2 inline-flex flex-col items-center justify-center gap-[5px]"
         >
           <span
             className={`block w-[18px] h-px bg-ink transition-transform ${

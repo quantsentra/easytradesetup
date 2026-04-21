@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: "%s · EasyTradeSetup",
   },
   description:
-    "Golden Indicator — proprietary TradingView Pine Script with 8 built-in tools for global markets: equities, F&O, commodities, forex, crypto. Any symbol, any timeframe. India ₹2,499 · Global $49. One-time payment.",
+    "Golden Indicator — proprietary TradingView Pine Script for global markets: equities, F&O, commodities, forex, crypto. Any symbol, any timeframe. Inaugural offer: $49 / ₹4,599 (retail $149 / ₹13,999). One-time payment, lifetime access.",
   keywords: [
     "TradingView indicator",
     "Pine Script",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "EasyTradeSetup — Golden Indicator",
-    description: "One indicator. Eight tools. Every market. India ₹2,499 · Global $49. One-time payment.",
+    description: "Trade with clarity. Not noise. Inaugural offer: $49 / ₹4,599 (retail $149 / ₹13,999). One-time payment, lifetime access.",
   },
   robots: { index: true, follow: true },
 };
