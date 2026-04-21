@@ -2,19 +2,19 @@ import type { ReactNode } from "react";
 
 type Props = {
   children: ReactNode;
-  tone?: "default" | "gold" | "signal";
+  tone?: "default" | "blue" | "muted";
   className?: string;
 };
 
 export default function Badge({ children, tone = "default", className = "" }: Props) {
   const tones: Record<string, string> = {
-    default: "bg-ink-card border-ink-border text-cream-muted",
-    gold: "bg-gold/10 border-gold/30 text-gold",
-    signal: "bg-signal-up/10 border-signal-up/30 text-signal-up",
+    default: "bg-surface-alt text-ink",
+    blue: "bg-blue/10 text-blue-link",
+    muted: "bg-page text-muted",
   };
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-mono ${tones[tone]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-pill px-2.5 py-1 text-micro font-medium ${tones[tone]} ${className}`}
     >
       {children}
     </span>

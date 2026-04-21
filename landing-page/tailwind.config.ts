@@ -5,68 +5,62 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: {
-          DEFAULT: "#0a0a0a",
-          soft: "#141414",
-          card: "#1a1a1a",
-          border: "#262626",
+        ink: "#1d1d1f",
+        page: "#f5f5f7",
+        surface: "#ffffff",
+        "surface-alt": "#fafafc",
+        "surface-active": "#ededf2",
+        "rule": "rgba(0, 0, 0, 0.08)",
+        blue: {
+          DEFAULT: "#0071e3",
+          link: "#0066cc",
+          bright: "#2997ff",
         },
-        cream: {
-          DEFAULT: "#f5f0e8",
-          muted: "#b8b2a8",
-          dim: "#7a746a",
-        },
-        gold: {
-          DEFAULT: "#d4a648",
-          bright: "#f0c05a",
-          deep: "#8a6d2a",
-        },
-        signal: {
-          up: "#3ecf8e",
-          down: "#ff5d5d",
+        muted: {
+          DEFAULT: "rgba(0, 0, 0, 0.8)",
+          soft: "rgba(0, 0, 0, 0.56)",
+          faint: "rgba(0, 0, 0, 0.48)",
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "serif"],
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        display: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "SF Pro Display",
+          "var(--font-inter)",
+          "Helvetica Neue",
+          "Helvetica",
+          "Arial",
+          "sans-serif",
+        ],
+        text: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "SF Pro Text",
+          "var(--font-inter)",
+          "Helvetica Neue",
+          "Helvetica",
+          "Arial",
+          "sans-serif",
+        ],
       },
       fontSize: {
-        "display-xl": ["clamp(3.5rem, 9vw, 7.5rem)", { lineHeight: "0.95", letterSpacing: "-0.03em" }],
-        "display-lg": ["clamp(2.5rem, 6vw, 4.5rem)", { lineHeight: "1", letterSpacing: "-0.025em" }],
-        "display-md": ["clamp(1.75rem, 3.5vw, 2.75rem)", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
+        "display-hero": ["clamp(2.5rem, 5.5vw, 3.5rem)", { lineHeight: "1.07", letterSpacing: "-0.005em" }],
+        "display-section": ["clamp(2rem, 4vw, 2.5rem)", { lineHeight: "1.1", letterSpacing: "-0.003em" }],
+        "display-tile": ["1.75rem", { lineHeight: "1.14", letterSpacing: "0.007em" }],
+        "card-title": ["1.3125rem", { lineHeight: "1.19", letterSpacing: "0.011em" }],
+        "body-lg": ["1.0625rem", { lineHeight: "1.47", letterSpacing: "-0.022em" }],
+        "body": ["1.0625rem", { lineHeight: "1.47", letterSpacing: "-0.022em" }],
+        "caption": ["0.875rem", { lineHeight: "1.29", letterSpacing: "-0.016em" }],
+        "micro": ["0.75rem", { lineHeight: "1.33", letterSpacing: "-0.01em" }],
+        "nano": ["0.625rem", { lineHeight: "1.47", letterSpacing: "-0.008em" }],
       },
-      animation: {
-        "ticker": "ticker 40s linear infinite",
-        "grain": "grain 8s steps(10) infinite",
-        "shimmer": "shimmer 3s ease-in-out infinite",
-        "fade-up": "fadeUp 0.8s ease-out forwards",
+      borderRadius: {
+        pill: "980px",
       },
-      keyframes: {
-        ticker: {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-50%)" },
-        },
-        grain: {
-          "0%, 100%": { transform: "translate(0, 0)" },
-          "10%": { transform: "translate(-5%, -10%)" },
-          "30%": { transform: "translate(3%, -15%)" },
-          "50%": { transform: "translate(-10%, 5%)" },
-          "70%": { transform: "translate(15%, 10%)" },
-          "90%": { transform: "translate(5%, -5%)" },
-        },
-        shimmer: {
-          "0%, 100%": { opacity: "0.3" },
-          "50%": { opacity: "0.7" },
-        },
-        fadeUp: {
-          "0%": { opacity: "0", transform: "translateY(24px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" },
-        },
-      },
-      backgroundImage: {
-        "grid-fade": "linear-gradient(180deg, rgba(212,166,72,0.04) 0%, transparent 100%)",
-        "gold-gradient": "linear-gradient(135deg, #f0c05a 0%, #d4a648 50%, #8a6d2a 100%)",
+      boxShadow: {
+        card: "rgba(0, 0, 0, 0.22) 3px 5px 30px 0px",
+        soft: "rgba(0, 0, 0, 0.08) 0px 2px 12px 0px",
       },
     },
   },

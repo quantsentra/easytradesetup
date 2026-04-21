@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
-import Button from "@/components/ui/Button";
 import { strategies, findStrategy } from "@/lib/strategies";
 
 export const dynamicParams = false;
@@ -32,65 +31,70 @@ export default async function StrategyPage({
   if (!s) notFound();
 
   return (
-    <article className="container-x pt-20 md:pt-28 pb-24">
-      <div className="max-w-3xl">
-        <Link href="/strategy" className="label-kicker link-underline">
-          ← Strategy Library
-        </Link>
-        <h1 className="mt-6 font-display text-display-lg text-balance">{s.name}</h1>
-        <p className="mt-6 text-lg text-cream-muted text-balance leading-relaxed">{s.summary}</p>
-
-        <div className="mt-8 flex flex-wrap gap-2">
-          <Badge>{s.market}</Badge>
-          <Badge>Timeframe · {s.timeframe}</Badge>
-          <Badge tone="gold">{s.risk} risk</Badge>
-        </div>
-      </div>
-
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <section className="glass-card p-8">
-          <div className="label-kicker text-signal-up">Entry</div>
-          <ol className="mt-4 space-y-3 text-sm">
-            {s.entry.map((e, i) => (
-              <li key={i} className="flex gap-3">
-                <span className="font-mono text-gold">{String(i + 1).padStart(2, "0")}</span>
-                <span>{e}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="glass-card p-8">
-          <div className="label-kicker">Exit</div>
-          <ol className="mt-4 space-y-3 text-sm">
-            {s.exit.map((e, i) => (
-              <li key={i} className="flex gap-3">
-                <span className="font-mono text-gold">{String(i + 1).padStart(2, "0")}</span>
-                <span>{e}</span>
-              </li>
-            ))}
-          </ol>
-        </section>
-
-        <section className="glass-card p-8">
-          <div className="label-kicker text-signal-down">Invalidation</div>
-          <p className="mt-4 text-sm leading-relaxed">{s.invalidation}</p>
-          <div className="mt-8 pt-6 border-t border-ink-border">
-            <div className="label-kicker">Edge</div>
-            <p className="mt-2 text-sm text-cream-muted">{s.edge}</p>
+    <>
+      <section className="bg-page hairline-b">
+        <div className="container-wide pt-20 md:pt-28 pb-14 text-center max-w-[780px] mx-auto">
+          <Link href="/strategy" className="link-apple text-caption">
+            ← Strategy Library
+          </Link>
+          <h1 className="mt-6 h-hero">{s.name}</h1>
+          <p className="mt-5 text-body-lg text-muted">{s.summary}</p>
+          <div className="mt-7 flex flex-wrap justify-center gap-2">
+            <Badge>{s.market}</Badge>
+            <Badge>Timeframe · {s.timeframe}</Badge>
+            <Badge tone="blue">{s.risk} risk</Badge>
           </div>
-        </section>
-      </div>
-
-      <div className="mt-16 glass-card p-10 gold-border text-center">
-        <h2 className="font-display text-3xl">Run this strategy on Golden Indicator.</h2>
-        <p className="mt-3 text-cream-muted">All the filters this setup needs are built in.</p>
-        <div className="mt-6">
-          <Button variant="gold" size="lg" href="/checkout">
-            Get it — ₹2,499
-          </Button>
         </div>
-      </div>
-    </article>
+      </section>
+
+      <section className="bg-surface">
+        <div className="container-wide py-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="card-apple p-10">
+              <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">Entry</div>
+              <ol className="mt-5 space-y-3 text-caption">
+                {s.entry.map((e, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="text-muted-faint tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-ink">{e}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="card-apple p-10">
+              <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">Exit</div>
+              <ol className="mt-5 space-y-3 text-caption">
+                {s.exit.map((e, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="text-muted-faint tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="text-ink">{e}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="card-apple p-10">
+              <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">Invalidation</div>
+              <p className="mt-5 text-caption text-ink leading-relaxed">{s.invalidation}</p>
+              <div className="mt-8 hairline-t pt-5">
+                <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">Edge</div>
+                <p className="mt-2 text-caption text-muted">{s.edge}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 card-white p-10 md:p-14 text-center">
+            <h2 className="h-tile">Run this strategy on Golden Indicator.</h2>
+            <p className="mt-3 text-caption text-muted">All the filters this setup needs are built in.</p>
+            <div className="mt-6">
+              <Link href="/checkout" className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body">
+                Buy ₹2,499
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

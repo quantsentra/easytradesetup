@@ -18,22 +18,24 @@ export default function DocsIndex() {
     <>
       <PageHeader
         eyebrow="Docs"
-        title={<>Everything you need. <span className="italic text-gold">Nothing you don&apos;t.</span></>}
-        lede="Short guides. No filler. Written by the same person who built the script."
+        title={<>Everything you need. Nothing you don&apos;t.</>}
+        lede="Short guides. No filler. Written by the person who built the script."
       />
-      <section className="container-x py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {sections.map((s) => (
-            <Link
-              key={s.href}
-              href={s.href}
-              className="group glass-card p-8 hover:border-gold/50 transition-colors"
-            >
-              <h2 className="font-display text-2xl group-hover:text-gold transition-colors">{s.title}</h2>
-              <p className="mt-3 text-sm text-cream-muted leading-relaxed">{s.desc}</p>
-              <div className="mt-6 text-xs font-mono text-gold">Read →</div>
-            </Link>
-          ))}
+      <section className="bg-surface">
+        <div className="container-wide py-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {sections.map((s) => (
+              <Link
+                key={s.href}
+                href={s.href}
+                className="card-apple p-10 hover:bg-surface-alt transition-colors"
+              >
+                <h2 className="h-tile">{s.title}</h2>
+                <p className="mt-3 text-caption text-muted leading-relaxed">{s.desc}</p>
+                <div className="mt-6 link-apple chevron text-caption">Read</div>
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
     </>

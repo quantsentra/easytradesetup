@@ -1,115 +1,110 @@
 import Link from "next/link";
-import Button from "@/components/ui/Button";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid opacity-40 mask-fade-b pointer-events-none" />
-      <div className="container-x relative pt-20 md:pt-28 pb-16 md:pb-24">
-        <div className="grid grid-cols-12 gap-6 md:gap-10 items-end">
-          <div className="col-span-12 lg:col-span-8">
-            <div className="inline-flex items-center gap-2 mb-8 font-mono text-xs uppercase tracking-[0.2em] text-gold">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-gold opacity-75" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-gold" />
-              </span>
-              Live — April 2026 · NSE / Global
-            </div>
+    <section className="bg-page">
+      <div className="container-wide pt-16 md:pt-24 pb-12 md:pb-16 text-center">
+        <p className="text-micro font-semibold text-blue-link uppercase tracking-wider">
+          Golden Indicator
+        </p>
+        <h1 className="mt-4 h-hero max-w-3xl mx-auto">
+          One indicator. Eight tools.<br />Every market.
+        </h1>
+        <p className="mt-5 text-body-lg text-muted max-w-xl mx-auto">
+          A proprietary TradingView Pine Script engineered for NSE F&amp;O,
+          and just as sharp on global markets.
+        </p>
+        <div className="mt-7 flex flex-wrap items-center justify-center gap-5 text-body">
+          <Link href="/product" className="link-apple chevron">
+            Learn more
+          </Link>
+          <Link
+            href="/checkout"
+            className="link-pill border border-blue-link px-5 py-1.5 hover:bg-blue-link/5"
+          >
+            Buy ₹2,499
+          </Link>
+        </div>
 
-            <h1 className="font-display text-display-xl text-balance">
-              One indicator.
-              <br />
-              <span className="italic text-gold">Eight</span> tools.
-              <br />
-              <span className="text-cream-muted">Every market.</span>
-            </h1>
-
-            <p className="mt-8 text-lg md:text-xl text-cream-muted leading-relaxed max-w-xl text-balance">
-              Golden Indicator replaces your stack of TradingView add-ons with a single proprietary Pine Script —
-              engineered for NSE F&O, and just as sharp on global markets.
-            </p>
-
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Button variant="gold" size="lg" href="/checkout">
-                Get it — ₹2,499 <span aria-hidden>→</span>
-              </Button>
-              <Button variant="secondary" size="lg" href="/product">
-                See the 8 tools
-              </Button>
-            </div>
-
-            <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs font-mono text-cream-dim">
-              <span>✓ Instant email delivery</span>
-              <span>✓ Any timeframe</span>
-              <span>✓ Lifetime access</span>
-              <span>✓ One-time payment</span>
-            </div>
-          </div>
-
-          <div className="col-span-12 lg:col-span-4">
-            <div className="relative aspect-[3/4] rounded-2xl border border-ink-border bg-ink-soft/60 overflow-hidden gold-border">
-              <div className="absolute inset-0 bg-gradient-to-br from-gold/10 via-transparent to-transparent" />
-              <div className="absolute top-4 left-4 right-4 flex items-center justify-between font-mono text-[10px] text-cream-dim">
-                <span>NIFTY · 5m</span>
-                <span className="text-gold animate-shimmer">● LIVE</span>
+        <div className="mt-14 md:mt-20 relative mx-auto max-w-[880px]">
+          <div className="rounded-[22px] overflow-hidden bg-surface shadow-card">
+            <div className="flex items-center justify-between px-5 py-3 border-b border-rule">
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-[#ff5f57]" />
+                <span className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+                <span className="w-3 h-3 rounded-full bg-[#28c840]" />
               </div>
+              <div className="text-micro text-muted-faint">NIFTY 50 · 5m · TradingView</div>
+              <div className="w-12" />
+            </div>
+            <div className="relative aspect-[16/9] bg-surface-alt">
               <svg
-                viewBox="0 0 300 400"
+                viewBox="0 0 800 450"
                 className="absolute inset-0 w-full h-full"
                 preserveAspectRatio="none"
               >
                 <defs>
-                  <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#d4a648" stopOpacity="0.25" />
-                    <stop offset="100%" stopColor="#d4a648" stopOpacity="0" />
+                  <linearGradient id="hfill" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#0071e3" stopOpacity="0.15" />
+                    <stop offset="100%" stopColor="#0071e3" stopOpacity="0" />
                   </linearGradient>
                 </defs>
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <line
+                    key={i}
+                    x1="0"
+                    x2="800"
+                    y1={90 + i * 70}
+                    y2={90 + i * 70}
+                    stroke="rgba(0,0,0,0.05)"
+                    strokeWidth="1"
+                  />
+                ))}
                 <path
-                  d="M 0,300 L 30,280 L 60,290 L 90,260 L 120,240 L 150,250 L 180,220 L 210,200 L 240,180 L 270,190 L 300,160 L 300,400 L 0,400 Z"
-                  fill="url(#chartFill)"
+                  d="M 0,340 L 60,320 L 120,330 L 180,290 L 240,270 L 300,285 L 360,240 L 420,220 L 480,195 L 540,210 L 600,175 L 660,160 L 720,145 L 800,130 L 800,450 L 0,450 Z"
+                  fill="url(#hfill)"
                 />
                 <path
-                  d="M 0,300 L 30,280 L 60,290 L 90,260 L 120,240 L 150,250 L 180,220 L 210,200 L 240,180 L 270,190 L 300,160"
-                  stroke="#d4a648"
-                  strokeWidth="1.5"
+                  d="M 0,340 L 60,320 L 120,330 L 180,290 L 240,270 L 300,285 L 360,240 L 420,220 L 480,195 L 540,210 L 600,175 L 660,160 L 720,145 L 800,130"
+                  stroke="#0071e3"
+                  strokeWidth="2"
                   fill="none"
                 />
-                {([
-                  [50, 280, 270, "#3ecf8e"],
-                  [110, 245, 240, "#3ecf8e"],
-                  [180, 215, 210, "#3ecf8e"],
-                  [240, 175, 175, "#ff5d5d"],
-                ] as Array<[number, number, number, string]>).map(([x, yH, yL, c], i) => (
+                {[
+                  [90, 320, 308],
+                  [200, 285, 278],
+                  [310, 280, 270],
+                  [420, 215, 210],
+                  [560, 205, 198],
+                  [680, 155, 148],
+                ].map(([x, yH, yL], i) => (
                   <line
                     key={i}
                     x1={x}
                     x2={x}
                     y1={yH}
                     y2={yL + 20}
-                    stroke={c}
+                    stroke="#2da44e"
                     strokeWidth="3"
                   />
                 ))}
               </svg>
-              <div className="absolute bottom-4 left-4 right-4 grid grid-cols-3 gap-2 text-[10px] font-mono">
-                <div className="glass-card px-2 py-1.5">
-                  <div className="text-cream-dim">TREND</div>
-                  <div className="text-signal-up">UP</div>
-                </div>
-                <div className="glass-card px-2 py-1.5">
-                  <div className="text-cream-dim">RSI</div>
-                  <div className="text-cream">62.4</div>
-                </div>
-                <div className="glass-card px-2 py-1.5">
-                  <div className="text-cream-dim">VOL</div>
-                  <div className="text-gold">HIGH</div>
-                </div>
+              <div className="absolute top-4 left-4 flex gap-2 text-micro">
+                <span className="bg-surface/95 px-2 py-1 rounded text-ink border border-rule">
+                  Trend · <span className="text-[#2da44e] font-semibold">UP</span>
+                </span>
+                <span className="bg-surface/95 px-2 py-1 rounded text-ink border border-rule">
+                  RSI · 62.4
+                </span>
+                <span className="bg-surface/95 px-2 py-1 rounded text-ink border border-rule">
+                  Vol · HIGH
+                </span>
               </div>
             </div>
-            <p className="mt-3 text-xs font-mono text-cream-dim">
-              Illustrative. Not a trade recommendation.
-            </p>
           </div>
+          <p className="mt-3 text-micro text-muted-faint">
+            Illustrative. Not a trade recommendation.
+          </p>
         </div>
       </div>
     </section>

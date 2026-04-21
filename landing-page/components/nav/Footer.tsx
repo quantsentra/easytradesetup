@@ -39,34 +39,25 @@ const cols = [
 
 export default function Footer() {
   return (
-    <footer className="relative mt-32 border-t border-ink-border">
-      <div className="container-x py-20">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10">
+    <footer className="bg-page hairline-t mt-20">
+      <div className="container-wide py-10">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-caption">
           <div className="col-span-2 md:col-span-1">
-            <Link href="/" className="inline-flex items-center gap-2.5">
-              <span className="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-gold-gradient">
-                <span className="absolute inset-0.5 rounded-full bg-ink" />
-                <span className="relative font-display text-gold text-base leading-none">E</span>
-              </span>
-              <span className="font-display text-lg">
-                Easy<span className="italic text-gold">Trade</span>Setup
-              </span>
+            <Link href="/" className="text-ink font-medium">
+              EasyTradeSetup
             </Link>
-            <p className="mt-4 text-sm text-cream-dim max-w-xs leading-relaxed">
+            <p className="mt-3 text-muted-soft max-w-xs">
               One indicator. Eight tools. Every market.
             </p>
           </div>
 
           {cols.map((col) => (
             <div key={col.title}>
-              <div className="label-kicker">{col.title}</div>
-              <ul className="mt-4 space-y-2.5">
+              <div className="text-muted-faint font-semibold">{col.title}</div>
+              <ul className="mt-3 space-y-2.5">
                 {col.links.map((l) => (
                   <li key={l.href}>
-                    <Link
-                      href={l.href}
-                      className="text-sm text-cream-muted hover:text-cream transition-colors"
-                    >
+                    <Link href={l.href} className="text-muted hover:text-ink transition-colors">
                       {l.label}
                     </Link>
                   </li>
@@ -76,13 +67,16 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="hairline mt-16 pt-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <p className="text-xs text-cream-dim font-mono">
+        <div className="hairline-t mt-10 pt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+          <p className="text-micro text-muted-faint">
             © {new Date().getFullYear()} EasyTradeSetup. Built in India.
           </p>
-          <p className="text-xs text-cream-dim max-w-2xl">
-            Trading in securities involves risk. Past performance does not guarantee future results.
-            See full <Link href="/legal/disclaimer" className="text-cream underline underline-offset-2">trading disclaimer</Link>.
+          <p className="text-micro text-muted-faint max-w-2xl">
+            Trading involves risk. Past performance does not guarantee future results. See the full{" "}
+            <Link href="/legal/disclaimer" className="link-apple">
+              trading disclaimer
+            </Link>
+            .
           </p>
         </div>
       </div>

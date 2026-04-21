@@ -4,111 +4,112 @@
 
 @layer base {
   :root {
-    --font-display: "Instrument Serif", Georgia, serif;
-    --font-sans: "Inter", system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+    --font-inter: ui-sans-serif, system-ui;
+    --sk-focus-color: #0071e3;
   }
 
   html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    @apply bg-ink text-cream font-sans;
-    background-image:
-      radial-gradient(ellipse at 20% 0%, rgba(212, 166, 72, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 100%, rgba(212, 166, 72, 0.04) 0%, transparent 50%);
-    background-attachment: fixed;
+    @apply bg-page text-ink font-text;
+    font-size: 17px;
+    line-height: 1.47;
+    letter-spacing: -0.022em;
   }
 
   ::selection {
-    @apply bg-gold text-ink;
+    background: rgba(0, 113, 227, 0.2);
   }
 
-  /* Noise grain overlay */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: -100%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
-    opacity: 0.035;
-    pointer-events: none;
-    z-index: 100;
-    animation: grain 8s steps(10) infinite;
+  :focus-visible {
+    outline: 2px solid var(--sk-focus-color);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    border-radius: inherit;
   }
 }
 
 @layer components {
   .container-x {
-    @apply max-w-7xl mx-auto px-6 md:px-10;
+    @apply max-w-[980px] mx-auto px-6 md:px-10;
   }
 
-  .hairline {
-    @apply border-t border-ink-border/60;
+  .container-wide {
+    @apply max-w-[1200px] mx-auto px-6 md:px-10;
   }
 
-  .label-kicker {
-    @apply font-mono text-xs uppercase tracking-[0.2em] text-gold;
+  .h-hero {
+    @apply font-display text-display-hero font-semibold text-ink;
   }
 
-  .link-underline {
-    @apply relative inline-block;
-  }
-  .link-underline::after {
-    content: "";
-    @apply absolute left-0 -bottom-0.5 w-full h-px bg-current origin-right scale-x-0 transition-transform duration-300;
-  }
-  .link-underline:hover::after {
-    @apply origin-left scale-x-100;
+  .h-section {
+    @apply font-display text-display-section font-semibold text-ink;
   }
 
-  .text-balance {
-    text-wrap: balance;
+  .h-tile {
+    @apply font-display text-display-tile font-normal text-ink;
   }
 
-  .glass-card {
-    @apply bg-ink-card/60 backdrop-blur-xl border border-ink-border rounded-2xl;
+  .h-card {
+    @apply font-display text-card-title font-bold text-ink;
   }
 
-  .gold-border {
-    position: relative;
-  }
-  .gold-border::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    padding: 1px;
-    border-radius: inherit;
-    background: linear-gradient(135deg, rgba(240, 192, 90, 0.6), rgba(212, 166, 72, 0.1), rgba(138, 109, 42, 0.4));
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
+  .body-muted {
+    @apply text-muted text-body-lg;
   }
 
-  .number-mono {
-    @apply font-mono tabular-nums;
-    font-feature-settings: "tnum" 1, "ss01" 1;
-  }
-}
-
-@layer utilities {
-  .bg-grid {
-    background-image:
-      linear-gradient(to right, rgba(212, 166, 72, 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(212, 166, 72, 0.06) 1px, transparent 1px);
-    background-size: 48px 48px;
+  .link-apple {
+    @apply text-blue-link hover:underline underline-offset-2;
   }
 
-  .mask-fade-b {
-    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+  .link-pill {
+    @apply inline-flex items-center gap-1 rounded-pill text-blue-link hover:underline underline-offset-2;
   }
 
-  .mask-fade-r {
-    mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  .chevron::after {
+    content: " \203A";
+    display: inline-block;
+    transition: transform 0.2s ease;
+  }
+
+  .chevron:hover::after {
+    transform: translateX(2px);
+  }
+
+  .section-light {
+    @apply bg-page;
+  }
+
+  .section-white {
+    @apply bg-surface;
+  }
+
+  .hairline-b {
+    @apply border-b border-rule;
+  }
+
+  .hairline-t {
+    @apply border-t border-rule;
+  }
+
+  .card-apple {
+    @apply bg-page rounded-[18px];
+  }
+
+  .card-white {
+    @apply bg-surface rounded-[18px];
+  }
+
+  .card-elevated {
+    @apply bg-surface rounded-[18px] shadow-card;
   }
 }

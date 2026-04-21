@@ -44,29 +44,33 @@ export default function FAQPage() {
     <>
       <PageHeader
         eyebrow="FAQ"
-        title={<>Asked. And <span className="italic text-gold">answered.</span></>}
+        title={<>Asked. And answered.</>}
         lede="If anything is missing, email hello@easytradesetup.com and we'll add it."
       />
-      <section className="container-x py-16 space-y-16">
-        {faqs.map((sec) => (
-          <div key={sec.cat}>
-            <div className="label-kicker mb-6">{sec.cat}</div>
-            <div className="space-y-3">
-              {sec.items.map(([q, a], i) => (
-                <details
-                  key={i}
-                  className="group glass-card p-6 open:border-gold/40 transition-colors [&_summary::-webkit-details-marker]:hidden"
-                >
-                  <summary className="flex items-start justify-between gap-4 cursor-pointer list-none">
-                    <span className="font-display text-xl">{q}</span>
-                    <span className="mt-1 text-gold transition-transform group-open:rotate-45">+</span>
-                  </summary>
-                  <p className="mt-3 text-cream-muted leading-relaxed">{a}</p>
-                </details>
-              ))}
+      <section className="bg-surface">
+        <div className="container-x py-16 space-y-12">
+          {faqs.map((sec) => (
+            <div key={sec.cat}>
+              <div className="text-micro font-semibold text-blue-link uppercase tracking-wider mb-4">
+                {sec.cat}
+              </div>
+              <div className="card-apple p-2 md:p-3">
+                {sec.items.map(([q, a], i) => (
+                  <details
+                    key={i}
+                    className="group border-b border-rule last:border-b-0 [&_summary::-webkit-details-marker]:hidden"
+                  >
+                    <summary className="flex items-center justify-between gap-4 cursor-pointer list-none px-6 py-5">
+                      <span className="text-body text-ink font-medium">{q}</span>
+                      <span className="text-blue-link text-[20px] leading-none transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <p className="px-6 pb-6 text-caption text-muted leading-relaxed">{a}</p>
+                  </details>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
     </>
   );

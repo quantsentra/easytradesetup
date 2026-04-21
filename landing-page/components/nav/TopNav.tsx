@@ -12,60 +12,56 @@ const navItems = [
 ];
 
 export default function TopNav() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (open) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "backdrop-blur-xl bg-ink/70 border-b border-ink-border"
-          : "bg-transparent"
-      }`}
+      className="sticky top-0 z-50"
+      style={{
+        backgroundColor: "rgba(245, 245, 247, 0.72)",
+        backdropFilter: "saturate(180%) blur(20px)",
+        WebkitBackdropFilter: "saturate(180%) blur(20px)",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
+      }}
     >
-      <div className="container-x flex items-center justify-between h-16">
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <span className="relative inline-flex items-center justify-center w-7 h-7 rounded-full bg-gold-gradient">
-            <span className="absolute inset-0.5 rounded-full bg-ink" />
-            <span className="relative font-display text-gold text-base leading-none">E</span>
-          </span>
-          <span className="font-display text-lg tracking-tight">
-            Easy<span className="italic text-gold">Trade</span>Setup
-          </span>
+      <div className="container-wide flex items-center justify-between h-12">
+        <Link href="/" aria-label="EasyTradeSetup home" className="flex items-center">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden>
+            <circle cx="14" cy="14" r="13" stroke="#1d1d1f" strokeWidth="1.5" />
+            <path d="M8 15l4 3 8-8" stroke="#1d1d1f" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <span className="ml-2 font-text text-[15px] font-medium text-ink">EasyTradeSetup</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8">
+        <nav aria-label="Primary" className="hidden md:flex items-center gap-7">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="link-underline text-sm text-cream-muted hover:text-cream transition-colors"
+              className="text-micro text-muted hover:text-ink transition-colors"
             >
               {item.label}
             </Link>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
-          <Link
-            href="/contact"
-            className="text-sm text-cream-muted hover:text-cream transition-colors"
-          >
+        <div className="hidden md:flex items-center gap-4">
+          <Link href="/contact" className="text-micro text-muted hover:text-ink transition-colors">
             Contact
           </Link>
           <Link
             href="/checkout"
-            className="inline-flex items-center gap-1.5 rounded-full bg-cream text-ink px-4 py-2 text-sm font-medium hover:bg-gold transition-colors"
+            className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-3.5 py-1.5 text-caption font-normal hover:brightness-110 transition-all"
           >
-            Get it — ₹2,499
-            <span aria-hidden>→</span>
+            Buy ₹2,499
           </Link>
         </div>
 
@@ -73,22 +69,30 @@ export default function TopNav() {
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="md:hidden w-9 h-9 inline-flex flex-col items-center justify-center gap-1.5"
+          className="md:hidden w-9 h-9 inline-flex flex-col items-center justify-center gap-[5px]"
         >
-          <span className={`block w-5 h-px bg-cream transition-transform ${open ? "translate-y-[3px] rotate-45" : ""}`} />
-          <span className={`block w-5 h-px bg-cream transition-transform ${open ? "-translate-y-[3px] -rotate-45" : ""}`} />
+          <span
+            className={`block w-[18px] h-px bg-ink transition-transform ${
+              open ? "translate-y-[3px] rotate-45" : ""
+            }`}
+          />
+          <span
+            className={`block w-[18px] h-px bg-ink transition-transform ${
+              open ? "-translate-y-[3px] -rotate-45" : ""
+            }`}
+          />
         </button>
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-ink-border bg-ink/95 backdrop-blur-xl">
-          <div className="container-x py-6 flex flex-col gap-4">
+        <div className="md:hidden bg-page border-t border-rule">
+          <div className="container-x py-8 flex flex-col">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="text-lg font-display"
+                className="py-4 text-[24px] font-normal text-ink hairline-b"
               >
                 {item.label}
               </Link>
@@ -96,16 +100,16 @@ export default function TopNav() {
             <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="text-lg font-display"
+              className="py-4 text-[24px] font-normal text-ink hairline-b"
             >
               Contact
             </Link>
             <Link
               href="/checkout"
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center justify-center rounded-full bg-cream text-ink px-5 py-3 font-medium"
+              className="mt-6 inline-flex items-center justify-center rounded-lg bg-blue text-white px-5 py-3 font-normal"
             >
-              Get it — ₹2,499 →
+              Buy ₹2,499
             </Link>
           </div>
         </div>

@@ -36,35 +36,37 @@ export default function UpdatesPage() {
     <>
       <PageHeader
         eyebrow="Daily Updates"
-        title={<>Pre-market. <span className="italic text-gold">Every trading day.</span></>}
+        title={<>Pre-market. Every trading day.</>}
         lede="Free for Golden Indicator customers. Delivered to your inbox by 8:45 AM IST."
       />
 
-      <section className="container-x py-16">
-        <div className="space-y-4">
-          {updates.map((u, i) => (
-            <article key={i} className="glass-card p-8">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="font-mono text-xs text-cream-dim">{u.date}</div>
-                <Badge tone="gold">{u.bias}</Badge>
-              </div>
-              <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div>
-                  <div className="label-kicker">Nifty</div>
-                  <div className="mt-1 font-mono text-xl">{u.nifty}</div>
+      <section className="bg-surface">
+        <div className="container-wide py-16">
+          <div className="space-y-4 max-w-[900px] mx-auto">
+            {updates.map((u, i) => (
+              <article key={i} className="card-apple p-10">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div className="text-caption text-muted-faint">{u.date}</div>
+                  <Badge tone="blue">{u.bias}</Badge>
                 </div>
-                <div>
-                  <div className="label-kicker">BankNifty</div>
-                  <div className="mt-1 font-mono text-xl">{u.bn}</div>
+                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6">
+                  <div>
+                    <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">Nifty</div>
+                    <div className="mt-1 text-display-tile font-semibold text-ink tabular-nums">{u.nifty}</div>
+                  </div>
+                  <div>
+                    <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">BankNifty</div>
+                    <div className="mt-1 text-display-tile font-semibold text-ink tabular-nums">{u.bn}</div>
+                  </div>
                 </div>
-              </div>
-              <p className="mt-6 text-cream-muted leading-relaxed">{u.note}</p>
-            </article>
-          ))}
+                <p className="mt-6 text-body text-muted leading-relaxed">{u.note}</p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-10 text-center text-caption text-muted-faint">
+            Archive of past updates available to customers only.
+          </p>
         </div>
-        <p className="mt-10 text-center text-sm text-cream-dim">
-          Archive of past updates available to customers only.
-        </p>
       </section>
     </>
   );

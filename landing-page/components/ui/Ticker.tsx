@@ -12,15 +12,19 @@ const items = [
 export default function Ticker() {
   const doubled = [...items, ...items];
   return (
-    <div className="relative overflow-hidden border-y border-ink-border bg-ink-soft/40 py-3 mask-fade-r">
-      <div className="flex gap-10 animate-ticker whitespace-nowrap">
+    <div className="relative overflow-hidden hairline-t hairline-b bg-surface py-2.5">
+      <style>{`
+        @keyframes ticker-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .ticker-track { animation: ticker-scroll 40s linear infinite; }
+      `}</style>
+      <div className="ticker-track flex gap-10 whitespace-nowrap">
         {doubled.map((it, i) => {
           const up = it.chg.startsWith("+");
           return (
-            <div key={i} className="flex items-center gap-2.5 font-mono text-xs">
-              <span className="text-cream-dim">{it.sym}</span>
-              <span className="number-mono text-cream">{it.px}</span>
-              <span className={up ? "text-signal-up" : "text-signal-down"}>{it.chg}</span>
+            <div key={i} className="flex items-center gap-2 text-micro">
+              <span className="text-muted-faint">{it.sym}</span>
+              <span className="text-ink tabular-nums">{it.px}</span>
+              <span className={up ? "text-[#2da44e]" : "text-[#d13438]"}>{it.chg}</span>
             </div>
           );
         })}

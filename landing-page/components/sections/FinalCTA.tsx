@@ -1,19 +1,22 @@
-import Button from "@/components/ui/Button";
+import Link from "next/link";
 
 export default function FinalCTA() {
   return (
-    <section className="container-x py-24 md:py-32">
-      <div className="relative text-center max-w-3xl mx-auto">
-        <h2 className="font-display text-display-lg text-balance">
-          Your next trade deserves a <span className="italic text-gold">cleaner</span> chart.
+    <section className="bg-page">
+      <div className="container-wide py-20 md:py-28 text-center">
+        <h2 className="h-hero max-w-2xl mx-auto">
+          Your next trade deserves a cleaner chart.
         </h2>
-        <p className="mt-6 text-lg text-cream-muted text-balance">
+        <p className="mt-5 text-body-lg text-muted max-w-xl mx-auto">
           Stop stacking indicators. Start reading the market.
         </p>
-        <div className="mt-10 flex justify-center gap-3">
-          <Button variant="gold" size="lg" href="/checkout">
-            Get Golden Indicator — ₹2,499
-          </Button>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-5">
+          <Link href="/checkout" className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body">
+            Buy ₹2,499
+          </Link>
+          <Link href="/product" className="link-apple chevron">
+            Explore the tools
+          </Link>
         </div>
       </div>
     </section>

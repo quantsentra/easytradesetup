@@ -1,23 +1,24 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "ghost" | "gold";
+type Variant = "primary" | "dark" | "pill" | "pill-solid" | "ghost";
 type Size = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-1.5 rounded-full font-medium transition-all duration-200 whitespace-nowrap";
+  "inline-flex items-center justify-center gap-1 font-text transition-all whitespace-nowrap";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-cream text-ink hover:bg-gold",
-  secondary: "bg-ink-card text-cream border border-ink-border hover:border-cream/40",
-  ghost: "text-cream-muted hover:text-cream",
-  gold: "bg-gold-gradient text-ink hover:brightness-110 shadow-[0_0_40px_-10px_rgba(240,192,90,0.5)]",
+  primary: "bg-blue text-white hover:brightness-110 rounded-lg",
+  dark: "bg-ink text-white hover:brightness-110 rounded-lg",
+  pill: "text-blue-link border border-blue-link hover:bg-blue-link/5 rounded-pill",
+  "pill-solid": "bg-blue text-white hover:brightness-110 rounded-pill",
+  ghost: "text-blue-link hover:underline underline-offset-2",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "text-xs px-3 py-1.5",
-  md: "text-sm px-4 py-2",
-  lg: "text-base px-6 py-3",
+  sm: "text-caption px-3 py-1.5",
+  md: "text-body px-4 py-2",
+  lg: "text-body px-6 py-3",
 };
 
 type Props = {

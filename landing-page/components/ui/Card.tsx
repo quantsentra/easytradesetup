@@ -3,15 +3,14 @@ import type { ReactNode } from "react";
 type Props = {
   children: ReactNode;
   className?: string;
-  gold?: boolean;
+  variant?: "white" | "page" | "elevated";
 };
 
-export default function Card({ children, className = "", gold = false }: Props) {
-  return (
-    <div
-      className={`glass-card ${gold ? "gold-border" : ""} p-6 md:p-8 ${className}`}
-    >
-      {children}
-    </div>
-  );
+export default function Card({ children, className = "", variant = "white" }: Props) {
+  const v = {
+    white: "card-white",
+    page: "card-apple",
+    elevated: "card-elevated",
+  }[variant];
+  return <div className={`${v} p-8 md:p-10 ${className}`}>{children}</div>;
 }
