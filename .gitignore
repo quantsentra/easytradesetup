@@ -25,3 +25,7 @@ assets/images/*.jpeg
 secrets.json
 
 .vercel
+
+# Claude Code — per-machine local config (may contain tokens in permission entries)
+.claude/settings.local.json
+.claude/.credentials*

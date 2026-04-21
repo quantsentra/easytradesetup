@@ -1,120 +1,76 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    './app/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-  ],
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        // light mode base
-        canvas:  '#FFFFFF',
-        subtle:  '#F6F6F4',
-        raised:  '#EDEDEB',
-        // text
         ink: {
-          DEFAULT: '#0D0D0D',
-          muted:   '#6B6B6B',
-          faint:   '#A3A3A3',
-          // old aliases — ChartDemo etc still use these
-          subtle:  '#CCCCCC',
+          DEFAULT: "#0a0a0a",
+          soft: "#141414",
+          card: "#1a1a1a",
+          border: "#262626",
         },
-        // border
-        line: {
-          DEFAULT: 'rgba(0,0,0,0.08)',
-          strong:  'rgba(0,0,0,0.14)',
-          subtle:  'rgba(0,0,0,0.05)',
+        cream: {
+          DEFAULT: "#f5f0e8",
+          muted: "#b8b2a8",
+          dim: "#7a746a",
         },
-        // brand accent
         gold: {
-          DEFAULT: '#9A6E0A',
-          hover:   '#B8830C',
-          bg:      'rgba(154,110,10,0.07)',
-          border:  'rgba(154,110,10,0.2)',
-        },
-        // data colors
-        up:   '#16A34A',
-        down: '#DC2626',
-        // backward compat — old components
-        border: {
-          DEFAULT: 'rgba(0,0,0,0.08)',
-          subtle:  'rgba(0,0,0,0.05)',
-          strong:  'rgba(0,0,0,0.14)',
-        },
-        bg: {
-          primary: '#FFFFFF',
-          surface: '#F6F6F4',
-          raised:  '#EDEDEB',
-          base:    '#FFFFFF',
-        },
-        accent: {
-          blue:   '#2563EB',
-          green:  '#16A34A',
-          purple: '#7C3AED',
-          red:    '#DC2626',
-          orange: '#D97706',
+          DEFAULT: "#d4a648",
+          bright: "#f0c05a",
+          deep: "#8a6d2a",
         },
         signal: {
-          up:   '#16A34A',
-          down: '#DC2626',
+          up: "#3ecf8e",
+          down: "#ff5d5d",
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
-        mono: ['var(--font-mono)', 'JetBrains Mono', 'ui-monospace', 'monospace'],
+        display: ["var(--font-display)", "serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
-      borderRadius: {
-        card: '12px',
-        xl2:  '16px',
-        xl3:  '20px',
-      },
-      boxShadow: {
-        card:   '0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.06)',
-        'card-hover': '0 4px 16px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.07)',
-        hero:   '0 8px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06)',
-        // stubs for old refs
-        glass:       '0 1px 3px rgba(0,0,0,0.07)',
-        glow:        'none',
-        'glow-green': 'none',
-        'glow-purple': 'none',
-        gold:         '0 0 0 1px rgba(154,110,10,0.2)',
-        'gold-strong': '0 4px 20px rgba(154,110,10,0.15)',
+      fontSize: {
+        "display-xl": ["clamp(3.5rem, 9vw, 7.5rem)", { lineHeight: "0.95", letterSpacing: "-0.03em" }],
+        "display-lg": ["clamp(2.5rem, 6vw, 4.5rem)", { lineHeight: "1", letterSpacing: "-0.025em" }],
+        "display-md": ["clamp(1.75rem, 3.5vw, 2.75rem)", { lineHeight: "1.1", letterSpacing: "-0.02em" }],
       },
       animation: {
-        'fade-up':   'fadeUp 0.45s cubic-bezier(0.22,1,0.36,1) both',
-        'fade-down': 'fadeDown 0.45s cubic-bezier(0.22,1,0.36,1) both',
-        'fade-in':   'fadeIn 0.35s ease both',
-        'pulse-soft': 'pulseSoft 2.5s ease-in-out infinite',
-        // stubs
-        float:        'none',
-        'float-slow': 'none',
-        'glow-pulse': 'none',
-        shimmer:      'none',
-        'slide-up':   'fadeUp 0.4s cubic-bezier(0.22,1,0.36,1) both',
-        'blur-in':    'fadeUp 0.45s cubic-bezier(0.22,1,0.36,1) both',
+        "ticker": "ticker 40s linear infinite",
+        "grain": "grain 8s steps(10) infinite",
+        "shimmer": "shimmer 3s ease-in-out infinite",
+        "fade-up": "fadeUp 0.8s ease-out forwards",
       },
       keyframes: {
+        ticker: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        grain: {
+          "0%, 100%": { transform: "translate(0, 0)" },
+          "10%": { transform: "translate(-5%, -10%)" },
+          "30%": { transform: "translate(3%, -15%)" },
+          "50%": { transform: "translate(-10%, 5%)" },
+          "70%": { transform: "translate(15%, 10%)" },
+          "90%": { transform: "translate(5%, -5%)" },
+        },
+        shimmer: {
+          "0%, 100%": { opacity: "0.3" },
+          "50%": { opacity: "0.7" },
+        },
         fadeUp: {
-          '0%':   { opacity: '0', transform: 'translateY(16px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
+          "0%": { opacity: "0", transform: "translateY(24px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        fadeDown: {
-          '0%':   { opacity: '0', transform: 'translateY(-12px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        fadeIn: {
-          '0%':   { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        pulseSoft: {
-          '0%, 100%': { opacity: '0.4' },
-          '50%':      { opacity: '1' },
-        },
+      },
+      backgroundImage: {
+        "grid-fade": "linear-gradient(180deg, rgba(212,166,72,0.04) 0%, transparent 100%)",
+        "gold-gradient": "linear-gradient(135deg, #f0c05a 0%, #d4a648 50%, #8a6d2a 100%)",
       },
     },
   },
   plugins: [],
-}
+};
 
-export default config
+export default config;

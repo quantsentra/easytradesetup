@@ -1,15 +1,22 @@
-interface BadgeProps {
-  children: React.ReactNode
-  variant?: 'gold' | 'green' | 'neutral' | 'blue' | 'red' | 'orange'
-}
+import type { ReactNode } from "react";
 
-export default function Badge({ children, variant = 'neutral' }: BadgeProps) {
-  const base = 'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium border tracking-widest uppercase'
-  if (variant === 'gold') {
-    return <span className={`${base} bg-gold-bg text-gold border-gold-border`}>{children}</span>
-  }
-  if (variant === 'green') {
-    return <span className={`${base} bg-up/8 text-up border-up/20`}>{children}</span>
-  }
-  return <span className={`${base} bg-subtle text-ink-faint border-line`}>{children}</span>
+type Props = {
+  children: ReactNode;
+  tone?: "default" | "gold" | "signal";
+  className?: string;
+};
+
+export default function Badge({ children, tone = "default", className = "" }: Props) {
+  const tones: Record<string, string> = {
+    default: "bg-ink-card border-ink-border text-cream-muted",
+    gold: "bg-gold/10 border-gold/30 text-gold",
+    signal: "bg-signal-up/10 border-signal-up/30 text-signal-up",
+  };
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-mono ${tones[tone]} ${className}`}
+    >
+      {children}
+    </span>
+  );
 }

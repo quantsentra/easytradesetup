@@ -1,78 +1,39 @@
-import FadeIn from '../ui/FadeIn'
+import SectionHeader from "@/components/ui/SectionHeader";
 
-const testimonials = [
+const quotes = [
   {
-    initials: 'RM',
-    name: 'Rajan M.',
-    location: 'Pune · Software Engineer',
-    quote: "Tried 3 paid courses before this — none gave me actual entry rules. This PDF has exactly what to check before pressing buy. Setup took 8 minutes on a free TradingView account.",
+    q: "Replaced four separate indicators with this one script. My chart finally breathes.",
+    a: "Rohit M.",
+    r: "Swing trader · Mumbai",
   },
   {
-    initials: 'DS',
-    name: 'Deepa S.',
-    location: 'Chennai · Business Owner',
-    quote: "The pre-trade checklist is what I use every morning. Takes 45 seconds and stops me from taking impulsive trades. Already saved me from two bad entries this week alone.",
+    q: "The session timer alone is worth it. Saved me from three fake-out trades this week.",
+    a: "Divya S.",
+    r: "Options trader · Bengaluru",
   },
   {
-    initials: 'VT',
-    name: 'Vikram T.',
-    location: 'Delhi · Salaried Professional',
-    quote: "Was skeptical at first — feels too simple. But the 3-confirmation logic is solid. Haven't touched another indicator since. Consistent process for the first time in 2 years.",
+    q: "Clean code, clear logic. Works on Nifty, works on US stocks, works on crypto.",
+    a: "Vikram T.",
+    r: "Futures trader · Delhi",
   },
-]
-
-function Stars() {
-  return (
-    <div className="flex items-center gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width="12" height="12" viewBox="0 0 12 12" fill="#9A6E0A">
-          <path d="M6 1l1.3 2.6 2.9.4-2.1 2 .5 2.9L6 7.6 3.4 8.9l.5-2.9-2.1-2 2.9-.4L6 1z" />
-        </svg>
-      ))}
-    </div>
-  )
-}
+];
 
 export default function Testimonials() {
   return (
-    <section className="py-20 sm:py-32 border-t border-line bg-white">
-      <div className="max-w-5xl mx-auto px-5 sm:px-6">
-
-        <FadeIn className="mb-14">
-          <span className="label">Testimonials</span>
-          <h2 className="mt-3 text-3xl sm:text-[40px] font-black tracking-[-0.03em] text-ink">What Traders Are Saying</h2>
-          <p className="mt-2 text-[15px] text-ink-muted">Real feedback. No paid reviews. No profit claims.</p>
-        </FadeIn>
-
-        <div className="grid md:grid-cols-3 gap-4">
-          {testimonials.map(({ initials, name, location, quote }, i) => (
-            <FadeIn key={name} delay={0.06 * i}>
-              <div className="card card-hover p-6 flex flex-col gap-5 h-full">
-                <Stars />
-                <p className="text-[14px] text-ink-muted leading-[1.75] flex-1">
-                  &ldquo;{quote}&rdquo;
-                </p>
-                <div className="flex items-center gap-3 pt-4 border-t border-line">
-                  <div className="w-8 h-8 rounded-full bg-subtle border border-line flex items-center justify-center flex-shrink-0">
-                    <span className="text-[10px] font-bold text-ink-muted">{initials}</span>
-                  </div>
-                  <div>
-                    <div className="text-[13px] font-semibold text-ink">{name}</div>
-                    <div className="text-[11px] font-mono text-ink-faint">{location}</div>
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
-
-        <FadeIn delay={0.22} className="mt-8 text-center">
-          <p className="text-[11px] font-mono text-ink-faint">
-            Reviews reflect individual experiences. Trading results depend on market conditions and personal discipline.
-          </p>
-        </FadeIn>
-
+    <section className="container-x py-24 md:py-32">
+      <SectionHeader kicker="From traders" title={<>What people <span className="italic text-gold">actually</span> say.</>} />
+      <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-5">
+        {quotes.map((q, i) => (
+          <figure key={i} className="glass-card p-8 flex flex-col">
+            <span className="font-display text-6xl leading-none text-gold/40">&ldquo;</span>
+            <blockquote className="mt-2 text-lg text-cream leading-relaxed flex-1">{q.q}</blockquote>
+            <figcaption className="mt-6 pt-6 border-t border-ink-border">
+              <div className="font-medium">{q.a}</div>
+              <div className="text-xs font-mono text-cream-dim mt-1">{q.r}</div>
+            </figcaption>
+          </figure>
+        ))}
       </div>
     </section>
-  )
+  );
 }

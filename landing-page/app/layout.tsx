@@ -1,109 +1,75 @@
-import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
-import { Toaster } from 'sonner'
-import './globals.css'
+import type { Metadata } from "next";
+import { Instrument_Serif, Inter, JetBrains_Mono } from "next/font/google";
+import TopNav from "@/components/nav/TopNav";
+import Footer from "@/components/nav/Footer";
+import "./globals.css";
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
+const display = Instrument_Serif({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const sans = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 const mono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-mono',
-  display: 'swap',
-  weight: ['400', '500', '600', '700'],
-})
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: 'EasyTradeSetup — Golden Indicator for TradingView | NSE F&O',
+  metadataBase: new URL("https://easytradesetup.com"),
+  title: {
+    default: "EasyTradeSetup — Golden Indicator",
+    template: "%s · EasyTradeSetup",
+  },
   description:
-    'The Golden Indicator — proprietary TradingView Pine Script for Nifty, BankNifty & global markets. Clear BUY/SELL signals, trade logic PDF, daily market updates. ₹2,499 one-time.',
+    "Golden Indicator — proprietary TradingView Pine Script with 8 built-in tools for NSE F&O and global markets. Instant delivery, ₹2,499 one-time.",
   keywords: [
-    'Nifty intraday strategy',
-    'BankNifty trading system',
-    'TradingView Pine Script India',
-    'NSE F&O strategy',
-    'Golden Indicator TradingView',
-    'intraday trading system India',
-    'Nifty 50 trading strategy',
-    'F&O trading system',
-    'NSE trading system buy sell signal',
-    'TradingView indicator Nifty BankNifty',
+    "TradingView indicator",
+    "Pine Script",
+    "NSE F&O",
+    "Nifty",
+    "BankNifty",
+    "intraday trading",
+    "Indian stock market",
   ],
-  robots: { index: true, follow: true },
+  authors: [{ name: "EasyTradeSetup" }],
   openGraph: {
-    title: 'EasyTradeSetup — Golden Indicator for TradingView',
-    description: 'Proprietary Pine Script for Nifty & global markets. Clear BUY/SELL signals. ₹2,499 one-time payment.',
-    url: 'https://www.easytradesetup.com',
-    siteName: 'EasyTradeSetup',
-    type: 'website',
-    locale: 'en_IN',
+    type: "website",
+    locale: "en_IN",
+    url: "https://easytradesetup.com",
+    siteName: "EasyTradeSetup",
+    title: "EasyTradeSetup — Golden Indicator",
+    description:
+      "One indicator. Eight tools. Every market. Proprietary TradingView Pine Script for serious traders.",
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'EasyTradeSetup — Golden Indicator for TradingView',
-    description: 'Proprietary Pine Script for Nifty & global markets. ₹2,499 one-time.',
+    card: "summary_large_image",
+    title: "EasyTradeSetup — Golden Indicator",
+    description:
+      "One indicator. Eight tools. Every market. ₹2,499 one-time.",
   },
-  alternates: {
-    canonical: 'https://www.easytradesetup.com',
-  },
-}
-
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    {
-      '@type': 'WebSite',
-      name: 'EasyTradeSetup',
-      url: 'https://easytradesetup.com',
-    },
-    {
-      '@type': 'Product',
-      name: 'Golden Indicator Pack',
-      description:
-        'Proprietary TradingView Pine Script v5 for Nifty, BankNifty & global markets. Includes indicator script, trade logic PDF, risk calculator, and daily market updates.',
-      brand: { '@type': 'Brand', name: 'EasyTradeSetup' },
-      offers: [
-        {
-          '@type': 'Offer',
-          name: 'Golden Indicator Pack',
-          price: '2499',
-          priceCurrency: 'INR',
-          availability: 'https://schema.org/PreOrder',
-          url: 'https://www.easytradesetup.com/#pricing',
-        },
-      ],
-    },
-  ],
-}
+  robots: { index: true, follow: true },
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${inter.variable} ${mono.variable}`}>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-      </head>
+    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
       <body>
-        {children}
-        <Toaster
-          position="bottom-center"
-          toastOptions={{
-            style: {
-              background: '#141414',
-              border: '1px solid rgba(255,255,255,0.09)',
-              color: '#ECECEC',
-              borderRadius: '10px',
-              fontFamily: 'var(--font-mono)',
-              fontSize: '13px',
-            },
-          }}
-        />
+        <TopNav />
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
-  )
+  );
 }

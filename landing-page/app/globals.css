@@ -2,152 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-inter: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+@layer base {
+  :root {
+    --font-display: "Instrument Serif", Georgia, serif;
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-ink text-cream font-sans;
+    background-image:
+      radial-gradient(ellipse at 20% 0%, rgba(212, 166, 72, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(212, 166, 72, 0.04) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-gold text-ink;
+  }
+
+  /* Noise grain overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: -100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 100;
+    animation: grain 8s steps(10) infinite;
+  }
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+@layer components {
+  .container-x {
+    @apply max-w-7xl mx-auto px-6 md:px-10;
+  }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  .hairline {
+    @apply border-t border-ink-border/60;
+  }
 
-body {
-  background-color: #FFFFFF;
-  color: #0D0D0D;
-  font-family: var(--font-inter);
-  line-height: 1.6;
-}
+  .label-kicker {
+    @apply font-mono text-xs uppercase tracking-[0.2em] text-gold;
+  }
 
-/* Hero warm gradient — barely perceptible */
-.hero-gradient {
-  background: radial-gradient(ellipse 80% 55% at 50% -5%, rgba(251,191,36,0.09) 0%, transparent 60%);
-}
+  .link-underline {
+    @apply relative inline-block;
+  }
+  .link-underline::after {
+    content: "";
+    @apply absolute left-0 -bottom-0.5 w-full h-px bg-current origin-right scale-x-0 transition-transform duration-300;
+  }
+  .link-underline:hover::after {
+    @apply origin-left scale-x-100;
+  }
 
-/* Very subtle dot grid on white */
-.bg-grid {
-  background-image: radial-gradient(rgba(0,0,0,0.06) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
+  .text-balance {
+    text-wrap: balance;
+  }
 
-/* Card — white surface with subtle depth */
-.card {
-  background: #FFFFFF;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.06);
-  border-radius: 12px;
-}
+  .glass-card {
+    @apply bg-ink-card/60 backdrop-blur-xl border border-ink-border rounded-2xl;
+  }
 
-.card-hover {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
+  .gold-border {
+    position: relative;
+  }
+  .gold-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(240, 192, 90, 0.6), rgba(212, 166, 72, 0.1), rgba(138, 109, 42, 0.4));
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
 
-.card-hover:hover {
-  box-shadow: 0 4px 16px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.07);
-  transform: translateY(-2px);
+  .number-mono {
+    @apply font-mono tabular-nums;
+    font-feature-settings: "tnum" 1, "ss01" 1;
+  }
 }
-
-/* Glass — light mode version for drawer */
-.glass {
-  background: rgba(255,255,255,0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(0,0,0,0.08);
-}
-
-.glass-light {
-  background: rgba(246,246,244,0.8);
-  border: 1px solid rgba(0,0,0,0.06);
-}
-
-/* Stubs — so old component refs do nothing */
-.aurora-bg, .aurora-green, .aurora-blue, .aurora-purple { background: transparent; }
-.border-beam::before { display: none; }
-.border-glow { box-shadow: none; }
-.glow-line { height: 1px; background: rgba(0,0,0,0.07); }
-.animate-glow-pulse { animation: none; }
 
 @layer utilities {
-  /* Section eyebrow */
-  .label {
-    font-size: 11px;
-    font-family: var(--font-mono);
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #A3A3A3;
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(212, 166, 72, 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(212, 166, 72, 0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
   }
 
-  /* Gold text — dark enough to read on white */
-  .text-gold {
-    color: #9A6E0A;
+  .mask-fade-b {
+    mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
   }
 
-  /* Gold gradient (headline accent) */
-  .text-gradient {
-    background: linear-gradient(135deg, #9A6E0A 0%, #C89020 50%, #9A6E0A 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .text-gradient-green {
-    background: linear-gradient(135deg, #16A34A 0%, #22C55E 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Primary CTA — black button */
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: #0D0D0D;
-    color: #FFFFFF;
-    font-weight: 700;
-    font-size: 14px;
-    padding: 12px 24px;
-    border-radius: 10px;
-    transition: background 0.15s ease;
-    cursor: pointer;
-    letter-spacing: -0.01em;
-  }
-
-  .btn-primary:hover {
-    background: #2A2A2A;
-  }
-
-  /* Secondary CTA — outline */
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: transparent;
-    color: #0D0D0D;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 12px 24px;
-    border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.14);
-    transition: border-color 0.15s ease, background 0.15s ease;
-    cursor: pointer;
-  }
-
-  .btn-secondary:hover {
-    border-color: rgba(0,0,0,0.28);
-    background: rgba(0,0,0,0.02);
-  }
-
-  /* Divider */
-  .divider {
-    height: 1px;
-    background: rgba(0,0,0,0.07);
+  .mask-fade-r {
+    mask-image: linear-gradient(to right, black 70%, transparent 100%);
   }
 }
