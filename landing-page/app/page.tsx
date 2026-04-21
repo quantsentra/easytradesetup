@@ -1,6 +1,7 @@
 import Hero from "@/components/sections/Hero";
 import WhoFor from "@/components/sections/WhoFor";
 import CleanVsNoisy from "@/components/sections/CleanVsNoisy";
+import VideoDemo from "@/components/sections/VideoDemo";
 import Bundle from "@/components/sections/Bundle";
 import HowItWorks from "@/components/sections/HowItWorks";
 import Principles from "@/components/sections/Principles";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <Hero />
       <WhoFor />
       <CleanVsNoisy />
+      <VideoDemo />
       <Bundle />
       <HowItWorks />
       <Principles />
