@@ -34,10 +34,11 @@ const feed: Record<Market, DayFeed[]> = {
           bias: "Bullish Structural",
           lastUpdate: "2h ago",
           marketView:
-            "Structural trend remains firmly bullish above 24,600. Price establishing a high-volume base at the psychological 24,800 level. Volatility expansion expected toward 25,100 if daily close sustains above yesterday's high. FII positioning remains net positive.",
+            "Structural trend remains firmly bullish above 24,600. Price establishing a high-volume base at the psychological 24,800 level. Volatility expansion expected toward 25,100 if daily close sustains above yesterday's high. FII positioning net positive three sessions running.",
           observations: [
             "Option chain shows heavy put writing at 24,700 strike — solid short-term floor.",
             "IT sector decoupling from NASDAQ weakness, showing independent strength.",
+            "VIX India compressed to 12.4 — low-vol regime supports trend continuation.",
           ],
           favorites: 248,
         },
@@ -47,10 +48,10 @@ const feed: Record<Market, DayFeed[]> = {
           bias: "Neutral",
           lastUpdate: "3h ago",
           marketView:
-            "Sideways consolidation between 2,900 and 2,980 continues. Waiting for volume confirmation before directional call. Earnings catalyst this week.",
+            "Sideways consolidation between 2,900 and 2,980 continues. Waiting for volume confirmation before directional call. Q4 earnings catalyst Friday — positioning cautious.",
           observations: [
-            "50-day MA flattening — momentum fading.",
-            "Pre-earnings IV elevated; options premium rich.",
+            "50-day MA flattening — momentum fading ahead of results.",
+            "Pre-earnings IV elevated; options premium rich vs historical baseline.",
           ],
           favorites: 112,
         },
@@ -60,7 +61,7 @@ const feed: Record<Market, DayFeed[]> = {
           bias: "Bullish",
           lastUpdate: "2h ago",
           marketView:
-            "Relative strength outperforms broader Nifty. Sustained close above 54,000 opens path to 54,800. Private bank basket leading.",
+            "Relative strength outperforms broader Nifty. Sustained close above 54,000 opens path to 54,800. Private bank basket leading; PSU banks catching up.",
           observations: [
             "HDFC Bank + ICICI Bank contributing 60% of index gains.",
             "FII long build-up in index futures for 3 sessions straight.",
@@ -73,7 +74,7 @@ const feed: Record<Market, DayFeed[]> = {
           bias: "Bullish",
           lastUpdate: "4h ago",
           marketView:
-            "Cleanly broken consolidation. Next resistance at 1,740, support retest zone 1,700. Momentum healthy.",
+            "Cleanly broken consolidation. Next resistance at 1,740, support retest zone 1,700. Momentum healthy, volume confirms.",
           observations: [
             "Delivery volume above 20-day average for 3 sessions.",
             "Mutual fund accumulation visible in bulk deals.",
@@ -83,28 +84,140 @@ const feed: Record<Market, DayFeed[]> = {
       ],
     },
     {
-      date: "2026-04-20",
-      label: "Yesterday, April 20, 2026",
+      date: "2026-04-18",
+      label: "Friday, April 18, 2026",
       symbols: [
         {
           code: "NIFTY 50",
           name: "India Index",
           bias: "Bullish",
-          lastUpdate: "1d ago",
+          lastUpdate: "3d ago",
           marketView:
-            "Strong session close at 24,740. High-volume zone flagged between 10:15 – 11:00 IST. BankNifty leading on relative strength into close.",
+            "Weekly expiry closed above max-pain at 24,700. Short-covering accelerated in last 90 minutes. Strong setup into next week's monthly F&O expiry.",
           observations: [
             "Breadth positive — 34 of 50 constituents closed green.",
             "Volume 18% above 20-day average on close.",
+            "USD/INR stable at 83.4; no FX headwind.",
           ],
-          favorites: 201,
+          favorites: 321,
+        },
+        {
+          code: "BANKNIFTY",
+          name: "Banking Index",
+          bias: "Bullish",
+          lastUpdate: "3d ago",
+          marketView:
+            "Led broader market on expiry. Closed at 53,980, just below key 54,000 round. Options writers rolling calls higher — directional bias up.",
+          observations: [
+            "PSU bank rally added 180 points to index.",
+            "Short rollover cost lowest in 4 weeks.",
+          ],
+          favorites: 164,
+        },
+      ],
+    },
+    {
+      date: "2026-04-16",
+      label: "Wednesday, April 16, 2026",
+      symbols: [
+        {
+          code: "NIFTY 50",
+          name: "India Index",
+          bias: "Range",
+          lastUpdate: "5d ago",
+          marketView:
+            "Mid-week consolidation between 24,520 and 24,680. Mean reversion strategy preferred over momentum. Avoid breakout entries until volume confirms.",
+          observations: [
+            "Range-bound session; 13 of last 15 bars inside prior range.",
+            "Advance-decline flat at 1:1.",
+          ],
+          favorites: 89,
+        },
+      ],
+    },
+    {
+      date: "2026-04-14",
+      label: "Monday, April 14, 2026",
+      symbols: [
+        {
+          code: "NIFTY 50",
+          name: "India Index",
+          bias: "Bullish",
+          lastUpdate: "1w ago",
+          marketView:
+            "Gap-up open on positive global cues. Held above 24,500 through session — bulls defended key level. Next resistance 24,700.",
+          observations: [
+            "Asian markets green; Nikkei +1.2%, Hang Seng +0.9%.",
+            "Crude held below $78 — positive for fuel importers.",
+          ],
+          favorites: 142,
         },
       ],
     },
   ],
-  US: [],
-  Gold: [],
-  BTC: [],
+  US: [
+    {
+      date: "2026-04-18",
+      label: "Friday, April 18, 2026",
+      symbols: [
+        {
+          code: "SPX",
+          name: "S&P 500",
+          bias: "Neutral",
+          lastUpdate: "3d ago",
+          marketView:
+            "Choppy tape ahead of earnings season. Index pinned near 5,180 weekly pivot. Regional banks weighing on breadth.",
+          observations: [
+            "VIX bumped to 16.2 — mild risk-off signal.",
+            "Tech leadership narrowing to top 7 names.",
+          ],
+          favorites: 67,
+        },
+      ],
+    },
+  ],
+  Gold: [
+    {
+      date: "2026-04-18",
+      label: "Friday, April 18, 2026",
+      symbols: [
+        {
+          code: "XAU/USD",
+          name: "Gold Spot",
+          bias: "Bullish",
+          lastUpdate: "3d ago",
+          marketView:
+            "Breaking out of multi-week consolidation above $2,420. Next resistance $2,460. DXY weakness + geopolitical bid both supportive.",
+          observations: [
+            "Central bank buying persists — net positive flows Q1.",
+            "Silver lagging — gold/silver ratio at 82.",
+          ],
+          favorites: 54,
+        },
+      ],
+    },
+  ],
+  BTC: [
+    {
+      date: "2026-04-18",
+      label: "Friday, April 18, 2026",
+      symbols: [
+        {
+          code: "BTC/USD",
+          name: "Bitcoin",
+          bias: "Range",
+          lastUpdate: "3d ago",
+          marketView:
+            "Consolidating between $63k and $68k post-halving. No directional bias until breakout. Funding rates neutral.",
+          observations: [
+            "Spot ETF flows flat for 5 sessions.",
+            "Dominance stable at 53%.",
+          ],
+          favorites: 43,
+        },
+      ],
+    },
+  ],
   Forex: [],
 };
 
@@ -146,11 +259,8 @@ const ICONS = {
 
 export default function UpdatesPage() {
   const [activeMarket, setActiveMarket] = useState<Market>("India");
-  const [activeSymbol, setActiveSymbol] = useState<number>(0);
 
   const days = feed[activeMarket];
-  const firstDay = days[0];
-  const symbol = firstDay?.symbols[activeSymbol];
 
   return (
     <>
@@ -194,10 +304,7 @@ export default function UpdatesPage() {
                   key={m}
                   role="tab"
                   aria-selected={active}
-                  onClick={() => {
-                    setActiveMarket(m);
-                    setActiveSymbol(0);
-                  }}
+                  onClick={() => setActiveMarket(m)}
                   className={`flex-1 md:flex-none px-6 sm:px-8 py-2.5 rounded-xl font-bold text-caption whitespace-nowrap transition-all ${
                     active
                       ? "bg-surface text-ink shadow-soft"
@@ -214,143 +321,17 @@ export default function UpdatesPage() {
 
       <section className="bg-page">
         <div className="container-wide pb-20">
-          {days.length === 0 || !symbol ? (
+          {days.length === 0 ? (
             <div className="card-white p-10 text-center">
               <p className="text-body text-muted">
-                {activeMarket} market feed coming soon.
+                {activeMarket} market feed coming soon. Join the newsletter to be notified when it goes live.
               </p>
             </div>
           ) : (
             <div className="space-y-12 sm:space-y-16">
-              <div>
-                <div className="flex items-center gap-4 mb-6 sm:mb-8">
-                  <h2 className="h-tile">{firstDay.label}</h2>
-                  <div className="h-px flex-1 bg-rule" />
-                </div>
-
-                <article className="bg-surface rounded-[22px] border border-rule shadow-soft overflow-hidden">
-                  <div className="px-5 sm:px-8 pt-6 border-b border-rule">
-                    <div
-                      role="tablist"
-                      aria-label="Symbol selector"
-                      className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-4"
-                    >
-                      {firstDay.symbols.map((s, i) => {
-                        const active = i === activeSymbol;
-                        return (
-                          <button
-                            key={s.code}
-                            role="tab"
-                            aria-selected={active}
-                            onClick={() => setActiveSymbol(i)}
-                            className={`flex-shrink-0 px-5 py-3 rounded-2xl font-bold text-caption flex flex-col items-start gap-0.5 transition-all ${
-                              active
-                                ? "bg-blue text-white shadow-soft"
-                                : "bg-page text-muted-soft hover:text-ink border border-rule"
-                            }`}
-                          >
-                            <span className="text-nano opacity-80 uppercase tracking-tight">
-                              {s.code}
-                            </span>
-                            <span>{s.name}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="px-5 sm:px-8 py-5 flex items-center justify-between bg-page/50 gap-4">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-blue/5 border border-blue/10 flex items-center justify-center flex-shrink-0">
-                        <Icon d={ICONS.waterfall} size={20} className="text-blue" />
-                      </div>
-                      <div className="min-w-0">
-                        <h3 className="text-body font-bold text-ink truncate">{symbol.code}</h3>
-                        <span className="text-nano font-bold text-muted-faint uppercase tracking-widest mt-0.5 block">
-                          Institutional View · {symbol.lastUpdate}
-                        </span>
-                      </div>
-                    </div>
-                    <span className="flex-shrink-0 px-3 py-1.5 rounded-full bg-[#e7f7ee] text-[#0a7a3a] text-nano font-bold uppercase tracking-widest border border-[#cdebd8]">
-                      {symbol.bias}
-                    </span>
-                  </div>
-
-                  <div className="bg-page/40 border-b border-rule">
-                    <div className="flex overflow-x-auto snap-x no-scrollbar px-5 sm:px-8 py-6 gap-4 sm:gap-6">
-                      <CarouselSlide
-                        label="Pre-Market Analysis"
-                        iconD={ICONS.monitoring}
-                        headline="Expect: 08:45 AM IST"
-                        sub="Pending session open"
-                      />
-                      <CarouselSlide
-                        label="Post-Market Execution"
-                        iconD={ICONS.doc}
-                        headline="Analysis coming soon"
-                        sub="Delivered after 3:30 PM IST"
-                      />
-                      <CarouselSlide
-                        label="Open Interest Flow"
-                        iconD={ICONS.waterfall}
-                        headline="Live flow tracking"
-                        sub="Updated intraday"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="px-5 sm:px-8 py-8 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
-                    <div>
-                      <h4 className="text-micro font-bold text-blue uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <Icon d={ICONS.insights} size={14} />
-                        Market View
-                      </h4>
-                      <p className="text-body text-ink leading-relaxed">{symbol.marketView}</p>
-                    </div>
-                    <div>
-                      <h4 className="text-micro font-bold text-muted-soft uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <Icon d={ICONS.checklist} size={14} />
-                        Critical Observations
-                      </h4>
-                      <ul className="space-y-3">
-                        {symbol.observations.map((o, i) => (
-                          <li key={i} className="flex items-start gap-3">
-                            <span className="w-1 h-1 rounded-full bg-blue mt-2 flex-shrink-0" />
-                            <p className="text-caption text-muted leading-relaxed">{o}</p>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="px-5 sm:px-8 py-4 bg-page/60 border-t border-rule flex items-center justify-between">
-                    <div className="flex items-center gap-5">
-                      <button className="flex items-center gap-1.5 text-muted-soft hover:text-blue transition-colors">
-                        <Icon d={ICONS.heart} size={16} />
-                        <span className="text-caption font-bold">{symbol.favorites}</span>
-                      </button>
-                      <button className="flex items-center gap-1.5 text-muted-soft hover:text-blue transition-colors">
-                        <Icon d={ICONS.share} size={16} />
-                        <span className="text-caption font-bold">Share</span>
-                      </button>
-                    </div>
-                    <div className="flex items-center gap-5">
-                      <Link
-                        href="/checkout"
-                        className="text-nano font-bold text-blue uppercase tracking-widest underline decoration-2 underline-offset-4 hover:no-underline"
-                      >
-                        Terminal View
-                      </Link>
-                      <button
-                        aria-label="Bookmark"
-                        className="text-muted-faint hover:text-ink transition-colors"
-                      >
-                        <Icon d={ICONS.bookmark} size={18} />
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              </div>
+              {days.map((day) => (
+                <DayCard key={day.date} day={day} />
+              ))}
 
               <nav
                 aria-label="Pagination"
@@ -393,6 +374,141 @@ export default function UpdatesPage() {
         </div>
       </section>
     </>
+  );
+}
+
+function DayCard({ day }: { day: DayFeed }) {
+  const [activeSymbol, setActiveSymbol] = useState(0);
+  const symbol = day.symbols[activeSymbol];
+
+  return (
+    <div>
+      <div className="flex items-center gap-4 mb-6 sm:mb-8">
+        <h2 className="h-tile">{day.label}</h2>
+        <div className="h-px flex-1 bg-rule" />
+      </div>
+
+      <article className="bg-surface rounded-[22px] border border-rule shadow-soft overflow-hidden">
+        <div className="px-5 sm:px-8 pt-6 border-b border-rule">
+          <div
+            role="tablist"
+            aria-label="Symbol selector"
+            className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-4"
+          >
+            {day.symbols.map((s, i) => {
+              const active = i === activeSymbol;
+              return (
+                <button
+                  key={s.code}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setActiveSymbol(i)}
+                  className={`flex-shrink-0 px-5 py-3 rounded-2xl font-bold text-caption flex flex-col items-start gap-0.5 transition-all ${
+                    active
+                      ? "bg-blue text-white shadow-soft"
+                      : "bg-page text-muted-soft hover:text-ink border border-rule"
+                  }`}
+                >
+                  <span className="text-nano opacity-80 uppercase tracking-tight">{s.code}</span>
+                  <span>{s.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="px-5 sm:px-8 py-5 flex items-center justify-between bg-page/50 gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-blue/5 border border-blue/10 flex items-center justify-center flex-shrink-0">
+              <Icon d={ICONS.waterfall} size={20} className="text-blue" />
+            </div>
+            <div className="min-w-0">
+              <h3 className="text-body font-bold text-ink truncate">{symbol.code}</h3>
+              <span className="text-nano font-bold text-muted-faint uppercase tracking-widest mt-0.5 block">
+                Institutional View · {symbol.lastUpdate}
+              </span>
+            </div>
+          </div>
+          <span className="flex-shrink-0 px-3 py-1.5 rounded-full bg-[#e7f7ee] text-[#0a7a3a] text-nano font-bold uppercase tracking-widest border border-[#cdebd8]">
+            {symbol.bias}
+          </span>
+        </div>
+
+        <div className="bg-page/40 border-b border-rule">
+          <div className="flex overflow-x-auto snap-x no-scrollbar px-5 sm:px-8 py-6 gap-4 sm:gap-6">
+            <CarouselSlide
+              label="Pre-Market Analysis"
+              iconD={ICONS.monitoring}
+              headline="08:45 AM IST"
+              sub="Delivered pre-open"
+            />
+            <CarouselSlide
+              label="Post-Market Execution"
+              iconD={ICONS.doc}
+              headline="After 3:30 PM IST"
+              sub="Session recap + next-day bias"
+            />
+            <CarouselSlide
+              label="Open Interest Flow"
+              iconD={ICONS.waterfall}
+              headline="Intraday updates"
+              sub="Option-chain shifts flagged"
+            />
+          </div>
+        </div>
+
+        <div className="px-5 sm:px-8 py-8 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
+          <div>
+            <h4 className="text-micro font-bold text-blue uppercase tracking-widest mb-3 flex items-center gap-2">
+              <Icon d={ICONS.insights} size={14} />
+              Market View
+            </h4>
+            <p className="text-body text-ink leading-relaxed">{symbol.marketView}</p>
+          </div>
+          <div>
+            <h4 className="text-micro font-bold text-muted-soft uppercase tracking-widest mb-3 flex items-center gap-2">
+              <Icon d={ICONS.checklist} size={14} />
+              Critical Observations
+            </h4>
+            <ul className="space-y-3">
+              {symbol.observations.map((o, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="w-1 h-1 rounded-full bg-blue mt-2 flex-shrink-0" />
+                  <p className="text-caption text-muted leading-relaxed">{o}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="px-5 sm:px-8 py-4 bg-page/60 border-t border-rule flex items-center justify-between">
+          <div className="flex items-center gap-5">
+            <button className="flex items-center gap-1.5 text-muted-soft hover:text-blue transition-colors">
+              <Icon d={ICONS.heart} size={16} />
+              <span className="text-caption font-bold">{symbol.favorites}</span>
+            </button>
+            <button className="flex items-center gap-1.5 text-muted-soft hover:text-blue transition-colors">
+              <Icon d={ICONS.share} size={16} />
+              <span className="text-caption font-bold">Share</span>
+            </button>
+          </div>
+          <div className="flex items-center gap-5">
+            <Link
+              href="/checkout"
+              className="text-nano font-bold text-blue uppercase tracking-widest underline decoration-2 underline-offset-4 hover:no-underline"
+            >
+              Terminal View
+            </Link>
+            <button
+              aria-label="Bookmark"
+              className="text-muted-faint hover:text-ink transition-colors"
+            >
+              <Icon d={ICONS.bookmark} size={18} />
+            </button>
+          </div>
+        </div>
+      </article>
+    </div>
   );
 }
 

@@ -17,8 +17,22 @@ export default function CheckoutPage() {
 
       <section className="bg-surface">
         <div className="container-wide py-16">
+          <div className="mb-8 rounded-xl border border-[#f0c36d] bg-[#fff8e6] px-5 py-4 flex items-start gap-3">
+            <svg width="18" height="18" viewBox="0 0 24 24" className="flex-shrink-0 mt-0.5" aria-hidden>
+              <circle cx="12" cy="12" r="10" fill="none" stroke="#b7791f" strokeWidth="1.8" />
+              <path d="M12 8v5 M12 16h.01" stroke="#b7791f" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <div className="text-caption leading-relaxed text-[#7a5a0f]">
+              <strong className="font-semibold">Not SEBI-registered investment advice.</strong> Golden Indicator is a
+              chart tool, not a signal service. You decide every trade. Past performance does not guarantee future
+              results. Trading in F&amp;O involves substantial risk of loss. Read our full{" "}
+              <Link href="/legal/disclaimer" className="underline">trading disclaimer</Link> and{" "}
+              <Link href="/legal/refund" className="underline">7-day refund policy</Link> before purchase.
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <div className="md:col-span-3 card-apple p-10">
+            <div className="md:col-span-3 card-apple p-6 sm:p-8 md:p-10">
               <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">Payment</div>
               <p className="mt-5 text-body text-muted leading-relaxed">
                 Payment processing is not yet live. Reserve your copy below — you&apos;ll be notified the moment checkout
@@ -45,7 +59,7 @@ export default function CheckoutPage() {
               </p>
             </div>
 
-            <aside className="md:col-span-2 card-apple p-10">
+            <aside className="md:col-span-2 card-apple p-6 sm:p-8 md:p-10">
               <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">Order summary</div>
               <div className="mt-6 pb-6 hairline-b">
                 <div className="text-body text-ink font-medium">Golden Indicator</div>
@@ -63,6 +77,22 @@ export default function CheckoutPage() {
                 <span className="h-card">Total</span>
                 <span className="h-tile text-blue-link">₹2,499</span>
               </div>
+
+              <ul className="mt-6 pt-6 hairline-t space-y-2.5 text-caption text-muted">
+                {[
+                  "Instant email delivery on launch",
+                  "7-day no-questions refund",
+                  "Encrypted payment via Razorpay / UPI",
+                  "Lifetime updates included",
+                ].map((t) => (
+                  <li key={t} className="flex items-start gap-2">
+                    <svg width="14" height="14" viewBox="0 0 14 14" className="mt-1 flex-shrink-0" aria-hidden>
+                      <path d="M2 7l3 3 7-7" stroke="#2da44e" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span>{t}</span>
+                  </li>
+                ))}
+              </ul>
             </aside>
           </div>
 
