@@ -20,7 +20,7 @@ const updates = [
     bias: "Bullish",
     nifty: "24,740",
     bn: "53,980",
-    note: "Strong session close. Session Timer marked high-volume zone between 10:15-11:00 IST. BankNifty leading on relative strength.",
+    note: "Strong session close. High-volume zone flagged between 10:15-11:00 IST. BankNifty leading on relative strength.",
   },
   {
     date: "2026-04-18",

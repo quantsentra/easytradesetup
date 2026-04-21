@@ -1,6 +1,6 @@
 import Hero from "@/components/sections/Hero";
 import Ticker from "@/components/ui/Ticker";
-import ToolsBento from "@/components/sections/ToolsBento";
+import Bundle from "@/components/sections/Bundle";
 import HowItWorks from "@/components/sections/HowItWorks";
 import Testimonials from "@/components/sections/Testimonials";
 import PricingTeaser from "@/components/sections/PricingTeaser";
@@ -10,9 +10,9 @@ import FinalCTA from "@/components/sections/FinalCTA";
 export default function HomePage() {
   return (
     <>
-      <Hero />
       <Ticker />
-      <ToolsBento />
+      <Hero />
+      <Bundle />
       <HowItWorks />
       <Testimonials />
       <PricingTeaser />

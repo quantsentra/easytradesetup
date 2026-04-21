@@ -19,7 +19,7 @@ export default function RiskCalcPage() {
             <ul>
               <li><strong>Account size</strong> — total trading capital in ₹.</li>
               <li><strong>Risk per trade</strong> — percent of account you&apos;re willing to lose on one trade. 0.5-1% is a reasonable default.</li>
-              <li><strong>Entry, stop, and symbol ATR</strong> — copy from Golden Indicator&apos;s Volatility Lens output.</li>
+              <li><strong>Entry, stop, and symbol ATR</strong> — copy directly from the Golden Indicator readout on your chart.</li>
             </ul>
 
             <h2>Outputs</h2>
