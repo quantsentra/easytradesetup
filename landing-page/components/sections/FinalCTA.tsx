@@ -1,10 +1,18 @@
 import Link from "next/link";
 import Price from "@/components/ui/Price";
+import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export default function FinalCTA() {
   return (
     <section className="bg-page">
       <div className="container-wide py-16 sm:py-20 md:py-28 text-center">
+        <div className="inline-flex items-center gap-2 rounded-full bg-blue/10 border border-blue/20 px-3 py-1 mb-5">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" aria-hidden />
+          <span className="text-nano font-bold text-blue-link uppercase tracking-widest">
+            {OFFER_LABEL} · {OFFER_TAGLINE}
+          </span>
+        </div>
+
         <h2 className="h-hero max-w-[22ch] mx-auto">
           Stop guessing. Start reading the market.
         </h2>
@@ -25,7 +33,10 @@ export default function FinalCTA() {
         </div>
 
         <p className="mt-5 text-caption text-muted-faint">
-          One-time payment · Instant delivery · Lifetime access
+          <span className="line-through decoration-muted-faint/60 mr-2"><Price variant="retail" /></span>
+          <span className="text-ink font-medium"><Price variant="amount" /> inaugural</span>
+          <span className="mx-2">·</span>
+          One-time · Instant delivery · Lifetime access
         </p>
       </div>
     </section>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import Badge from "@/components/ui/Badge";
 import Price from "@/components/ui/Price";
 import { strategies, findStrategy } from "@/lib/strategies";
+import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const dynamicParams = false;
 
@@ -85,7 +86,13 @@ export default async function StrategyPage({
             </div>
           </div>
 
-          <div className="mt-12 card-white p-10 md:p-14 text-center">
+          <div className="mt-12 card-white p-6 sm:p-10 md:p-14 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue/10 border border-blue/20 px-3 py-1 mb-4">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" aria-hidden />
+              <span className="text-nano font-bold text-blue-link uppercase tracking-widest">
+                {OFFER_LABEL} · {OFFER_TAGLINE}
+              </span>
+            </div>
             <h2 className="h-tile">Run this strategy on Golden Indicator.</h2>
             <p className="mt-3 text-caption text-muted">All the filters this setup needs are built in.</p>
             <div className="mt-6">
@@ -93,6 +100,10 @@ export default async function StrategyPage({
                 <Price variant="cta" />
               </Link>
             </div>
+            <p className="mt-4 text-caption text-muted-faint">
+              <span className="line-through decoration-muted-faint/60 mr-2"><Price variant="retail" /></span>
+              <span className="text-ink font-medium"><Price variant="amount" /></span> inaugural
+            </p>
           </div>
         </div>
       </section>

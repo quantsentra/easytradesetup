@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Price from "@/components/ui/Price";
 import ChartMockup from "@/components/ui/ChartMockup";
+import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export default function Hero() {
   return (
@@ -15,11 +16,18 @@ export default function Hero() {
       />
 
       <div className="container-wide relative pt-16 sm:pt-20 md:pt-28 pb-10 sm:pb-14 md:pb-20 text-center">
-        <p className="text-micro font-semibold text-blue-link uppercase tracking-wider">
+        <div className="inline-flex items-center gap-2 rounded-full bg-blue/10 border border-blue/20 px-3 py-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" aria-hidden />
+          <span className="text-nano font-bold text-blue-link uppercase tracking-widest">
+            {OFFER_LABEL} · {OFFER_TAGLINE}
+          </span>
+        </div>
+
+        <p className="mt-4 text-micro font-semibold text-blue-link uppercase tracking-wider">
           Golden Indicator · TradingView
         </p>
 
-        <h1 className="mt-4 sm:mt-5 h-hero max-w-[18ch] mx-auto">
+        <h1 className="mt-3 sm:mt-4 h-hero max-w-[18ch] mx-auto">
           Trade with clarity.<br />Not noise.
         </h1>
 
@@ -48,7 +56,10 @@ export default function Hero() {
         </div>
 
         <p className="mt-4 text-caption text-muted-faint">
-          One-time payment · No subscriptions · Lifetime access
+          <span className="line-through decoration-muted-faint/60 mr-2"><Price variant="retail" /></span>
+          <span className="text-ink font-medium"><Price variant="amount" /> inaugural</span>
+          <span className="mx-2">·</span>
+          One-time · Lifetime access
         </p>
 
         <div className="mt-12 sm:mt-16 md:mt-20 relative mx-auto max-w-[920px]">

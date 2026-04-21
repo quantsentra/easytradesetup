@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Bundle from "@/components/sections/Bundle";
 import Price from "@/components/ui/Price";
+import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Product — Golden Indicator",
@@ -85,12 +86,24 @@ export default function ProductPage() {
 
       <section className="bg-surface">
         <div className="container-wide py-14 sm:py-16 text-center">
-          <Link
-            href="/checkout"
-            className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body hover:brightness-110 transition-all"
-          >
-            <Price variant="cta" />
-          </Link>
+          <div className="inline-flex items-center gap-2 rounded-full bg-blue/10 border border-blue/20 px-3 py-1 mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" aria-hidden />
+            <span className="text-nano font-bold text-blue-link uppercase tracking-widest">
+              {OFFER_LABEL} · {OFFER_TAGLINE}
+            </span>
+          </div>
+          <div>
+            <Link
+              href="/checkout"
+              className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body hover:brightness-110 transition-all"
+            >
+              <Price variant="cta" />
+            </Link>
+          </div>
+          <p className="mt-4 text-caption text-muted-faint">
+            <span className="line-through decoration-muted-faint/60 mr-2"><Price variant="retail" /></span>
+            <span className="text-ink font-medium"><Price variant="amount" /></span> inaugural launch price
+          </p>
         </div>
       </section>
     </>

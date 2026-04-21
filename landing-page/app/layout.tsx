@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import TopNav from "@/components/nav/TopNav";
 import Footer from "@/components/nav/Footer";
+import OfferBanner from "@/components/ui/OfferBanner";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -52,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
+        <OfferBanner />
         <TopNav />
         <main id="main">{children}</main>
         <Footer />
