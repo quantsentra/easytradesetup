@@ -9,34 +9,34 @@ const pains = [
 
 export default function Pain() {
   return (
-    <section className="py-20 sm:py-32 border-t border-[rgba(255,255,255,0.07)]">
+    <section className="py-20 sm:py-32 border-t border-line bg-white">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
 
         <FadeIn className="mb-14">
-          <span className="label text-ink-faint">The Problem</span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-black tracking-[-0.03em]">Sound Familiar?</h2>
-          <p className="mt-2 text-ink-muted text-[15px]">Every F&amp;O trader has been here.</p>
+          <span className="label">The Problem</span>
+          <h2 className="mt-3 text-3xl sm:text-[40px] font-black tracking-[-0.03em] text-ink">Sound Familiar?</h2>
+          <p className="mt-2 text-[15px] text-ink-muted">Every F&amp;O trader has been here.</p>
         </FadeIn>
 
-        <div className="max-w-2xl">
+        <div className="max-w-2xl space-y-0">
           {pains.map(({ num, text }, i) => (
-            <FadeIn key={num} delay={0.06 * i}>
-              <div className={`flex items-start gap-8 py-6 ${i < pains.length - 1 ? 'border-b border-[rgba(255,255,255,0.07)]' : ''}`}>
-                <span className="text-3xl font-black text-ink-faint/30 font-mono leading-none flex-shrink-0 w-10 pt-0.5">
+            <FadeIn key={num} delay={0.05 * i}>
+              <div className={`flex items-start gap-8 py-6 ${i < pains.length - 1 ? 'border-b border-line' : ''}`}>
+                <span className="text-[28px] font-black text-ink-faint/30 font-mono leading-none flex-shrink-0 w-9 pt-0.5">
                   {num}
                 </span>
-                <p className="text-[15px] text-ink-muted leading-[1.7]">{text}</p>
+                <p className="text-[16px] text-ink-muted leading-[1.7]">{text}</p>
               </div>
             </FadeIn>
           ))}
         </div>
 
-        <FadeIn delay={0.3} className="mt-12">
-          <div className="inline-flex items-center gap-3 border border-[rgba(255,255,255,0.08)] rounded-lg px-5 py-3 bg-bg-surface">
+        <FadeIn delay={0.25} className="mt-12">
+          <div className="inline-flex items-center gap-3 border border-line rounded-lg px-5 py-3 bg-subtle">
             <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse-soft flex-shrink-0" />
             <p className="text-[13px] text-ink-muted">
               You don&apos;t need more knowledge.{' '}
-              <span className="text-ink">You need a repeatable system.</span>
+              <span className="font-semibold text-ink">You need a repeatable system.</span>
             </p>
           </div>
         </FadeIn>

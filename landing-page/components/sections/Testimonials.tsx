@@ -17,7 +17,7 @@ const testimonials = [
     initials: 'VT',
     name: 'Vikram T.',
     location: 'Delhi · Salaried Professional',
-    quote: "Was skeptical at first — feels too simple. But the 3-confirmation logic is actually solid. Haven't touched another indicator since. Consistent process for the first time in 2 years.",
+    quote: "Was skeptical at first — feels too simple. But the 3-confirmation logic is solid. Haven't touched another indicator since. Consistent process for the first time in 2 years.",
   },
 ]
 
@@ -25,7 +25,7 @@ function Stars() {
   return (
     <div className="flex items-center gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width="11" height="11" viewBox="0 0 12 12" fill="#C8A84B">
+        <svg key={i} width="12" height="12" viewBox="0 0 12 12" fill="#9A6E0A">
           <path d="M6 1l1.3 2.6 2.9.4-2.1 2 .5 2.9L6 7.6 3.4 8.9l.5-2.9-2.1-2 2.9-.4L6 1z" />
         </svg>
       ))}
@@ -35,28 +35,25 @@ function Stars() {
 
 export default function Testimonials() {
   return (
-    <section className="py-20 sm:py-32 border-t border-[rgba(255,255,255,0.07)]">
+    <section className="py-20 sm:py-32 border-t border-line bg-white">
       <div className="max-w-5xl mx-auto px-5 sm:px-6">
 
         <FadeIn className="mb-14">
-          <span className="label text-ink-faint">Testimonials</span>
-          <h2 className="mt-3 text-3xl sm:text-4xl font-black tracking-[-0.03em]">What Traders Are Saying</h2>
-          <p className="mt-2 text-ink-muted text-[15px]">Real feedback. No paid reviews. No profit claims.</p>
+          <span className="label">Testimonials</span>
+          <h2 className="mt-3 text-3xl sm:text-[40px] font-black tracking-[-0.03em] text-ink">What Traders Are Saying</h2>
+          <p className="mt-2 text-[15px] text-ink-muted">Real feedback. No paid reviews. No profit claims.</p>
         </FadeIn>
 
         <div className="grid md:grid-cols-3 gap-4">
           {testimonials.map(({ initials, name, location, quote }, i) => (
             <FadeIn key={name} delay={0.06 * i}>
-              <div className="rounded-xl border border-[rgba(255,255,255,0.07)] bg-bg-surface p-6 flex flex-col gap-5 h-full hover:border-[rgba(255,255,255,0.12)] transition-colors duration-200">
-
+              <div className="card card-hover p-6 flex flex-col gap-5 h-full">
                 <Stars />
-
                 <p className="text-[14px] text-ink-muted leading-[1.75] flex-1">
                   &ldquo;{quote}&rdquo;
                 </p>
-
-                <div className="flex items-center gap-3 pt-2 border-t border-[rgba(255,255,255,0.06)]">
-                  <div className="w-8 h-8 rounded-full bg-bg-raised border border-[rgba(255,255,255,0.08)] flex items-center justify-center flex-shrink-0">
+                <div className="flex items-center gap-3 pt-4 border-t border-line">
+                  <div className="w-8 h-8 rounded-full bg-subtle border border-line flex items-center justify-center flex-shrink-0">
                     <span className="text-[10px] font-bold text-ink-muted">{initials}</span>
                   </div>
                   <div>
@@ -64,14 +61,13 @@ export default function Testimonials() {
                     <div className="text-[11px] font-mono text-ink-faint">{location}</div>
                   </div>
                 </div>
-
               </div>
             </FadeIn>
           ))}
         </div>
 
-        <FadeIn delay={0.25} className="mt-8 text-center">
-          <p className="text-[11px] text-ink-faint font-mono">
+        <FadeIn delay={0.22} className="mt-8 text-center">
+          <p className="text-[11px] font-mono text-ink-faint">
             Reviews reflect individual experiences. Trading results depend on market conditions and personal discipline.
           </p>
         </FadeIn>

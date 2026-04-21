@@ -14,14 +14,14 @@ export default function StickyMobileCTA() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
-      <div className="bg-bg-surface/98 backdrop-blur-md border-t border-[rgba(255,255,255,0.08)] px-4 py-3 flex items-center gap-3">
+      <div className="bg-white/96 backdrop-blur-md border-t border-line px-4 py-3 flex items-center gap-3 shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
         <div className="flex-1 min-w-0">
           <div className="text-[10px] font-mono text-ink-faint">Golden Indicator Pack</div>
           <div className="text-[13px] font-black text-ink font-mono">₹2,499 · One-time</div>
         </div>
         <a
           href="#pricing"
-          className="flex-shrink-0 bg-gold text-black text-[13px] font-bold px-5 py-2.5 rounded-lg hover:bg-gold-light transition-colors duration-150"
+          className="flex-shrink-0 bg-[#0D0D0D] text-white text-[13px] font-bold px-5 py-2.5 rounded-lg hover:bg-[#2A2A2A] transition-colors duration-150"
         >
           Get Notified →
         </a>

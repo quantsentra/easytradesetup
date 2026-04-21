@@ -4,12 +4,12 @@ export default function FooterSection() {
   return (
     <>
       {/* Pre-footer CTA */}
-      <section className="py-20 sm:py-32 border-t border-[rgba(255,255,255,0.07)] bg-grid">
+      <section className="py-20 sm:py-32 border-t border-line bg-white">
         <div className="max-w-5xl mx-auto px-5 sm:px-6">
           <FadeIn>
             <div className="max-w-xl">
-              <span className="label text-ink-faint">Get Started</span>
-              <h2 className="mt-3 text-3xl sm:text-4xl font-black tracking-[-0.03em] leading-tight">
+              <span className="label">Get Started</span>
+              <h2 className="mt-3 text-3xl sm:text-[40px] font-black tracking-[-0.03em] leading-tight text-ink">
                 Ready to Trade<br />With a System?
               </h2>
               <p className="mt-4 text-[15px] text-ink-muted leading-[1.7]">
@@ -18,13 +18,13 @@ export default function FooterSection() {
               <div className="mt-8 flex flex-col sm:flex-row items-start gap-3">
                 <a
                   href="#pricing"
-                  className="inline-flex items-center gap-2 bg-gold text-black font-bold text-[15px] px-7 py-3.5 rounded-xl hover:bg-gold-light transition-colors duration-150 tracking-tight"
+                  className="inline-flex items-center gap-2 bg-[#0D0D0D] text-white font-bold text-[15px] px-7 py-3.5 rounded-xl hover:bg-[#2A2A2A] transition-colors duration-150 tracking-tight"
                 >
                   Get the Golden Indicator — ₹2,499 →
                 </a>
                 <a
                   href="/checklist"
-                  className="inline-flex items-center gap-2 text-ink-muted text-[14px] px-5 py-3.5 hover:text-ink transition-colors duration-150"
+                  className="inline-flex items-center gap-1.5 text-ink-muted text-[14px] px-4 py-3.5 hover:text-ink transition-colors duration-150"
                 >
                   Free Checklist First →
                 </a>
@@ -38,32 +38,32 @@ export default function FooterSection() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-[rgba(255,255,255,0.07)] py-8">
-        <div className="max-w-5xl mx-auto px-5 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 text-[12px] text-ink-faint">
+      <footer className="border-t border-line py-8 bg-subtle">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5">
 
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-5 h-5 rounded-md bg-gold/10 border border-gold/20 flex items-center justify-center">
+            <div className="w-5 h-5 rounded-md bg-gold-bg border border-gold-border flex items-center justify-center">
               <span className="text-gold text-[9px] font-black">E</span>
             </div>
-            <span className="font-mono">© 2026 EasyTradeSetup</span>
+            <span className="text-[12px] font-mono text-ink-muted">© 2026 EasyTradeSetup</span>
           </div>
 
           <nav className="flex flex-wrap gap-x-5 gap-y-1.5">
             {[
-              { href: '/checklist',          label: 'Free Checklist' },
+              { href: '/checklist',             label: 'Free Checklist' },
               { href: '/strategy/ets-momentum', label: 'Strategy' },
-              { href: '/contact',            label: 'Contact' },
-              { href: '/terms',              label: 'Terms' },
-              { href: '/refund',             label: 'Refund Policy' },
-              { href: '/delivery',           label: 'Delivery Policy' },
+              { href: '/contact',               label: 'Contact' },
+              { href: '/terms',                 label: 'Terms' },
+              { href: '/refund',                label: 'Refund Policy' },
+              { href: '/delivery',              label: 'Delivery Policy' },
             ].map(({ href, label }) => (
-              <a key={href} href={href} className="hover:text-ink-muted transition-colors font-mono">
+              <a key={href} href={href} className="text-[12px] font-mono text-ink-faint hover:text-ink-muted transition-colors">
                 {label}
               </a>
             ))}
           </nav>
 
-          <p className="font-mono text-[11px] max-w-[240px] text-right hidden sm:block">
+          <p className="text-[11px] font-mono text-ink-faint hidden sm:block text-right max-w-[220px]">
             Trading involves risk. Not SEBI-registered advice.
           </p>
         </div>

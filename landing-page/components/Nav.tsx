@@ -22,19 +22,17 @@ export default function Nav() {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? 'bg-bg-base/95 backdrop-blur-md border-b border-[rgba(255,255,255,0.07)]'
-          : 'bg-transparent'
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${
+        scrolled ? 'bg-white/95 backdrop-blur-md shadow-[0_1px_0_rgba(0,0,0,0.07)]' : 'bg-white'
       }`}>
         <div className="max-w-5xl mx-auto px-5 sm:px-6 h-14 flex items-center justify-between">
 
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2.5 group">
-            <div className="w-6 h-6 rounded-md bg-gold/15 border border-gold/25 flex items-center justify-center">
+          <a href="/" className="flex items-center gap-2 group">
+            <div className="w-6 h-6 rounded-md bg-gold-bg border border-gold-border flex items-center justify-center">
               <span className="text-gold text-[10px] font-black">E</span>
             </div>
-            <span className="font-semibold text-sm text-ink tracking-tight">EasyTradeSetup</span>
+            <span className="font-semibold text-[14px] text-ink tracking-tight">EasyTradeSetup</span>
           </a>
 
           {/* Desktop links */}
@@ -43,7 +41,7 @@ export default function Nav() {
               <a
                 key={href}
                 href={href}
-                className="hover:text-ink transition-colors duration-150 relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-px after:bg-gold after:transition-all hover:after:w-full"
+                className="hover:text-ink transition-colors duration-150"
               >
                 {label}
               </a>
@@ -53,12 +51,10 @@ export default function Nav() {
           <div className="flex items-center gap-3">
             <a
               href="#pricing"
-              className="hidden md:inline-flex items-center gap-1.5 bg-gold text-black text-xs font-bold px-4 py-2 rounded-lg hover:bg-gold-light transition-colors duration-150 tracking-tight"
+              className="hidden md:inline-flex items-center gap-1.5 bg-[#0D0D0D] text-white text-[13px] font-bold px-4 py-2 rounded-lg hover:bg-[#2A2A2A] transition-colors duration-150 tracking-tight"
             >
               Get the Pack →
             </a>
-
-            {/* Mobile hamburger */}
             <button
               onClick={() => setOpen(true)}
               className="md:hidden p-2 flex flex-col gap-[5px]"
@@ -74,16 +70,16 @@ export default function Nav() {
 
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 bg-black/70 z-50" />
-          <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl bg-bg-surface border-t border-[rgba(255,255,255,0.08)] p-6 pb-10 outline-none">
-            <div className="mx-auto w-10 h-0.5 rounded-full bg-[rgba(255,255,255,0.1)] mb-8" />
+          <Drawer.Overlay className="fixed inset-0 bg-black/40 z-50" />
+          <Drawer.Content className="fixed bottom-0 left-0 right-0 z-50 flex flex-col rounded-t-2xl bg-white border-t border-line p-6 pb-10 outline-none shadow-[0_-4px_24px_rgba(0,0,0,0.08)]">
+            <div className="mx-auto w-10 h-1 rounded-full bg-line mb-8" />
             <nav className="flex flex-col gap-1">
               {navLinks.map(({ href, label }) => (
                 <a
                   key={href}
                   href={href}
                   onClick={() => setOpen(false)}
-                  className="py-3 px-3 rounded-lg text-ink text-sm hover:bg-bg-raised transition-colors"
+                  className="py-3 px-3 rounded-lg text-ink text-[14px] hover:bg-subtle transition-colors"
                 >
                   {label}
                 </a>
@@ -93,7 +89,7 @@ export default function Nav() {
               <a
                 href="#pricing"
                 onClick={() => setOpen(false)}
-                className="block w-full text-center bg-gold text-black font-bold py-3.5 rounded-xl hover:bg-gold-light transition-colors"
+                className="block w-full text-center bg-[#0D0D0D] text-white font-bold py-3.5 rounded-xl hover:bg-[#2A2A2A] transition-colors"
               >
                 Get the Pack — ₹2,499 →
               </a>
