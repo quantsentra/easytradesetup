@@ -41,8 +41,9 @@ export default function DisclaimerPage() {
 
             <h2>Jurisdiction</h2>
             <p>
-              Our product is primarily intended for users in India who trade on NSE and BSE. If you access it from
-              elsewhere, you are responsible for compliance with your local laws and exchange regulations.
+              Golden Indicator is sold globally. Users are responsible for compliance with their local exchange and
+              regulatory requirements. Indian users trading in NSE or BSE F&amp;O — please note that EasyTradeSetup
+              is not a SEBI-registered research analyst or investment advisor.
             </p>
           </Prose>
         </div>

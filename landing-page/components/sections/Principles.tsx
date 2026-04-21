@@ -18,7 +18,7 @@ const principles = [
   },
 ];
 
-export default function Testimonials() {
+export default function Principles() {
   return (
     <section className="bg-surface">
       <div className="container-wide py-16 sm:py-20 md:py-28">

@@ -36,8 +36,9 @@ export default function TermsPage() {
 
             <h2>5. Payment & refunds</h2>
             <p>
-              Prices are in Indian Rupees (₹) and inclusive of GST. Refunds are subject to our
-              <a href="/legal/refund"> refund policy</a>.
+              Indian customers are billed in Indian Rupees (₹2,499) inclusive of GST. International customers are
+              billed in US Dollars ($49). All applicable taxes are included in the displayed price. Refunds are
+              subject to our <a href="/legal/refund">refund policy</a>.
             </p>
 
             <h2>6. Limitation of liability</h2>
@@ -47,7 +48,11 @@ export default function TermsPage() {
             </p>
 
             <h2>7. Governing law</h2>
-            <p>These terms are governed by the laws of India. Disputes fall under the jurisdiction of courts in India.</p>
+            <p>
+              These terms are governed by the laws of India, where EasyTradeSetup is based. Any dispute, regardless of
+              user jurisdiction, is subject to the exclusive jurisdiction of courts in India. International users
+              agreeing to these terms acknowledge this venue.
+            </p>
           </Prose>
         </div>
       </section>

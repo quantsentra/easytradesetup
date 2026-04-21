@@ -33,7 +33,7 @@ export default function AboutPage() {
               <li>Write one good Pine Script, and keep improving it.</li>
               <li>Document every setup so you can replicate, not copy.</li>
               <li>Reply to emails within 24 hours.</li>
-              <li>Ship pre-market notes every trading day.</li>
+              <li>Ship pre-market notes every trading day — India plus global (SPX, Gold, BTC).</li>
             </ul>
 
             <h2>The product roadmap</h2>

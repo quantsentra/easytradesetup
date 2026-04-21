@@ -73,7 +73,7 @@ export default function Footer() {
 
         <div className="hairline-t mt-10 pt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <p className="text-micro text-muted-faint">
-            © {new Date().getFullYear()} EasyTradeSetup. Built in India.
+            © {new Date().getFullYear()} EasyTradeSetup. Built by traders, for traders — globally.
           </p>
           <p className="text-micro text-muted-faint max-w-2xl">
             Trading involves risk. Past performance does not guarantee future results. See the full{" "}

@@ -9,7 +9,7 @@ const faqs = [
     items: [
       ["Is this a signal service?", "No. Golden Indicator is a TradingView chart tool that helps you read regime, momentum, levels, and volume on one pane. You decide when to trade."],
       ["Can I modify the Pine Script?", "Yes. The script is delivered as open source. Modify it for personal use. Redistribution or resale is not permitted."],
-      ["Does it work outside India?", "Yes. Symbol-agnostic. Tuned for NSE F&O but runs on US equities, commodities, forex, and major crypto pairs."],
+      ["Which markets does it work on?", "Symbol-agnostic. NSE F&O, US equities (SPX, NASDAQ, NYSE), commodities (Gold, Crude, Silver), major forex pairs, and major crypto pairs (BTC, ETH). Any symbol available on TradingView."],
       ["Will it work on my TradingView free plan?", "Yes. Pine Script runs on every TradingView tier."],
     ],
   },
@@ -18,7 +18,7 @@ const faqs = [
     items: [
       ["How do I receive the files?", "By email, within seconds of payment. The email contains the .pine file, trade-logic PDF, and risk calculator link."],
       ["Do I need to enter card details every month?", "No. It's a one-time payment. No recurring charges, ever."],
-      ["Is GST included in ₹2,499?", "Yes. Total price inclusive of taxes."],
+      ["Are taxes included in the price?", "Yes. India: ₹2,499 inclusive of GST. International: $49 inclusive of applicable taxes."],
       ["Refund policy?", "7-day refund window if the script fails to install or doesn't function as documented. See refund policy."],
     ],
   },

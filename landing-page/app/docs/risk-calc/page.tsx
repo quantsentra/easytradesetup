@@ -17,23 +17,24 @@ export default function RiskCalcPage() {
           <Prose>
             <h2>Inputs you provide</h2>
             <ul>
-              <li><strong>Account size</strong> — total trading capital in ₹.</li>
+              <li><strong>Account size</strong> — total trading capital in your base currency (₹, $, €, whichever).</li>
               <li><strong>Risk per trade</strong> — percent of account you&apos;re willing to lose on one trade. 0.5-1% is a reasonable default.</li>
               <li><strong>Entry, stop, and symbol ATR</strong> — copy directly from the Golden Indicator readout on your chart.</li>
             </ul>
 
             <h2>Outputs</h2>
             <ul>
-              <li><strong>Position size</strong> in lots (for F&O) or shares (for equities).</li>
-              <li><strong>₹ risk</strong> on the trade.</li>
+              <li><strong>Position size</strong> in lots (for F&O), contracts (for futures), or shares / units (for equities and crypto).</li>
+              <li><strong>Currency risk</strong> on the trade, in your base currency.</li>
               <li><strong>1R target</strong> — the distance you&apos;re risking, projected forward.</li>
             </ul>
 
-            <h2>Why ATR-based sizing beats fixed-lot sizing</h2>
+            <h2>Why ATR-based sizing beats fixed-position sizing</h2>
             <p>
-              A 1-lot BankNifty trade risks ~₹2,000 on a calm day and ~₹6,000 on a violent day. Fixed-lot sizing means your
-              real risk silently triples. ATR-based sizing keeps your ₹-risk constant by scaling the position down when
-              volatility is high.
+              A fixed 1-lot or 1-contract position carries very different real-currency risk when volatility doubles — your
+              downside silently scales with it. ATR-based sizing keeps your currency risk constant by shrinking the
+              position when volatility is high, regardless of whether you&apos;re trading BankNifty, Gold futures, or SPX
+              options.
             </p>
 
             <h2>Where to find it</h2>
