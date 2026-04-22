@@ -5,6 +5,8 @@ import VideoDemo from "@/components/sections/VideoDemo";
 import Bundle from "@/components/sections/Bundle";
 import HowItWorks from "@/components/sections/HowItWorks";
 import Principles from "@/components/sections/Principles";
+import Insights from "@/components/sections/Insights";
+import FounderNote from "@/components/sections/FounderNote";
 import PricingTeaser from "@/components/sections/PricingTeaser";
 import FAQTeaser from "@/components/sections/FAQTeaser";
 import FinalCTA from "@/components/sections/FinalCTA";
@@ -18,7 +20,9 @@ export default function HomePage() {
       <VideoDemo />
       <Bundle />
       <HowItWorks />
+      <Insights />
       <Principles />
+      <FounderNote />
       <PricingTeaser />
       <FAQTeaser />
       <FinalCTA />

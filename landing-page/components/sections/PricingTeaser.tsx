@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Price from "@/components/ui/Price";
+import PaymentLogos from "@/components/ui/PaymentLogos";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 const included = [
@@ -54,8 +55,12 @@ export default function PricingTeaser() {
           </div>
 
           <p className="mt-5 text-caption text-muted-faint">
-            One-time payment · Instant delivery · Lifetime access
+            One-time payment · Instant delivery · Lifetime access · 7-day refund
           </p>
+
+          <div className="mt-8 pt-8 hairline-t">
+            <PaymentLogos />
+          </div>
         </div>
       </div>
     </section>

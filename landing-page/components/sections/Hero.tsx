@@ -1,6 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
 import Price from "@/components/ui/Price";
-import ChartMockup from "@/components/ui/ChartMockup";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export default function Hero() {
@@ -62,6 +62,33 @@ export default function Hero() {
           One-time · Lifetime access
         </p>
 
+        <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-nano font-semibold uppercase tracking-widest text-muted-faint">
+          <li className="inline-flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden>
+              <path d="M2 7l3 3 7-7" stroke="#0a7a3a" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Built for TradingView
+          </li>
+          <li className="inline-flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden>
+              <path d="M2 7l3 3 7-7" stroke="#0a7a3a" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            7-day refund
+          </li>
+          <li className="inline-flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden>
+              <path d="M2 7l3 3 7-7" stroke="#0a7a3a" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            No subscription
+          </li>
+          <li className="inline-flex items-center gap-1.5">
+            <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden>
+              <path d="M2 7l3 3 7-7" stroke="#0a7a3a" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Built in India · Global markets
+          </li>
+        </ul>
+
         <div className="mt-12 sm:mt-16 md:mt-20 relative mx-auto max-w-[920px]">
           <div
             aria-hidden
@@ -72,10 +99,36 @@ export default function Hero() {
             }}
           />
 
-          <ChartMockup />
+          <figure className="relative rounded-[16px] sm:rounded-[22px] overflow-hidden bg-surface shadow-card">
+            <div className="flex items-center justify-between gap-2 px-3 sm:px-5 py-2.5 sm:py-3 border-b border-rule">
+              <div className="flex items-center gap-1.5 flex-shrink-0" aria-hidden>
+                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#ff5f57]" />
+                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#ffbd2e]" />
+                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#28c840]" />
+              </div>
+              <div className="flex-1 text-nano sm:text-micro text-muted-faint truncate px-2 sm:px-3 font-mono text-center">
+                XAU / USD · 15m · Golden Indicator
+              </div>
+              <div className="inline-flex items-center gap-1 sm:gap-1.5 bg-surface-alt px-2 py-0.5 rounded-md border border-rule flex-shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#2da44e] animate-pulse" aria-hidden />
+                <span className="text-nano font-bold text-[#2da44e] uppercase tracking-widest">Live</span>
+              </div>
+            </div>
+            <div className="relative aspect-[16/10] bg-surface-alt">
+              <Image
+                src="/chart-after.png"
+                alt="Gold Spot 15-minute chart with Golden Indicator — regime lines, seller zones, swing structure, prior-day levels visible as a single clean overlay"
+                fill
+                sizes="(min-width: 920px) 920px, 100vw"
+                className="object-cover"
+                priority
+                fetchPriority="high"
+              />
+            </div>
+          </figure>
 
           <p className="mt-4 text-micro text-muted-faint">
-            Illustrative. Not a live feed. Not a trade recommendation.
+            Real TradingView chart · Gold / USD 15m · Not a trade recommendation
           </p>
         </div>
       </div>

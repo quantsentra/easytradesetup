@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
+import LaunchCountdown from "@/components/ui/LaunchCountdown";
+import PaymentLogos from "@/components/ui/PaymentLogos";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
@@ -63,8 +65,16 @@ export default function PricingPage() {
               </Link>
             </div>
             <p className="mt-6 text-micro text-muted-faint">
-              Instant delivery via email. Lifetime access.
+              Instant delivery via email. Lifetime access. 7-day refund.
             </p>
+
+            <div className="mt-10 pt-8 hairline-t">
+              <LaunchCountdown />
+            </div>
+
+            <div className="mt-8 pt-6 hairline-t">
+              <PaymentLogos />
+            </div>
           </div>
         </div>
       </section>

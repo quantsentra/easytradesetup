@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import TopNav from "@/components/nav/TopNav";
 import Footer from "@/components/nav/Footer";
 import OfferBanner from "@/components/ui/OfferBanner";
+import StickyBuyBar from "@/components/ui/StickyBuyBar";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <TopNav />
         <main id="main">{children}</main>
         <Footer />
+        <StickyBuyBar />
         <Analytics />
       </body>
     </html>
