@@ -12,9 +12,11 @@ const faqs = [
     cat: "Product",
     items: [
       ["Is this a signal service?", "No. Golden Indicator is a TradingView chart tool that helps you read regime, momentum, levels, and volume on one pane. You decide when to trade."],
+      ["Why pay when free Pine scripts exist on TradingView?", "Free scripts are usually single-purpose — one moving average, one oscillator, one pattern. Golden Indicator fuses regime, structure, levels, and volume into one decision layer, plus ships the Trade Logic PDF and risk calculator that tie it all together. You're paying for the system, not just the code."],
+      ["I already use MA + RSI + volume. Why add this?", "Then you already know the pain of switching between panes. Golden Indicator replaces that stack with one decision layer — regime-aware, session-aware, volatility-aware. Most users drop 3-5 indicators within a week of installing it."],
       ["Can I modify the Pine Script?", "Yes. The script is delivered as open source. Modify it for personal use. Redistribution or resale is not permitted."],
-      ["Which markets does it work on?", "Symbol-agnostic. NSE F&O, US equities (SPX, NASDAQ, NYSE), commodities (Gold, Crude, Silver), major forex pairs, and major crypto pairs (BTC, ETH). Any symbol available on TradingView."],
-      ["Will it work on my TradingView free plan?", "Yes. Pine Script runs on every TradingView tier."],
+      ["Which markets does it work on?", "Symbol-agnostic. NSE F&O (NIFTY, BANKNIFTY), US equities (SPX, NASDAQ, NYSE), commodities (Gold, Crude, Silver), major forex pairs, and major crypto pairs (BTC, ETH). Any symbol available on TradingView."],
+      ["Will it work on my TradingView free plan?", "Yes. Pine Script runs on every TradingView tier, including the free plan."],
     ],
   },
   {
@@ -22,8 +24,8 @@ const faqs = [
     items: [
       ["How do I receive the files?", "By email, within seconds of payment. The email contains the .pine file, trade-logic PDF, and risk calculator link."],
       ["Do I need to enter card details every month?", "No. It's a one-time payment. No recurring charges, ever."],
-      ["Are taxes included in the price?", "Yes. India: ₹2,499 inclusive of GST. International: $49 inclusive of applicable taxes."],
-      ["Refund policy?", "7-day refund window if the script fails to install or doesn't function as documented. See refund policy."],
+      ["Are taxes included in the price?", "Yes. India: ₹4,599 inclusive of GST. International: $49 inclusive of applicable taxes."],
+      ["Refund policy?", "7-day refund window. Email hello@easytradesetup.com within 7 days of purchase for a full refund — no questions, no forms. See refund policy."],
     ],
   },
   {

@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import Price from "@/components/ui/Price";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export default function CleanVsNoisy() {
@@ -60,6 +62,15 @@ export default function CleanVsNoisy() {
         <p className="mt-8 sm:mt-10 text-center text-nano font-mono uppercase tracking-widest text-ink-40 max-w-2xl mx-auto">
           Real TradingView screenshots · Not more information — clearer thinking
         </p>
+
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <Link href="/checkout" className="btn btn-primary">
+            Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+          </Link>
+          <Link href="/compare" className="btn btn-ghost">
+            See how it compares
+          </Link>
+        </div>
       </div>
     </section>
   );

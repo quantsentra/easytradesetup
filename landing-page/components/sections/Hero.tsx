@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Price from "@/components/ui/Price";
 import HeroChart from "@/components/ui/HeroChart";
+import ReservationNotice from "@/components/ui/ReservationNotice";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export default function Hero() {
@@ -35,17 +36,21 @@ export default function Hero() {
           <span className="grad-text">Not noise.</span>
         </h1>
 
-        <p className="mt-6 sm:mt-7 text-body-lg text-ink-60 max-w-[56ch] mx-auto px-2">
-          One sealed TradingView indicator. Eight internal tools fuse into a single
-          decision on your chart — across every market on earth.
+        <p className="mt-6 sm:mt-7 text-body-lg text-ink-60 max-w-[58ch] mx-auto px-2">
+          Regime, structure, entry, and stop — drawn on one pane of your TradingView chart.
+          Stop switching between six indicators.
         </p>
 
-        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
+        <div className="mt-7 flex justify-center">
+          <ReservationNotice />
+        </div>
+
+        <div className="mt-6 sm:mt-7 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
           <Link href="/checkout" className="btn btn-primary btn-lg w-full sm:w-auto">
             Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
           </Link>
-          <Link href="/product" className="btn btn-outline btn-lg w-full sm:w-auto">
-            See it on a live chart
+          <Link href="/sample" className="btn btn-outline btn-lg w-full sm:w-auto">
+            Read a free chapter — no email
           </Link>
         </div>
 
@@ -60,7 +65,7 @@ export default function Hero() {
             <span className="text-cyan">✓</span>7-day refund
           </li>
           <li className="inline-flex items-center gap-1.5">
-            <span className="text-cyan">✓</span>Global markets
+            <span className="text-cyan">✓</span>Works on any market
           </li>
         </ul>
 

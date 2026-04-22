@@ -72,14 +72,14 @@ export default function Insights() {
               </span>
               <span className="font-mono text-nano uppercase tracking-widest text-ink-40">Honest</span>
             </div>
-            <h3 className="mt-5 h-card">How we stack up against the alternatives.</h3>
+            <h3 className="mt-5 h-card">Save $1,400+ over 3 years.</h3>
             <p className="mt-3 text-caption text-ink-60 flex-1 leading-relaxed">
-              Side-by-side table vs LuxAlgo, TrendSpider, and typical YouTuber-branded scripts —
-              pricing, model, support, and claims.
+              Side-by-side vs LuxAlgo ($39/mo), TrendSpider ($58/mo), and typical YouTuber scripts.
+              Pricing, model, support, claims — compared honestly.
             </p>
             <div className="mt-6 pt-5 hairline-t flex items-center justify-between">
               <span className="font-mono text-nano uppercase tracking-widest text-ink-40">
-                3-year cost delta
+                One payment · forever
               </span>
               <span className="text-caption font-medium text-blue-soft">See table →</span>
             </div>

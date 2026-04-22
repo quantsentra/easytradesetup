@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Price from "@/components/ui/Price";
 import PaymentLogos from "@/components/ui/PaymentLogos";
+import ReservationNotice from "@/components/ui/ReservationNotice";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 const included = [
@@ -49,6 +50,13 @@ export default function PricingTeaser() {
             <p className="mt-4 body-muted max-w-xl mx-auto">
               Inaugural launch price — over 60% off retail. One payment, yours for life.
             </p>
+            <p className="mt-3 text-caption text-ink-60 max-w-xl mx-auto">
+              Less than 2 months of a LuxAlgo subscription. One avoided bad trade covers it 10× over.
+            </p>
+
+            <div className="mt-6 flex justify-center">
+              <ReservationNotice />
+            </div>
 
             <ul className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 max-w-xl mx-auto text-left">
               {included.map((f) => (

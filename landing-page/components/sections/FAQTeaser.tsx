@@ -2,28 +2,36 @@ import Link from "next/link";
 
 const faqs: Array<[string, string]> = [
   [
+    "Why pay when free Pine scripts exist on TradingView?",
+    "Free scripts are usually single-purpose — one moving average, one oscillator, one pattern. Golden Indicator fuses regime, structure, levels, and volume into one clean output, plus ships the Trade Logic PDF and risk calculator that tie it all together. You're paying for the system, not just the code.",
+  ],
+  [
+    "I already use MA + RSI + volume. Why add this?",
+    "Then you already know the pain of switching between panes. Golden Indicator replaces that stack with one decision layer — regime-aware, session-aware, volatility-aware. Most users drop 3-5 indicators within a week of installing it.",
+  ],
+  [
     "Does this work on any TradingView plan?",
-    "Yes. The Pine Script v5 indicator runs on every TradingView tier, including the free plan.",
+    "Yes. The Pine Script v5 indicator runs on every TradingView tier, including the free plan. No premium subscription required.",
   ],
   [
     "Is this a signal service?",
-    "No. Golden Indicator is a chart tool. You decide when to enter and exit. The script helps you see regime, momentum, levels, and volume on one pane.",
+    "No. Golden Indicator is a chart tool. You decide when to enter and exit. The script helps you see regime, momentum, levels, and volume on one pane — it never tells you to buy or sell.",
   ],
   [
-    "Does it work on US stocks and crypto?",
-    "Yes. Symbol-agnostic. Tuned for NSE F&O but runs cleanly on US equities, commodities, forex, and major crypto pairs.",
+    "Which markets does it work on?",
+    "Symbol-agnostic. Tuned for NIFTY / BankNifty weekly expiries, runs cleanly on US indices (SPX, NASDAQ), commodities (Gold, Silver, Crude), major forex (EUR, GBP, JPY pairs), and major crypto (BTC, ETH). Any symbol that exists on TradingView.",
   ],
   [
     "Is the source code open?",
-    "The Pine Script is delivered as open source — you can inspect and modify it. Redistribution is not permitted.",
+    "The Pine Script is delivered as open source — you can inspect and modify it for personal use. Redistribution or resale is not permitted.",
   ],
   [
     "What if I have no TradingView experience?",
-    "The install guide walks you through creating a free TradingView account and pasting the script. No coding required.",
+    "The install guide walks you through creating a free TradingView account and pasting the script. No coding required. You're trading in under 60 seconds.",
   ],
   [
     "How does the refund work?",
-    "Email us within 7 days of purchase for a full refund. No questions asked.",
+    "Email us within 7 days of purchase for a full refund. No questions, no forms. Replies from the founder within 24 hours.",
   ],
 ];
 

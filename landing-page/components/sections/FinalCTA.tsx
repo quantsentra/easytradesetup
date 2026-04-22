@@ -34,7 +34,8 @@ export default function FinalCTA() {
               Your next trade deserves a <span className="grad-text-2">cleaner chart.</span>
             </h2>
             <p className="mt-5 body-muted max-w-xl mx-auto">
-              Reserve once. Own it for life. Decide every trade yourself.
+              <Price variant="amount" /> once. Not <Price variant="amount" />/month. Ever.
+              Own it for life and decide every trade yourself.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
               <Link href="/checkout" className="btn btn-primary btn-lg w-full sm:w-auto">

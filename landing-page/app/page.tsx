@@ -1,8 +1,10 @@
 import Hero from "@/components/sections/Hero";
 import WhoFor from "@/components/sections/WhoFor";
 import CleanVsNoisy from "@/components/sections/CleanVsNoisy";
+import TrustStrip from "@/components/sections/TrustStrip";
 import VideoDemo from "@/components/sections/VideoDemo";
 import Bundle from "@/components/sections/Bundle";
+import SampleLeadMagnet from "@/components/sections/SampleLeadMagnet";
 import HowItWorks from "@/components/sections/HowItWorks";
 import Principles from "@/components/sections/Principles";
 import Insights from "@/components/sections/Insights";
@@ -19,8 +21,10 @@ export default function HomePage() {
       <Hero />
       <WhoFor />
       <CleanVsNoisy />
+      <TrustStrip />
       <VideoDemo />
       <Bundle />
+      <SampleLeadMagnet />
       <HowItWorks />
       <Insights />
       <Principles />
