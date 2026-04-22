@@ -11,9 +11,16 @@ export default function SectionHeader({ eyebrow, title, lede, align = "center" }
   const a = align === "center" ? "text-center mx-auto" : "";
   return (
     <div className={`max-w-[720px] ${a}`}>
-      {eyebrow && <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">{eyebrow}</div>}
-      <h2 className={`${eyebrow ? "mt-3" : ""} h-section`}>{title}</h2>
-      {lede && <p className="mt-5 text-body-lg text-muted">{lede}</p>}
+      {eyebrow && (
+        <div className="eye justify-center mb-4 inline-flex">
+          <span className="eye-dot" aria-hidden />
+          {eyebrow}
+        </div>
+      )}
+      <h2 className="h-section">{title}</h2>
+      {lede && (
+        <p className="mt-5 body-muted">{lede}</p>
+      )}
     </div>
   );
 }

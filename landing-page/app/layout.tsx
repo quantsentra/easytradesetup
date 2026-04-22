@@ -58,7 +58,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f5f5f7",
+  themeColor: "#05070F",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -69,9 +69,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
+        <div className="aurora" aria-hidden>
+          <div className="aurora-third" />
+        </div>
+        <div className="stars" aria-hidden />
         <OfferBanner />
         <TopNav />
-        <main id="main">{children}</main>
+        <main id="main" className="above-bg">{children}</main>
         <Footer />
         <StickyBuyBar />
         <ExitIntent />

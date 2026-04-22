@@ -89,20 +89,20 @@ export default function VideoDemo() {
   }
 
   return (
-    <section className="relative bg-page overflow-hidden" ref={wrapRef}>
+    <section className="relative above-bg overflow-hidden" ref={wrapRef}>
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[400px] opacity-60"
+        className="pointer-events-none absolute inset-x-0 top-0 h-[400px] opacity-50"
         style={{
           background:
-            "radial-gradient(900px 300px at 50% 0%, rgba(0,113,227,0.08), transparent 60%)",
+            "radial-gradient(900px 300px at 50% 0%, rgba(43,123,255,0.15), transparent 60%)",
         }}
       />
 
-      <div className="container-wide relative py-14 sm:py-20 md:py-28">
+      <div className="container-wide relative py-14 sm:py-20 md:py-24">
         <SectionHeader
           eyebrow="See it in action"
-          title={<>The indicator. Live on the chart.</>}
+          title={<>The indicator. <span className="grad-text-2">Live on the chart.</span></>}
           lede="Watch how regime, structure, and key levels draw themselves in real time."
         />
 
@@ -112,26 +112,28 @@ export default function VideoDemo() {
             className="pointer-events-none absolute -inset-6 sm:-inset-10 rounded-[32px] opacity-60"
             style={{
               background:
-                "radial-gradient(600px 200px at 50% 100%, rgba(0,113,227,0.16), transparent 70%)",
+                "radial-gradient(600px 200px at 50% 100%, rgba(43,123,255,0.25), transparent 70%)",
+              filter: "blur(20px)",
             }}
           />
 
-          <figure className="relative rounded-[16px] sm:rounded-[22px] overflow-hidden bg-surface shadow-card">
-            <div className="flex items-center justify-between gap-2 px-3 sm:px-5 py-2.5 sm:py-3 border-b border-rule">
+          <figure className="relative glass-card overflow-hidden">
+            <div className="flex items-center justify-between gap-2 px-3 sm:px-5 py-2.5 sm:py-3 border-b border-rule" style={{ background: "rgba(255,255,255,0.02)" }}>
               <div className="flex items-center gap-1.5 flex-shrink-0" aria-hidden>
-                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#ff5f57]" />
-                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#ffbd2e]" />
-                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#28c840]" />
+                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#FF5F57]" />
+                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#FEBC2E]" />
+                <span className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-[#28C840]" />
               </div>
-              <div className="flex-1 text-nano sm:text-micro text-muted-faint truncate px-2 sm:px-3 font-mono text-center">
+              <div className="flex-1 text-nano sm:text-micro text-ink-40 truncate px-2 sm:px-3 font-mono text-center uppercase tracking-widest">
                 Golden Indicator · Live demo
               </div>
-              <div className="inline-flex items-center gap-1 sm:gap-1.5 bg-surface-alt px-2 py-0.5 rounded-md border border-rule flex-shrink-0">
+              <div className="inline-flex items-center gap-1 sm:gap-1.5 bg-white/5 px-2 py-0.5 rounded-md border border-rule-2 flex-shrink-0">
                 <span
-                  className="w-1.5 h-1.5 rounded-full bg-[#2da44e] motion-safe:animate-pulse"
+                  className="w-1.5 h-1.5 rounded-full bg-cyan motion-safe:animate-pulse"
+                  style={{ boxShadow: "0 0 6px #22D3EE" }}
                   aria-hidden
                 />
-                <span className="text-nano font-bold text-[#2da44e] uppercase tracking-widest">
+                <span className="text-nano font-bold text-cyan uppercase tracking-widest">
                   1.5×
                 </span>
               </div>
@@ -194,9 +196,12 @@ export default function VideoDemo() {
                     togglePlay();
                   }}
                   aria-label="Play demo"
-                  className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
+                  className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors"
                 >
-                  <span className="flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-white/95 text-ink shadow-card">
+                  <span
+                    className="flex items-center justify-center w-14 h-14 sm:w-20 sm:h-20 rounded-full text-[#0B0F17] shadow-cta"
+                    style={{ background: "linear-gradient(135deg, #4E9AFF, #22D3EE)" }}
+                  >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                       <path d="M8 5v14l11-7z" />
                     </svg>
@@ -210,10 +215,10 @@ export default function VideoDemo() {
             </figcaption>
           </figure>
 
-          <p className="mt-4 text-micro text-muted-faint text-center px-2">
+          <p className="mt-4 text-nano font-mono uppercase tracking-widest text-ink-40 text-center px-2">
             {autoplayOk
-              ? "Muted · Looping · Playback 1.5× · Illustrative, not a trade recommendation"
-              : "Tap play to load · Data-saver / reduced-motion respected · Illustrative, not a trade recommendation"}
+              ? "Muted · Looping · Playback 1.5× · Illustrative · Not a trade recommendation"
+              : "Tap play to load · Data-saver / reduced-motion respected · Illustrative"}
           </p>
         </div>
       </div>

@@ -41,33 +41,54 @@ const items = [
 
 export default function Bundle() {
   return (
-    <section className="bg-surface">
-      <div className="container-wide py-16 sm:py-20 md:py-28">
+    <section className="above-bg">
+      <div className="container-wide py-16 sm:py-20 md:py-24">
         <SectionHeader
           eyebrow="What you get"
-          title={<>Everything you need. Nothing you don&apos;t.</>}
-          lede="No more switching indicators. No more conflicting signals. Just one system that shows you what actually matters."
+          title={<>Everything you need. <span className="grad-text-2">Nothing you don&apos;t.</span></>}
+          lede="No more switching indicators. No more conflicting signals. One system that shows you what actually matters."
         />
 
         <div className="mt-10 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {items.map((it) => (
             <div
               key={it.n}
-              className="card-apple p-6 sm:p-8 md:p-10 flex flex-col transition-colors hover:bg-[#eeeef1]"
+              className="glass-card-soft p-6 sm:p-8 flex flex-col transition-all duration-200 hover:border-rule-3 hover:-translate-y-0.5"
             >
               <div className="flex items-center justify-between">
-                <div className="text-micro font-semibold text-blue-link tracking-wider">{it.n}</div>
-                <div className="text-nano uppercase tracking-wider text-muted-faint">{it.tag}</div>
+                <div className="font-mono text-nano uppercase tracking-widest text-cyan">{it.n}</div>
+                <div className="font-mono text-nano uppercase tracking-widest text-ink-40">{it.tag}</div>
               </div>
-              <h3 className="mt-3 sm:mt-4 h-card">{it.name}</h3>
-              <p className="mt-2 sm:mt-3 text-caption text-muted leading-relaxed">{it.desc}</p>
+              <h3 className="mt-4 h-card">{it.name}</h3>
+              <p className="mt-3 text-caption text-ink-60 leading-relaxed">{it.desc}</p>
             </div>
           ))}
         </div>
 
-        <p className="mt-10 sm:mt-12 text-center text-caption text-muted-faint max-w-2xl mx-auto">
+        <p className="mt-10 sm:mt-12 text-center text-caption text-ink-40 max-w-2xl mx-auto">
           Delivered as a sealed package. Installable in under a minute. Yours for life.
         </p>
+
+        <div className="mt-12 glass-card-soft grid grid-cols-2 md:grid-cols-4">
+          {[
+            { k: "8",     v: "Internal tools" },
+            { k: "1",     v: "Decision output" },
+            { k: "24/5",  v: "Markets covered" },
+            { k: "∞",     v: "Lifetime updates" },
+          ].map((s, i) => (
+            <div
+              key={s.v}
+              className={`px-6 py-7 text-center ${i < 3 ? "border-r border-rule" : ""} ${i < 2 ? "border-b md:border-b-0 border-rule" : ""}`}
+            >
+              <div className="font-display font-semibold text-[34px] leading-none tabular-nums grad-text not-italic">
+                {s.k}
+              </div>
+              <div className="mt-2 font-mono text-nano uppercase tracking-widest text-ink-40">
+                {s.v}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

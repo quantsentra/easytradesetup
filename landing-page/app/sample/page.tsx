@@ -58,10 +58,10 @@ export default function SamplePage() {
 
             <h3 className="mt-10 h-card">Exit rules</h3>
             <ul className="mt-4 space-y-3 text-body text-muted">
-              <li className="flex gap-3"><span className="flex-none text-[#0a7a3a] mt-1">✓</span><span><strong className="text-ink">Target:</strong> project the range width in the direction of the break. OR width = 40 pts → target 40 pts from entry.</span></li>
-              <li className="flex gap-3"><span className="flex-none text-[#0a7a3a] mt-1">✓</span><span><strong className="text-ink">Stop:</strong> opposite side of the opening range. Never inside the range.</span></li>
-              <li className="flex gap-3"><span className="flex-none text-[#0a7a3a] mt-1">✓</span><span><strong className="text-ink">Time stop:</strong> square off by 15:15 IST regardless of PnL. This is an intraday setup; overnight exposure invalidates the edge.</span></li>
-              <li className="flex gap-3"><span className="flex-none text-[#0a7a3a] mt-1">✓</span><span><strong className="text-ink">Scale-out option:</strong> take half at 0.7× range width, trail the remainder with a 1× ATR stop.</span></li>
+              <li className="flex gap-3"><span className="flex-none text-up mt-1">✓</span><span><strong className="text-ink">Target:</strong> project the range width in the direction of the break. OR width = 40 pts → target 40 pts from entry.</span></li>
+              <li className="flex gap-3"><span className="flex-none text-up mt-1">✓</span><span><strong className="text-ink">Stop:</strong> opposite side of the opening range. Never inside the range.</span></li>
+              <li className="flex gap-3"><span className="flex-none text-up mt-1">✓</span><span><strong className="text-ink">Time stop:</strong> square off by 15:15 IST regardless of PnL. This is an intraday setup; overnight exposure invalidates the edge.</span></li>
+              <li className="flex gap-3"><span className="flex-none text-up mt-1">✓</span><span><strong className="text-ink">Scale-out option:</strong> take half at 0.7× range width, trail the remainder with a 1× ATR stop.</span></li>
             </ul>
 
             <h3 className="mt-10 h-card">Invalidation</h3>

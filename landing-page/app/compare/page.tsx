@@ -39,7 +39,7 @@ const rows: Row[] = [
 function Cell({ v }: { v: string | boolean }) {
   if (v === true) {
     return (
-      <span className="inline-flex items-center gap-1.5 text-[#0a7a3a] font-medium">
+      <span className="inline-flex items-center gap-1.5 text-up font-medium">
         <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden>
           <path d="M2 7l3 3 7-7" stroke="#0a7a3a" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

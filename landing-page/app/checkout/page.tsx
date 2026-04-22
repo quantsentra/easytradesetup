@@ -22,12 +22,12 @@ export default function CheckoutPage() {
 
       <section className="bg-surface">
         <div className="container-wide py-16">
-          <div className="mb-8 rounded-xl border border-[#f0c36d] bg-[#fff8e6] px-5 py-4 flex items-start gap-3">
+          <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 flex items-start gap-3">
             <svg width="18" height="18" viewBox="0 0 24 24" className="flex-shrink-0 mt-0.5" aria-hidden>
-              <circle cx="12" cy="12" r="10" fill="none" stroke="#b7791f" strokeWidth="1.8" />
-              <path d="M12 8v5 M12 16h.01" stroke="#b7791f" strokeWidth="2" strokeLinecap="round" />
+              <circle cx="12" cy="12" r="10" fill="none" stroke="#F59E0B" strokeWidth="1.8" />
+              <path d="M12 8v5 M12 16h.01" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
             </svg>
-            <div className="text-caption leading-relaxed text-[#7a5a0f]">
+            <div className="text-caption leading-relaxed text-amber-200">
               <strong className="font-semibold">Educational tool, not investment advice.</strong> Golden Indicator is a
               chart tool, not a signal service. You decide every trade. Past performance does not guarantee future
               results. Trading in financial instruments involves substantial risk of loss. Indian users — we are not
@@ -108,7 +108,7 @@ export default function CheckoutPage() {
               </div>
               <div className="mt-2 flex items-center justify-between text-body">
                 <span className="text-muted">Offer applied</span>
-                <span className="inline-flex items-center gap-1.5 bg-[#e7f7ee] text-[#0a7a3a] px-2.5 py-0.5 rounded-full text-nano font-bold uppercase tracking-widest border border-[#cdebd8]">
+                <span className="inline-flex items-center gap-1.5 bg-up/10 text-up px-2.5 py-0.5 rounded-full text-nano font-bold uppercase tracking-widest border border-up/30">
                   {OFFER_LABEL}
                 </span>
               </div>

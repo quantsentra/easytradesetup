@@ -50,8 +50,8 @@ const releases: Release[] = [
 
 const statusBadge: Record<Release["status"], { label: string; className: string }> = {
   planned:  { label: "Planned",  className: "bg-blue/10 text-blue-link border-blue/20" },
-  beta:     { label: "Beta",     className: "bg-[#fff8e6] text-[#7a5a0f] border-[#f0c36d]" },
-  released: { label: "Released", className: "bg-[#e7f7ee] text-[#0a7a3a] border-[#cdebd8]" },
+  beta:     { label: "Beta",     className: "bg-amber-500/10 text-amber-200 border-amber-500/30" },
+  released: { label: "Released", className: "bg-up/10 text-up border-up/30" },
 };
 
 export default function ChangelogPage() {

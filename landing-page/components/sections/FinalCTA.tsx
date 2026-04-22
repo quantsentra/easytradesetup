@@ -1,43 +1,54 @@
 import Link from "next/link";
 import Price from "@/components/ui/Price";
-import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export default function FinalCTA() {
   return (
-    <section className="bg-page">
-      <div className="container-wide py-16 sm:py-20 md:py-28 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full bg-blue/10 border border-blue/20 px-3 py-1 mb-5">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" aria-hidden />
-          <span className="text-nano font-bold text-blue-link uppercase tracking-widest">
-            {OFFER_LABEL} · {OFFER_TAGLINE}
-          </span>
+    <section className="above-bg">
+      <div className="container-wide py-10 sm:py-16">
+        <div
+          className="relative overflow-hidden rounded-[28px] px-6 sm:px-12 py-14 sm:py-16 text-center"
+          style={{
+            background:
+              "radial-gradient(60% 80% at 0% 50%, rgba(43,123,255,.3), transparent 70%), radial-gradient(50% 80% at 100% 50%, rgba(139,92,246,.3), transparent 70%), linear-gradient(180deg, #0E1530, #080C1A)",
+            border: "1px solid rgba(255, 255, 255, 0.10)",
+          }}
+        >
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              backgroundImage: `
+                radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,.5), transparent),
+                radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,.4), transparent),
+                radial-gradient(1.5px 1.5px at 80% 20%, rgba(255,255,255,.5), transparent),
+                radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,.3), transparent)`,
+            }}
+          />
+
+          <div className="relative">
+            <div className="eye justify-center mb-4 inline-flex">
+              <span className="eye-dot" aria-hidden />
+              One last thing
+            </div>
+            <h2 className="h-section max-w-2xl mx-auto">
+              Your next trade deserves a <span className="grad-text-2">cleaner chart.</span>
+            </h2>
+            <p className="mt-5 body-muted max-w-xl mx-auto">
+              Reserve once. Own it for life. Decide every trade yourself.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
+              <Link href="/checkout" className="btn btn-primary btn-lg w-full sm:w-auto">
+                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+              </Link>
+              <Link href="/product" className="btn btn-outline btn-lg w-full sm:w-auto">
+                Explore the tools
+              </Link>
+            </div>
+            <p className="mt-6 text-nano font-mono uppercase tracking-widest text-ink-40">
+              7-day refund · Instant email delivery · Not investment advice
+            </p>
+          </div>
         </div>
-
-        <h2 className="h-hero max-w-[22ch] mx-auto">
-          Stop guessing. Start reading the market.
-        </h2>
-        <p className="mt-5 sm:mt-6 text-body-lg text-muted max-w-[52ch] mx-auto">
-          The difference between losing traders and consistent ones isn&apos;t luck — it&apos;s clarity.
-        </p>
-
-        <div className="mt-8 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 sm:gap-5">
-          <Link
-            href="/checkout"
-            className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body font-medium hover:brightness-110 transition-all w-full sm:w-auto"
-          >
-            <Price variant="cta" />
-          </Link>
-          <Link href="/product" className="link-apple chevron">
-            Explore the product
-          </Link>
-        </div>
-
-        <p className="mt-5 text-caption text-muted-faint">
-          <span className="line-through decoration-muted-faint/60 mr-2"><Price variant="retail" /></span>
-          <span className="text-ink font-medium"><Price variant="amount" /> inaugural</span>
-          <span className="mx-2">·</span>
-          One-time · Instant delivery · Lifetime access
-        </p>
       </div>
     </section>
   );

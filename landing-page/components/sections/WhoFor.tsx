@@ -9,7 +9,7 @@ const signals = [
 
 export default function WhoFor() {
   return (
-    <section className="bg-page">
+    <section className="above-bg">
       <div className="container-wide py-16 sm:py-20 md:py-24">
         <SectionHeader
           eyebrow="Who this is for"
@@ -20,7 +20,7 @@ export default function WhoFor() {
           {signals.map((s) => (
             <li
               key={s}
-              className="card-white p-5 sm:p-6 flex items-start gap-3 text-body text-ink leading-relaxed"
+              className="glass-card-soft p-5 sm:p-6 flex items-start gap-3 text-body text-ink leading-relaxed"
             >
               <svg
                 width="18"
@@ -29,7 +29,7 @@ export default function WhoFor() {
                 className="mt-[3px] flex-none"
                 aria-hidden
               >
-                <circle cx="12" cy="12" r="10" fill="#0071e3" />
+                <circle cx="12" cy="12" r="10" fill="#2B7BFF" />
                 <path
                   d="M8 12l3 3 5-6"
                   stroke="#fff"

@@ -2,13 +2,13 @@ import Link from "next/link";
 
 export default function RiskDisclosure() {
   return (
-    <div className="bg-surface hairline-t">
+    <div className="bg-bg-2 hairline-t above-bg">
       <div className="container-wide py-6 sm:py-8">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="text-nano font-semibold text-muted-faint uppercase tracking-widest mb-2">
+          <div className="text-nano font-semibold text-ink-40 uppercase tracking-widest mb-2">
             Risk Disclosure
           </div>
-          <p className="text-caption text-muted leading-relaxed">
+          <p className="text-caption text-ink-60 leading-relaxed">
             Trading in financial instruments — stocks, F&amp;O, commodities, forex, crypto — involves significant
             risk. Past performance of any strategy is not indicative of future results. EasyTradeSetup products
             are for educational purposes only and do not constitute investment advice. For Indian users: we are

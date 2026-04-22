@@ -37,9 +37,7 @@ export default function LaunchCountdown({
   }, []);
 
   if (!delta) {
-    return (
-      <div aria-hidden className="opacity-0 h-[1px]" />
-    );
+    return <div aria-hidden className="opacity-0 h-[1px]" />;
   }
 
   if (variant === "inline") {
@@ -54,21 +52,21 @@ export default function LaunchCountdown({
 
   return (
     <div className="inline-flex flex-col items-center">
-      <div className="text-nano font-semibold uppercase tracking-widest text-muted-faint">
+      <div className="text-nano font-semibold uppercase tracking-widest text-ink-40">
         Inaugural pricing ends
       </div>
       {delta.ended ? (
-        <div className="mt-2 text-body text-ink font-semibold">Launch window closed</div>
+        <div className="mt-3 text-body text-ink font-semibold">Launch window closed</div>
       ) : (
-        <div className="mt-2 flex items-baseline gap-3 tabular-nums">
-          <TimeCell n={delta.days} label="days" />
-          <span className="text-muted-faint" aria-hidden>:</span>
-          <TimeCell n={delta.hours} label="hours" />
-          <span className="text-muted-faint" aria-hidden>:</span>
-          <TimeCell n={delta.minutes} label="min" />
+        <div className="mt-3 flex items-baseline gap-2 sm:gap-3 font-mono tabular-nums">
+          <TimeCell n={delta.days} label="Days" />
+          <span className="text-ink-40 text-xl" aria-hidden>:</span>
+          <TimeCell n={delta.hours} label="Hrs" />
+          <span className="text-ink-40 text-xl" aria-hidden>:</span>
+          <TimeCell n={delta.minutes} label="Min" />
         </div>
       )}
-      <div className="mt-3 text-caption text-muted">
+      <div className="mt-4 text-caption text-ink-60">
         {LAUNCH_END_DATE_LABEL} · or first {RESERVATION_CAP} reservations — whichever comes first
       </div>
     </div>
@@ -77,11 +75,14 @@ export default function LaunchCountdown({
 
 function TimeCell({ n, label }: { n: number; label: string }) {
   return (
-    <div className="flex flex-col items-center">
-      <div className="text-[34px] sm:text-[42px] leading-none font-display font-semibold text-ink tabular-nums">
+    <div
+      className="flex flex-col items-center px-2.5 py-2.5 rounded-lg border border-rule-2 min-w-[62px]"
+      style={{ background: "rgba(255, 255, 255, 0.04)" }}
+    >
+      <div className="font-display text-[26px] sm:text-[30px] leading-none font-semibold text-ink tabular-nums">
         {String(n).padStart(2, "0")}
       </div>
-      <div className="mt-1 text-nano font-semibold uppercase tracking-widest text-muted-faint">
+      <div className="mt-1 text-[9.5px] font-semibold uppercase tracking-widest text-ink-40">
         {label}
       </div>
     </div>

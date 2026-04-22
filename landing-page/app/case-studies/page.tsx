@@ -107,7 +107,7 @@ export default function CaseStudiesPage() {
       <section className="bg-surface">
         <div className="container-x py-14 sm:py-20 space-y-8">
           {/* Disclaimer callout */}
-          <div className="rounded-xl border border-[#f0c36d] bg-[#fff8e6] px-5 py-4 text-caption leading-relaxed text-[#7a5a0f]">
+          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 text-caption leading-relaxed text-amber-200">
             <strong className="font-semibold">Educational, not performance.</strong> Each
             case below is a post-hoc walk-through on a historical chart — not a log of
             live trades, not a guarantee of future outcomes. Hypothetical entries, stops,
@@ -171,7 +171,7 @@ export default function CaseStudiesPage() {
                       <dt className="text-muted-faint uppercase tracking-wider text-nano font-semibold">
                         R multiple
                       </dt>
-                      <dd className="text-[#0a7a3a] font-semibold tabular-nums">
+                      <dd className="text-up font-semibold tabular-nums">
                         {c.hypothetical.r}
                       </dd>
                     </div>

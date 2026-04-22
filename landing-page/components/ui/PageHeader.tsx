@@ -4,22 +4,21 @@ type Props = {
   eyebrow?: string;
   title: ReactNode;
   lede?: ReactNode;
-  tone?: "page" | "white";
 };
 
-export default function PageHeader({ eyebrow, title, lede, tone = "page" }: Props) {
-  const bg = tone === "page" ? "bg-page" : "bg-surface";
+export default function PageHeader({ eyebrow, title, lede }: Props) {
   return (
-    <section className={`${bg} hairline-b`}>
-      <div className="container-wide pt-20 md:pt-28 pb-14 md:pb-20 text-center">
+    <section className="relative above-bg hairline-b">
+      <div className="container-wide pt-16 md:pt-24 pb-12 md:pb-16 text-center">
         {eyebrow && (
-          <div className="text-micro font-semibold text-blue-link uppercase tracking-wider mb-5">
+          <div className="eye justify-center mb-5 inline-flex">
+            <span className="eye-dot" aria-hidden />
             {eyebrow}
           </div>
         )}
         <h1 className="h-hero max-w-3xl mx-auto">{title}</h1>
         {lede && (
-          <p className="mt-6 text-body-lg text-muted max-w-2xl mx-auto">{lede}</p>
+          <p className="mt-6 body-muted max-w-2xl mx-auto">{lede}</p>
         )}
       </div>
     </section>

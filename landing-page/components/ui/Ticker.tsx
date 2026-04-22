@@ -13,7 +13,7 @@ export default function Ticker() {
   const doubled = [...items, ...items];
   return (
     <div
-      className="relative overflow-hidden hairline-t hairline-b bg-surface py-2.5"
+      className="relative overflow-hidden hairline-t hairline-b bg-bg-2 py-2.5 above-bg"
       aria-label="Sample market quotes (illustrative)"
       role="marquee"
     >
@@ -23,21 +23,17 @@ export default function Ticker() {
           return (
             <div
               key={i}
-              className="flex items-center gap-2 text-micro"
+              className="flex items-center gap-2 text-nano font-mono uppercase tracking-widest"
               aria-hidden={i >= items.length}
             >
-              <span className="text-muted-faint">{it.sym}</span>
+              <span className="text-ink-40">{it.sym}</span>
               <span className="text-ink tabular-nums">{it.px}</span>
-              <span className={up ? "text-[#2da44e]" : "text-[#d13438]"}>
-                {it.chg}
-              </span>
+              <span className={up ? "text-up" : "text-dn"}>{it.chg}</span>
             </div>
           );
         })}
       </div>
-      <span className="sr-only">
-        Illustrative ticker. Not live market data.
-      </span>
+      <span className="sr-only">Illustrative ticker. Not live market data.</span>
     </div>
   );
 }

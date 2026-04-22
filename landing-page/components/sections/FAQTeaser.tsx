@@ -1,66 +1,80 @@
 import Link from "next/link";
-import SectionHeader from "@/components/ui/SectionHeader";
 
 const faqs: Array<[string, string]> = [
   [
+    "Does this work on any TradingView plan?",
+    "Yes. The Pine Script v5 indicator runs on every TradingView tier, including the free plan.",
+  ],
+  [
     "Is this a signal service?",
-    "No. Golden Indicator is a chart tool that helps you read regime, momentum, and key levels. You decide every trade.",
+    "No. Golden Indicator is a chart tool. You decide when to enter and exit. The script helps you see regime, momentum, levels, and volume on one pane.",
   ],
   [
-    "Does it work on all TradingView-compatible markets?",
-    "Yes — any symbol available on TradingView. NSE F&O, US equities, commodities, forex, and major crypto pairs all supported out of the box.",
+    "Does it work on US stocks and crypto?",
+    "Yes. Symbol-agnostic. Tuned for NSE F&O but runs cleanly on US equities, commodities, forex, and major crypto pairs.",
   ],
   [
-    "Do I need prior trading experience?",
-    "Helpful, but not required. The included guide walks through the rules step by step. You can be up and reading a chart in under an hour.",
+    "Is the source code open?",
+    "The Pine Script is delivered as open source — you can inspect and modify it. Redistribution is not permitted.",
   ],
   [
-    "Is the source code included?",
-    "Yes. The Pine Script is delivered open-source so you can inspect and adapt it to your own chart. Redistribution is not permitted.",
+    "What if I have no TradingView experience?",
+    "The install guide walks you through creating a free TradingView account and pasting the script. No coding required.",
   ],
   [
-    "Is this a subscription?",
-    "No. One-time payment. No auto-renewals, no hidden fees, no tiered upgrades. You own the product for life.",
-  ],
-  [
-    "How do I access the files after purchase?",
-    "Everything — indicator, PDF, risk calculator link, and market-notes subscription — arrives in your inbox within seconds of payment.",
+    "How does the refund work?",
+    "Email us within 7 days of purchase for a full refund. No questions asked.",
   ],
 ];
 
 export default function FAQTeaser() {
   return (
-    <section className="bg-surface">
-      <div className="container-x py-16 sm:py-20 md:py-28">
-        <SectionHeader
-          eyebrow="Questions"
-          title={<>Straight answers.</>}
-        />
+    <section className="above-bg">
+      <div className="container-wide py-16 sm:py-20 md:py-24">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_1.6fr] gap-10 md:gap-16 items-start">
+          <div>
+            <div className="eye mb-4">
+              <span className="eye-dot" aria-hidden />Frequent questions
+            </div>
+            <h2 className="h-section">
+              Questions before you <span className="grad-text-2">buy.</span>
+            </h2>
+            <p className="mt-5 body-muted">
+              Still need more?{" "}
+              <Link href="/contact" className="link-apple">
+                Email us
+              </Link>{" "}
+              — we reply within 24 hours from a human.
+            </p>
+          </div>
 
-        <div className="mt-10 sm:mt-12 card-apple p-2 md:p-3">
-          {faqs.map(([q, a], i) => (
-            <details
-              key={i}
-              className="group border-b border-rule last:border-b-0 [&>summary]:list-none [&_summary::-webkit-details-marker]:hidden [&_summary::marker]:content-['']"
-            >
-              <summary className="flex items-center justify-between gap-4 cursor-pointer px-4 sm:px-6 py-4 sm:py-5 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue">
-                <span className="text-body text-ink font-medium">{q}</span>
-                <span
-                  aria-hidden
-                  className="text-blue-link text-[20px] leading-none transition-transform group-open:rotate-45 flex-none"
-                >
-                  +
-                </span>
-              </summary>
-              <p className="px-4 sm:px-6 pb-5 sm:pb-6 text-caption text-muted leading-relaxed">{a}</p>
-            </details>
-          ))}
-        </div>
+          <div className="flex flex-col gap-2">
+            {faqs.map(([q, a], i) => (
+              <details
+                key={i}
+                className="group glass-card-soft transition-colors hover:border-rule-3 [&_summary::-webkit-details-marker]:hidden"
+              >
+                <summary className="flex items-center justify-between gap-4 cursor-pointer list-none px-5 sm:px-6 py-5">
+                  <span className="text-[15px] font-medium text-ink">{q}</span>
+                  <span
+                    aria-hidden
+                    className="w-6 h-6 inline-flex items-center justify-center rounded-full border border-rule-2 text-ink-60 text-base transition-all group-open:text-white group-open:rotate-45 flex-none"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="px-5 sm:px-6 pb-5 text-caption text-ink-60 leading-relaxed">
+                  {a}
+                </p>
+              </details>
+            ))}
 
-        <div className="mt-6 sm:mt-8 text-center">
-          <Link href="/docs/faq" className="link-apple chevron">
-            Read full FAQ
-          </Link>
+            <div className="mt-4">
+              <Link href="/docs/faq" className="link-apple chevron text-caption">
+                Read the full FAQ
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </section>

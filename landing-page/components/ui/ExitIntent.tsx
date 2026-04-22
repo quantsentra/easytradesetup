@@ -145,12 +145,12 @@ export default function ExitIntent() {
         if (e.target === e.currentTarget) dismiss();
       }}
     >
-      <div className="relative bg-surface rounded-[22px] shadow-card w-full sm:max-w-lg p-6 sm:p-10">
+      <div className="relative glass-card w-full sm:max-w-lg p-6 sm:p-10">
         <button
           type="button"
           onClick={dismiss}
           aria-label="Close"
-          className="absolute top-3 right-3 w-9 h-9 inline-flex items-center justify-center rounded-full hover:bg-surface-alt transition-colors"
+          className="absolute top-3 right-3 w-9 h-9 inline-flex items-center justify-center rounded-full hover:bg-white/10 text-ink-60 hover:text-ink transition-colors"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden>
             <line x1="18" y1="6" x2="6" y2="18" />
@@ -158,19 +158,20 @@ export default function ExitIntent() {
           </svg>
         </button>
 
-        <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">
+        <div className="eye">
+          <span className="eye-dot" aria-hidden />
           Before you go
         </div>
         <h2 id="exit-intent-title" className="mt-3 h-tile">
           Take a sample of the playbook with you.
         </h2>
-        <p className="mt-3 text-caption text-muted leading-relaxed">
+        <p className="mt-3 text-caption text-ink-60 leading-relaxed">
           Drop your email and we&apos;ll send a free 3-page sample from the Trade Logic PDF —
           structure, entry rules, invalidation. No spam. No follow-ups until launch.
         </p>
 
         {status === "success" ? (
-          <div className="mt-6 rounded-xl bg-[#e7f7ee] border border-[#cdebd8] px-4 py-3 text-caption text-[#0a7a3a]">
+          <div className="mt-6 rounded-xl px-4 py-3 text-caption" style={{ background: "rgba(34,197,94,0.12)", border: "1px solid rgba(34,197,94,0.3)", color: "#86EFAC" }}>
             Thanks — check your inbox. If it doesn&apos;t arrive in 5 minutes, peek in spam.
           </div>
         ) : (
@@ -182,12 +183,12 @@ export default function ExitIntent() {
               autoFocus
               placeholder="you@example.com"
               aria-label="Email address"
-              className="flex-1 bg-surface border border-rule rounded-lg px-4 py-3 text-body text-ink focus:outline-none focus:border-blue transition-colors"
+              className="flex-1 bg-white/5 border border-rule-2 rounded-lg px-4 py-3 text-body text-ink placeholder:text-ink-40 focus:outline-none focus:border-blue-soft transition-colors"
             />
             <button
               type="submit"
               disabled={status === "submitting"}
-              className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-5 py-3 text-body font-medium hover:brightness-110 transition-all disabled:opacity-60"
+              className="btn btn-primary btn-lg disabled:opacity-60"
             >
               {status === "submitting" ? "Sending…" : "Send sample"}
             </button>
@@ -195,14 +196,14 @@ export default function ExitIntent() {
         )}
 
         {status === "error" && (
-          <div className="mt-3 text-caption text-[#8f1d22]">
+          <div className="mt-3 text-caption text-dn">
             Couldn&apos;t send right now. Please try again or email hello@easytradesetup.com.
           </div>
         )}
 
-        <p className="mt-5 text-nano text-muted-faint">
+        <p className="mt-5 text-nano text-ink-40 uppercase tracking-widest font-mono">
           Or{" "}
-          <Link href="/sample" onClick={dismiss} className="link-apple">
+          <Link href="/sample" onClick={dismiss} className="link-apple normal-case tracking-normal">
             view the sample page
           </Link>
           {" "}· unsubscribe any time · we don&apos;t sell emails.
