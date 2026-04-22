@@ -3,6 +3,7 @@ import TopNav from "@/components/nav/TopNav";
 import Footer from "@/components/nav/Footer";
 import OfferBanner from "@/components/ui/OfferBanner";
 import StickyBuyBar from "@/components/ui/StickyBuyBar";
+import ExitIntent from "@/components/ui/ExitIntent";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -59,6 +60,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <StickyBuyBar />
+        <ExitIntent />
         <Analytics />
       </body>
     </html>

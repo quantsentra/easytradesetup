@@ -10,7 +10,6 @@ const navItems = [
   { href: "/pricing", label: "Pricing" },
   { href: "/docs", label: "Docs" },
   { href: "/updates", label: "Updates" },
-  { href: "/research", label: "Research" },
 ];
 
 export default function TopNav() {

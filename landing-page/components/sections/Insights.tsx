@@ -62,25 +62,25 @@ export default function Insights() {
             </div>
           </Link>
 
-          {/* Research report card */}
+          {/* Compare card */}
           <Link
-            href="/research"
+            href="/compare"
             className="card-white p-6 sm:p-8 flex flex-col group hover:bg-surface-alt transition-colors"
           >
             <div className="flex items-center justify-between">
               <span className="text-micro font-semibold text-blue-link uppercase tracking-wider">
-                Research
+                Compare
               </span>
-              <span className="text-nano font-mono text-muted-faint">Apr 2026</span>
+              <span className="text-nano font-mono text-muted-faint">Honest</span>
             </div>
-            <h3 className="mt-5 h-card">Market feasibility — can this find buyers?</h3>
+            <h3 className="mt-5 h-card">How we stack up against the alternatives.</h3>
             <p className="mt-3 text-caption text-muted flex-1 leading-relaxed">
-              TAM/SAM/SOM on the Indian F&amp;O + global TradingView market, pricing
-              benchmarks, 5-competitor analysis, and a conservative revenue model.
+              Side-by-side table vs LuxAlgo, TrendSpider, and typical YouTuber-branded
+              scripts — pricing, model, support, and claims.
             </p>
             <div className="mt-6 pt-5 hairline-t flex items-center justify-between">
-              <span className="text-nano text-muted-faint font-mono">Desk research</span>
-              <span className="text-caption text-blue-link font-medium">Open report →</span>
+              <span className="text-nano text-muted-faint font-mono">3-year cost delta</span>
+              <span className="text-caption text-blue-link font-medium">See table →</span>
             </div>
           </Link>
         </div>
