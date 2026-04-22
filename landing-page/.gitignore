@@ -5,3 +5,9 @@ out
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Test artifacts
+coverage
+playwright-report
+test-results
+/playwright/.cache
