@@ -3,12 +3,14 @@ import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Bundle from "@/components/sections/Bundle";
 import Price from "@/components/ui/Price";
+import { ProductJsonLd } from "@/components/seo/JsonLd";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Product — Golden Indicator",
   description:
     "Golden Indicator — a proprietary TradingView Pine Script with an integrated signal engine for global markets. Pine + Chart gallery + PDF + Risk Calculator + daily notes. India ₹2,499 · Global $49.",
+  alternates: { canonical: "/product" },
 };
 
 const promises = [
@@ -46,6 +48,7 @@ const specs: Array<[string, string]> = [
 export default function ProductPage() {
   return (
     <>
+      <ProductJsonLd />
       <PageHeader
         eyebrow="Golden Indicator"
         title={<>One script. One proprietary engine.</>}

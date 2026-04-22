@@ -4,12 +4,14 @@ import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
 import LaunchCountdown from "@/components/ui/LaunchCountdown";
 import PaymentLogos from "@/components/ui/PaymentLogos";
+import { ProductJsonLd } from "@/components/seo/JsonLd";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description:
     "Golden Indicator — inaugural launch offer. Retail $149 / ₹13,999, today $49 / ₹4,599. One-time payment. Lifetime access. No subscription, no hidden costs.",
+  alternates: { canonical: "/pricing" },
 };
 
 const included = [
@@ -31,6 +33,7 @@ const notIncluded = [
 export default function PricingPage() {
   return (
     <>
+      <ProductJsonLd />
       <PageHeader
         eyebrow="Pricing"
         title={<>One price. Forever.</>}

@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
+import { FAQPageJsonLd } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = { title: "FAQ" };
+export const metadata: Metadata = {
+  title: "FAQ",
+  alternates: { canonical: "/docs/faq" },
+};
 
 const faqs = [
   {
@@ -40,8 +44,12 @@ const faqs = [
 ];
 
 export default function FAQPage() {
+  const flat = faqs.flatMap((sec) =>
+    sec.items.map(([q, a]) => ({ q: String(q), a: String(a) }))
+  );
   return (
     <>
+      <FAQPageJsonLd faqs={flat} />
       <PageHeader
         eyebrow="FAQ"
         title={<>Asked. And answered.</>}

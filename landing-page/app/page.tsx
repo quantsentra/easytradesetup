@@ -10,10 +10,12 @@ import FounderNote from "@/components/sections/FounderNote";
 import PricingTeaser from "@/components/sections/PricingTeaser";
 import FAQTeaser from "@/components/sections/FAQTeaser";
 import FinalCTA from "@/components/sections/FinalCTA";
+import { ProductJsonLd } from "@/components/seo/JsonLd";
 
 export default function HomePage() {
   return (
     <>
+      <ProductJsonLd />
       <Hero />
       <WhoFor />
       <CleanVsNoisy />

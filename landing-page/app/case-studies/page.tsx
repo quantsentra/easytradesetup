@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Case studies — Educational walk-throughs",
   description:
     "Educational case studies demonstrating how Golden Indicator reads regime, structure, and levels on real historical charts. Hypothetical outcomes. Not a record of trading performance.",
+  alternates: { canonical: "/case-studies" },
 };
 
 type Case = {

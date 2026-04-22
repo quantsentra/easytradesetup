@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   title: "Sample — Trade Logic PDF",
   description:
     "Read a free sample chapter from the Golden Indicator Trade Logic PDF. Ungated. No email required. Setup rules, entry logic, invalidation framework.",
+  alternates: { canonical: "/sample" },
 };
 
 export default function SamplePage() {

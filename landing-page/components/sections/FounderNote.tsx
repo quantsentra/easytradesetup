@@ -5,9 +5,9 @@ export default function FounderNote() {
     <section className="bg-surface">
       <div className="container-x py-16 sm:py-20 md:py-24">
         <div className="max-w-[720px] mx-auto">
-          <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">
+          <h2 className="text-micro font-semibold text-blue-link uppercase tracking-wider m-0">
             A note from the founder
-          </div>
+          </h2>
           <blockquote className="mt-5 text-[22px] sm:text-[26px] leading-[1.35] tracking-tight text-ink font-display font-normal">
             &ldquo;I built Golden Indicator because the chart tools I could buy
             were either cluttered, confused, or disguised sales pitches. I

@@ -3,18 +3,46 @@
 import { useEffect, useRef, useState } from "react";
 import SectionHeader from "@/components/ui/SectionHeader";
 
+type ConnectionLike = {
+  saveData?: boolean;
+  effectiveType?: string;
+};
+
+function shouldAutoplay(): boolean {
+  if (typeof window === "undefined") return false;
+
+  try {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce) return false;
+  } catch {
+    /* ignored */
+  }
+
+  try {
+    const nav = navigator as Navigator & { connection?: ConnectionLike };
+    const conn = nav.connection;
+    if (conn) {
+      if (conn.saveData) return false;
+      const slow = conn.effectiveType && /2g|slow-2g/.test(conn.effectiveType);
+      if (slow) return false;
+    }
+  } catch {
+    /* ignored */
+  }
+
+  return true;
+}
+
 export default function VideoDemo() {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [muted, setMuted] = useState(true);
   const [playing, setPlaying] = useState(false);
+  const [autoplayOk, setAutoplayOk] = useState(false);
   const [nearViewport, setNearViewport] = useState(false);
 
   useEffect(() => {
-    const wrap = wrapRef.current;
-    const vid = videoRef.current;
-    if (!wrap || !vid) return;
-    vid.playbackRate = 1.5;
+    setAutoplayOk(shouldAutoplay());
   }, []);
 
   useEffect(() => {
@@ -29,6 +57,7 @@ export default function VideoDemo() {
         for (const e of entries) {
           if (e.isIntersecting) {
             setNearViewport(true);
+            if (!autoplayOk) return;
             const vid = videoRef.current;
             if (vid && vid.readyState < 2) vid.load();
             if (vid) vid.play().catch(() => undefined);
@@ -39,7 +68,7 @@ export default function VideoDemo() {
     );
     io.observe(wrap);
     return () => io.disconnect();
-  }, []);
+  }, [autoplayOk]);
 
   function toggleMute() {
     const el = videoRef.current;
@@ -98,7 +127,10 @@ export default function VideoDemo() {
                 Golden Indicator · Live demo
               </div>
               <div className="inline-flex items-center gap-1 sm:gap-1.5 bg-surface-alt px-2 py-0.5 rounded-md border border-rule flex-shrink-0">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2da44e] animate-pulse" aria-hidden />
+                <span
+                  className="w-1.5 h-1.5 rounded-full bg-[#2da44e] motion-safe:animate-pulse"
+                  aria-hidden
+                />
                 <span className="text-nano font-bold text-[#2da44e] uppercase tracking-widest">
                   1.5×
                 </span>
@@ -108,19 +140,19 @@ export default function VideoDemo() {
             <div className="relative bg-black">
               <video
                 ref={videoRef}
-                src={nearViewport ? "/demo.mp4" : undefined}
+                src={nearViewport && autoplayOk ? "/demo.mp4" : undefined}
                 poster="/chart-after.png"
-                autoPlay
+                autoPlay={autoplayOk}
                 muted
                 loop
                 playsInline
-                preload="auto"
+                preload={autoplayOk ? "auto" : "none"}
                 onPlay={() => setPlaying(true)}
                 onPause={() => setPlaying(false)}
                 onCanPlay={(e) => {
                   const el = e.currentTarget;
                   el.playbackRate = 1.5;
-                  if (el.paused) el.play().catch(() => undefined);
+                  if (autoplayOk && el.paused) el.play().catch(() => undefined);
                 }}
                 onClick={togglePlay}
                 className="w-full h-auto block cursor-pointer"
@@ -157,7 +189,10 @@ export default function VideoDemo() {
               {!playing && (
                 <button
                   type="button"
-                  onClick={togglePlay}
+                  onClick={() => {
+                    setAutoplayOk(true);
+                    togglePlay();
+                  }}
                   aria-label="Play demo"
                   className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors"
                 >
@@ -176,7 +211,9 @@ export default function VideoDemo() {
           </figure>
 
           <p className="mt-4 text-micro text-muted-faint text-center px-2">
-            Muted · Looping · Playback 1.5× · Illustrative, not a trade recommendation
+            {autoplayOk
+              ? "Muted · Looping · Playback 1.5× · Illustrative, not a trade recommendation"
+              : "Tap play to load · Data-saver / reduced-motion respected · Illustrative, not a trade recommendation"}
           </p>
         </div>
       </div>

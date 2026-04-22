@@ -4,6 +4,7 @@ import Footer from "@/components/nav/Footer";
 import OfferBanner from "@/components/ui/OfferBanner";
 import StickyBuyBar from "@/components/ui/StickyBuyBar";
 import ExitIntent from "@/components/ui/ExitIntent";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -40,7 +41,20 @@ export const metadata: Metadata = {
     title: "EasyTradeSetup — Golden Indicator",
     description: "Trade with clarity. Not noise. Inaugural offer: $49 / ₹4,599 (retail $149 / ₹13,999). One-time payment, lifetime access.",
   },
-  robots: { index: true, follow: true },
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export const viewport: Viewport = {
@@ -61,6 +75,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <StickyBuyBar />
         <ExitIntent />
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
         <Analytics />
       </body>
     </html>

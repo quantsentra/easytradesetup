@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Compare — Golden Indicator vs alternatives",
   description:
     "Side-by-side comparison of Golden Indicator against LuxAlgo, TrendSpider, and typical YouTuber-branded Pine Script bundles. Pricing, model, support, and claims compared.",
+  alternates: { canonical: "/compare" },
 };
 
 type Row = {

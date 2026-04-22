@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Reserve early access",
   description:
     "Reserve your copy of Golden Indicator at the launch price. $49 / ₹4,599 inaugural — locked in when you join the list.",
+  alternates: { canonical: "/checkout" },
 };
 
 export default function CheckoutPage() {
