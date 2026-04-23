@@ -31,15 +31,12 @@ export default function PricingTeaser() {
             <div
               className="inline-flex items-center gap-2 rounded-full px-3 py-1"
               style={{
-                background: "rgba(43, 123, 255, 0.12)",
-                border: "1px solid rgba(43, 123, 255, 0.30)",
+                background: "rgba(143, 204, 42, 0.10)",
+                border: "1px solid rgba(143, 204, 42, 0.35)",
               }}
             >
-              <span
-                className="w-1.5 h-1.5 rounded-full bg-blue motion-safe:animate-pulse"
-                aria-hidden
-              />
-              <span className="text-nano font-bold text-blue-soft uppercase tracking-widest">
+              <span className="pulse-dot" aria-hidden />
+              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-acid">
                 {OFFER_LABEL} · {OFFER_TAGLINE}
               </span>
             </div>
@@ -77,7 +74,7 @@ export default function PricingTeaser() {
             </ul>
 
             <div className="mt-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
-              <Link href="/checkout" className="btn btn-primary btn-lg w-full sm:w-auto">
+              <Link href="/checkout" className="btn btn-acid btn-lg w-full sm:w-auto">
                 Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link href="/pricing" className="btn btn-outline btn-lg w-full sm:w-auto">

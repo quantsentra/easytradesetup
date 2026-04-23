@@ -1,74 +1,140 @@
 import SectionHeader from "@/components/ui/SectionHeader";
 
-const items = [
+type Item = {
+  n: string;
+  name: string;
+  desc: string;
+  tag: "included" | "new" | "soon";
+  tagLabel: string;
+  icon: React.ReactNode;
+};
+
+const items: Item[] = [
   {
     n: "01",
     name: "Golden Indicator",
-    tag: "Pine Script v5",
-    desc: "See where real buyers and sellers are active. One signal engine replaces a dozen cluttered indicators.",
+    tag: "included",
+    tagLabel: "Pine Script v5",
+    desc: "One signal engine replacing a dozen cluttered indicators. Bar-close only — no repaint, no mid-bar flicker.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="M4 19V7m5 12v-6m5 6V10m5 9V5" />
+      </svg>
+    ),
   },
   {
     n: "02",
-    name: "TradingView Chart Gallery",
-    tag: "Real setups",
-    desc: "Learn how professionals read the same chart you're looking at. Real markets, annotated.",
+    name: "Trade Logic PDF",
+    tag: "included",
+    tagLabel: "50+ pages",
+    desc: "Entries, exits, risk framework — in plain language. Rules you can read once and apply the next morning.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="M5 4h12a2 2 0 0 1 2 2v14l-4-2-4 2-4-2-4 2V6a2 2 0 0 1 2-2Z" />
+        <path d="M9 9h7M9 13h5" />
+      </svg>
+    ),
   },
   {
     n: "03",
-    name: "Trade Logic PDF",
-    tag: "50+ pages",
-    desc: "Clear rules. No guessing. No confusion. Entries, exits, and the risk framework in plain language.",
+    name: "Risk Calculator",
+    tag: "new",
+    tagLabel: "New",
+    desc: "Position sizing and R-multiple tracker tuned to your account currency. Protect capital before chasing P&L.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 6v6l4 2" />
+      </svg>
+    ),
   },
   {
     n: "04",
-    name: "Risk Calculator",
-    tag: "Web tool",
-    desc: "Protect your capital before you chase profits. Position sizing in your own currency, built in.",
-  },
-  {
-    n: "05",
     name: "Daily Market Notes",
-    tag: "Email",
-    desc: "Know what matters before the market opens. India plus global — SPX, Gold, BTC.",
-  },
-  {
-    n: "06",
-    name: "Lifetime Updates",
-    tag: "Included",
-    desc: "The system evolves as markets evolve. Every future revision delivered to you, free of charge.",
+    tag: "soon",
+    tagLabel: "Coming Soon",
+    desc: "Pre-market bias: NIFTY, SPX, Gold, BTC. Levels, gamma, session timing. Delivered before the open.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <rect x="3" y="5" width="18" height="15" rx="2" />
+        <path d="M3 9h18M8 3v4M16 3v4" />
+      </svg>
+    ),
   },
 ];
 
 export default function Bundle() {
   return (
     <section className="above-bg">
-      <div className="container-wide py-16 sm:py-20 md:py-24">
+      <div className="container-wide py-20 sm:py-24 md:py-28">
         <SectionHeader
-          eyebrow="What you get"
-          title={<>Everything you need. <span className="grad-text-2">Nothing you don&apos;t.</span></>}
-          lede="No more switching indicators. No more conflicting signals. One system that shows you what actually matters."
+          eyebrow="The kit"
+          title={
+            <>
+              Four instruments. <span className="grad-text-2">One sealed workflow.</span>
+            </>
+          }
+          lede="No upsells, no feature tiers. Every piece shares the same bar data so nothing contradicts itself."
         />
 
-        <div className="mt-10 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="mt-12 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {items.map((it) => (
-            <div
-              key={it.n}
-              className="glass-card-soft p-6 sm:p-8 flex flex-col transition-all duration-200 hover:border-rule-3 hover:-translate-y-0.5"
-            >
-              <div className="flex items-center justify-between">
-                <div className="font-mono text-nano uppercase tracking-widest text-cyan">{it.n}</div>
-                <div className="font-mono text-nano uppercase tracking-widest text-ink-40">{it.tag}</div>
+            <article key={it.n} className="feat-card">
+              <div className="flex items-start justify-between">
+                <div className="stat-num text-[32px] text-acid leading-none">{it.n}</div>
+                <div
+                  className="w-11 h-11 rounded-lg grid place-items-center flex-shrink-0"
+                  style={{
+                    background: "rgba(143, 204, 42, 0.14)",
+                    color: "#8FCC2A",
+                  }}
+                  aria-hidden
+                >
+                  {it.icon}
+                </div>
               </div>
-              <h3 className="mt-4 h-card">{it.name}</h3>
-              <p className="mt-3 text-caption text-ink-60 leading-relaxed">{it.desc}</p>
-            </div>
+
+              <h3 className="mt-10 font-display text-[20px] font-semibold tracking-[-0.02em] text-ink">
+                {it.name}
+              </h3>
+
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                <span
+                  className={
+                    it.tag === "new"
+                      ? "chip chip-new"
+                      : it.tag === "soon"
+                      ? "chip chip-soon"
+                      : "chip"
+                  }
+                >
+                  {it.tagLabel}
+                </span>
+              </div>
+
+              <p className="mt-4 text-[14px] leading-[1.55] text-ink-60 flex-1">{it.desc}</p>
+            </article>
           ))}
         </div>
 
-        <p className="mt-10 sm:mt-12 text-center text-caption text-ink-40 max-w-2xl mx-auto">
-          Delivered as a sealed package. Installable in under a minute. Yours for life.
-        </p>
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-[13px] text-ink-60">
+          <span className="inline-flex items-center gap-2">
+            <span className="text-acid">✓</span>Lifetime updates included
+          </span>
+          <Dot />
+          <span className="inline-flex items-center gap-2">
+            <span className="text-acid">✓</span>Delivered by email
+          </span>
+          <Dot />
+          <span className="inline-flex items-center gap-2">
+            <span className="text-acid">✓</span>Installable in under 60 seconds
+          </span>
+        </div>
       </div>
     </section>
   );
+}
+
+function Dot() {
+  return <span className="w-1 h-1 rounded-full bg-ink-40" aria-hidden />;
 }

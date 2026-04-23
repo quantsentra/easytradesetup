@@ -1,25 +1,32 @@
 import type { Config } from "tailwindcss";
 
-const appleStack = [
+const sansStack = [
+  "var(--font-inter-tight)",
+  "Inter",
   "-apple-system",
   "BlinkMacSystemFont",
   "SF Pro Display",
-  "SF Pro Text",
-  "Inter",
+  "Segoe UI",
+  "Roboto",
   "Helvetica Neue",
-  "Helvetica",
-  "Arial",
+  "sans-serif",
+];
+
+const displayStack = [
+  "var(--font-space-grotesk)",
+  "var(--font-inter-tight)",
+  "Inter",
+  "system-ui",
   "sans-serif",
 ];
 
 const monoStack = [
+  "var(--font-jetbrains-mono)",
   "ui-monospace",
   "SFMono-Regular",
   "SF Mono",
   "Menlo",
-  "Monaco",
   "Consolas",
-  "Liberation Mono",
   "monospace",
 ];
 
@@ -61,6 +68,13 @@ const config: Config = {
           dim: "#8A6D2A",
         },
         violet: "#8B5CF6",
+        // Acid-lime accent (live / streaming / signal-active states)
+        acid: {
+          DEFAULT: "#8FCC2A",
+          dim: "#6FA01E",
+          glow: "rgba(143, 204, 42, 0.35)",
+        },
+        amber: "#FFB341",
 
         // Semantic (trading)
         up: "#22C55E",
@@ -78,8 +92,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: appleStack,
-        text: appleStack,
+        display: displayStack,
+        text: sansStack,
         mono: monoStack,
       },
       fontSize: {

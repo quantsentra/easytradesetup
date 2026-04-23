@@ -27,13 +27,13 @@ export default function TopNav() {
     <header
       className="sticky top-0 z-50 above-bg"
       style={{
-        backgroundColor: "rgba(5, 7, 15, 0.55)",
-        backdropFilter: "blur(18px) saturate(1.4)",
-        WebkitBackdropFilter: "blur(18px) saturate(1.4)",
+        backgroundColor: "rgba(5, 7, 15, 0.85)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
         borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
       }}
     >
-      <div className="container-wide flex items-center justify-between gap-6 h-14">
+      <div className="container-wide flex items-center justify-between gap-6 h-16">
         <Link href="/" aria-label="EasyTradeSetup home" className="inline-flex items-center gap-2.5 flex-shrink-0">
           <span
             className="w-7 h-7 rounded-full grid place-items-center text-white"
@@ -70,7 +70,7 @@ export default function TopNav() {
           >
             Contact
           </Link>
-          <Link href="/checkout" className="btn btn-primary">
+          <Link href="/checkout" className="btn btn-acid">
             Reserve · <Price variant="amount" />
             <span className="arrow" aria-hidden>→</span>
           </Link>
@@ -116,7 +116,7 @@ export default function TopNav() {
             <Link
               href="/checkout"
               onClick={() => setOpen(false)}
-              className="btn btn-primary btn-lg mt-6 justify-center"
+              className="btn btn-acid btn-lg mt-6 justify-center"
             >
               Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
             </Link>

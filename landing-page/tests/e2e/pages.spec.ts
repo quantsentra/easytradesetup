@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 // Smoke-test every route linked from sitemap / nav / footer.
 const routes: Array<{ path: string; mustContain: RegExp }> = [
-  { path: "/", mustContain: /trade with clarity/i },
+  { path: "/", mustContain: /signal stack|devours|chart clutter/i },
   { path: "/product", mustContain: /golden indicator|one decision layer/i },
   { path: "/pricing", mustContain: /one price.*forever/i },
   { path: "/compare", mustContain: /compare|alternatives|side by side/i },

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Inter_Tight, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import TopNav from "@/components/nav/TopNav";
 import Footer from "@/components/nav/Footer";
 import OfferBanner from "@/components/ui/OfferBanner";
@@ -7,6 +8,25 @@ import ExitIntent from "@/components/ui/ExitIntent";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-inter-tight",
+  display: "swap",
+});
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-jetbrains-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://easytradesetup.com"),
@@ -66,13 +86,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
-        <div className="aurora" aria-hidden>
-          <div className="aurora-third" />
-        </div>
-        <div className="stars" aria-hidden />
         <OfferBanner />
         <TopNav />
         <main id="main" className="above-bg">{children}</main>
