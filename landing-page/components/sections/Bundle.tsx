@@ -74,7 +74,13 @@ export default function Bundle() {
               Four instruments. <span className="grad-text-2">One sealed workflow.</span>
             </>
           }
-          lede="No upsells, no feature tiers. Every piece shares the same bar data so nothing contradicts itself."
+          lede={
+            <>
+              Regime, structure, entry, and pullback logic fused into a single non-repainting
+              engine. No upsells, no feature tiers, no hunting across twelve scripts for the
+              one piece that actually works.
+            </>
+          }
         />
 
         <div className="mt-12 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

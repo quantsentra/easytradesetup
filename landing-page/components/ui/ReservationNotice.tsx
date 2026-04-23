@@ -5,6 +5,7 @@ import {
   LAUNCH_END_DATE,
   LAUNCH_END_DATE_LABEL,
   RESERVATION_CAP,
+  estimatedClaimed,
 } from "@/lib/launch";
 
 function daysLeft(nowMs: number): number {
@@ -20,10 +21,15 @@ export default function ReservationNotice({
   tone?: "solid" | "soft";
 }) {
   const [days, setDays] = useState<number | null>(null);
+  const [claimed, setClaimed] = useState<number>(0);
 
   useEffect(() => {
-    setDays(daysLeft(Date.now()));
-    const id = setInterval(() => setDays(daysLeft(Date.now())), 60_000);
+    const tick = () => {
+      setDays(daysLeft(Date.now()));
+      setClaimed(estimatedClaimed());
+    };
+    tick();
+    const id = setInterval(tick, 60_000);
     return () => clearInterval(id);
   }, []);
 
@@ -31,14 +37,15 @@ export default function ReservationNotice({
     return <div aria-hidden className="h-[34px]" />;
   }
 
-  const base =
-    tone === "soft"
-      ? "bg-white/[0.03] border-rule-2"
-      : "bg-white/[0.06] border-rule-3";
+  const remaining = Math.max(0, RESERVATION_CAP - claimed);
+  const pct = Math.min(100, Math.round((claimed / RESERVATION_CAP) * 100));
 
   return (
     <div
-      className={`inline-flex items-center flex-wrap justify-center gap-x-3 gap-y-1.5 rounded-full border ${base} px-3.5 py-1.5`}
+      className={`inline-flex items-center flex-wrap justify-center gap-x-3 gap-y-1.5 rounded-full border border-rule-3 px-3.5 py-1.5`}
+      style={{
+        background: tone === "soft" ? "var(--c-fill-soft)" : "var(--c-fill-hover)",
+      }}
     >
       <span className="inline-flex items-center gap-1.5">
         <span
@@ -46,14 +53,29 @@ export default function ReservationNotice({
           style={{ boxShadow: "0 0 6px #22D3EE" }}
           aria-hidden
         />
-        <span className="text-nano font-bold text-cyan uppercase tracking-widest">
-          {RESERVATION_CAP} spots · launch price
+        <span className="text-nano font-bold text-cyan uppercase tracking-widest tabular-nums">
+          {claimed} / {RESERVATION_CAP} claimed · {remaining} left
         </span>
       </span>
       <span className="text-nano font-mono text-ink-40 uppercase tracking-widest">
         {days > 0
           ? `${days}d left · ends ${LAUNCH_END_DATE_LABEL}`
           : "Launch closed"}
+      </span>
+
+      {/* Thin progress bar */}
+      <span
+        className="basis-full h-[2px] rounded-full overflow-hidden"
+        style={{ background: "var(--c-rule)" }}
+        aria-hidden
+      >
+        <span
+          className="block h-full"
+          style={{
+            width: `${pct}%`,
+            background: "linear-gradient(90deg, #22D3EE, #2B7BFF)",
+          }}
+        />
       </span>
     </div>
   );

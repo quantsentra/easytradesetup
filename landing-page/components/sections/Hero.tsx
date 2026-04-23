@@ -25,11 +25,11 @@ export default function Hero() {
               </span>
             </div>
 
-            <h1 className="mt-6 font-display font-semibold text-[56px] sm:text-[72px] lg:text-[88px] leading-[0.95] tracking-[-0.035em] text-ink">
-              The signal stack<br />
-              that{" "}
+            <h1 className="mt-6 font-display font-semibold text-[50px] sm:text-[66px] lg:text-[78px] leading-[0.98] tracking-[-0.035em] text-ink">
+              One TradingView indicator.<br />
+              Everything you&apos;ll{" "}
               <em className="word-accent">
-                devours
+                ever
                 <svg viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden>
                   <path
                     d="M2 8 Q 100 2, 200 7 T 398 6"
@@ -39,23 +39,26 @@ export default function Hero() {
                     strokeLinecap="round"
                   />
                 </svg>
-              </em>
-              <br />
-              your chart clutter.
+              </em>{" "}
+              need<br />
+              to read any market.
             </h1>
 
-            <p className="mt-7 max-w-[520px] text-[17px] sm:text-[18px] leading-[1.55] text-ink-60">
-              One sealed TradingView Pine v5 indicator. Regime, structure, entry, and
-              stop — drawn on one pane. Stop switching between six dashboards to read a
-              single chart.
+            <p className="mt-7 max-w-[540px] text-[17px] sm:text-[18px] leading-[1.55] text-ink-60">
+              Golden Indicator is a sealed Pine v5 script. Regime, structure, key levels,
+              entries, pullbacks, and risk — fused on one pane. Bar-close only.
+              No repaint, no signal service. You decide every trade.
             </p>
 
             <div className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <Link href="/checkout" className="btn btn-acid btn-lg">
                 Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
-              <Link href="/sample" className="btn btn-outline btn-lg">
-                Read a free chapter — no email
+              <Link
+                href="/sample"
+                className="inline-flex items-center gap-1.5 text-[14px] font-medium text-ink-60 hover:text-ink transition-colors px-2 py-2"
+              >
+                or read a free chapter first <span aria-hidden>→</span>
               </Link>
             </div>
 

@@ -5,11 +5,11 @@ test.describe("Home page — marketing integrity", () => {
     await page.goto("/");
   });
 
-  test("renders hero headline with tradzella-style accent word", async ({ page }) => {
+  test("renders hero headline with product-first cadence + accent word", async ({ page }) => {
     const h1 = page.getByRole("heading", { level: 1 });
-    await expect(h1).toContainText(/signal stack/i);
-    await expect(h1).toContainText(/devours/i);
-    await expect(h1).toContainText(/chart clutter/i);
+    await expect(h1).toContainText(/one tradingview indicator/i);
+    await expect(h1).toContainText(/ever/i);
+    await expect(h1).toContainText(/any market/i);
   });
 
   test("hero CTA links point to checkout + sample", async ({ page }) => {
@@ -22,9 +22,9 @@ test.describe("Home page — marketing integrity", () => {
     await expect(sample).toHaveAttribute("href", "/sample");
   });
 
-  test("reservation notice shows cap + days-left", async ({ page }) => {
-    await expect(page.getByText(/500 spots · launch price/i).first()).toBeVisible();
-    await expect(page.getByText(/ends 15 may 2026/i).first()).toBeVisible();
+  test("reservation notice shows claimed counter + days-left", async ({ page }) => {
+    await expect(page.getByText(/\d+ \/ 500 claimed/i).first()).toBeVisible();
+    await expect(page.getByText(/left · ends 15 may 2026/i).first()).toBeVisible();
   });
 
   test("markets marquee renders symbols", async ({ page }) => {
