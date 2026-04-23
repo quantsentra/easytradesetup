@@ -81,24 +81,21 @@ Motion: all animations behind `motion-safe:`. Global `prefers-reduced-motion` ov
 
 ## Sitemap
 
-30 routes, priority-tuned in `app/sitemap.ts`.
+14 public routes, priority-tuned in `app/sitemap.ts`.
 
 | Tier | Path |
 |---|---|
 | Core (1.0–0.9) | `/`, `/product`, `/pricing`, `/checkout` |
-| Proof (0.8) | `/compare`, `/sample`, `/case-studies`, `/strategy/[slug]` |
-| Supporting (0.7) | `/updates`, `/docs/faq` |
-| Docs (0.6) | `/docs`, `/docs/install`, `/docs/risk-calc`, `/docs/changelog` |
+| Proof (0.8) | `/compare`, `/sample` |
+| Supporting (0.7) | `/docs/faq` |
+| Docs (0.6) | `/docs/install` |
 | Legal (0.3–0.5) | `/legal/disclaimer`, `/legal/privacy`, `/legal/terms`, `/legal/refund` |
 | Ancillary | `/about`, `/contact`, `/thank-you` |
 
-Home composition (`app/page.tsx`):
+Home composition (`app/page.tsx`), 7 sections only:
 
 ```
-Hero → WhoFor (3-lane) → CleanVsNoisy → TrustStrip (India proof)
-→ VideoDemo → Bundle → SampleLeadMagnet → HowItWorks
-→ Insights → Principles → FounderNote → PricingTeaser
-→ FAQTeaser → FinalCTA
+Hero → CleanVsNoisy → WhoFor → Bundle → PricingTeaser → FAQTeaser → FinalCTA
 ```
 
 Global chrome: `OfferBanner` (dismissible, countdown-aware), `TopNav`, `Footer`, `StickyBuyBar`, `ExitIntent` modal.

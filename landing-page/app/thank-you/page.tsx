@@ -8,24 +8,25 @@ export const metadata: Metadata = {
 
 export default function ThankYouPage() {
   return (
-    <section className="bg-page">
+    <section className="above-bg">
       <div className="container-wide py-32 md:py-40 text-center max-w-2xl mx-auto">
-        <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">
+        <div className="eye justify-center inline-flex">
+          <span className="eye-dot" aria-hidden />
           Order confirmed
         </div>
-        <h1 className="mt-4 h-hero">
+        <h1 className="mt-5 h-hero">
           Welcome. Check your inbox.
         </h1>
-        <p className="mt-5 text-body-lg text-muted">
-          Your Pine Script, trade logic PDF, and risk calculator link are on the way. Arrival in under 60 seconds. If
-          nothing lands, check spam and then email us.
+        <p className="mt-6 text-body-lg text-ink-60 leading-relaxed">
+          Your Pine Script, Trade Logic PDF, and risk calculator link are on the way — arrival in under 60 seconds.
+          If nothing lands, check spam, then email us.
         </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-5">
-          <Link href="/docs/install" className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body">
+        <div className="mt-10 flex flex-col sm:flex-row flex-wrap justify-center gap-3">
+          <Link href="/docs/install" className="btn btn-primary">
             Install guide
           </Link>
-          <Link href="/strategy" className="link-apple chevron">
-            Strategy library
+          <Link href="/docs/faq" className="btn btn-outline">
+            Read the FAQ
           </Link>
         </div>
       </div>
