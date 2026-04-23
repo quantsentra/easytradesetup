@@ -6,11 +6,10 @@ import Price from "@/components/ui/Price";
 
 const navItems = [
   { href: "/product",  label: "Product" },
-  { href: "/strategy", label: "Strategy" },
   { href: "/pricing",  label: "Pricing" },
   { href: "/compare",  label: "Compare" },
-  { href: "/docs",     label: "Docs" },
-  { href: "/updates",  label: "Updates" },
+  { href: "/sample",   label: "Sample" },
+  { href: "/docs/faq", label: "FAQ" },
 ];
 
 export default function TopNav() {

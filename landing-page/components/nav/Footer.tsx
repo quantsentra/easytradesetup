@@ -6,11 +6,8 @@ const cols = [
     title: "Product",
     links: [
       { href: "/product", label: "Golden Indicator" },
-      { href: "/strategy", label: "Strategy Library" },
       { href: "/pricing", label: "Pricing" },
-      { href: "/updates", label: "Market Updates" },
       { href: "/compare", label: "Compare" },
-      { href: "/case-studies", label: "Case Studies" },
       { href: "/sample", label: "Free Sample" },
     ],
   },
@@ -24,11 +21,8 @@ const cols = [
   {
     title: "Resources",
     links: [
-      { href: "/docs", label: "Documentation" },
-      { href: "/docs/install", label: "TradingView Install" },
-      { href: "/docs/risk-calc", label: "Risk Calculator" },
+      { href: "/docs/install", label: "Install Guide" },
       { href: "/docs/faq", label: "FAQ" },
-      { href: "/docs/changelog", label: "Changelog" },
     ],
   },
   {

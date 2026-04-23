@@ -1,25 +1,21 @@
 import { test, expect } from "@playwright/test";
 
+// Smoke-test every route linked from sitemap / nav / footer.
 const routes: Array<{ path: string; mustContain: RegExp }> = [
   { path: "/", mustContain: /trade with clarity/i },
-  { path: "/pricing", mustContain: /pricing|reserve/i },
-  { path: "/product", mustContain: /golden indicator|product/i },
-  { path: "/compare", mustContain: /compare|alternatives/i },
+  { path: "/product", mustContain: /golden indicator|one decision layer/i },
+  { path: "/pricing", mustContain: /one price.*forever/i },
+  { path: "/compare", mustContain: /compare|alternatives|side by side/i },
   { path: "/sample", mustContain: /free sample|chapter/i },
-  { path: "/case-studies", mustContain: /case studies/i },
-  { path: "/strategy", mustContain: /strateg/i },
-  { path: "/updates", mustContain: /updates|notes/i },
-  { path: "/docs/faq", mustContain: /asked.*answered|faq/i },
   { path: "/docs/install", mustContain: /install/i },
-  { path: "/docs/changelog", mustContain: /changelog/i },
-  { path: "/docs/risk-calc", mustContain: /risk/i },
+  { path: "/docs/faq", mustContain: /asked.*answered|faq/i },
+  { path: "/contact", mustContain: /contact|hello@easytradesetup/i },
+  { path: "/about", mustContain: /about|easytradesetup/i },
+  { path: "/thank-you", mustContain: /thank|reserved/i },
   { path: "/legal/disclaimer", mustContain: /disclaimer/i },
   { path: "/legal/privacy", mustContain: /privacy/i },
   { path: "/legal/terms", mustContain: /terms/i },
   { path: "/legal/refund", mustContain: /refund/i },
-  { path: "/contact", mustContain: /contact|hello@easytradesetup/i },
-  { path: "/about", mustContain: /about|easytradesetup/i },
-  { path: "/thank-you", mustContain: /thank|reserved/i },
 ];
 
 for (const r of routes) {
@@ -38,6 +34,16 @@ test("sitemap.xml lists the public routes", async ({ page }) => {
   expect(body).toContain("/pricing");
   expect(body).toContain("/checkout");
   expect(body).toContain("/compare");
+  expect(body).toContain("/sample");
+});
+
+test("sitemap does not include removed pages", async ({ page }) => {
+  const res = await page.goto("/sitemap.xml");
+  const body = await page.content();
+  expect(res?.status()).toBe(200);
+  expect(body).not.toMatch(/\/case-studies/);
+  expect(body).not.toMatch(/\/docs\/risk-calc/);
+  expect(body).not.toMatch(/\/docs\/changelog/);
 });
 
 test("robots.txt allows crawling", async ({ page }) => {

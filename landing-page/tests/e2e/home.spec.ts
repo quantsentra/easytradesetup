@@ -31,26 +31,11 @@ test.describe("Home page — marketing integrity", () => {
     await expect(page.getByText(/options & expiry players/i)).toBeVisible();
   });
 
-  test("India trust strip shows Hindi tagline + market chips", async ({ page }) => {
-    await expect(page.getByText(/built in india.*ships globally/i)).toBeVisible();
-    await expect(page.getByText(/साफ चार्ट/i)).toBeVisible();
-    await expect(page.locator("text=NIFTY").first()).toBeVisible();
-  });
-
-  test("sample lead magnet CTA is present mid-scroll", async ({ page }) => {
-    await expect(page.getByText(/judge the quality before you reserve/i)).toBeVisible();
-    const sampleLink = page.getByRole("link", { name: /read sample chapter/i });
-    await expect(sampleLink).toHaveAttribute("href", "/sample");
-  });
-
-  test("Principles section shows the We-do / We-don't balance", async ({ page }) => {
-    await expect(page.getByText(/no signals/i).first()).toBeVisible();
-    await expect(page.getByText(/no subscriptions/i).first()).toBeVisible();
-    await expect(page.getByText(/real human support/i)).toBeVisible();
-  });
-
-  test("compare teaser leads with the 3-year savings number", async ({ page }) => {
-    await expect(page.getByText(/save \$1,400\+ over 3 years/i)).toBeVisible();
+  test("Bundle section shows all 6 included items", async ({ page }) => {
+    await expect(page.getByText("Golden Indicator", { exact: false }).first()).toBeVisible();
+    await expect(page.getByText("Trade Logic PDF").first()).toBeVisible();
+    await expect(page.getByText("Risk Calculator").first()).toBeVisible();
+    await expect(page.getByText("Daily Market Notes").first()).toBeVisible();
   });
 
   test("FAQ teaser includes the new objection handlers", async ({ page }) => {
@@ -60,6 +45,15 @@ test.describe("Home page — marketing integrity", () => {
 
   test("FinalCTA reinforces one-time vs recurring", async ({ page }) => {
     await expect(page.getByText(/once\. not.*\/month\. ever\./i)).toBeVisible();
+  });
+
+  test("home page composition — 7 sections only", async ({ page }) => {
+    // After simplification, home should not contain sections we removed
+    await expect(page.getByText(/the indicator. live on the chart/i)).toHaveCount(0);
+    await expect(page.getByText(/judge the quality before you reserve/i)).toHaveCount(0);
+    await expect(page.getByText(/built in india · ships globally/i)).toHaveCount(0);
+    await expect(page.getByText(/a note from the founder/i)).toHaveCount(0);
+    await expect(page.getByText(/we don.*sell shortcuts/i)).toHaveCount(0);
   });
 
   test("no broken internal links in primary nav", async ({ page }) => {

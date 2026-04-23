@@ -3,46 +3,42 @@ import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Bundle from "@/components/sections/Bundle";
 import Price from "@/components/ui/Price";
+import ReservationNotice from "@/components/ui/ReservationNotice";
 import { ProductJsonLd } from "@/components/seo/JsonLd";
-import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Product — Golden Indicator",
   description:
-    "Golden Indicator — a proprietary TradingView Pine Script with an integrated signal engine for global markets. Pine + Chart gallery + PDF + Risk Calculator + daily notes. India ₹2,499 · Global $49.",
+    "Golden Indicator — a sealed TradingView Pine v5 indicator. Regime, structure, levels, and volume fused into one decision layer. Global markets. One-time $49 / ₹4,599.",
   alternates: { canonical: "/product" },
 };
 
 const promises = [
   {
-    n: "01",
     title: "One integrated engine",
-    body: "Regime, momentum, levels, volume, and risk — fused into a single proprietary signal. One chart. One source of truth.",
+    body: "Regime, momentum, levels, volume, and risk — fused into a single proprietary signal layer. One chart, one read.",
   },
   {
-    n: "02",
-    title: "Any symbol. Any timeframe. Any market.",
-    body: "Runs cleanly on NSE F&O, US equities, commodities, forex, and major crypto. 1-minute to weekly. Built global-first.",
+    title: "Any symbol. Any timeframe.",
+    body: "Runs cleanly on NSE F&O, US equities, commodities, forex, and major crypto. From 1-minute to weekly.",
   },
   {
-    n: "03",
     title: "Zero subscriptions",
     body: "Pay once. Keep the script forever. Lifetime updates included. No feature tiers, no renewal traps.",
   },
   {
-    n: "04",
     title: "Delivered sealed",
-    body: "Installable Pine file, trade-logic PDF, risk calculator, and daily market updates. Internal methodology proprietary.",
+    body: "Pine file, Trade Logic PDF, risk calculator, and daily market notes — by email within seconds.",
   },
 ];
 
 const specs: Array<[string, string]> = [
   ["Language",   "Pine Script v5"],
-  ["Platform",   "TradingView (any plan)"],
-  ["Symbols",    "Global · NSE · US · Forex · Crypto · Commodities"],
+  ["Platform",   "TradingView · any plan"],
+  ["Symbols",    "NSE · US · Forex · Crypto · Commodities"],
   ["Timeframes", "1m → 1W"],
   ["Alerts",     "Built-in alertcondition()"],
-  ["Delivery",   "Email (.pine file + PDF)"],
+  ["Delivery",   "Email · .pine + PDF"],
 ];
 
 export default function ProductPage() {
@@ -51,18 +47,17 @@ export default function ProductPage() {
       <ProductJsonLd />
       <PageHeader
         eyebrow="Golden Indicator"
-        title={<>One script. One proprietary engine.</>}
-        lede="Engineered inside Pine Script v5 for TradingView. Every component shares the same bar data and the same chart — signals never contradict each other, and the methodology stays sealed."
+        title={<>One script. <span className="grad-text-2">One decision layer.</span></>}
+        lede="Built inside Pine Script v5 for TradingView. Every component shares the same bar data and the same chart — signals never contradict each other."
       />
 
-      <section className="bg-surface">
-        <div className="container-wide py-16 sm:py-20">
+      <section className="above-bg">
+        <div className="container-wide py-14 sm:py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {promises.map((p) => (
-              <div key={p.n} className="card-apple p-6 sm:p-8 md:p-10">
-                <div className="text-micro font-semibold text-blue-link tracking-wider">{p.n}</div>
-                <h3 className="mt-3 sm:mt-4 h-tile">{p.title}</h3>
-                <p className="mt-3 text-caption text-muted leading-relaxed">{p.body}</p>
+              <div key={p.title} className="glass-card-soft p-6 sm:p-8">
+                <h3 className="h-card">{p.title}</h3>
+                <p className="mt-3 text-caption text-ink-60 leading-relaxed">{p.body}</p>
               </div>
             ))}
           </div>
@@ -71,41 +66,35 @@ export default function ProductPage() {
 
       <Bundle />
 
-      <section className="bg-page">
-        <div className="container-wide py-16 sm:py-20">
-          <div className="card-white p-6 sm:p-10 md:p-14">
-            <h2 className="h-tile text-center">Technical specifications</h2>
-            <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-3xl mx-auto">
+      <section className="above-bg">
+        <div className="container-wide py-14 sm:py-20">
+          <div className="glass-card p-8 sm:p-10 md:p-14">
+            <h2 className="h-tile text-center">Technical specs</h2>
+            <dl className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
               {specs.map(([k, v]) => (
                 <div key={k} className="text-center">
-                  <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">{k}</div>
-                  <div className="mt-2 h-card">{v}</div>
+                  <dt className="text-micro font-semibold text-ink-40 uppercase tracking-wider">{k}</dt>
+                  <dd className="mt-2 text-body text-ink font-medium">{v}</dd>
                 </div>
               ))}
-            </div>
+            </dl>
           </div>
         </div>
       </section>
 
-      <section className="bg-surface">
+      <section className="above-bg">
         <div className="container-wide py-14 sm:py-16 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-blue/10 border border-blue/20 px-3 py-1 mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse" aria-hidden />
-            <span className="text-nano font-bold text-blue-link uppercase tracking-widest">
-              {OFFER_LABEL} · {OFFER_TAGLINE}
-            </span>
-          </div>
-          <div>
-            <Link
-              href="/checkout"
-              className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body hover:brightness-110 transition-all"
-            >
-              <Price variant="cta" />
+          <ReservationNotice />
+          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+            <Link href="/checkout" className="btn btn-primary btn-lg">
+              Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+            </Link>
+            <Link href="/sample" className="btn btn-outline btn-lg">
+              Read a free chapter
             </Link>
           </div>
-          <p className="mt-4 text-caption text-muted-faint">
-            <span className="line-through decoration-muted-faint/60 mr-2"><Price variant="retail" /></span>
-            <span className="text-ink font-medium"><Price variant="amount" /></span> inaugural launch price
+          <p className="mt-4 text-nano font-mono uppercase tracking-widest text-ink-40">
+            One-time · Lifetime updates · 7-day refund
           </p>
         </div>
       </section>
