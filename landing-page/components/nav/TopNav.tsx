@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Price from "@/components/ui/Price";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -13,8 +14,16 @@ const navItems = [
   { href: "/docs/faq", label: "FAQ" },
 ];
 
+function isActive(pathname: string | null, href: string): boolean {
+  if (!pathname) return false;
+  if (href === "/") return pathname === "/";
+  if (href.startsWith("/docs")) return pathname.startsWith("/docs");
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export default function TopNav() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
@@ -24,10 +33,13 @@ export default function TopNav() {
     };
   }, [open]);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
   return (
-    <header
-      className="sticky top-0 z-50 above-bg nav-bar"
-    >
+    <header className="sticky top-0 z-50 above-bg nav-bar">
       <div className="container-wide flex items-center justify-between gap-6 h-16">
         <Link href="/" aria-label="EasyTradeSetup home" className="inline-flex items-center gap-2.5 flex-shrink-0">
           <span
@@ -47,21 +59,26 @@ export default function TopNav() {
         </Link>
 
         <nav aria-label="Primary" className="hidden lg:flex items-center gap-1 flex-1 justify-center">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="px-3.5 py-1.5 rounded-lg text-[13.5px] text-ink-60 hover:text-ink hover-fill transition-colors"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            const active = isActive(pathname, item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`nav-link ${active ? "nav-link-active" : ""}`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
           <Link
             href="/contact"
-            className="text-[13px] text-ink-60 hover:text-ink transition-colors px-2"
+            aria-current={pathname === "/contact" ? "page" : undefined}
+            className={`text-[13px] transition-colors px-2 ${pathname === "/contact" ? "text-ink font-medium" : "text-ink-60 hover:text-ink"}`}
           >
             Contact
           </Link>
@@ -73,36 +90,49 @@ export default function TopNav() {
         </div>
 
         <div className="lg:hidden flex items-center gap-2">
-        <ThemeToggle />
-        <button
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-          className="w-10 h-10 inline-flex flex-col items-center justify-center gap-[5px] rounded-lg hover-fill transition-colors"
-        >
-          <span className={`block w-[18px] h-px bg-ink transition-transform ${open ? "translate-y-[3px] rotate-45" : ""}`} />
-          <span className={`block w-[18px] h-px bg-ink transition-transform ${open ? "-translate-y-[3px] -rotate-45" : ""}`} />
-        </button>
+          <ThemeToggle />
+          <button
+            aria-label="Toggle menu"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
+            className="w-10 h-10 inline-flex flex-col items-center justify-center gap-[5px] rounded-lg hover-fill transition-colors"
+          >
+            <span className={`block w-[18px] h-px bg-ink transition-transform ${open ? "translate-y-[3px] rotate-45" : ""}`} />
+            <span className={`block w-[18px] h-px bg-ink transition-transform ${open ? "-translate-y-[3px] -rotate-45" : ""}`} />
+          </button>
         </div>
       </div>
 
       {open && (
         <div className="lg:hidden border-t border-rule nav-mobile">
-          <div className="container-x py-6 flex flex-col">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="py-3.5 text-[18px] font-medium text-ink hairline-b"
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="container-x py-4 flex flex-col">
+            {navItems.map((item) => {
+              const active = isActive(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className={`nav-link-mobile hairline-b ${active ? "nav-link-mobile-active" : ""}`}
+                >
+                  <span className="flex items-center gap-3">
+                    {active && <span className="nav-dot" aria-hidden />}
+                    <span>{item.label}</span>
+                  </span>
+                  {active && (
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-acid">
+                      current
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
             <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="py-3.5 text-[18px] font-medium text-ink hairline-b"
+              aria-current={pathname === "/contact" ? "page" : undefined}
+              className={`nav-link-mobile hairline-b ${pathname === "/contact" ? "nav-link-mobile-active" : ""}`}
             >
               Contact
             </Link>
