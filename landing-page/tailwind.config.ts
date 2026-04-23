@@ -35,23 +35,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Surface
-        bg: "#05070F",
-        "bg-2": "#080C1A",
-        "bg-3": "#0C1224",
-        panel: "#0E1530",
-        "panel-2": "#131A36",
+        // Surface (CSS-var driven — swaps with .light class)
+        bg: "var(--c-bg)",
+        "bg-2": "var(--c-bg-2)",
+        "bg-3": "var(--c-bg-3)",
+        panel: "var(--c-panel)",
+        "panel-2": "var(--c-panel-2)",
 
         // Text
-        ink: "#EDF1FA",
-        "ink-60": "rgba(237, 241, 250, 0.62)",
-        "ink-40": "rgba(237, 241, 250, 0.42)",
-        "ink-20": "rgba(237, 241, 250, 0.20)",
+        ink: "var(--c-ink)",
+        "ink-60": "var(--c-ink-60)",
+        "ink-40": "var(--c-ink-40)",
+        "ink-20": "var(--c-ink-20)",
 
         // Borders
-        rule: "rgba(255, 255, 255, 0.06)",
-        "rule-2": "rgba(255, 255, 255, 0.10)",
-        "rule-3": "rgba(255, 255, 255, 0.16)",
+        rule: "var(--c-rule)",
+        "rule-2": "var(--c-rule-2)",
+        "rule-3": "var(--c-rule-3)",
 
         // Accent — signature blue + brand gold
         blue: {
@@ -81,14 +81,14 @@ const config: Config = {
         dn: "#EF4444",
 
         // Back-compat so existing pages don't break while we retheme
-        page: "#05070F",
-        surface: "#0E1530",
-        "surface-alt": "#131A36",
-        "surface-active": "#1A2550",
+        page: "var(--c-bg)",
+        surface: "var(--c-panel)",
+        "surface-alt": "var(--c-panel-2)",
+        "surface-active": "var(--c-bg-3)",
         muted: {
-          DEFAULT: "rgba(237, 241, 250, 0.80)",
-          soft: "rgba(237, 241, 250, 0.56)",
-          faint: "rgba(237, 241, 250, 0.42)",
+          DEFAULT: "var(--c-ink)",
+          soft: "var(--c-ink-60)",
+          faint: "var(--c-ink-40)",
         },
       },
       fontFamily: {

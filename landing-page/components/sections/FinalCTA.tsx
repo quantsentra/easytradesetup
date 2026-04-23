@@ -39,14 +39,14 @@ export default function FinalCTA() {
                 <span className="eye-dot" aria-hidden />
                 Feed the edge
               </span>
-              <h2 className="mt-5 font-display text-[42px] sm:text-[54px] font-semibold leading-[1] tracking-[-0.03em] text-ink">
+              <h2 className="mt-5 font-display text-[42px] sm:text-[54px] font-semibold leading-[1] tracking-[-0.03em]" style={{ color: "#EDF1FA" }}>
                 Feed the read. <span className="grad-text-2">Starve the noise.</span>
               </h2>
-              <p className="mt-5 max-w-[520px] text-[15px] sm:text-[16px] leading-[1.55] text-ink-60">
+              <p className="mt-5 max-w-[520px] text-[15px] sm:text-[16px] leading-[1.55]" style={{ color: "rgba(237, 241, 250, 0.72)" }}>
                 <Price variant="amount" /> once. Not <Price variant="amount" />/month. Ever.
                 Own the script for life and decide every trade yourself.
               </p>
-              <p className="mt-4 font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40">
+              <p className="mt-4 font-mono text-[10.5px] font-bold uppercase tracking-widest" style={{ color: "rgba(237, 241, 250, 0.5)" }}>
                 7-day refund · Instant email delivery · Not investment advice
               </p>
             </div>
@@ -55,7 +55,15 @@ export default function FinalCTA() {
               <Link href="/checkout" className="btn btn-acid btn-lg justify-center">
                 Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
-              <Link href="/sample" className="btn btn-outline btn-lg justify-center">
+              <Link
+                href="/sample"
+                className="btn btn-lg justify-center"
+                style={{
+                  borderColor: "rgba(255, 255, 255, 0.18)",
+                  color: "#EDF1FA",
+                  background: "transparent",
+                }}
+              >
                 Free chapter first
               </Link>
             </div>

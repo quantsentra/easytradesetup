@@ -77,7 +77,7 @@ function TimeCell({ n, label }: { n: number; label: string }) {
   return (
     <div
       className="flex flex-col items-center px-2.5 py-2.5 rounded-lg border border-rule-2 min-w-[62px]"
-      style={{ background: "rgba(255, 255, 255, 0.04)" }}
+      style={{ background: "var(--c-fill-soft)" }}
     >
       <div className="font-display text-[26px] sm:text-[30px] leading-none font-semibold text-ink tabular-nums">
         {String(n).padStart(2, "0")}

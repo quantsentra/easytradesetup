@@ -78,15 +78,23 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#05070F",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#05070F" },
+    { media: "(prefers-color-scheme: light)", color: "#FFFFFF" },
+  ],
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
 };
 
+const themeInitScript = `(function(){try{var m=localStorage.getItem('theme')||'auto';var e=m;if(m==='auto'){var h=new Date().getHours();e=(h>=6&&h<18)?'light':'dark';}if(e==='light'){document.documentElement.classList.add('light');}document.documentElement.dataset.themeMode=m;}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
         <a href="#main" className="skip-link">Skip to content</a>
         <OfferBanner />

@@ -163,11 +163,9 @@ export default function Hero() {
 
             {/* Floating streak badge */}
             <div
-              className="absolute -top-4 -right-4 sm:-right-6 flex items-center gap-3 px-4 py-2.5 rounded-xl"
+              className="absolute -top-4 -right-4 sm:-right-6 flex items-center gap-3 px-4 py-2.5 rounded-xl bg-panel border border-rule-2"
               style={{
-                background: "#0E1530",
-                border: "1px solid rgba(255, 255, 255, 0.10)",
-                boxShadow: "0 12px 40px rgba(0, 0, 0, 0.5)",
+                boxShadow: "var(--c-shadow-term)",
               }}
             >
               <div

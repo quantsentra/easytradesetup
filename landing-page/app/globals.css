@@ -5,6 +5,76 @@
 @layer base {
   :root {
     --sk-focus-color: #2B7BFF;
+
+    /* Dark theme (default) */
+    --c-bg: #05070F;
+    --c-bg-2: #080C1A;
+    --c-bg-3: #0C1224;
+    --c-panel: #0E1530;
+    --c-panel-2: #131A36;
+
+    --c-ink: #EDF1FA;
+    --c-ink-60: rgba(237, 241, 250, 0.62);
+    --c-ink-40: rgba(237, 241, 250, 0.42);
+    --c-ink-20: rgba(237, 241, 250, 0.20);
+
+    --c-rule: rgba(255, 255, 255, 0.06);
+    --c-rule-2: rgba(255, 255, 255, 0.10);
+    --c-rule-3: rgba(255, 255, 255, 0.16);
+
+    /* Surface gradients (glass-card stops) */
+    --c-glass-top: rgba(30, 40, 80, 0.55);
+    --c-glass-bot: rgba(10, 15, 35, 0.65);
+    --c-glass-soft-top: rgba(30, 40, 80, 0.40);
+    --c-glass-soft-bot: rgba(10, 15, 35, 0.55);
+    --c-glass-flat: rgba(10, 15, 30, 0.5);
+
+    /* Raised/subtle fills for chips + ghost buttons */
+    --c-fill-soft: rgba(255, 255, 255, 0.04);
+    --c-fill-softer: rgba(255, 255, 255, 0.02);
+    --c-fill-hover: rgba(255, 255, 255, 0.08);
+
+    /* Shadows */
+    --c-shadow-card: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 12px 40px -10px rgba(43, 123, 255, 0.15);
+    --c-shadow-term: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+
+    --c-nav-bg: rgba(5, 7, 15, 0.85);
+    --c-nav-bg-solid: rgba(5, 7, 15, 0.95);
+  }
+
+  html.light {
+    /* Light theme */
+    --c-bg: #FFFFFF;
+    --c-bg-2: #F6F6F4;
+    --c-bg-3: #EDEDEB;
+    --c-panel: #FFFFFF;
+    --c-panel-2: #F6F6F4;
+
+    --c-ink: #0D0D0D;
+    --c-ink-60: rgba(13, 13, 13, 0.64);
+    --c-ink-40: rgba(13, 13, 13, 0.46);
+    --c-ink-20: rgba(13, 13, 13, 0.22);
+
+    --c-rule: rgba(0, 0, 0, 0.08);
+    --c-rule-2: rgba(0, 0, 0, 0.12);
+    --c-rule-3: rgba(0, 0, 0, 0.18);
+
+    /* White glass with subtle tint */
+    --c-glass-top: rgba(255, 255, 255, 0.92);
+    --c-glass-bot: rgba(246, 246, 244, 0.88);
+    --c-glass-soft-top: rgba(255, 255, 255, 0.85);
+    --c-glass-soft-bot: rgba(246, 246, 244, 0.82);
+    --c-glass-flat: rgba(255, 255, 255, 0.82);
+
+    --c-fill-soft: rgba(0, 0, 0, 0.04);
+    --c-fill-softer: rgba(0, 0, 0, 0.02);
+    --c-fill-hover: rgba(0, 0, 0, 0.07);
+
+    --c-shadow-card: 0 8px 28px -8px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.06);
+    --c-shadow-term: 0 12px 36px -10px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.05);
+
+    --c-nav-bg: rgba(255, 255, 255, 0.85);
+    --c-nav-bg-solid: rgba(255, 255, 255, 0.96);
   }
 
   html {
@@ -12,11 +82,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    background: #05070F;
+    background: var(--c-bg);
   }
 
   body {
-    @apply bg-bg text-ink font-text;
+    background: var(--c-bg);
+    color: var(--c-ink);
+    @apply font-text;
     font-size: 16px;
     line-height: 1.55;
     letter-spacing: -0.008em;
@@ -26,6 +98,11 @@
   ::selection {
     background: rgba(43, 123, 255, 0.35);
     color: #fff;
+  }
+
+  html.light ::selection {
+    background: rgba(43, 123, 255, 0.22);
+    color: #0D0D0D;
   }
 
   :focus-visible {
@@ -77,7 +154,7 @@
 
   .body-muted {
     @apply text-body-lg;
-    color: rgba(237, 241, 250, 0.62);
+    color: var(--c-ink-60);
   }
 
   /* Eyebrow */
@@ -117,39 +194,38 @@
   .glass-card {
     background: linear-gradient(
       180deg,
-      rgba(30, 40, 80, 0.55) 0%,
-      rgba(10, 15, 35, 0.65) 100%
+      var(--c-glass-top) 0%,
+      var(--c-glass-bot) 100%
     );
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    border: 1px solid var(--c-rule-2);
     border-radius: 20px;
     backdrop-filter: blur(20px) saturate(1.2);
     -webkit-backdrop-filter: blur(20px) saturate(1.2);
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-      0 30px 80px -20px rgba(0, 0, 0, 0.8),
-      0 12px 40px -10px rgba(43, 123, 255, 0.15);
+      0 0 0 1px var(--c-fill-soft) inset,
+      var(--c-shadow-card);
   }
 
   .glass-card-soft {
     background: linear-gradient(
       180deg,
-      rgba(30, 40, 80, 0.40) 0%,
-      rgba(10, 15, 35, 0.55) 100%
+      var(--c-glass-soft-top) 0%,
+      var(--c-glass-soft-bot) 100%
     );
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    border: 1px solid var(--c-rule-2);
     border-radius: 18px;
   }
 
   .glass-flat {
-    background: rgba(10, 15, 30, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--c-glass-flat);
+    border: 1px solid var(--c-rule);
     border-radius: 14px;
   }
 
   /* Gradient border (featured/pricing) */
   .grad-border {
     background:
-      linear-gradient(180deg, rgba(30, 40, 80, 0.55), rgba(10, 15, 35, 0.65)) padding-box,
+      linear-gradient(180deg, var(--c-glass-top), var(--c-glass-bot)) padding-box,
       linear-gradient(135deg, #2B7BFF 0%, #22D3EE 50%, #F0C05A 100%) border-box;
     border: 1px solid transparent;
   }
@@ -178,11 +254,11 @@
   /* Hairlines */
   .hairline-b {
     @apply border-b;
-    border-color: rgba(255, 255, 255, 0.06);
+    border-color: var(--c-rule);
   }
   .hairline-t {
     @apply border-t;
-    border-color: rgba(255, 255, 255, 0.06);
+    border-color: var(--c-rule);
   }
 
   /* Section bgs (map old classes to new dark semantic) */
@@ -192,6 +268,20 @@
   .card-apple { @apply glass-card-soft p-6 sm:p-8; }
   .card-white { @apply glass-card p-6 sm:p-8; }
   .card-elevated { @apply glass-card p-6 sm:p-8; }
+
+  /* Nav bar (theme-aware translucent) */
+  .nav-bar {
+    background-color: var(--c-nav-bg, rgba(5, 7, 15, 0.85));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--c-rule);
+  }
+  .nav-mobile {
+    background-color: var(--c-nav-bg-solid, rgba(5, 7, 15, 0.95));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+  }
+  .hover-fill:hover { background: var(--c-fill-soft); }
 
   /* Skip link */
   .skip-link {
@@ -229,22 +319,22 @@
   }
 
   .btn-ghost {
-    color: #EDF1FA;
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.10);
+    color: var(--c-ink);
+    background: var(--c-fill-soft);
+    border-color: var(--c-rule-2);
   }
   .btn-ghost:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.16);
+    background: var(--c-fill-hover);
+    border-color: var(--c-rule-3);
   }
 
   .btn-outline {
-    border-color: rgba(255, 255, 255, 0.16);
-    color: #EDF1FA;
+    border-color: var(--c-rule-3);
+    color: var(--c-ink);
     background: transparent;
   }
   .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--c-fill-soft);
   }
 
   .btn-lg {
@@ -279,9 +369,9 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.10);
-    color: rgba(237, 241, 250, 0.62);
+    background: var(--c-fill-soft);
+    border: 1px solid var(--c-rule-2);
+    color: var(--c-ink-60);
     white-space: nowrap;
   }
   .chip-acid {
@@ -317,19 +407,19 @@
 
   /* Terminal-frame window (mac traffic lights header) */
   .term-frame {
-    background: #0E1530;
-    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: var(--c-panel);
+    border: 1px solid var(--c-rule-2);
     border-radius: 14px;
     overflow: hidden;
-    box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
+    box-shadow: var(--c-shadow-term);
   }
   .term-head {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.02);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--c-fill-softer);
+    border-bottom: 1px solid var(--c-rule);
   }
   .term-lights { display: flex; gap: 6px; }
   .term-lights span {
@@ -353,15 +443,21 @@
   /* Feature card (numbered progression grid) */
   .feat-card {
     @apply flex flex-col;
-    background: #0E1530;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: var(--c-panel);
+    border: 1px solid var(--c-rule);
     border-radius: 16px;
     padding: 28px;
-    transition: border-color 160ms, transform 160ms;
+    transition: border-color 160ms, transform 160ms, box-shadow 160ms;
   }
   .feat-card:hover {
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: var(--c-rule-2);
     transform: translateY(-2px);
+  }
+  html.light .feat-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  html.light .feat-card:hover {
+    box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.12);
   }
 
   /* Squiggle-accent underline (tradzella "devours" word) */

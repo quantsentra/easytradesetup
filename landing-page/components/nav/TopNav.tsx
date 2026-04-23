@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Price from "@/components/ui/Price";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const navItems = [
   { href: "/product",  label: "Product" },
@@ -25,13 +26,7 @@ export default function TopNav() {
 
   return (
     <header
-      className="sticky top-0 z-50 above-bg"
-      style={{
-        backgroundColor: "rgba(5, 7, 15, 0.85)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.06)",
-      }}
+      className="sticky top-0 z-50 above-bg nav-bar"
     >
       <div className="container-wide flex items-center justify-between gap-6 h-16">
         <Link href="/" aria-label="EasyTradeSetup home" className="inline-flex items-center gap-2.5 flex-shrink-0">
@@ -56,7 +51,7 @@ export default function TopNav() {
             <Link
               key={item.href}
               href={item.href}
-              className="px-3.5 py-1.5 rounded-lg text-[13.5px] text-ink-60 hover:text-ink hover:bg-white/5 transition-colors"
+              className="px-3.5 py-1.5 rounded-lg text-[13.5px] text-ink-60 hover:text-ink hover-fill transition-colors"
             >
               {item.label}
             </Link>
@@ -70,31 +65,29 @@ export default function TopNav() {
           >
             Contact
           </Link>
+          <ThemeToggle />
           <Link href="/checkout" className="btn btn-acid">
             Reserve · <Price variant="amount" />
             <span className="arrow" aria-hidden>→</span>
           </Link>
         </div>
 
+        <div className="lg:hidden flex items-center gap-2">
+        <ThemeToggle />
         <button
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
-          className="lg:hidden w-10 h-10 inline-flex flex-col items-center justify-center gap-[5px] rounded-lg hover:bg-white/5 transition-colors"
+          className="w-10 h-10 inline-flex flex-col items-center justify-center gap-[5px] rounded-lg hover-fill transition-colors"
         >
           <span className={`block w-[18px] h-px bg-ink transition-transform ${open ? "translate-y-[3px] rotate-45" : ""}`} />
           <span className={`block w-[18px] h-px bg-ink transition-transform ${open ? "-translate-y-[3px] -rotate-45" : ""}`} />
         </button>
+        </div>
       </div>
 
       {open && (
-        <div
-          className="lg:hidden border-t border-rule"
-          style={{
-            backgroundColor: "rgba(5, 7, 15, 0.95)",
-            backdropFilter: "blur(18px)",
-          }}
-        >
+        <div className="lg:hidden border-t border-rule nav-mobile">
           <div className="container-x py-6 flex flex-col">
             {navItems.map((item) => (
               <Link
