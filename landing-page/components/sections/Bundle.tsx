@@ -68,27 +68,6 @@ export default function Bundle() {
         <p className="mt-10 sm:mt-12 text-center text-caption text-ink-40 max-w-2xl mx-auto">
           Delivered as a sealed package. Installable in under a minute. Yours for life.
         </p>
-
-        <div className="mt-12 glass-card-soft grid grid-cols-2 md:grid-cols-4">
-          {[
-            { k: "8",     v: "Internal tools" },
-            { k: "1",     v: "Decision output" },
-            { k: "24/5",  v: "Markets covered" },
-            { k: "∞",     v: "Lifetime updates" },
-          ].map((s, i) => (
-            <div
-              key={s.v}
-              className={`px-6 py-7 text-center ${i < 3 ? "border-r border-rule" : ""} ${i < 2 ? "border-b md:border-b-0 border-rule" : ""}`}
-            >
-              <div className="font-display font-semibold text-[34px] leading-none tabular-nums grad-text not-italic">
-                {s.k}
-              </div>
-              <div className="mt-2 font-mono text-nano uppercase tracking-widest text-ink-40">
-                {s.v}
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
