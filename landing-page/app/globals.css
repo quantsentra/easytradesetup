@@ -6,44 +6,7 @@
   :root {
     --sk-focus-color: #2B7BFF;
 
-    /* Dark theme (default) */
-    --c-bg: #05070F;
-    --c-bg-2: #080C1A;
-    --c-bg-3: #0C1224;
-    --c-panel: #0E1530;
-    --c-panel-2: #131A36;
-
-    --c-ink: #EDF1FA;
-    --c-ink-60: rgba(237, 241, 250, 0.62);
-    --c-ink-40: rgba(237, 241, 250, 0.42);
-    --c-ink-20: rgba(237, 241, 250, 0.20);
-
-    --c-rule: rgba(255, 255, 255, 0.06);
-    --c-rule-2: rgba(255, 255, 255, 0.10);
-    --c-rule-3: rgba(255, 255, 255, 0.16);
-
-    /* Surface gradients (glass-card stops) */
-    --c-glass-top: rgba(30, 40, 80, 0.55);
-    --c-glass-bot: rgba(10, 15, 35, 0.65);
-    --c-glass-soft-top: rgba(30, 40, 80, 0.40);
-    --c-glass-soft-bot: rgba(10, 15, 35, 0.55);
-    --c-glass-flat: rgba(10, 15, 30, 0.5);
-
-    /* Raised/subtle fills for chips + ghost buttons */
-    --c-fill-soft: rgba(255, 255, 255, 0.04);
-    --c-fill-softer: rgba(255, 255, 255, 0.02);
-    --c-fill-hover: rgba(255, 255, 255, 0.08);
-
-    /* Shadows */
-    --c-shadow-card: 0 30px 80px -20px rgba(0, 0, 0, 0.8), 0 12px 40px -10px rgba(43, 123, 255, 0.15);
-    --c-shadow-term: 0 30px 80px -20px rgba(0, 0, 0, 0.8);
-
-    --c-nav-bg: rgba(5, 7, 15, 0.85);
-    --c-nav-bg-solid: rgba(5, 7, 15, 0.95);
-  }
-
-  html.light {
-    /* Light theme */
+    /* Light theme (only theme) */
     --c-bg: #FFFFFF;
     --c-bg-2: #F6F6F4;
     --c-bg-3: #EDEDEB;
@@ -97,11 +60,6 @@
   }
 
   ::selection {
-    background: rgba(43, 123, 255, 0.35);
-    color: #fff;
-  }
-
-  html.light ::selection {
     background: rgba(43, 123, 255, 0.22);
     color: #0D0D0D;
   }
@@ -502,16 +460,12 @@
     border: 1px solid var(--c-rule);
     border-radius: 16px;
     padding: 28px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: border-color 160ms, transform 160ms, box-shadow 160ms;
   }
   .feat-card:hover {
     border-color: var(--c-rule-2);
     transform: translateY(-2px);
-  }
-  html.light .feat-card {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  }
-  html.light .feat-card:hover {
     box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.12);
   }
 

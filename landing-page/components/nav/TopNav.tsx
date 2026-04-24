@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import Price from "@/components/ui/Price";
-import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const navItems = [
   { href: "/product",  label: "Product" },
@@ -103,7 +102,6 @@ export default function TopNav() {
               <UserButton appearance={{ elements: { userButtonAvatarBox: "w-7 h-7" } }} />
             </>
           )}
-          <ThemeToggle />
           <Link href="/checkout" className="btn btn-acid">
             Reserve · <Price variant="amount" />
             <span className="arrow" aria-hidden>→</span>
@@ -111,7 +109,6 @@ export default function TopNav() {
         </div>
 
         <div className="lg:hidden flex items-center gap-2">
-          <ThemeToggle />
           <button
             aria-label="Toggle menu"
             aria-expanded={open}

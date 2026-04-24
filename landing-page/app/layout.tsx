@@ -90,26 +90,17 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#05070F" },
-    { media: "(prefers-color-scheme: light)", color: "#FFFFFF" },
-  ],
+  themeColor: "#FFFFFF",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
 };
 
-// Pre-hydration theme init. Reads explicit localStorage choice; falls back
-// to system preference on first visit. Default is dark when no signal.
-const themeInitScript = `(function(){try{var s=localStorage.getItem('theme');var m=s==='light'||s==='dark'?s:(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');if(m==='light'){document.documentElement.classList.add('light');}document.documentElement.dataset.themeMode=m;}catch(e){}})();`;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemedClerkProvider>
-      <html lang="en" suppressHydrationWarning className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
-        <head>
-          <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        </head>
+      <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+        <head />
         <body>
           <a href="#main" className="skip-link">Skip to content</a>
           <OfferBanner />
