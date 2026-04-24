@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuth, UserButton } from "@clerk/nextjs";
 import Price from "@/components/ui/Price";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
@@ -24,6 +25,7 @@ function isActive(pathname: string | null, href: string): boolean {
 export default function TopNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { isSignedIn, isLoaded } = useAuth();
 
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
@@ -82,6 +84,25 @@ export default function TopNav() {
           >
             Contact
           </Link>
+          {isLoaded && !isSignedIn && (
+            <Link
+              href="/sign-in"
+              className="text-[13px] px-2 text-ink-60 hover:text-ink transition-colors"
+            >
+              Sign in
+            </Link>
+          )}
+          {isLoaded && isSignedIn && (
+            <>
+              <Link
+                href="/portal"
+                className="text-[13px] px-2 text-ink hover:text-cyan transition-colors font-medium"
+              >
+                Portal
+              </Link>
+              <UserButton appearance={{ elements: { userButtonAvatarBox: "w-7 h-7" } }} />
+            </>
+          )}
           <ThemeToggle />
           <Link href="/checkout" className="btn btn-acid">
             Reserve · <Price variant="amount" />
@@ -136,6 +157,24 @@ export default function TopNav() {
             >
               Contact
             </Link>
+            {isLoaded && !isSignedIn && (
+              <Link
+                href="/sign-in"
+                onClick={() => setOpen(false)}
+                className="nav-link-mobile hairline-b"
+              >
+                Sign in
+              </Link>
+            )}
+            {isLoaded && isSignedIn && (
+              <Link
+                href="/portal"
+                onClick={() => setOpen(false)}
+                className="nav-link-mobile hairline-b"
+              >
+                Portal
+              </Link>
+            )}
             <Link
               href="/checkout"
               onClick={() => setOpen(false)}

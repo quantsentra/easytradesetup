@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
+import ThemedClerkProvider from "@/components/auth/ThemedClerkProvider";
 import { Inter_Tight, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import TopNav from "@/components/nav/TopNav";
 import MarketsMarquee from "@/components/sections/MarketsMarquee";
@@ -105,19 +105,7 @@ const themeInitScript = `(function(){try{var s=localStorage.getItem('theme');var
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider
-      appearance={{
-        variables: {
-          colorPrimary: "#2B7BFF",
-          colorBackground: "#05070F",
-          colorText: "#EDF1FA",
-          colorTextSecondary: "rgba(237,241,250,0.62)",
-          colorInputBackground: "rgba(255,255,255,0.04)",
-          colorInputText: "#EDF1FA",
-          borderRadius: "10px",
-        },
-      }}
-    >
+    <ThemedClerkProvider>
       <html lang="en" suppressHydrationWarning className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
         <head>
           <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
@@ -136,6 +124,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Analytics />
         </body>
       </html>
-    </ClerkProvider>
+    </ThemedClerkProvider>
   );
 }
