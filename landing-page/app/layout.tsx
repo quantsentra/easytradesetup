@@ -87,7 +87,9 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-const themeInitScript = `(function(){try{var m=localStorage.getItem('theme')||'auto';var e=m;if(m==='auto'){var h=new Date().getHours();e=(h>=6&&h<18)?'light':'dark';}if(e==='light'){document.documentElement.classList.add('light');}document.documentElement.dataset.themeMode=m;}catch(e){}})();`;
+// Pre-hydration theme init. Reads explicit localStorage choice; falls back
+// to system preference on first visit. Default is dark when no signal.
+const themeInitScript = `(function(){try{var s=localStorage.getItem('theme');var m=s==='light'||s==='dark'?s:(window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');if(m==='light'){document.documentElement.classList.add('light');}document.documentElement.dataset.themeMode=m;}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

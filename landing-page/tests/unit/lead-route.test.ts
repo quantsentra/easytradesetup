@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { POST } from "@/app/api/lead/route";
+import { __resetRateLimit } from "@/lib/rate-limit";
 
 function jsonRequest(body: unknown): Request {
   return new Request("http://localhost/api/lead", {
@@ -21,6 +22,7 @@ function formRequest(kv: Record<string, string>): Request {
 describe("POST /api/lead", () => {
   beforeEach(() => {
     vi.spyOn(console, "log").mockImplementation(() => undefined);
+    __resetRateLimit();
   });
 
   it("accepts a well-formed email via JSON and returns ok:true", async () => {
@@ -120,5 +122,20 @@ describe("POST /api/lead", () => {
     const logged = allCalls.join("\n");
     expect(logged).not.toContain("sensitive@example.com");
     expect(logged).toMatch(/\*\*\*/);
+  });
+
+  it("returns 429 Too Many Requests after burst from the same IP", async () => {
+    const ipHeaders = { "content-type": "application/json", "x-forwarded-for": "203.0.113.7" };
+    const body = JSON.stringify({ email: "a@example.com" });
+    const make = () => new Request("http://localhost/api/lead", { method: "POST", headers: ipHeaders, body });
+
+    // 6 allowed, 7th blocked (RATE_LIMIT = { windowMs: 60_000, max: 6 })
+    for (let i = 0; i < 6; i++) {
+      const res = await POST(make());
+      expect(res.status, `req ${i + 1}`).toBe(200);
+    }
+    const blocked = await POST(make());
+    expect(blocked.status).toBe(429);
+    expect(blocked.headers.get("Retry-After")).toMatch(/^\d+$/);
   });
 });

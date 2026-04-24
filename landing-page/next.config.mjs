@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 
-// Security headers applied to every route. CSP tuned for:
-//   - self + Vercel Analytics (script)
-//   - inline styles (Tailwind + dynamic style props)
-//   - Google Fonts (font + style)
-//   - self images + data: + https: (TradingView screenshots, OG images)
+// Security headers applied to every route. CSP uses 'unsafe-inline' on
+// script-src for the FOUC theme-init script. Planned follow-up: extract the
+// script to an external file served with nonce, or wire Edge Middleware that
+// correctly propagates nonce to Next's hydration bundles.
 const securityHeaders = [
   { key: "X-Content-Type-Options",     value: "nosniff" },
   { key: "X-Frame-Options",            value: "DENY" },
@@ -16,9 +15,6 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      // 'unsafe-inline' on scripts required for the FOUC theme-init script
-      // in app/layout.tsx. Replace with nonce-based CSP once an Edge
-      // Middleware generates per-request nonces.
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vitals.vercel-insights.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",

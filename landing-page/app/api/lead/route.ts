@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
+
+// 6 submissions per IP per minute. Users rarely need more than a couple
+// (fat-finger retry, different source). Bots hammering for list-farming
+// get cut off within a second.
+const RATE_LIMIT = { windowMs: 60_000, max: 6 };
 
 // Max payload bytes for a lead submission. Plenty of room for email + source
 // metadata; anything bigger is almost certainly abusive.
@@ -58,6 +64,17 @@ export async function POST(req: Request) {
 
   if (!ALLOWED_CONTENT_TYPES.some((ct) => contentType.startsWith(ct))) {
     return badRequest("Unsupported Content-Type", 415);
+  }
+
+  // Rate limit before any body parsing — cheap rejection, no allocations for
+  // abusive callers.
+  const ip = clientIp(req);
+  const rl = rateLimit(`lead:${ip}`, RATE_LIMIT);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { ok: false, error: "Too many requests" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
   }
 
   // Enforce Content-Length where provided. formData()/json() do not impose

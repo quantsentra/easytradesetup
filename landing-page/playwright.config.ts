@@ -6,8 +6,11 @@ const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${PORT}`;
 export default defineConfig({
   testDir: "./tests/e2e",
   timeout: 30_000,
-  expect: { timeout: 5_000 },
-  fullyParallel: true,
+  expect: { timeout: 10_000 },
+  // Parallel hammers the dev-server warmup path and flakes on Windows.
+  // Serial is still fast enough (~1.5 min for full suite).
+  fullyParallel: false,
+  workers: 1,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : [["list"]],
   use: {
