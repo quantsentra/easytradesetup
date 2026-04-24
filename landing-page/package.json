@@ -15,6 +15,9 @@
     "test:all": "npm run test && npm run test:e2e"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.2.5",
+    "@supabase/ssr": "^0.10.2",
+    "@supabase/supabase-js": "^2.104.1",
     "@vercel/analytics": "^2.0.1",
     "next": "^15.1.0",
     "react": "^19.0.0",
