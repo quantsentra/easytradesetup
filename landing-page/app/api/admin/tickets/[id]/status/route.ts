@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { isAdmin } from "@/lib/admin";
-import { setStatus, type TicketStatus } from "@/lib/tickets";
+import { setStatus, getTicket, type TicketStatus } from "@/lib/tickets";
+import { audit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 
@@ -22,10 +23,19 @@ export async function POST(
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
+  const before = await getTicket(id);
   const result = await setStatus(id, status);
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
+
+  await audit({
+    actorId: userId,
+    action: "ticket.status.change",
+    targetKind: "ticket",
+    targetId: id,
+    metadata: { from: before?.status, to: status },
+  });
 
   return NextResponse.redirect(new URL(`/admin/tickets/${id}`, req.url), 303);
 }

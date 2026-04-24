@@ -3,6 +3,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { isAdmin } from "@/lib/admin";
 import { addMessage, getTicket } from "@/lib/tickets";
 import { sendEmail, ticketReplyCustomerHtml } from "@/lib/email";
+import { audit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 
@@ -36,6 +37,14 @@ export async function POST(
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
+
+  await audit({
+    actorId: userId,
+    action: "ticket.reply",
+    targetKind: "ticket",
+    targetId: id,
+    metadata: { resolved: resolve, customerUserId: ticket.user_id },
+  });
 
   // Fire-and-forget customer notification.
   (async () => {

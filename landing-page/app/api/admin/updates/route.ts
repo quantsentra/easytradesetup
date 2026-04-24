@@ -2,10 +2,13 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { isAdmin } from "@/lib/admin";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { rateLimit } from "@/lib/rate-limit";
+import { audit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 
 const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,79}$/;
+const PUBLISH_RL = { windowMs: 10 * 60_000, max: 30 };
 
 export async function POST(req: Request) {
   const { userId } = await auth();
@@ -16,6 +19,14 @@ export async function POST(req: Request) {
   const admin = await isAdmin(userId);
   if (!admin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const rl = rateLimit(`admin-publish:${userId}`, PUBLISH_RL);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many publishes — wait a moment" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
   }
 
   const form = await req.formData();
@@ -52,6 +63,14 @@ export async function POST(req: Request) {
       : error.message;
     return NextResponse.json({ error: msg }, { status: 400 });
   }
+
+  await audit({
+    actorId: userId,
+    action: "update.publish",
+    targetKind: "update",
+    targetId: slug,
+    metadata: { title, draft },
+  });
 
   return NextResponse.redirect(new URL("/admin/updates", req.url), 303);
 }

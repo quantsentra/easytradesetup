@@ -6,8 +6,13 @@ import {
   sendEmail,
   ticketCreatedAdminHtml,
 } from "@/lib/email";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
+
+// 5 new tickets per 15 minutes per user. Stops a confused user hammering
+// the form; legitimate follow-ups happen on the reply endpoint, not here.
+const CREATE_RL = { windowMs: 15 * 60_000, max: 5 };
 
 function siteUrl(req: Request): string {
   return process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
@@ -16,6 +21,14 @@ function siteUrl(req: Request): string {
 export async function POST(req: Request) {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
+
+  const rl = rateLimit(`ticket-create:${userId}`, CREATE_RL);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { error: "Too many new tickets — wait a few minutes and try again" },
+      { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
+    );
+  }
 
   const form = await req.formData();
   const subject = String(form.get("subject") || "");
