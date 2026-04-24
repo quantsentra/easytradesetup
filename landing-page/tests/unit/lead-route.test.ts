@@ -63,4 +63,62 @@ describe("POST /api/lead", () => {
     const res = await POST(formRequest({ email: "x", source: "exit" }));
     expect(res.status).toBe(400);
   });
+
+  it("rejects unsupported Content-Type with 415", async () => {
+    const req = new Request("http://localhost/api/lead", {
+      method: "POST",
+      headers: { "content-type": "text/plain" },
+      body: "email=trader@example.com",
+    });
+    const res = await POST(req);
+    expect(res.status).toBe(415);
+  });
+
+  it("rejects email with consecutive dots (RFC violation)", async () => {
+    const res = await POST(jsonRequest({ email: "foo..bar@example.com" }));
+    expect(res.status).toBe(400);
+  });
+
+  it("rejects single-char TLD", async () => {
+    const res = await POST(jsonRequest({ email: "foo@bar.c" }));
+    expect(res.status).toBe(400);
+  });
+
+  it("silently accepts honeypot-filled submission without logging email", async () => {
+    const logSpy = vi.spyOn(console, "log");
+    const res = await POST(
+      jsonRequest({ email: "bot@example.com", website: "https://spam.example.com" }),
+    );
+    expect(res.status).toBe(200);
+    expect(logSpy).not.toHaveBeenCalledWith(
+      "[lead]",
+      expect.objectContaining({ email: expect.stringContaining("bot") }),
+    );
+  });
+
+  it("redirects form submissions to SITE_ORIGIN (not req Host) to prevent open redirect", async () => {
+    const req = new Request("http://localhost/api/lead", {
+      method: "POST",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+        host: "evil.example.com",
+        "x-forwarded-host": "evil.example.com",
+      },
+      body: "email=trader@example.com&source=checkout",
+    });
+    const res = await POST(req);
+    expect(res.status).toBe(303);
+    const loc = res.headers.get("location") || "";
+    expect(loc).not.toContain("evil.example.com");
+    expect(loc).toMatch(/\/thank-you$/);
+  });
+
+  it("redacts email in console log output (no plaintext PII)", async () => {
+    const logSpy = vi.spyOn(console, "log");
+    await POST(jsonRequest({ email: "sensitive@example.com", source: "test" }));
+    const allCalls = logSpy.mock.calls.flat().map((c) => JSON.stringify(c));
+    const logged = allCalls.join("\n");
+    expect(logged).not.toContain("sensitive@example.com");
+    expect(logged).toMatch(/\*\*\*/);
+  });
 });

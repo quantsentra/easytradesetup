@@ -50,10 +50,20 @@ export default function CheckoutPage() {
               </p>
               <form action="/api/lead" method="POST" className="mt-8 flex flex-col sm:flex-row gap-3">
                 <input type="hidden" name="source" value="checkout" />
+                {/* Honeypot — real users don't see or fill this. */}
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                  style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+                />
                 <input
                   name="email"
                   type="email"
                   required
+                  maxLength={254}
                   placeholder="you@example.com"
                   aria-label="Email address"
                   className="flex-1 bg-surface border border-rule rounded-lg px-4 py-3 text-body text-ink focus:outline-none focus:border-blue transition-colors"

@@ -9,6 +9,18 @@ const DISABLED_ROUTES = ["/checkout", "/thank-you"];
 const MIN_DWELL_MS = 20_000;
 const SCROLL_TRIGGER_PX = 800;
 
+// Read/write survives private mode by falling through to sessionStorage and
+// then an in-memory flag. Prevents repeat-spam when localStorage is blocked.
+function readShown(): boolean {
+  try { if (localStorage.getItem(STORAGE_KEY) === "1") return true; } catch { /* ignored */ }
+  try { if (sessionStorage.getItem(STORAGE_KEY) === "1") return true; } catch { /* ignored */ }
+  return false;
+}
+function writeShown() {
+  try { localStorage.setItem(STORAGE_KEY, "1"); return; } catch { /* ignored */ }
+  try { sessionStorage.setItem(STORAGE_KEY, "1"); } catch { /* ignored */ }
+}
+
 type Status = "idle" | "submitting" | "success" | "error";
 
 export default function ExitIntent() {
@@ -20,22 +32,14 @@ export default function ExitIntent() {
 
   const dismiss = useCallback(() => {
     setOpen(false);
-    try {
-      localStorage.setItem(STORAGE_KEY, "1");
-    } catch {
-      /* ignored */
-    }
+    writeShown();
     dismissedRef.current = true;
   }, []);
 
   const trigger = useCallback(() => {
     if (dismissedRef.current || !armedRef.current) return;
     setOpen(true);
-    try {
-      localStorage.setItem(STORAGE_KEY, "1");
-    } catch {
-      /* ignored */
-    }
+    writeShown();
     dismissedRef.current = true;
   }, []);
 
@@ -45,13 +49,9 @@ export default function ExitIntent() {
       armedRef.current = false;
       return;
     }
-    try {
-      if (localStorage.getItem(STORAGE_KEY) === "1") {
-        dismissedRef.current = true;
-        return;
-      }
-    } catch {
-      /* ignored */
+    if (readShown()) {
+      dismissedRef.current = true;
+      return;
     }
 
     let dwellPassed = false;
@@ -115,8 +115,12 @@ export default function ExitIntent() {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
+    const website = String(data.get("website") || "");
+    if (website) { setStatus("success"); return; } // honeypot tripped
     setStatus("submitting");
     try {
+      const ctrl = new AbortController();
+      const timeout = window.setTimeout(() => ctrl.abort(), 8000);
       const res = await fetch("/api/lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -124,7 +128,9 @@ export default function ExitIntent() {
           email: data.get("email"),
           source: "exit-intent",
         }),
+        signal: ctrl.signal,
       });
+      window.clearTimeout(timeout);
       if (!res.ok) throw new Error();
       setStatus("success");
     } catch {
@@ -176,10 +182,20 @@ export default function ExitIntent() {
           </div>
         ) : (
           <form onSubmit={onSubmit} className="mt-6 flex flex-col sm:flex-row gap-3">
+            {/* Honeypot */}
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+            />
             <input
               name="email"
               type="email"
               required
+              maxLength={254}
               autoFocus
               placeholder="you@example.com"
               aria-label="Email address"

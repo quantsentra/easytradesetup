@@ -21,6 +21,7 @@ export default function OfferBanner() {
   const [dismissed, setDismissed] = useState(false);
   const [ready, setReady] = useState(false);
   const [left, setLeft] = useState<{ days: number; hours: number; mins: number } | null>(null);
+  const [ended, setEnded] = useState(false);
 
   useEffect(() => {
     try {
@@ -29,8 +30,13 @@ export default function OfferBanner() {
       /* ignored */
     }
     setReady(true);
-    setLeft(computeLeft());
-    const id = setInterval(() => setLeft(computeLeft()), 60_000);
+    const tick = () => {
+      const l = computeLeft();
+      setLeft(l);
+      setEnded(l === null);
+    };
+    tick();
+    const id = setInterval(tick, 60_000);
     return () => clearInterval(id);
   }, []);
 
@@ -55,18 +61,26 @@ export default function OfferBanner() {
         <span className="inline-flex items-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-white/80" aria-hidden />
           <span className="uppercase tracking-widest text-nano font-semibold">
-            {OFFER_LABEL}
+            {ended ? "Launch window closed" : OFFER_LABEL}
           </span>
           <span className="hidden sm:inline text-white/70">·</span>
           <span className="hidden sm:inline text-white/90 truncate">
-            <Price variant="retail" />
-            <span className="mx-1.5 text-white/60">→</span>
-            <Price variant="amount" />
+            {ended ? (
+              <>Retail price in effect — <Price variant="retail" /></>
+            ) : (
+              <>
+                <Price variant="retail" />
+                <span className="mx-1.5 text-white/60">→</span>
+                <Price variant="amount" />
+              </>
+            )}
           </span>
-          <span className="hidden md:inline text-white/70 ml-1">· {OFFER_TAGLINE}</span>
+          {!ended && (
+            <span className="hidden md:inline text-white/70 ml-1">· {OFFER_TAGLINE}</span>
+          )}
         </span>
 
-        {left && (
+        {left && !ended && (
           <span className="inline-flex items-baseline gap-2 font-mono text-nano tabular-nums">
             <span className="text-white/70">Ends {LAUNCH_END_DATE_LABEL} —</span>
             <b className="bg-white/15 px-1.5 py-0.5 rounded text-[11px]">{left.days}d</b>

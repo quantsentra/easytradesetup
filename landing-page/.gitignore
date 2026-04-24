@@ -1,10 +1,19 @@
 node_modules
 .next
 out
-.env*.local
 .vercel
 *.tsbuildinfo
 next-env.d.ts
+
+# Env / secrets — never commit
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.json
+.credentials
+.DS_Store
 
 # Test artifacts
 coverage

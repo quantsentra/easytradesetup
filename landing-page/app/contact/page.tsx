@@ -35,6 +35,16 @@ export default function ContactPage() {
           </div>
 
           <form action="/api/lead" method="POST" className="mt-6 card-apple p-10">
+            <input type="hidden" name="source" value="contact" />
+            {/* Honeypot — bots fill every field; real users never see this. */}
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
+            />
             <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">Quick message</div>
             <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
               <label className="flex flex-col gap-2">

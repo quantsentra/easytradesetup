@@ -51,9 +51,10 @@
     --c-panel-2: #F6F6F4;
 
     --c-ink: #0D0D0D;
-    --c-ink-60: rgba(13, 13, 13, 0.64);
-    --c-ink-40: rgba(13, 13, 13, 0.46);
-    --c-ink-20: rgba(13, 13, 13, 0.22);
+    /* AAA/AA-safe contrast on white: 0.72 > 7:1, 0.60 > 4.5:1. */
+    --c-ink-60: rgba(13, 13, 13, 0.72);
+    --c-ink-40: rgba(13, 13, 13, 0.60);
+    --c-ink-20: rgba(13, 13, 13, 0.32);
 
     --c-rule: rgba(0, 0, 0, 0.08);
     --c-rule-2: rgba(0, 0, 0, 0.12);
