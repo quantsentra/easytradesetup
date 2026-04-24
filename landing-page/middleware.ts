@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 // Routes that require a signed-in user. Everything else is public (marketing).
 const isProtected = createRouteMatcher([
@@ -7,21 +8,29 @@ const isProtected = createRouteMatcher([
   "/api/entitlement(.*)",
 ]);
 
-// Admin-only routes — signed-in is necessary but not sufficient; the route
-// handler still has to check the user's role.
-const isAdminOnly = createRouteMatcher(["/admin(.*)"]);
+// If Clerk env vars are missing (e.g. preview envs not set yet) we must not
+// crash the whole site — marketing pages need to stay up. Protected routes
+// 404 in that case, which is the correct signal to operators.
+const hasClerk =
+  !!process.env.CLERK_SECRET_KEY &&
+  !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
-export default clerkMiddleware(async (auth, req) => {
+const clerkHandler = clerkMiddleware(async (auth, req) => {
   if (isProtected(req)) {
     await auth.protect();
   }
-
-  if (isAdminOnly(req)) {
-    // Role check happens inside the route handler where we have the full
-    // session claims + Supabase access. The middleware just guarantees the
-    // request is authenticated.
-  }
 });
+
+export default function middleware(req: NextRequest, ev: unknown) {
+  if (!hasClerk) {
+    if (isProtected(req)) {
+      return NextResponse.rewrite(new URL("/404", req.url));
+    }
+    return NextResponse.next();
+  }
+  // @ts-expect-error — Clerk types the event loosely; pass-through is fine.
+  return clerkHandler(req, ev);
+}
 
 export const config = {
   matcher: [
