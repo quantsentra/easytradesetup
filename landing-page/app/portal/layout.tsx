@@ -12,6 +12,7 @@ const navItems = [
   { href: "/portal/downloads", label: "Downloads" },
   { href: "/portal/docs",      label: "Strategies" },
   { href: "/portal/updates",   label: "Market notes" },
+  { href: "/portal/support",   label: "Support" },
   { href: "/portal/account",   label: "Account" },
 ];
 

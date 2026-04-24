@@ -76,6 +76,13 @@ export default async function PortalDashboard() {
           locked={!active}
         />
         <Tile
+          title="Support"
+          hint="Open a ticket · founder replies in 24h"
+          href="/portal/support"
+          cta="Get help"
+          locked={false}
+        />
+        <Tile
           title="Account"
           hint="Email · billing · sessions"
           href="/portal/account"

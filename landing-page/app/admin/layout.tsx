@@ -11,8 +11,10 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-  { href: "/admin",         label: "Overview" },
-  { href: "/admin/updates", label: "Market notes" },
+  { href: "/admin",           label: "Overview" },
+  { href: "/admin/customers", label: "Customers" },
+  { href: "/admin/tickets",   label: "Tickets" },
+  { href: "/admin/updates",   label: "Market notes" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
