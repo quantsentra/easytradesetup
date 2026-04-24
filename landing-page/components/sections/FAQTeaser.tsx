@@ -3,23 +3,27 @@ import Link from "next/link";
 const faqs: Array<[string, string]> = [
   [
     "Why pay when free Pine scripts exist on TradingView?",
-    "Free scripts are usually single-purpose — one moving average, one oscillator, one pattern. Golden Indicator fuses regime, structure, levels, and volume into one clean output, plus ships the Trade Logic PDF and risk calculator. You're paying for the system, not just the code.",
+    "Free scripts are single-purpose — one MA, one oscillator, one pattern. Golden Indicator fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one non-repainting engine. Plus the Trade Logic PDF and risk calculator. You're buying a system, not a plot.",
   ],
   [
-    "Is this a signal service?",
-    "No. Golden Indicator is a chart tool. You decide when to enter and exit — it never tells you to buy or sell.",
+    "Does it repaint? What about mid-bar signals?",
+    "No repaint. Every signal, zone, and structural break is calculated on bar close only. What you see at close is what stays on the chart — forever.",
   ],
   [
-    "Which markets does it work on?",
-    "Any symbol on TradingView. Tuned for NIFTY / BankNifty weekly expiries, clean on US indices (SPX, NASDAQ), commodities (Gold, Silver), major forex, and BTC / ETH.",
+    "Is this a signal service or a buy / sell bot?",
+    "Neither. Golden Indicator is a chart tool. It draws the levels and structure; you decide the trade. No alerts to your phone, no copy-trading, no tips.",
   ],
   [
-    "Does this work on the free TradingView plan?",
-    "Yes. Pine Script v5 runs on every TradingView tier, including the free plan.",
+    "Which markets and timeframes are supported?",
+    "Any symbol on TradingView, any timeframe. Tuned for NIFTY / BANKNIFTY weekly expiries, clean on SPX / NAS100, XAU / Silver / Crude, major forex, and BTC / ETH / SOL.",
   ],
   [
-    "How does the refund work?",
-    "Email us within 7 days of purchase for a full refund. No questions, no forms. Replies from the founder within 24 hours.",
+    "Will this work on my free TradingView plan?",
+    "Yes. Pine Script v5 runs on every TradingView tier including the free plan. No upgrade needed.",
+  ],
+  [
+    "How does the 7-day refund work?",
+    "Email within 7 days of purchase — full refund, no forms, no questions. Reply from the founder within 24 hours.",
   ],
 ];
 

@@ -5,13 +5,19 @@ import Price from "@/components/ui/Price";
 import LaunchCountdown from "@/components/ui/LaunchCountdown";
 import PaymentLogos from "@/components/ui/PaymentLogos";
 import ReservationNotice from "@/components/ui/ReservationNotice";
-import { ProductJsonLd } from "@/components/seo/JsonLd";
+import { ProductJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Pricing",
+  title: "Pricing — one-time, lifetime, no subscription",
   description:
-    "Golden Indicator — inaugural launch offer. Retail $149 / ₹13,999, today $49 / ₹4,599. One-time payment. Lifetime access. No subscription.",
+    "Golden Indicator inaugural launch: $49 / ₹4,599 (retail $149 / ₹13,999). One-time payment, lifetime updates, no recurring fees. 7-day refund.",
+  keywords: [
+    "TradingView indicator price",
+    "Pine Script one-time payment",
+    "no subscription trading indicator",
+    "Golden Indicator pricing",
+  ],
   alternates: { canonical: "/pricing" },
 };
 
@@ -35,6 +41,7 @@ export default function PricingPage() {
   return (
     <>
       <ProductJsonLd />
+      <PageBreadcrumbs name="Pricing" path="/pricing" />
       <PageHeader
         eyebrow="Pricing"
         title={<>One price. <span className="grad-text-2">Forever.</span></>}

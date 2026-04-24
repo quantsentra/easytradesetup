@@ -1,17 +1,32 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
+import { PageBreadcrumbs } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Sample — Trade Logic PDF",
+  title: "Free sample chapter — Golden Indicator Trade Logic PDF",
   description:
-    "Read a free sample chapter from the Golden Indicator Trade Logic PDF. Ungated. No email required. Setup rules, entry logic, invalidation framework.",
+    "Free chapter from the Golden Indicator Trade Logic PDF — setup rules, entry logic, invalidation, R-multiple sizing. Ungated. No email required.",
+  keywords: [
+    "trading playbook PDF",
+    "Pine Script trade logic",
+    "NIFTY trading guide",
+    "price action rules",
+    "free sample chapter",
+  ],
   alternates: { canonical: "/sample" },
+  openGraph: {
+    title: "Free Trade Logic sample chapter",
+    description: "Setup rules, entry logic, invalidation — no email.",
+    url: "https://easytradesetup.com/sample",
+    type: "article",
+  },
 };
 
 export default function SamplePage() {
   return (
     <>
+      <PageBreadcrumbs name="Sample" path="/sample" />
       <PageHeader
         eyebrow="Free sample"
         title={<>A chapter from the playbook. No email required.</>}

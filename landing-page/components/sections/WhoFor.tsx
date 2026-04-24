@@ -12,23 +12,23 @@ const lanes: Lane[] = [
   {
     tag: "Intraday",
     title: "Scalpers & day traders",
-    who: "You trade 5-min or 15-min on NIFTY, BankNifty, or SPX futures and want cleaner reads after the open.",
-    outcome: "Opening-range bias, regime shifts, and volatility zones — drawn before you enter.",
-    markets: "NIFTY · BANKNIFTY · SPX · NASDAQ",
+    who: "You trade 5m / 15m on NIFTY, BANKNIFTY, or SPX futures. You want a read before the second candle prints.",
+    outcome: "Opening-range bias, VWAP context, regime flips, and trap zones — drawn on the chart, not buried in a dozen sub-panes.",
+    markets: "NIFTY · BANKNIFTY · SPX · NAS100",
   },
   {
     tag: "Swing",
     title: "Swing & positional traders",
-    who: "You hold for days to weeks on equities, gold, or crypto and want fewer false breakouts.",
-    outcome: "Structural regime filter stops you from buying into distribution or fading a trend.",
+    who: "You hold days to weeks on equities, gold, or crypto. You lose more to fake breakouts than to bad setups.",
+    outcome: "Market-structure filter (HH / HL / BOS / CHoCH) tells you when you're buying the trend vs. buying the trap.",
     markets: "Equities · XAU · BTC · ETH",
   },
   {
     tag: "Options",
     title: "Options & expiry players",
-    who: "You sell or buy NSE weekly options and need direction plus volatility context.",
-    outcome: "Expiry-gamma awareness, range tagging, and session timing built into the script.",
-    markets: "NIFTY weekly · BankNifty weekly",
+    who: "You sell straddles on Thursday or buy weeklies for directional moves. You need bias + volatility on one pane.",
+    outcome: "Expiry-day gamma awareness, range-day tagging, and session-time filters built into the script.",
+    markets: "NIFTY weekly · BANKNIFTY weekly",
   },
 ];
 

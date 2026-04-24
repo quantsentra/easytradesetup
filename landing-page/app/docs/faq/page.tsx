@@ -1,10 +1,25 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
-import { FAQPageJsonLd } from "@/components/seo/JsonLd";
+import { FAQPageJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "FAQ",
+  title: "FAQ — Golden Indicator questions answered",
+  description:
+    "Golden Indicator FAQ — repaint, signals, markets, timeframes, refunds. Everything traders ask before buying a TradingView Pine v5 indicator.",
+  keywords: [
+    "TradingView indicator FAQ",
+    "Pine Script questions",
+    "no repaint indicator",
+    "Golden Indicator refund",
+    "NIFTY indicator FAQ",
+  ],
   alternates: { canonical: "/docs/faq" },
+  openGraph: {
+    title: "FAQ — Golden Indicator",
+    description: "Repaint, signals, markets, refunds — every question answered.",
+    url: "https://easytradesetup.com/docs/faq",
+    type: "article",
+  },
 };
 
 const faqs = [
@@ -52,6 +67,7 @@ export default function FAQPage() {
   return (
     <>
       <FAQPageJsonLd faqs={flat} />
+      <PageBreadcrumbs name="FAQ" path="/docs/faq" />
       <PageHeader
         eyebrow="FAQ"
         title={<>Asked. And answered.</>}

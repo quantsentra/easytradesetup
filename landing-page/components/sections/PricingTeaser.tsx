@@ -5,12 +5,12 @@ import ReservationNotice from "@/components/ui/ReservationNotice";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 const included = [
-  "Works on stocks, forex, crypto, commodities, and indices",
-  "No recurring fees",
-  "Instant access",
-  "Lifetime updates included",
-  "Clear setup guide included",
-  "Built for TradingView users",
+  "Any symbol, any timeframe on TradingView",
+  "Bar-close only — no repaint, no flicker",
+  "Equities, F&O, forex, crypto, commodities",
+  "Lifetime updates — no subscription, ever",
+  "Trade Logic PDF + risk calculator included",
+  "Pine v5 — runs on the free TradingView plan",
 ];
 
 export default function PricingTeaser() {

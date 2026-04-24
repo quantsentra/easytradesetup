@@ -1,12 +1,26 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
 import Prose from "@/components/ui/Prose";
+import { PageBreadcrumbs } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = { title: "About" };
+export const metadata: Metadata = {
+  title: "About EasyTradeSetup — Golden Indicator",
+  description:
+    "EasyTradeSetup builds one-off trading tools for working traders. No subscription, no signal rooms, no gurus. Just Pine v5 scripts that read any market.",
+  keywords: ["EasyTradeSetup", "Golden Indicator founder", "independent trading tools"],
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About EasyTradeSetup",
+    description: "One-off trading tools for working traders. No subscription, no signals.",
+    url: "https://easytradesetup.com/about",
+    type: "website",
+  },
+};
 
 export default function AboutPage() {
   return (
     <>
+      <PageBreadcrumbs name="About" path="/about" />
       <PageHeader
         eyebrow="About"
         title={<>Built by one trader, for other traders.</>}

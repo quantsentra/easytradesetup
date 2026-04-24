@@ -1,12 +1,31 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
 import Prose from "@/components/ui/Prose";
+import { PageBreadcrumbs } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = { title: "TradingView install" };
+export const metadata: Metadata = {
+  title: "Install Golden Indicator on TradingView",
+  description:
+    "Step-by-step guide to install Golden Indicator on TradingView. Pine v5, works on free + paid plans. 90-second setup with screenshots.",
+  keywords: [
+    "install TradingView indicator",
+    "Pine Script install guide",
+    "add Pine v5 to TradingView",
+    "Golden Indicator setup",
+  ],
+  alternates: { canonical: "/docs/install" },
+  openGraph: {
+    title: "Install Golden Indicator on TradingView",
+    description: "Pine v5 setup in 90 seconds. Works on the free plan.",
+    url: "https://easytradesetup.com/docs/install",
+    type: "article",
+  },
+};
 
 export default function InstallPage() {
   return (
     <>
+      <PageBreadcrumbs name="Install" path="/docs/install" />
       <PageHeader eyebrow="Docs / Install" title="Install on TradingView" lede="Ninety seconds, start to finish." />
       <section className="bg-surface">
         <div className="container-wide py-16">

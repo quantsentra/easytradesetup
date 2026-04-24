@@ -64,8 +64,9 @@ test.describe("Home page — marketing integrity", () => {
 
   test("FAQ teaser includes key objection handlers", async ({ page }) => {
     await expect(page.getByText(/free pine scripts exist/i)).toBeVisible();
-    await expect(page.getByText(/is this a signal service\?/i)).toBeVisible();
-    await expect(page.getByText(/how does the refund work/i)).toBeVisible();
+    await expect(page.getByText(/signal service/i).first()).toBeVisible();
+    await expect(page.getByText(/refund work/i)).toBeVisible();
+    await expect(page.getByText(/repaint/i).first()).toBeVisible();
   });
 
   test("FinalCTA reinforces one-time vs recurring", async ({ page }) => {

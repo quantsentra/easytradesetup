@@ -2,12 +2,26 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
+import { PageBreadcrumbs } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Compare — Golden Indicator vs alternatives",
+  title: "Golden Indicator vs LuxAlgo, TrendSpider & signal services",
   description:
-    "Side-by-side comparison of Golden Indicator against LuxAlgo, TrendSpider, and typical YouTuber-branded Pine Script bundles. Pricing, model, support, and claims compared.",
+    "Side-by-side: Golden Indicator vs LuxAlgo, TrendSpider, paid signal groups, and YouTuber Pine bundles. Pricing model, repaint behavior, support, claims.",
+  keywords: [
+    "Golden Indicator vs LuxAlgo",
+    "LuxAlgo alternative",
+    "TrendSpider alternative",
+    "best TradingView indicator",
+    "Pine Script comparison",
+  ],
   alternates: { canonical: "/compare" },
+  openGraph: {
+    title: "Golden Indicator vs LuxAlgo & TrendSpider",
+    description: "Pricing, repaint behavior, and claims — side by side.",
+    url: "https://easytradesetup.com/compare",
+    type: "article",
+  },
 };
 
 type Row = {
@@ -141,6 +155,7 @@ function EtsValue({ v }: { v: string | boolean }) {
 export default function ComparePage() {
   return (
     <>
+      <PageBreadcrumbs name="Compare" path="/compare" />
       <PageHeader
         eyebrow="Compare"
         title={<>Side by side with <span className="grad-text-2">the alternatives.</span></>}

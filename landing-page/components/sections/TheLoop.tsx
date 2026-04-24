@@ -4,22 +4,22 @@ const steps = [
   {
     n: "01",
     title: "Install",
-    body: "Paste the Pine file into TradingView's Pine Editor. Save. 60 seconds, any plan, including free.",
+    body: "Paste the Pine v5 file into TradingView's Pine Editor. Save. 60 seconds. Works on the free plan.",
   },
   {
     n: "02",
     title: "Read",
-    body: "Regime, structure, levels, and volume render on one pane. No extra indicators, no extra dashboards.",
+    body: "Structure, regime, key levels, and supply / demand zones print on one pane. Bar-close only. No repaint.",
   },
   {
     n: "03",
     title: "Decide",
-    body: "You own the decision. The tool shows the read; your risk, your entry, your call.",
+    body: "Your entry, your stop, your size. The script shows the context; you own every trade.",
   },
   {
     n: "04",
     title: "Trade",
-    body: "Same chart, any market. NIFTY, SPX, Gold, BTC — the filter adapts to regime and session.",
+    body: "Same chart, any symbol. NIFTY, BANKNIFTY, SPX, XAU, BTC — the filter adapts to regime and session.",
   },
 ];
 
@@ -34,7 +34,7 @@ export default function TheLoop() {
               Install. Read. <span className="grad-text-2">Decide.</span> Trade.
             </>
           }
-          lede="Four moves a day. No alerts blowing up your phone, no signal rooms, no Telegram nags."
+          lede="Four moves per session. No alerts to your phone, no paid signal rooms, no Telegram nags."
         />
 
         <div className="mt-14 grid grid-cols-1 md:grid-cols-4 gap-3 sm:gap-4">

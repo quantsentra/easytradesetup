@@ -7,7 +7,9 @@ export function OrganizationJsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": `${SITE_URL}#org`,
     name: "EasyTradeSetup",
+    alternateName: ["Easy Trade Setup", "ETS"],
     url: SITE_URL,
     logo: `${SITE_URL}/favicon.ico`,
     sameAs: [],
@@ -20,7 +22,8 @@ export function OrganizationJsonLd() {
       },
     ],
     description:
-      "Maker of Golden Indicator — a proprietary TradingView Pine Script for global markets. Based in India.",
+      "Maker of Golden Indicator — a non-repainting TradingView Pine Script v5 for intraday, swing, and options traders across global markets.",
+    areaServed: "Worldwide",
   };
   return <Script data={data} id="ld-org" />;
 }
@@ -29,9 +32,17 @@ export function WebSiteJsonLd() {
   const data = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": `${SITE_URL}#website`,
     name: "EasyTradeSetup",
     url: SITE_URL,
+    description:
+      "Golden Indicator — one TradingView Pine v5 script for any market. Market structure, regime, key levels, supply / demand.",
     publisher: { "@id": `${SITE_URL}#org` },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${SITE_URL}/docs/faq?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
   };
   return <Script data={data} id="ld-website" />;
 }
@@ -43,10 +54,17 @@ export function ProductJsonLd() {
     name: "Golden Indicator",
     brand: { "@type": "Brand", name: "EasyTradeSetup" },
     description:
-      "Proprietary TradingView Pine Script v5 with integrated signal engine for NSE F&O, US equities, commodities, forex, and crypto. One indicator, eight built-in tools, any symbol, any timeframe.",
+      "TradingView Pine Script v5 indicator for global markets. Fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one non-repainting engine. Works on NIFTY, BANKNIFTY, SPX, NASDAQ, XAU, Silver, Crude, forex, and crypto.",
     category: "Software / Trading Tools",
     url: `${SITE_URL}/product`,
-    image: `${SITE_URL}/chart-after.png`,
+    image: [
+      `${SITE_URL}/chart-after.png`,
+      `${SITE_URL}/chart-before.png`,
+    ],
+    audience: {
+      "@type": "Audience",
+      audienceType: "Retail traders — intraday, swing, options",
+    },
     offers: [
       {
         "@type": "Offer",
@@ -72,6 +90,8 @@ export function ProductJsonLd() {
       { "@type": "PropertyValue", name: "Platform", value: "TradingView" },
       { "@type": "PropertyValue", name: "Language", value: "Pine Script v5" },
       { "@type": "PropertyValue", name: "Billing model", value: "One-time, lifetime access" },
+      { "@type": "PropertyValue", name: "Repaint behavior", value: "None — bar-close only" },
+      { "@type": "PropertyValue", name: "Supported markets", value: "Equities, F&O, forex, crypto, commodities" },
     ],
   };
   return <Script data={data} id="ld-product" />;
@@ -104,6 +124,19 @@ export function BreadcrumbJsonLd({ items }: { items: Array<{ name: string; url: 
     })),
   };
   return <Script data={data} id="ld-breadcrumb" />;
+}
+
+/** Convenience — build a Home > Page breadcrumb from a path slug. */
+export function PageBreadcrumbs({ name, path }: { name: string; path: string }) {
+  const clean = path.startsWith("/") ? path : `/${path}`;
+  return (
+    <BreadcrumbJsonLd
+      items={[
+        { name: "Home", url: SITE_URL + "/" },
+        { name, url: SITE_URL + clean },
+      ]}
+    />
+  );
 }
 
 function Script({ data, id }: { data: unknown; id: string }) {

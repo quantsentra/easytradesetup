@@ -4,13 +4,28 @@ import PageHeader from "@/components/ui/PageHeader";
 import Bundle from "@/components/sections/Bundle";
 import Price from "@/components/ui/Price";
 import ReservationNotice from "@/components/ui/ReservationNotice";
-import { ProductJsonLd } from "@/components/seo/JsonLd";
+import { ProductJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Product — Golden Indicator",
+  title: "Golden Indicator — TradingView Pine v5 for any market",
   description:
-    "Golden Indicator — a sealed TradingView Pine v5 indicator. Regime, structure, levels, and volume fused into one decision layer. Global markets. One-time $49 / ₹4,599.",
+    "Golden Indicator fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL), and supply / demand into one non-repainting Pine v5 script. NIFTY, SPX, XAU, BTC.",
+  keywords: [
+    "TradingView Pine v5 indicator",
+    "no repaint indicator",
+    "market structure indicator",
+    "NIFTY 50 indicator",
+    "BANKNIFTY indicator",
+    "price action indicator",
+    "supply and demand indicator",
+  ],
   alternates: { canonical: "/product" },
+  openGraph: {
+    title: "Golden Indicator — one pane, every market",
+    description: "Structure, regime, levels, supply / demand — fused on one chart.",
+    url: "https://easytradesetup.com/product",
+    type: "website",
+  },
 };
 
 const promises = [
@@ -45,6 +60,7 @@ export default function ProductPage() {
   return (
     <>
       <ProductJsonLd />
+      <PageBreadcrumbs name="Product" path="/product" />
       <PageHeader
         eyebrow="Golden Indicator"
         title={<>One script. <span className="grad-text-2">One decision layer.</span></>}

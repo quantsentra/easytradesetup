@@ -1,11 +1,25 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
+import { PageBreadcrumbs } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = { title: "Contact" };
+export const metadata: Metadata = {
+  title: "Contact — Golden Indicator support",
+  description:
+    "Get in touch with the EasyTradeSetup team. Email hello@easytradesetup.com — founder replies within 24 hours. Refund, install, feature requests.",
+  keywords: ["EasyTradeSetup contact", "Golden Indicator support", "TradingView indicator help"],
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact EasyTradeSetup",
+    description: "Founder replies within 24 hours. hello@easytradesetup.com",
+    url: "https://easytradesetup.com/contact",
+    type: "website",
+  },
+};
 
 export default function ContactPage() {
   return (
     <>
+      <PageBreadcrumbs name="Contact" path="/contact" />
       <PageHeader
         eyebrow="Contact"
         title={<>Talk to a person.</>}

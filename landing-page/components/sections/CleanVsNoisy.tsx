@@ -8,9 +8,9 @@ export default function CleanVsNoisy() {
     <section className="above-bg">
       <div className="container-wide py-16 sm:py-20 md:py-24">
         <SectionHeader
-          eyebrow="The difference"
-          title={<>The same chart. <span className="grad-text-2">Two very different traders.</span></>}
-          lede="The problem was never the market. It was everything you stacked on top of it — or didn't."
+          eyebrow="Before / after"
+          title={<>Same chart. <span className="grad-text-2">Two very different reads.</span></>}
+          lede="You were never losing to the market. You were losing to a chart with no structure, no zones, and no idea who owns the level."
         />
 
         <div className="mt-10 sm:mt-14 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -32,7 +32,7 @@ export default function CleanVsNoisy() {
               />
             </div>
             <figcaption className="px-5 py-4 text-caption text-ink-60 leading-relaxed border-t border-rule">
-              A price chart by itself. Candles, maybe a trend — but no structure, no zones, no way to read where real buyers and sellers stepped in.
+              Candles. Maybe a moving average. No market structure, no supply / demand, no way to read where size actually entered the book.
             </figcaption>
           </figure>
 
@@ -54,13 +54,13 @@ export default function CleanVsNoisy() {
               />
             </div>
             <figcaption className="px-5 py-4 text-caption text-ink-60 leading-relaxed border-t border-rule">
-              Same chart. Seller zones, regime curves, swing structure (HH / LH / LL), prior-day levels — all drawn for you. One indicator. One clean read.
+              Buyer and seller zones. Regime bias. Market structure (HH / HL / LL / LH). PDH / PDL / PWH / PWL. One pane. One read. One decision.
             </figcaption>
           </figure>
         </div>
 
         <p className="mt-8 sm:mt-10 text-center text-nano font-mono uppercase tracking-widest text-ink-40 max-w-2xl mx-auto">
-          Real TradingView screenshots · Not more information — clearer thinking
+          Real TradingView screenshots · Not more indicators — fewer decisions
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
