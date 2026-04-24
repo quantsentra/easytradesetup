@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/auth-server";
 import { addMessage, getTicket } from "@/lib/tickets";
 import {
   getAdminNotifyAddress,
@@ -22,8 +22,9 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
+  const user = await getUser();
+  if (!user) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
+  const userId = user.id;
 
   const rl = rateLimit(`ticket-reply:${userId}`, REPLY_RL);
   if (!rl.allowed) {
@@ -57,8 +58,7 @@ export async function POST(
   // Fire-and-forget admin notification about the customer reply.
   (async () => {
     try {
-      const user = await currentUser();
-      const customerEmail = user?.primaryEmailAddress?.emailAddress || "unknown";
+      const customerEmail = user.email || "unknown";
       await sendEmail({
         to: getAdminNotifyAddress(),
         subject: `[Ticket reply] ${ticket.subject}`,

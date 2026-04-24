@@ -1,19 +1,18 @@
-import { clerkClient } from "@clerk/nextjs/server";
+import { listAllUsers } from "@/lib/auth-server";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 
 type Row = {
   userId: string;
   email: string;
   name: string;
-  signedUpAt: number | null;
+  signedUpAt: string | null;
   active: boolean;
   grantedAt: string | null;
   source: string | null;
 };
 
 async function fetchRows(): Promise<Row[]> {
-  const client = await clerkClient();
-  const { data: users, totalCount } = await client.users.getUserList({ limit: 200 });
+  const users = await listAllUsers(200);
 
   let entitlements: Array<{ user_id: string; active: boolean; granted_at: string; source: string }> = [];
   try {
@@ -27,13 +26,10 @@ async function fetchRows(): Promise<Row[]> {
 
   const rows: Row[] = users.map((u) => {
     const ent = byUser.get(u.id);
-    const first = u.firstName || "";
-    const last = u.lastName || "";
-    const name = [first, last].filter(Boolean).join(" ") || u.username || "";
     return {
       userId: u.id,
-      email: u.primaryEmailAddress?.emailAddress || "",
-      name,
+      email: u.email || "",
+      name: u.fullName || "",
       signedUpAt: u.createdAt,
       active: ent?.active === true,
       grantedAt: ent?.granted_at || null,
@@ -41,13 +37,14 @@ async function fetchRows(): Promise<Row[]> {
     };
   });
 
-  // Active licenses first, then by signup desc.
   rows.sort((a, b) => {
     if (a.active !== b.active) return a.active ? -1 : 1;
-    return (b.signedUpAt || 0) - (a.signedUpAt || 0);
+    const aTs = a.signedUpAt ? Date.parse(a.signedUpAt) : 0;
+    const bTs = b.signedUpAt ? Date.parse(b.signedUpAt) : 0;
+    return bTs - aTs;
   });
 
-  return rows.slice(0, Math.min(rows.length, totalCount));
+  return rows;
 }
 
 export default async function AdminCustomersPage() {

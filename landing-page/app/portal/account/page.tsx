@@ -1,9 +1,9 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/auth-server";
 import { getEntitlement } from "@/lib/entitlements";
 
 export default async function AccountPage() {
-  const user = await currentUser();
-  const email = user?.primaryEmailAddress?.emailAddress || "";
+  const user = await getUser();
+  const email = user?.email || "";
   const entitlement = await getEntitlement(user?.id);
   const active = entitlement?.active === true;
 
@@ -19,7 +19,7 @@ export default async function AccountPage() {
 
       <div className="mt-8 flex flex-col gap-3">
         <Row label="Email">{email || "—"}</Row>
-        <Row label="Clerk user ID" mono>{user?.id || "—"}</Row>
+        <Row label="User ID" mono>{user?.id || "—"}</Row>
         <Row label="License">
           {active ? (
             <span className="chip chip-acid">Active · lifetime</span>

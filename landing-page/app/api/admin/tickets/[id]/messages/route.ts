@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getUserId, getUserById } from "@/lib/auth-server";
 import { isAdmin } from "@/lib/admin";
 import { addMessage, getTicket } from "@/lib/tickets";
 import { sendEmail, ticketReplyCustomerHtml } from "@/lib/email";
@@ -15,7 +15,7 @@ export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const { userId } = await auth();
+  const userId = await getUserId();
   if (!userId) return NextResponse.json({ error: "Not signed in" }, { status: 401 });
   if (!(await isAdmin(userId))) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
@@ -49,9 +49,8 @@ export async function POST(
   // Fire-and-forget customer notification.
   (async () => {
     try {
-      const client = await clerkClient();
-      const customer = await client.users.getUser(ticket.user_id);
-      const to = customer.primaryEmailAddress?.emailAddress;
+      const customer = await getUserById(ticket.user_id);
+      const to = customer?.email;
       if (!to) return;
       await sendEmail({
         to,

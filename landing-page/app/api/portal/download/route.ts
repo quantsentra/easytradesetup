@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getUserId } from "@/lib/auth-server";
 import { getEntitlement } from "@/lib/entitlements";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 
@@ -13,7 +13,7 @@ const SIGNED_URL_TTL_SECONDS = 600; // 10 minutes
 const ALLOWED_PATH_PREFIX = "golden-indicator/";
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
+  const userId = await getUserId();
   if (!userId) {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });
   }

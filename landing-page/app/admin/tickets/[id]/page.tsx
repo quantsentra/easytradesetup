@@ -1,18 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { clerkClient } from "@clerk/nextjs/server";
+import { getUserById } from "@/lib/auth-server";
 import { getTicket, getTicketMessages, type TicketStatus } from "@/lib/tickets";
 
 const STATUS_OPTIONS: TicketStatus[] = ["open", "waiting", "resolved", "closed"];
 
 async function customerEmail(userId: string): Promise<string> {
-  try {
-    const client = await clerkClient();
-    const user = await client.users.getUser(userId);
-    return user.primaryEmailAddress?.emailAddress || userId;
-  } catch {
-    return userId;
-  }
+  const u = await getUserById(userId);
+  return u?.email || userId;
 }
 
 export default async function AdminTicketDetailPage({

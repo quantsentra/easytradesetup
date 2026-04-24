@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
+import { getUser } from "@/lib/auth-server";
+import AccountMenu from "@/components/auth/AccountMenu";
 
 export const metadata: Metadata = {
   title: "Portal",
@@ -16,7 +17,10 @@ const navItems = [
   { href: "/portal/account",   label: "Account" },
 ];
 
-export default function PortalLayout({ children }: { children: React.ReactNode }) {
+export default async function PortalLayout({ children }: { children: React.ReactNode }) {
+  const user = await getUser();
+  const email = user?.email || "";
+
   return (
     <div className="relative min-h-screen">
       <div className="container-wide py-8 sm:py-12">
@@ -41,16 +45,12 @@ export default function PortalLayout({ children }: { children: React.ReactNode }
                 <span className="text-nano font-mono uppercase tracking-widest text-ink-40">
                   Signed in
                 </span>
-                <UserButton
-                  appearance={{ elements: { userButtonAvatarBox: "w-8 h-8" } }}
-                />
+                <AccountMenu email={email} size={32} />
               </div>
             </div>
           </aside>
 
-          <section className="min-w-0">
-            {children}
-          </section>
+          <section className="min-w-0">{children}</section>
         </div>
       </div>
     </div>

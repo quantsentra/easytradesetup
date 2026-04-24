@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { clerkClient } from "@clerk/nextjs/server";
+import { emailsByUserIds } from "@/lib/auth-server";
 import { listAllTickets, type Ticket, type TicketStatus } from "@/lib/tickets";
 
 const ALL_STATUSES: Array<TicketStatus | "all"> = [
@@ -11,21 +11,6 @@ const ALL_STATUSES: Array<TicketStatus | "all"> = [
 ];
 
 type SearchParams = Promise<{ status?: string }>;
-
-async function loadUsersByIds(ids: string[]): Promise<Map<string, string>> {
-  const out = new Map<string, string>();
-  if (ids.length === 0) return out;
-  try {
-    const client = await clerkClient();
-    const { data } = await client.users.getUserList({ userId: ids, limit: 100 });
-    for (const u of data) {
-      out.set(u.id, u.primaryEmailAddress?.emailAddress || u.id);
-    }
-  } catch {
-    // Clerk unreachable — fall through to raw IDs.
-  }
-  return out;
-}
 
 function statusChip(s: Ticket["status"]) {
   const cls =
@@ -42,7 +27,7 @@ export default async function AdminTicketsPage({ searchParams }: { searchParams:
     | "all";
 
   const tickets = await listAllTickets(filter);
-  const emailMap = await loadUsersByIds(Array.from(new Set(tickets.map((t) => t.user_id))));
+  const emailMap = await emailsByUserIds(Array.from(new Set(tickets.map((t) => t.user_id))));
 
   return (
     <>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/auth-server";
 import { getEntitlement } from "@/lib/entitlements";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import Prose from "@/components/ui/Prose";
@@ -76,7 +76,7 @@ export default async function UpdateDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const user = await currentUser();
+  const user = await getUser();
   const entitlement = await getEntitlement(user?.id);
   const active = entitlement?.active === true;
 

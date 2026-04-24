@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import ThemedClerkProvider from "@/components/auth/ThemedClerkProvider";
 import { Inter_Tight, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import TopNav from "@/components/nav/TopNav";
 import MarketsMarquee from "@/components/sections/MarketsMarquee";
@@ -98,23 +97,21 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ThemedClerkProvider>
-      <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
-        <head />
-        <body>
-          <a href="#main" className="skip-link">Skip to content</a>
-          <OfferBanner />
-          <TopNav />
-          <MarketsMarquee />
-          <main id="main" className="above-bg">{children}</main>
-          <Footer />
-          <StickyBuyBar />
-          <ExitIntent />
-          <OrganizationJsonLd />
-          <WebSiteJsonLd />
-          <Analytics />
-        </body>
-      </html>
-    </ThemedClerkProvider>
+    <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+      <head />
+      <body>
+        <a href="#main" className="skip-link">Skip to content</a>
+        <OfferBanner />
+        <TopNav />
+        <MarketsMarquee />
+        <main id="main" className="above-bg">{children}</main>
+        <Footer />
+        <StickyBuyBar />
+        <ExitIntent />
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
+        <Analytics />
+      </body>
+    </html>
   );
 }

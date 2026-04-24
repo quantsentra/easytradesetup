@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getUserId } from "@/lib/auth-server";
 import { isAdmin } from "@/lib/admin";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { rateLimit } from "@/lib/rate-limit";
@@ -11,7 +11,7 @@ const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,79}$/;
 const PUBLISH_RL = { windowMs: 10 * 60_000, max: 30 };
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
+  const userId = await getUserId();
   if (!userId) {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });
   }

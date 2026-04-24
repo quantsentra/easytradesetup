@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/auth-server";
 import { listTicketsForUser, type Ticket } from "@/lib/tickets";
 
 const STATUS_LABEL: Record<Ticket["status"], string> = {
@@ -10,7 +10,7 @@ const STATUS_LABEL: Record<Ticket["status"], string> = {
 };
 
 export default async function SupportPage() {
-  const user = await currentUser();
+  const user = await getUser();
   const tickets = user ? await listTicketsForUser(user.id) : [];
 
   return (

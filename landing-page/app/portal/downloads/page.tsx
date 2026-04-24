@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/auth-server";
 import { getEntitlement } from "@/lib/entitlements";
 
 export default async function DownloadsPage() {
-  const user = await currentUser();
+  const user = await getUser();
   const entitlement = await getEntitlement(user?.id);
   const active = entitlement?.active === true;
 

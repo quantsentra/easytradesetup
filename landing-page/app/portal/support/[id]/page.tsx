@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/auth-server";
 import { getTicket, getTicketMessages } from "@/lib/tickets";
 
 export default async function TicketDetailPage({
@@ -9,7 +9,7 @@ export default async function TicketDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = await currentUser();
+  const user = await getUser();
   const ticket = await getTicket(id);
   if (!user || !ticket || ticket.user_id !== user.id) notFound();
 

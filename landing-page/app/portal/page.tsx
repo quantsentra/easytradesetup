@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/auth-server";
 import { getEntitlement } from "@/lib/entitlements";
 import { touchAndGetPrevious } from "@/lib/user-activity";
 import { fetchLatestUpdate, countUpdatesSince } from "@/lib/updates";
 
 export default async function PortalDashboard() {
-  const user = await currentUser();
-  const firstName = user?.firstName || user?.username || "trader";
+  const user = await getUser();
+  const fullName = (user?.user_metadata?.full_name as string | undefined) || "";
+  const firstName = fullName.split(" ")[0] || user?.email?.split("@")[0] || "trader";
   const entitlement = await getEntitlement(user?.id);
   const active = entitlement?.active === true;
 

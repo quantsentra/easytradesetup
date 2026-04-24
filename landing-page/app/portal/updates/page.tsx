@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { currentUser } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/auth-server";
 import { getEntitlement } from "@/lib/entitlements";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 
@@ -26,7 +26,7 @@ async function fetchUpdates(): Promise<Update[]> {
 }
 
 export default async function UpdatesPage() {
-  const user = await currentUser();
+  const user = await getUser();
   const entitlement = await getEntitlement(user?.id);
   const active = entitlement?.active === true;
 

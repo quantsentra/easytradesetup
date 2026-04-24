@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { currentUser } from "@clerk/nextjs/server";
-import { UserButton } from "@clerk/nextjs";
+import { getUser } from "@/lib/auth-server";
 import { isAdmin } from "@/lib/admin";
+import AccountMenu from "@/components/auth/AccountMenu";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -19,7 +19,7 @@ const navItems = [
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const user = await currentUser();
+  const user = await getUser();
   const admin = await isAdmin(user?.id);
   if (!admin) notFound();
 
@@ -47,7 +47,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <span className="text-nano font-mono uppercase tracking-widest text-ink-40">
                   Admin
                 </span>
-                <UserButton appearance={{ elements: { userButtonAvatarBox: "w-8 h-8" } }} />
+                <AccountMenu email={user?.email || "admin"} size={32} />
               </div>
             </div>
           </aside>

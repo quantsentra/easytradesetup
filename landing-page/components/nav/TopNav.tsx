@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAuth, UserButton } from "@clerk/nextjs";
+import { supabaseBrowser } from "@/lib/supabase/browser";
+import AccountMenu from "@/components/auth/AccountMenu";
 import Price from "@/components/ui/Price";
 
 const navItems = [
@@ -23,8 +24,30 @@ function isActive(pathname: string | null, href: string): boolean {
 
 export default function TopNav() {
   const [open, setOpen] = useState(false);
+  const [email, setEmail] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
   const pathname = usePathname();
-  const { isSignedIn, isLoaded } = useAuth();
+
+  useEffect(() => {
+    let alive = true;
+    const supa = supabaseBrowser();
+    (async () => {
+      const res = await supa.auth.getUser();
+      if (!alive) return;
+      setEmail(res.data.user?.email ?? null);
+      setLoaded(true);
+    })();
+    const sub = supa.auth.onAuthStateChange((_event, session) => {
+      if (!alive) return;
+      setEmail(session?.user?.email ?? null);
+    });
+    return () => {
+      alive = false;
+      sub.data.subscription.unsubscribe();
+    };
+  }, []);
+
+  const isSignedIn = !!email;
 
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
@@ -83,7 +106,7 @@ export default function TopNav() {
           >
             Contact
           </Link>
-          {isLoaded && !isSignedIn && (
+          {loaded && !isSignedIn && (
             <Link
               href="/sign-in"
               className="text-[13px] px-2 text-ink-60 hover:text-ink transition-colors"
@@ -91,15 +114,15 @@ export default function TopNav() {
               Sign in
             </Link>
           )}
-          {isLoaded && isSignedIn && (
+          {loaded && isSignedIn && (
             <>
-              <Link
-                href="/portal"
+              <a
+                href="https://portal.easytradesetup.com/"
                 className="text-[13px] px-2 text-ink hover:text-cyan transition-colors font-medium"
               >
                 Portal
-              </Link>
-              <UserButton appearance={{ elements: { userButtonAvatarBox: "w-7 h-7" } }} />
+              </a>
+              <AccountMenu email={email || ""} size={28} />
             </>
           )}
           <Link href="/checkout" className="btn btn-acid">
@@ -154,7 +177,7 @@ export default function TopNav() {
             >
               Contact
             </Link>
-            {isLoaded && !isSignedIn && (
+            {loaded && !isSignedIn && (
               <Link
                 href="/sign-in"
                 onClick={() => setOpen(false)}
@@ -163,14 +186,14 @@ export default function TopNav() {
                 Sign in
               </Link>
             )}
-            {isLoaded && isSignedIn && (
-              <Link
-                href="/portal"
+            {loaded && isSignedIn && (
+              <a
+                href="https://portal.easytradesetup.com/"
                 onClick={() => setOpen(false)}
                 className="nav-link-mobile hairline-b"
               >
                 Portal
-              </Link>
+              </a>
             )}
             <Link
               href="/checkout"
