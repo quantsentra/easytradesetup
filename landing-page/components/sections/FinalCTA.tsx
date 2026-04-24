@@ -37,23 +37,25 @@ export default function FinalCTA() {
             <div>
               <span className="eye">
                 <span className="eye-dot" aria-hidden />
-                Feed the edge
+                Trade from structure
               </span>
               <h2 className="mt-5 font-display text-[42px] sm:text-[54px] font-semibold leading-[1] tracking-[-0.03em]" style={{ color: "#EDF1FA" }}>
-                Feed the read. <span className="grad-text-2">Starve the noise.</span>
+                Trade from structure, <span className="grad-text-2">not confusion.</span>
               </h2>
               <p className="mt-5 max-w-[520px] text-[15px] sm:text-[16px] leading-[1.55]" style={{ color: "rgba(237, 241, 250, 0.72)" }}>
-                <Price variant="amount" /> once. Not <Price variant="amount" />/month. Ever.
-                Own the script for life and decide every trade yourself.
+                If your chart feels overloaded, your entries feel emotional, or your decisions
+                change from trade to trade, Golden Indicator gives you a cleaner way to read the
+                market. One indicator. One process. <Price variant="amount" /> once. Not{" "}
+                <Price variant="amount" />/month. Ever.
               </p>
               <p className="mt-4 font-mono text-[10.5px] font-bold uppercase tracking-widest" style={{ color: "rgba(237, 241, 250, 0.5)" }}>
-                7-day refund · Instant email delivery · Not investment advice
+                7-day refund · Instant email delivery · Educational, not investment advice
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 lg:w-[220px]">
               <Link href="/checkout" className="btn btn-acid btn-lg justify-center">
-                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+                Get Golden Indicator · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link
                 href="/sample"
@@ -64,7 +66,7 @@ export default function FinalCTA() {
                   background: "transparent",
                 }}
               >
-                Free chapter first
+                Read free sample
               </Link>
             </div>
           </div>

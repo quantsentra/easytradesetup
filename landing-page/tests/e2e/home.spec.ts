@@ -5,11 +5,11 @@ test.describe("Home page — marketing integrity", () => {
     await page.goto("/");
   });
 
-  test("renders hero headline with product-first cadence + accent word", async ({ page }) => {
+  test("renders hero headline with structure-vs-noise positioning + accent word", async ({ page }) => {
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toContainText(/one tradingview indicator/i);
-    await expect(h1).toContainText(/ever/i);
-    await expect(h1).toContainText(/any market/i);
+    await expect(h1).toContainText(/structure/i);
+    await expect(h1).toContainText(/not noise/i);
   });
 
   test("hero CTA links point to checkout + sample", async ({ page }) => {
@@ -17,7 +17,7 @@ test.describe("Home page — marketing integrity", () => {
     await expect(reserve).toBeVisible();
     await expect(reserve).toHaveAttribute("href", "/checkout");
 
-    const sample = page.getByRole("link", { name: /free chapter/i }).first();
+    const sample = page.getByRole("link", { name: /free sample/i }).first();
     await expect(sample).toBeVisible();
     await expect(sample).toHaveAttribute("href", "/sample");
   });
@@ -34,18 +34,26 @@ test.describe("Home page — marketing integrity", () => {
   });
 
   test("3-lane WhoFor segmentation renders", async ({ page }) => {
-    await expect(page.getByText(/scalpers & day traders/i)).toBeVisible();
-    await expect(page.getByText(/swing & positional traders/i)).toBeVisible();
-    await expect(page.getByText(/options & expiry players/i)).toBeVisible();
+    await expect(page.getByText(/^intraday traders$/i)).toBeVisible();
+    await expect(page.getByText(/^swing traders$/i)).toBeVisible();
+    await expect(page.getByText(/^options traders$/i)).toBeVisible();
   });
 
-  test("Bundle 4-grid shows kit items with NEW + COMING SOON pills", async ({ page }) => {
+  test("Bundle 6-grid shows kit items with NEW pill", async ({ page }) => {
     await expect(page.getByText("Golden Indicator", { exact: false }).first()).toBeVisible();
     await expect(page.getByText("Trade Logic PDF").first()).toBeVisible();
     await expect(page.getByText("Risk Calculator").first()).toBeVisible();
-    await expect(page.getByText("Daily Market Notes").first()).toBeVisible();
+    await expect(page.getByText("Install Guide").first()).toBeVisible();
+    await expect(page.getByText("Lifetime Updates").first()).toBeVisible();
+    await expect(page.getByText("Founder Support").first()).toBeVisible();
     await expect(page.getByText(/^new$/i).first()).toBeVisible();
-    await expect(page.getByText(/coming soon/i).first()).toBeVisible();
+  });
+
+  test("new Problem / Solution / WhatItShows / WhyDifferent sections render", async ({ page }) => {
+    await expect(page.getByText(/most traders don't need more indicators/i)).toBeVisible();
+    await expect(page.getByText(/structure, levels, regime, and risk/i)).toBeVisible();
+    await expect(page.getByText(/what golden indicator/i)).toBeVisible();
+    await expect(page.getByText(/not another buy \/ sell indicator/i)).toBeVisible();
   });
 
   test("MultiMarket stacked cards show sample symbols", async ({ page }) => {
@@ -69,7 +77,8 @@ test.describe("Home page — marketing integrity", () => {
     await expect(page.getByText(/repaint/i).first()).toBeVisible();
   });
 
-  test("FinalCTA reinforces one-time vs recurring", async ({ page }) => {
+  test("FinalCTA reinforces structure-vs-confusion framing", async ({ page }) => {
+    await expect(page.getByText(/trade from structure/i).first()).toBeVisible();
     await expect(page.getByText(/once\. not.*\/month\. ever\./i)).toBeVisible();
   });
 

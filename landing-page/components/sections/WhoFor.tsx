@@ -11,23 +11,23 @@ type Lane = {
 const lanes: Lane[] = [
   {
     tag: "Intraday",
-    title: "Scalpers & day traders",
-    who: "You trade 5m / 15m on NIFTY, BANKNIFTY, or SPX futures. You want a read before the second candle prints.",
-    outcome: "Opening-range bias, VWAP context, regime flips, and trap zones — drawn on the chart, not buried in a dozen sub-panes.",
-    markets: "NIFTY · BANKNIFTY · SPX · NAS100",
+    title: "Intraday traders",
+    who: "You trade NIFTY, BANKNIFTY, SPX, NASDAQ, Gold, or crypto on lower timeframes.",
+    outcome: "Quickly understand trend direction, important levels, and possible trap zones before entering.",
+    markets: "NIFTY · BANKNIFTY · SPX · NAS100 · XAU",
   },
   {
     tag: "Swing",
-    title: "Swing & positional traders",
-    who: "You hold days to weeks on equities, gold, or crypto. You lose more to fake breakouts than to bad setups.",
-    outcome: "Market-structure filter (HH / HL / BOS / CHoCH) tells you when you're buying the trend vs. buying the trap.",
+    title: "Swing traders",
+    who: "You hold trades for days or weeks. You lose more to weak breakouts than to bad setups.",
+    outcome: "Focus on cleaner structure, trend continuation, and important reversal zones. Skip the fakeouts.",
     markets: "Equities · XAU · BTC · ETH",
   },
   {
     tag: "Options",
-    title: "Options & expiry players",
-    who: "You sell straddles on Thursday or buy weeklies for directional moves. You need bias + volatility on one pane.",
-    outcome: "Expiry-day gamma awareness, range-day tagging, and session-time filters built into the script.",
+    title: "Options traders",
+    who: "You trade weekly options and need a directional read before you commit premium.",
+    outcome: "Build directional bias with regime + key levels, avoid entering blindly around supports and resistances.",
     markets: "NIFTY weekly · BANKNIFTY weekly",
   },
 ];
@@ -37,8 +37,8 @@ export default function WhoFor() {
     <section className="above-bg">
       <div className="container-wide py-16 sm:py-20 md:py-24">
         <SectionHeader
-          eyebrow="Who this is for"
-          title={<>Three traders. <span className="grad-text-2">One tool.</span></>}
+          eyebrow="Built for traders who want clarity"
+          title={<>For intraday, swing, <span className="grad-text-2">and multi-market traders.</span></>}
           lede="Golden Indicator adapts to how you trade. Pick the lane that looks most like yours."
         />
 

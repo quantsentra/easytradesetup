@@ -15,7 +15,7 @@ const items: Item[] = [
     name: "Golden Indicator",
     tag: "included",
     tagLabel: "Pine Script v5",
-    desc: "One signal engine replacing a dozen cluttered indicators. Bar-close only — no repaint, no mid-bar flicker.",
+    desc: "TradingView Pine v5 indicator covering structure, levels, trend regime, supply / demand, and pullback context.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         <path d="M4 19V7m5 12v-6m5 6V10m5 9V5" />
@@ -27,7 +27,7 @@ const items: Item[] = [
     name: "Trade Logic PDF",
     tag: "included",
     tagLabel: "50+ pages",
-    desc: "Entries, exits, risk framework — in plain language. Rules you can read once and apply the next morning.",
+    desc: "A practical trading playbook — entries, exits, invalidation, risk, and trade planning. Rules you can read once and apply the next morning.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         <path d="M5 4h12a2 2 0 0 1 2 2v14l-4-2-4 2-4-2-4 2V6a2 2 0 0 1 2-2Z" />
@@ -40,7 +40,7 @@ const items: Item[] = [
     name: "Risk Calculator",
     tag: "new",
     tagLabel: "New",
-    desc: "Position sizing and R-multiple tracker tuned to your account currency. Protect capital before chasing P&L.",
+    desc: "Position sizing and R-multiple tracker. Protect capital before chasing P&L.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
         <circle cx="12" cy="12" r="9" />
@@ -50,14 +50,40 @@ const items: Item[] = [
   },
   {
     n: "04",
-    name: "Daily Market Notes",
-    tag: "soon",
-    tagLabel: "Coming Soon",
-    desc: "Pre-market bias: NIFTY, SPX, Gold, BTC. Levels, gamma, session timing. Delivered before the open.",
+    name: "Install Guide",
+    tag: "included",
+    tagLabel: "Step-by-step",
+    desc: "TradingView setup guide with screenshots. Works on the free TradingView plan. Indicator running in under 90 seconds.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <rect x="3" y="5" width="18" height="15" rx="2" />
-        <path d="M3 9h18M8 3v4M16 3v4" />
+        <rect x="4" y="3" width="16" height="18" rx="2" />
+        <path d="M8 9h8M8 13h5" />
+      </svg>
+    ),
+  },
+  {
+    n: "05",
+    name: "Lifetime Updates",
+    tag: "included",
+    tagLabel: "No subscription",
+    desc: "Future improvements included — no monthly billing, no re-purchase. Your access grows with the product.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="M21 12a9 9 0 1 1-3-6.7" />
+        <path d="M21 4v5h-5" />
+      </svg>
+    ),
+  },
+  {
+    n: "06",
+    name: "Founder Support",
+    tag: "included",
+    tagLabel: "Email",
+    desc: "Direct email support for installation and product questions. Reply within 24 hours, from the founder.",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m3 7 9 6 9-6" />
       </svg>
     ),
   },
@@ -68,22 +94,22 @@ export default function Bundle() {
     <section className="above-bg">
       <div className="container-wide py-20 sm:py-24 md:py-28">
         <SectionHeader
-          eyebrow="The kit"
+          eyebrow="What you get"
           title={
             <>
-              Four instruments. <span className="grad-text-2">One sealed workflow.</span>
+              Six components. <span className="grad-text-2">One clean workflow.</span>
             </>
           }
           lede={
             <>
-              Regime, structure, entry, and pullback logic fused into a single non-repainting
-              engine. No upsells, no feature tiers, no hunting across twelve scripts for the
-              one piece that actually works.
+              The indicator, the playbook, the risk tool, the setup guide, lifetime updates,
+              and founder-direct support — bundled for one payment. No upsells, no feature
+              tiers, no hunting across twelve scripts for the one piece that actually works.
             </>
           }
         />
 
-        <div className="mt-12 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="mt-12 sm:mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {items.map((it) => (
             <article key={it.n} className="feat-card">
               <div className="flex items-start justify-between">

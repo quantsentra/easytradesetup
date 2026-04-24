@@ -26,10 +26,10 @@ export default function Hero() {
             </div>
 
             <h1 className="mt-6 font-display font-semibold text-[50px] sm:text-[66px] lg:text-[78px] leading-[0.98] tracking-[-0.035em] text-ink">
-              One TradingView indicator.<br />
-              Everything you&apos;ll{" "}
+              One TradingView indicator<br />
+              to read the market with{" "}
               <em className="word-accent">
-                ever
+                structure
                 <svg viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden>
                   <path
                     d="M2 8 Q 100 2, 200 7 T 398 6"
@@ -40,14 +40,13 @@ export default function Hero() {
                   />
                 </svg>
               </em>{" "}
-              need<br />
-              to read any market.
+              <br />— not noise.
             </h1>
 
             <p className="mt-7 max-w-[540px] text-[17px] sm:text-[18px] leading-[1.55] text-ink-60">
-              Golden Indicator is a sealed Pine v5 script. Regime, structure, key levels,
-              entries, pullbacks, and risk — fused on one pane. Bar-close only.
-              No repaint, no signal service. You decide every trade.
+              Golden Indicator combines market structure, trend regime, key levels, supply /
+              demand zones, pullback context, and a risk framework into one Pine v5 indicator.
+              Bar-close logic. No signal service. You decide every trade.
             </p>
 
             <div className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -58,7 +57,7 @@ export default function Hero() {
                 href="/sample"
                 className="inline-flex items-center gap-1.5 text-[14px] font-medium text-ink-60 hover:text-ink transition-colors px-2 py-2"
               >
-                or read a free chapter first <span aria-hidden>→</span>
+                View free sample <span aria-hidden>→</span>
               </Link>
             </div>
 

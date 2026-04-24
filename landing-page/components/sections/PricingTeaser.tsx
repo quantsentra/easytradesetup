@@ -5,8 +5,8 @@ import ReservationNotice from "@/components/ui/ReservationNotice";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 const included = [
-  "Any symbol, any timeframe on TradingView",
-  "Bar-close only — no repaint, no flicker",
+  "Works across TradingView symbols and timeframes",
+  "Bar-close logic — no repaint, no flicker",
   "Equities, F&O, forex, crypto, commodities",
   "Lifetime updates — no subscription, ever",
   "Trade Logic PDF + risk calculator included",
@@ -45,10 +45,12 @@ export default function PricingTeaser() {
               <Price variant="strike-offer" />
             </h2>
             <p className="mt-4 body-muted max-w-xl mx-auto">
-              Inaugural launch price — over 60% off retail. One payment, yours for life.
+              Inaugural launch price — over 60% off retail. One payment, lifetime access. No
+              monthly billing, no locked tiers, no recurring charges.
             </p>
             <p className="mt-3 text-caption text-ink-60 max-w-xl mx-auto">
-              Less than 2 months of a LuxAlgo subscription. One avoided bad trade covers it 10× over.
+              Designed to reduce chart clutter, improve preparation, and support a more
+              disciplined trading process.
             </p>
 
             <div className="mt-6 flex justify-center">

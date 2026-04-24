@@ -8,9 +8,9 @@ export default function CleanVsNoisy() {
     <section className="above-bg">
       <div className="container-wide py-16 sm:py-20 md:py-24">
         <SectionHeader
-          eyebrow="Before / after"
-          title={<>Same chart. <span className="grad-text-2">Two very different reads.</span></>}
-          lede="You were never losing to the market. You were losing to a chart with no structure, no zones, and no idea who owns the level."
+          eyebrow="The problem"
+          title={<>Most traders don&apos;t need more indicators. <span className="grad-text-2">They need a clearer read.</span></>}
+          lede="Moving averages, RSI, volume, support / resistance, supply zones, session levels — all useful, but messy when scattered. Golden Indicator brings the important parts together so you can quickly see trend vs range, where the levels are, where buyers and sellers reacted, and where the risk lives."
         />
 
         <div className="mt-10 sm:mt-14 grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
@@ -32,7 +32,7 @@ export default function CleanVsNoisy() {
               />
             </div>
             <figcaption className="px-5 py-4 text-caption text-ink-60 leading-relaxed border-t border-rule">
-              Candles. Maybe a moving average. No market structure, no supply / demand, no way to read where size actually entered the book.
+              Candles. Maybe a moving average. No market structure, no supply / demand, no clear context for where the market is in its own cycle.
             </figcaption>
           </figure>
 
