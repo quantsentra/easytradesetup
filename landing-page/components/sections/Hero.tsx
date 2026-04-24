@@ -28,18 +28,32 @@ export default function Hero() {
             <h1 className="mt-6 font-display font-semibold text-[50px] sm:text-[66px] lg:text-[78px] leading-[0.98] tracking-[-0.035em] text-ink">
               One TradingView indicator<br />
               to read the market with{" "}
-              <em className="word-accent">
-                structure
+              <span
+                className="word-rotator"
+                aria-label="structure, clarity, discipline, confidence"
+              >
+                <span className="word" style={{ "--word-i": 0 } as React.CSSProperties}>
+                  structure
+                </span>
+                <span className="word" style={{ "--word-i": 1 } as React.CSSProperties}>
+                  clarity
+                </span>
+                <span className="word" style={{ "--word-i": 2 } as React.CSSProperties}>
+                  discipline
+                </span>
+                <span className="word" style={{ "--word-i": 3 } as React.CSSProperties}>
+                  confidence
+                </span>
                 <svg viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden>
                   <path
                     d="M2 8 Q 100 2, 200 7 T 398 6"
-                    stroke="#22D3EE"
+                    stroke="currentColor"
                     strokeWidth="2"
                     fill="none"
                     strokeLinecap="round"
                   />
                 </svg>
-              </em>{" "}
+              </span>{" "}
               <br />— not noise.
             </h1>
 
