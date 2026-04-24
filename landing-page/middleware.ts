@@ -24,77 +24,110 @@ function isMarketingHost(host: string | null): boolean {
   return host === "easytradesetup.com" || host === MARKETING_HOST;
 }
 
-function needsAuth(pathname: string): boolean {
+function needsAuth(logicalPath: string): boolean {
   return (
-    pathname === "/portal" ||
-    pathname.startsWith("/portal/") ||
-    pathname === "/admin" ||
-    pathname.startsWith("/admin/")
+    logicalPath === "/portal" ||
+    logicalPath.startsWith("/portal/") ||
+    logicalPath === "/admin" ||
+    logicalPath.startsWith("/admin/")
   );
 }
 
-function hostnameRouting(req: NextRequest): NextResponse | null {
+type RoutedPlan =
+  | { kind: "redirect"; response: NextResponse }
+  | { kind: "rewrite"; to: string; externalPath: string }
+  | { kind: "passthrough"; externalPath: string };
+
+/**
+ * Figure out what the final response should look like based on the host.
+ * Returns a plan so the caller can still layer Supabase auth + session
+ * refresh on top without fighting the hostname rewrite.
+ */
+function planHostnameRouting(req: NextRequest): RoutedPlan {
   const host = req.headers.get("host");
   const { pathname, search } = req.nextUrl;
 
-  // --- Portal subdomain — rewrite root-level paths into /portal/... ---
+  // --- Portal subdomain ---
   if (isPortalHost(host)) {
+    // portal.domain/portal/foo -> 301 to portal.domain/foo
     if (pathname === "/portal" || pathname.startsWith("/portal/")) {
       const clean = pathname === "/portal" ? "/" : pathname.slice("/portal".length);
-      return NextResponse.redirect(
-        new URL(`${clean}${search}`, `https://${PORTAL_HOST}`),
-        301,
-      );
+      return {
+        kind: "redirect",
+        response: NextResponse.redirect(
+          new URL(`${clean}${search}`, `https://${PORTAL_HOST}`),
+          301,
+        ),
+      };
     }
+    // /admin, /sign-in, /api, etc. render at their literal path.
     if (
       PORTAL_PASSTHROUGH_PREFIXES.some(
         (p) => pathname === p || pathname.startsWith(`${p}/`),
       )
     ) {
-      return null;
+      return { kind: "passthrough", externalPath: pathname };
     }
-    const rewritten = new URL(`/portal${pathname}${search}`, req.url);
-    return NextResponse.rewrite(rewritten);
+    // Everything else maps to /portal/foo internally.
+    return {
+      kind: "rewrite",
+      to: `/portal${pathname}${search}`,
+      externalPath: pathname,
+    };
   }
 
-  // --- Marketing host — migrate portal/admin URLs to subdomain ---
+  // --- Marketing host ---
   if (isMarketingHost(host)) {
     if (pathname === "/portal" || pathname.startsWith("/portal/")) {
       const clean = pathname === "/portal" ? "/" : pathname.slice("/portal".length);
-      return NextResponse.redirect(
-        new URL(`${clean}${search}`, `https://${PORTAL_HOST}`),
-        301,
-      );
+      return {
+        kind: "redirect",
+        response: NextResponse.redirect(
+          new URL(`${clean}${search}`, `https://${PORTAL_HOST}`),
+          301,
+        ),
+      };
     }
     if (pathname === "/admin" || pathname.startsWith("/admin/")) {
-      return NextResponse.redirect(
-        new URL(`${pathname}${search}`, `https://${PORTAL_HOST}`),
-        301,
-      );
+      return {
+        kind: "redirect",
+        response: NextResponse.redirect(
+          new URL(`${pathname}${search}`, `https://${PORTAL_HOST}`),
+          301,
+        ),
+      };
     }
   }
 
-  return null;
+  return { kind: "passthrough", externalPath: pathname };
 }
 
-/**
- * Refresh the Supabase auth session cookie and gate protected routes.
- * Keep middleware responses as slim as possible — we only need to touch
- * cookies and redirect when unauthenticated users hit /portal or /admin.
- */
 export async function middleware(req: NextRequest) {
-  const routed = hostnameRouting(req);
-  if (routed) return routed;
+  const plan = planHostnameRouting(req);
 
-  const res = NextResponse.next({ request: req });
+  if (plan.kind === "redirect") {
+    return plan.response;
+  }
+
+  // Determine the logical path the app will render. Rewrites translate
+  // portal.domain/foo -> /portal/foo; passthroughs keep the pathname as-is.
+  const logicalPath =
+    plan.kind === "rewrite" ? new URL(plan.to, req.url).pathname : plan.externalPath;
+
+  // Build the response we'll eventually return. Cookie mutations from
+  // Supabase auth attach here regardless of rewrite vs next.
+  const res =
+    plan.kind === "rewrite"
+      ? NextResponse.rewrite(new URL(plan.to, req.url), { request: req })
+      : NextResponse.next({ request: req });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  // Without Supabase env, don't crash public pages; just 404 protected
+  // Without Supabase env vars, don't crash public pages; just 404 protected
   // routes so operators notice the missing config.
   if (!url || !anon) {
-    if (needsAuth(req.nextUrl.pathname)) {
+    if (needsAuth(logicalPath)) {
       return NextResponse.rewrite(new URL("/404", req.url));
     }
     return res;
@@ -113,16 +146,15 @@ export async function middleware(req: NextRequest) {
     },
   });
 
-  // Refresh session if expired. Side effect: renewed auth cookie is set
-  // on the response we return.
   const {
     data: { user },
   } = await supa.auth.getUser();
 
-  if (!user && needsAuth(req.nextUrl.pathname)) {
+  if (!user && needsAuth(logicalPath)) {
     const signIn = req.nextUrl.clone();
     signIn.pathname = "/sign-in";
-    signIn.search = `?redirect=${encodeURIComponent(req.nextUrl.pathname + req.nextUrl.search)}`;
+    // Redirect back to the cosmetic URL the user typed, not the internal one.
+    signIn.search = `?redirect=${encodeURIComponent(plan.externalPath + (req.nextUrl.search || ""))}`;
     return NextResponse.redirect(signIn);
   }
 

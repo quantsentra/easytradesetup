@@ -17,7 +17,7 @@ type Report = {
   version: string;
   checks: {
     supabase: Check;
-    clerkEnv: { ok: boolean };
+    authEnv: { ok: boolean };
     resendEnv: { ok: boolean };
   };
 };
@@ -36,16 +36,16 @@ async function checkSupabase(): Promise<Check> {
 
 export async function GET() {
   const supabase = await checkSupabase();
-  const clerkEnv = {
-    ok: !!process.env.CLERK_SECRET_KEY && !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+  const authEnv = {
+    ok: !!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.SUPABASE_SERVICE_ROLE_KEY,
   };
   const resendEnv = { ok: !!process.env.RESEND_API_KEY };
 
   const report: Report = {
-    ok: supabase.ok && clerkEnv.ok,
+    ok: supabase.ok && authEnv.ok,
     at: new Date().toISOString(),
     version: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || "local",
-    checks: { supabase, clerkEnv, resendEnv },
+    checks: { supabase, authEnv, resendEnv },
   };
 
   return NextResponse.json(report, {
