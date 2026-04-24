@@ -27,6 +27,7 @@ const groups = [
       { slug: "position-sizing",  label: "Position sizing" },
       { slug: "stop-placement",   label: "Stop placement — structure vs ATR" },
       { slug: "daily-loss-limit", label: "Daily loss limits + cool-down rules" },
+      { slug: "risk-calculator",  label: "Risk calculator — how to use it" },
     ],
   },
 ];
