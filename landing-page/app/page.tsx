@@ -1,5 +1,4 @@
 import Hero from "@/components/sections/Hero";
-import MarketsMarquee from "@/components/sections/MarketsMarquee";
 import CleanVsNoisy from "@/components/sections/CleanVsNoisy";
 import WhoFor from "@/components/sections/WhoFor";
 import Bundle from "@/components/sections/Bundle";
@@ -15,7 +14,6 @@ export default function HomePage() {
     <>
       <ProductJsonLd />
       <Hero />
-      <MarketsMarquee />
       <CleanVsNoisy />
       <WhoFor />
       <Bundle />

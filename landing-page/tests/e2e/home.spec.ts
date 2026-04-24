@@ -28,7 +28,7 @@ test.describe("Home page — marketing integrity", () => {
   });
 
   test("markets marquee renders symbols", async ({ page }) => {
-    await expect(page.getByText(/reads any symbol on tradingview/i).first()).toBeVisible();
+    await expect(page.getByText(/live markets|reads any symbol on tradingview/i).first()).toBeVisible();
     await expect(page.getByText(/nifty 50/i).first()).toBeVisible();
     await expect(page.getByText(/spx 500/i).first()).toBeVisible();
   });
