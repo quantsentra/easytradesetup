@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { addMessage, getTicket } from "@/lib/tickets";
+import {
+  getAdminNotifyAddress,
+  sendEmail,
+  ticketReplyAdminHtml,
+} from "@/lib/email";
 
 export const runtime = "nodejs";
+
+function siteUrl(req: Request): string {
+  return process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
+}
 
 export async function POST(
   req: Request,
@@ -20,7 +29,6 @@ export async function POST(
   const form = await req.formData();
   const body = String(form.get("body") || "");
 
-  // Customer reply re-opens a resolved ticket.
   const newStatus = ticket.status === "resolved" ? "open" : undefined;
   const result = await addMessage({
     ticketId: id,
@@ -32,6 +40,25 @@ export async function POST(
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
+
+  // Fire-and-forget admin notification about the customer reply.
+  (async () => {
+    try {
+      const user = await currentUser();
+      const customerEmail = user?.primaryEmailAddress?.emailAddress || "unknown";
+      await sendEmail({
+        to: getAdminNotifyAddress(),
+        subject: `[Ticket reply] ${ticket.subject}`,
+        replyTo: customerEmail !== "unknown" ? customerEmail : undefined,
+        html: ticketReplyAdminHtml({
+          customerEmail,
+          subject: ticket.subject,
+          body,
+          adminUrl: `${siteUrl(req)}/admin/tickets/${id}`,
+        }),
+      });
+    } catch { /* ignored */ }
+  })();
 
   return NextResponse.redirect(new URL(`/portal/support/${id}`, req.url), 303);
 }

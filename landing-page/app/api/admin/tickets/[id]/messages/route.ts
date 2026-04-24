@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { isAdmin } from "@/lib/admin";
 import { addMessage, getTicket } from "@/lib/tickets";
+import { sendEmail, ticketReplyCustomerHtml } from "@/lib/email";
 
 export const runtime = "nodejs";
+
+function siteUrl(req: Request): string {
+  return process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin;
+}
 
 export async function POST(
   req: Request,
@@ -31,6 +36,25 @@ export async function POST(
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
+
+  // Fire-and-forget customer notification.
+  (async () => {
+    try {
+      const client = await clerkClient();
+      const customer = await client.users.getUser(ticket.user_id);
+      const to = customer.primaryEmailAddress?.emailAddress;
+      if (!to) return;
+      await sendEmail({
+        to,
+        subject: `Re: ${ticket.subject}`,
+        html: ticketReplyCustomerHtml({
+          subject: ticket.subject,
+          body,
+          ticketUrl: `${siteUrl(req)}/portal/support/${id}`,
+        }),
+      });
+    } catch { /* ignored */ }
+  })();
 
   return NextResponse.redirect(new URL(`/admin/tickets/${id}`, req.url), 303);
 }
