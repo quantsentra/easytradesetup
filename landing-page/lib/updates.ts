@@ -25,6 +25,21 @@ export async function fetchLatestUpdate(): Promise<LatestUpdate | null> {
   }
 }
 
+export async function fetchLatestUpdates(limit = 5): Promise<LatestUpdate[]> {
+  try {
+    const supa = createSupabaseAdmin();
+    const { data } = await supa
+      .from("updates")
+      .select("id,slug,title,excerpt,published_at")
+      .eq("draft", false)
+      .order("published_at", { ascending: false })
+      .limit(limit);
+    return (data as LatestUpdate[]) || [];
+  } catch {
+    return [];
+  }
+}
+
 export async function countUpdatesSince(isoTimestamp: string): Promise<number> {
   try {
     const supa = createSupabaseAdmin();
