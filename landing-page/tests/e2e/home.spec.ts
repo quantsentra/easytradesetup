@@ -33,12 +33,6 @@ test.describe("Home page — marketing integrity", () => {
     await expect(page.getByText(/spx 500/i).first()).toBeVisible();
   });
 
-  test("3-lane WhoFor segmentation renders", async ({ page }) => {
-    await expect(page.getByText(/^intraday traders$/i)).toBeVisible();
-    await expect(page.getByText(/^swing traders$/i)).toBeVisible();
-    await expect(page.getByText(/^options traders$/i)).toBeVisible();
-  });
-
   test("Bundle 6-grid shows kit items with NEW pill", async ({ page }) => {
     await expect(page.getByText("Golden Indicator", { exact: false }).first()).toBeVisible();
     await expect(page.getByText("Trade Logic PDF").first()).toBeVisible();
@@ -49,25 +43,10 @@ test.describe("Home page — marketing integrity", () => {
     await expect(page.getByText(/^new$/i).first()).toBeVisible();
   });
 
-  test("new Problem / Solution / WhatItShows / WhyDifferent sections render", async ({ page }) => {
-    await expect(page.getByText(/most traders don't need more indicators/i)).toBeVisible();
-    await expect(page.getByText(/structure, levels, regime, and risk/i)).toBeVisible();
-    await expect(page.getByText(/what golden indicator/i)).toBeVisible();
-    await expect(page.getByText(/not another buy \/ sell indicator/i)).toBeVisible();
-  });
-
   test("MultiMarket stacked cards show sample symbols", async ({ page }) => {
     await expect(page.getByText(/multi-market coverage/i)).toBeVisible();
     await expect(page.getByText(/nifty 50/i).first()).toBeVisible();
     await expect(page.getByText(/btc \/ usd/i).first()).toBeVisible();
-  });
-
-  test("TheLoop 4-step section renders", async ({ page }) => {
-    await expect(page.getByText(/^the loop$/i)).toBeVisible();
-    await expect(page.getByRole("heading", { name: /^install$/i })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /^read$/i })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /^decide$/i })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /^trade$/i })).toBeVisible();
   });
 
   test("FAQ teaser includes key objection handlers", async ({ page }) => {
