@@ -1,12 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter_Tight, Space_Grotesk, JetBrains_Mono } from "next/font/google";
-import TopNav from "@/components/nav/TopNav";
-import MarketsMarquee from "@/components/sections/MarketsMarquee";
-import Footer from "@/components/nav/Footer";
-import OfferBanner from "@/components/ui/OfferBanner";
-import StickyBuyBar from "@/components/ui/StickyBuyBar";
-import ExitIntent from "@/components/ui/ExitIntent";
-import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -100,16 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
       <head />
       <body>
-        <a href="#main" className="skip-link">Skip to content</a>
-        <OfferBanner />
-        <TopNav />
-        <MarketsMarquee />
-        <main id="main" className="above-bg">{children}</main>
-        <Footer />
-        <StickyBuyBar />
-        <ExitIntent />
-        <OrganizationJsonLd />
-        <WebSiteJsonLd />
+        {children}
         <Analytics />
       </body>
     </html>
