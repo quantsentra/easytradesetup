@@ -1,8 +1,5 @@
 import Link from "next/link";
 
-// Phase-1 docs are authored in MDX in the repo. Sidebar is hardcoded here
-// so we can ship v1 without a CMS. Swap in Fumadocs file-based routing
-// in the next iteration.
 const groups = [
   {
     title: "Getting started",
@@ -35,30 +32,28 @@ const groups = [
 export default function PortalDocsIndex() {
   return (
     <>
-      <span className="eye">
-        <span className="eye-dot" aria-hidden />
-        Strategies · library
-      </span>
-      <h1 className="mt-3 font-display text-[36px] font-semibold leading-[1.1] text-ink">
-        Everything the indicator is thinking.
-      </h1>
-      <p className="mt-3 text-[15px] text-ink-60 max-w-[640px]">
-        Read the rules. Copy the checklists. Open a chart. Each entry links the Pine logic to the
-        trader-side decision — no mystery, no hidden sauce.
-      </p>
+      <div className="tz-topbar">
+        <div>
+          <h1 className="tz-topbar-title">Strategy library.</h1>
+          <div className="tz-topbar-sub">
+            Read the rules. Copy the checklists. Each entry links the Pine logic to the trader-side decision.
+          </div>
+        </div>
+      </div>
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {groups.map((g) => (
-          <section key={g.title} className="glass-card-soft p-6">
-            <div className="text-micro font-semibold text-cyan uppercase tracking-wider">
-              {g.title}
-            </div>
-            <ul className="mt-4 flex flex-col gap-2.5">
+          <section key={g.title} className="tz-card">
+            <div className="tz-card-title mb-4">{g.title}</div>
+            <ul className="flex flex-col">
               {g.items.map((it) => (
-                <li key={it.slug}>
+                <li key={it.slug}
+                  style={{ borderTop: "1px solid var(--tz-border)" }}
+                  className="first:border-t-0">
                   <Link
                     href={`/portal/docs/${it.slug}`}
-                    className="text-[14px] text-ink hover:text-cyan transition-colors"
+                    className="block py-2.5 text-[14px] transition-colors hover:pl-1"
+                    style={{ color: "var(--tz-ink)" }}
                   >
                     {it.label}
                   </Link>

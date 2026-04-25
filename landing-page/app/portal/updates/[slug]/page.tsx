@@ -82,16 +82,25 @@ export default async function UpdateDetailPage({
 
   if (!active) {
     return (
-      <div className="glass-card p-8">
-        <h1 className="h-tile">Customer-only</h1>
-        <p className="mt-3 text-[15px] text-ink-60">
-          Market notes are published inside the portal for active customers. Reserve the launch price to
-          unlock.
-        </p>
-        <Link href="/checkout" className="btn btn-acid mt-6">
-          Reserve · lifetime access →
-        </Link>
-      </div>
+      <>
+        <div className="tz-topbar">
+          <div>
+            <h1 className="tz-topbar-title">Market notes.</h1>
+            <div className="tz-topbar-sub">Customer-only.</div>
+          </div>
+        </div>
+        <div className="tz-card">
+          <p className="text-[15px]" style={{ color: "var(--tz-ink-dim)" }}>
+            Market notes are published inside the portal for active customers. Reserve the launch
+            price to unlock.
+          </p>
+          <div className="mt-5">
+            <Link href="/checkout" className="tz-btn tz-btn-primary">
+              Reserve · lifetime access →
+            </Link>
+          </div>
+        </div>
+      </>
     );
   }
 
@@ -100,36 +109,43 @@ export default async function UpdateDetailPage({
 
   return (
     <>
-      <div className="mb-6">
-        <Link
-          href="/portal/updates"
-          className="font-mono text-[11px] uppercase tracking-widest text-ink-40 hover:text-cyan"
-        >
-          ← All notes
-        </Link>
+      <Link
+        href="/portal/updates"
+        className="inline-flex items-center gap-1.5 text-[12px] font-mono uppercase tracking-widest mb-4"
+        style={{ color: "var(--tz-ink-mute)" }}
+      >
+        ← All notes
+      </Link>
+
+      <div className="tz-topbar">
+        <div>
+          <span className="tz-chip">
+            <span className="tz-chip-dot" style={{ background: "var(--tz-acid)" }} />
+            Market note ·{" "}
+            <time>{new Date(update.published_at).toISOString().slice(0, 10)}</time>
+          </span>
+          <h1 className="tz-topbar-title mt-3">{update.title}</h1>
+          {update.excerpt && (
+            <div className="tz-topbar-sub max-w-[640px]">{update.excerpt}</div>
+          )}
+        </div>
       </div>
-      <span className="eye">
-        <span className="eye-dot" aria-hidden />
-        Market note ·{" "}
-        <time>{new Date(update.published_at).toISOString().slice(0, 10)}</time>
-      </span>
-      <h1 className="mt-3 font-display text-[36px] font-semibold leading-[1.1] text-ink">
-        {update.title}
-      </h1>
-      {update.excerpt && (
-        <p className="mt-3 text-[15px] text-ink-60 max-w-[640px]">{update.excerpt}</p>
-      )}
-      <div className="mt-10">
+
+      <div className="tz-card" style={{ padding: "32px 40px" }}>
         <Prose>{renderBody(update.body_mdx || "")}</Prose>
       </div>
-      <div className="mt-16 pt-8 hairline-t flex items-center justify-between">
+
+      <div className="mt-10 pt-6 flex items-center justify-between"
+        style={{ borderTop: "1px solid var(--tz-border)" }}>
         <Link
           href="/portal/updates"
-          className="text-[13px] text-ink-60 hover:text-cyan transition-colors"
+          className="text-[13px]"
+          style={{ color: "var(--tz-ink-mute)" }}
         >
           ← Back to notes
         </Link>
-        <span className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40">
+        <span className="font-mono text-[10.5px] uppercase tracking-widest"
+          style={{ color: "var(--tz-ink-mute)" }}>
           Educational · not investment advice
         </span>
       </div>

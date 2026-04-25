@@ -39,6 +39,47 @@
 
     --c-nav-bg: rgba(255, 255, 255, 0.85);
     --c-nav-bg-solid: rgba(255, 255, 255, 0.96);
+
+    /* ===== Tradzilla-inspired tokens (admin + portal only, light mode) =====
+       Applied via .tz-* component classes so the marketing site keeps its
+       existing styling. Palette is a light-mode adaptation of the reference
+       dark-theme design. */
+    --tz-bg:        #faf9f5;
+    --tz-bg-2:      #f4f3ec;
+    --tz-surface:   #ffffff;
+    --tz-surface-2: #faf9f5;
+    --tz-surface-3: #efede4;
+
+    --tz-ink:       #15181a;
+    --tz-ink-dim:   rgba(21, 24, 26, 0.72);
+    --tz-ink-mute:  rgba(21, 24, 26, 0.52);
+    --tz-ink-faint: rgba(21, 24, 26, 0.32);
+
+    --tz-border:      rgba(21, 24, 26, 0.08);
+    --tz-border-2:    rgba(21, 24, 26, 0.14);
+    --tz-border-strong: rgba(21, 24, 26, 0.22);
+
+    --tz-acid:      #6b9f1e;
+    --tz-acid-dim:  #507918;
+    --tz-acid-glow: rgba(107, 159, 30, 0.18);
+    --tz-amber:     #b47216;
+    --tz-win:       #1f9d55;
+    --tz-win-bg:    rgba(31, 157, 85, 0.08);
+    --tz-loss:      #d93b3b;
+    --tz-loss-bg:   rgba(217, 59, 59, 0.08);
+    --tz-info:      #2d6bb4;
+
+    --tz-display: "Space Grotesk", "Inter Tight", system-ui, sans-serif;
+    --tz-sans:    "Inter Tight", "Inter", system-ui, -apple-system, sans-serif;
+    --tz-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --tz-r-sm: 6px;
+    --tz-r-md: 10px;
+    --tz-r-lg: 14px;
+
+    --tz-shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.04);
+    --tz-shadow:     0 4px 16px -4px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.03);
+    --tz-shadow-lg:  0 20px 50px -20px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.05);
   }
 
   html {
@@ -555,6 +596,347 @@
     .word-rotator .word:first-of-type {
       opacity: 1;
     }
+  }
+
+  /* =====================================================================
+     Tradzilla-inspired component classes. Scoped to admin + portal pages
+     via .tz-shell. Applied ON TOP of the existing design system; marketing
+     pages (/, /pricing, etc.) keep their current look.
+     ===================================================================== */
+
+  .tz-shell {
+    background: var(--tz-bg);
+    color: var(--tz-ink);
+    font-family: var(--tz-sans);
+    min-height: 100vh;
+  }
+  .tz-shell a { color: inherit; }
+
+  .tz-num {
+    font-family: var(--tz-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  .tz-sidebar {
+    background: var(--tz-surface);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-r-lg);
+    padding: 18px 14px;
+    box-shadow: var(--tz-shadow-sm);
+  }
+  .tz-sidebar-brand {
+    display: flex; align-items: center; gap: 10px;
+    padding: 4px 6px 16px;
+    border-bottom: 1px solid var(--tz-border);
+    margin-bottom: 14px;
+  }
+  .tz-sidebar-brand .mark {
+    width: 30px; height: 30px; border-radius: 8px;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--tz-acid), var(--tz-acid-dim));
+    color: #fff; font: 700 14px var(--tz-display); letter-spacing: -0.04em;
+    box-shadow: 0 0 0 1px rgba(107,159,30,0.3), 0 2px 8px rgba(107,159,30,0.2);
+  }
+  .tz-sidebar-brand .name {
+    font: 600 14px var(--tz-display);
+    letter-spacing: -0.015em;
+    color: var(--tz-ink);
+  }
+  .tz-sidebar-section {
+    margin-top: 14px;
+  }
+  .tz-sidebar-section-title {
+    font: 600 10px var(--tz-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tz-ink-mute);
+    padding: 0 8px 6px;
+  }
+  .tz-navitem {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font: 500 13px var(--tz-sans);
+    color: var(--tz-ink-dim);
+    position: relative;
+    transition: background .12s, color .12s;
+  }
+  .tz-navitem:hover {
+    background: var(--tz-surface-2);
+    color: var(--tz-ink);
+  }
+  .tz-navitem.active {
+    background: var(--tz-surface-2);
+    color: var(--tz-ink);
+    font-weight: 600;
+  }
+  .tz-navitem.active::before {
+    content: '';
+    position: absolute; left: 0; top: 9px; bottom: 9px;
+    width: 2px; border-radius: 2px;
+    background: var(--tz-acid);
+  }
+
+  .tz-topbar {
+    display: flex; align-items: center; gap: 18px;
+    padding: 14px 4px 20px;
+    border-bottom: 1px solid var(--tz-border);
+    margin-bottom: 22px;
+  }
+  .tz-topbar-title {
+    font: 600 22px var(--tz-display);
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+  .tz-topbar-sub {
+    font-size: 13px;
+    color: var(--tz-ink-mute);
+    margin-top: 2px;
+  }
+  .tz-topbar-actions {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  .tz-card {
+    background: var(--tz-surface);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-r-lg);
+    padding: 18px 20px;
+    box-shadow: var(--tz-shadow-sm);
+  }
+  .tz-card-head {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; margin-bottom: 14px;
+  }
+  .tz-card-title {
+    font: 600 11px var(--tz-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tz-ink-mute);
+  }
+  .tz-card-sub {
+    font-size: 12px;
+    color: var(--tz-ink-mute);
+    margin-top: 2px;
+  }
+
+  .tz-kpi {
+    background: var(--tz-surface);
+    border: 1px solid var(--tz-border);
+    border-radius: var(--tz-r-lg);
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--tz-shadow-sm);
+  }
+  .tz-kpi-label {
+    font: 600 10px var(--tz-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tz-ink-mute);
+  }
+  .tz-kpi-value {
+    font: 700 28px var(--tz-display);
+    letter-spacing: -0.02em;
+    margin-top: 6px;
+  }
+  .tz-kpi-delta {
+    font-size: 12px;
+    margin-top: 2px;
+    display: inline-flex; align-items: center; gap: 4px;
+    color: var(--tz-ink-mute);
+  }
+  .tz-kpi-delta.up { color: var(--tz-win); }
+  .tz-kpi-delta.down { color: var(--tz-loss); }
+  .tz-kpi.acc {
+    background:
+      linear-gradient(135deg, rgba(107,159,30,0.06) 0%, transparent 60%),
+      var(--tz-surface);
+    border-color: rgba(107,159,30,0.2);
+  }
+
+  .tz-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    height: 22px; padding: 0 9px;
+    border-radius: 999px;
+    font: 500 11px var(--tz-mono);
+    letter-spacing: 0.04em;
+    background: var(--tz-surface-2);
+    color: var(--tz-ink-dim);
+    border: 1px solid var(--tz-border);
+  }
+  .tz-chip-acid {
+    background: rgba(107,159,30,0.12);
+    color: var(--tz-acid-dim);
+    border-color: rgba(107,159,30,0.28);
+  }
+  .tz-chip-amber {
+    background: rgba(180,114,22,0.10);
+    color: var(--tz-amber);
+    border-color: rgba(180,114,22,0.28);
+  }
+  .tz-chip-win {
+    background: var(--tz-win-bg);
+    color: var(--tz-win);
+    border-color: rgba(31,157,85,0.28);
+  }
+  .tz-chip-loss {
+    background: var(--tz-loss-bg);
+    color: var(--tz-loss);
+    border-color: rgba(217,59,59,0.28);
+  }
+  .tz-chip-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor;
+  }
+
+  .tz-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 34px; padding: 0 14px;
+    border-radius: 8px;
+    font: 500 13px var(--tz-sans);
+    border: 1px solid var(--tz-border-2);
+    background: var(--tz-surface);
+    color: var(--tz-ink);
+    cursor: pointer;
+    transition: background .12s, border-color .12s;
+  }
+  .tz-btn:hover {
+    background: var(--tz-surface-2);
+    border-color: var(--tz-border-strong);
+  }
+  .tz-btn-primary {
+    background: var(--tz-acid);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 0 0 1px rgba(107,159,30,0.4), 0 2px 8px var(--tz-acid-glow);
+  }
+  .tz-btn-primary:hover {
+    background: var(--tz-acid-dim);
+  }
+  .tz-btn-ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--tz-ink-dim);
+  }
+  .tz-btn-ghost:hover {
+    background: var(--tz-surface-2);
+    color: var(--tz-ink);
+  }
+
+  .tz-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+  }
+  .tz-table th {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--tz-border);
+    color: var(--tz-ink-mute);
+    font: 600 10px var(--tz-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .tz-table td {
+    padding: 14px;
+    border-bottom: 1px solid var(--tz-border);
+    color: var(--tz-ink-dim);
+    vertical-align: middle;
+  }
+  .tz-table tr:last-child td { border-bottom: none; }
+  .tz-table tr:hover td { background: var(--tz-surface-2); }
+
+  .tz-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid var(--tz-border);
+    background: var(--tz-bg);
+    color: var(--tz-ink);
+    font: 400 14px var(--tz-sans);
+    outline: none;
+    transition: border-color .14s, box-shadow .14s;
+  }
+  .tz-input:focus {
+    border-color: var(--tz-acid);
+    box-shadow: 0 0 0 3px var(--tz-acid-glow);
+  }
+  textarea.tz-input {
+    height: auto;
+    padding: 12px 14px;
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.55;
+  }
+
+  .tz-field-label {
+    font: 600 10px var(--tz-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--tz-ink-mute);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .tz-meter {
+    height: 6px; background: var(--tz-surface-3);
+    border-radius: 3px; overflow: hidden;
+  }
+  .tz-meter > div {
+    height: 100%; border-radius: 3px;
+    background: var(--tz-acid);
+  }
+
+  .tz-tilerow {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    border-radius: var(--tz-r-md);
+    background: var(--tz-surface);
+    border: 1px solid var(--tz-border);
+    transition: border-color .12s, transform .12s, box-shadow .12s;
+  }
+  .tz-tilerow:hover {
+    border-color: var(--tz-border-strong);
+    transform: translateY(-1px);
+    box-shadow: var(--tz-shadow-sm);
+  }
+
+  .tz-sparkline-wrap {
+    display: flex; align-items: flex-end; gap: 2px;
+    height: 28px; padding: 2px 0;
+  }
+  .tz-spark-bar {
+    width: 4px; border-radius: 1px;
+    transition: height .3s;
+  }
+
+  .tz-tabbar {
+    display: inline-flex; gap: 2px; padding: 4px;
+    background: var(--tz-surface-2);
+    border: 1px solid var(--tz-border);
+    border-radius: 10px;
+  }
+  .tz-tabpill {
+    height: 32px; padding: 0 14px;
+    border-radius: 7px;
+    display: inline-flex; align-items: center; gap: 6px;
+    font: 500 12.5px var(--tz-sans);
+    color: var(--tz-ink-mute);
+    border: none; background: transparent;
+    cursor: pointer; transition: background .12s, color .12s;
+  }
+  .tz-tabpill:hover { color: var(--tz-ink); }
+  .tz-tabpill.active {
+    background: var(--tz-surface);
+    color: var(--tz-ink);
+    font-weight: 600;
+    box-shadow: var(--tz-shadow-sm);
   }
 }
 

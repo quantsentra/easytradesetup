@@ -53,84 +53,99 @@ export default async function AdminCustomersPage() {
 
   return (
     <>
-      <span className="eye">
-        <span className="eye-dot" aria-hidden />
-        Admin · customers
-      </span>
-      <h1 className="mt-3 font-display text-[36px] font-semibold leading-[1.1] text-ink">
-        Customers.
-      </h1>
-      <p className="mt-3 text-[15px] text-ink-60">
-        {rows.length} users · {activeCount} with active license.
-      </p>
-
-      <div className="mt-10 glass-card-soft overflow-x-auto">
-        <table className="w-full text-[13px] min-w-[720px]">
-          <thead>
-            <tr className="text-left">
-              <Th>Email</Th>
-              <Th>Name</Th>
-              <Th>Signed up</Th>
-              <Th>License</Th>
-              <Th>Granted</Th>
-              <Th>Source</Th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="px-5 py-8 text-center text-ink-60">
-                  No users yet.
-                </td>
-              </tr>
-            ) : (
-              rows.map((r) => (
-                <tr key={r.userId} className="hairline-t">
-                  <Td>
-                    <span className="text-ink font-medium">{r.email || "—"}</span>
-                    <div className="mt-0.5 font-mono text-[10.5px] text-ink-40">{r.userId}</div>
-                  </Td>
-                  <Td>{r.name || <span className="text-ink-40">—</span>}</Td>
-                  <Td>
-                    {r.signedUpAt
-                      ? new Date(r.signedUpAt).toISOString().slice(0, 10)
-                      : "—"}
-                  </Td>
-                  <Td>
-                    {r.active ? (
-                      <span className="chip chip-acid">Active</span>
-                    ) : (
-                      <span className="chip">No license</span>
-                    )}
-                  </Td>
-                  <Td>
-                    {r.grantedAt ? new Date(r.grantedAt).toISOString().slice(0, 10) : "—"}
-                  </Td>
-                  <Td>
-                    <span className="font-mono text-[11.5px] text-ink-60">{r.source || "—"}</span>
-                  </Td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+      <div className="tz-topbar">
+        <div>
+          <h1 className="tz-topbar-title">Customers.</h1>
+          <div className="tz-topbar-sub">
+            {rows.length} users · <strong style={{ color: "var(--tz-acid-dim)" }}>{activeCount} active license{activeCount === 1 ? "" : "s"}</strong>.
+          </div>
+        </div>
       </div>
 
-      <p className="mt-5 text-nano font-mono uppercase tracking-widest text-ink-40">
-        Active licenses shown first · Max 200 users per page
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <div className="tz-kpi acc">
+          <div className="tz-kpi-label">Active licenses</div>
+          <div className="tz-kpi-value tz-num" style={{ color: "var(--tz-acid-dim)" }}>{activeCount}</div>
+        </div>
+        <div className="tz-kpi">
+          <div className="tz-kpi-label">Total users</div>
+          <div className="tz-kpi-value tz-num">{rows.length}</div>
+        </div>
+        <div className="tz-kpi">
+          <div className="tz-kpi-label">Conversion</div>
+          <div className="tz-kpi-value tz-num">
+            {rows.length > 0 ? `${Math.round((activeCount / rows.length) * 100)}%` : "—"}
+          </div>
+        </div>
+        <div className="tz-kpi">
+          <div className="tz-kpi-label">No license</div>
+          <div className="tz-kpi-value tz-num">{rows.length - activeCount}</div>
+        </div>
+      </div>
+
+      <div className="tz-card" style={{ padding: 0, overflow: "hidden" }}>
+        <div style={{ overflowX: "auto" }}>
+          <table className="tz-table" style={{ minWidth: 720 }}>
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Signed up</th>
+                <th>License</th>
+                <th>Granted</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.length === 0 ? (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: 32, color: "var(--tz-ink-mute)" }}>
+                    No users yet.
+                  </td>
+                </tr>
+              ) : (
+                rows.map((r) => (
+                  <tr key={r.userId}>
+                    <td>
+                      <div style={{ color: "var(--tz-ink)", fontWeight: 500 }}>{r.email || "—"}</div>
+                      <div className="tz-num" style={{ marginTop: 2, fontSize: 10.5, color: "var(--tz-ink-mute)" }}>
+                        {r.userId}
+                      </div>
+                    </td>
+                    <td>{r.name || <span style={{ color: "var(--tz-ink-mute)" }}>—</span>}</td>
+                    <td className="tz-num" style={{ fontSize: 12 }}>
+                      {r.signedUpAt ? new Date(r.signedUpAt).toISOString().slice(0, 10) : "—"}
+                    </td>
+                    <td>
+                      {r.active ? (
+                        <span className="tz-chip tz-chip-acid">
+                          <span className="tz-chip-dot" />
+                          Active
+                        </span>
+                      ) : (
+                        <span className="tz-chip">No license</span>
+                      )}
+                    </td>
+                    <td className="tz-num" style={{ fontSize: 12 }}>
+                      {r.grantedAt ? new Date(r.grantedAt).toISOString().slice(0, 10) : "—"}
+                    </td>
+                    <td>
+                      <span className="font-mono text-[11.5px]" style={{ color: "var(--tz-ink-mute)" }}>
+                        {r.source || "—"}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p className="mt-4 text-[10.5px] font-mono uppercase tracking-widest"
+        style={{ color: "var(--tz-ink-mute)" }}>
+        Active licenses sorted first · Max 200 users
       </p>
     </>
   );
-}
-
-function Th({ children }: { children: React.ReactNode }) {
-  return (
-    <th className="px-5 py-4 font-mono text-[10.5px] uppercase tracking-widest text-ink-40 font-bold">
-      {children}
-    </th>
-  );
-}
-
-function Td({ children }: { children: React.ReactNode }) {
-  return <td className="px-5 py-4 align-top">{children}</td>;
 }

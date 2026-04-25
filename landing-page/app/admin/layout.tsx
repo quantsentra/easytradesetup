@@ -11,11 +11,11 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-  { href: "/admin",           label: "Overview" },
-  { href: "/admin/customers", label: "Customers" },
-  { href: "/admin/tickets",   label: "Tickets" },
-  { href: "/admin/updates",   label: "Market notes" },
-  { href: "/admin/audit",     label: "Audit log" },
+  { href: "/admin",           label: "Overview",     icon: "□" },
+  { href: "/admin/customers", label: "Customers",    icon: "C" },
+  { href: "/admin/tickets",   label: "Tickets",      icon: "T" },
+  { href: "/admin/updates",   label: "Market notes", icon: "N" },
+  { href: "/admin/audit",     label: "Audit log",    icon: "A" },
 ];
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -24,30 +24,74 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!admin) notFound();
 
   return (
-    <div className="relative min-h-screen">
-      <div className="container-wide py-8 sm:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-8 lg:gap-10">
-          <aside className="lg:sticky lg:top-24 lg:self-start">
-            <div className="glass-card-soft p-5">
-              <div className="text-nano font-mono font-bold uppercase tracking-widest text-cyan mb-4">
-                Admin
+    <div className="tz-shell">
+      <div className="container-wide py-8 sm:py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-6 lg:gap-8">
+          <aside className="lg:sticky lg:top-20 lg:self-start">
+            <div className="tz-sidebar">
+              <div className="tz-sidebar-brand">
+                <span className="mark" style={{
+                  background: "linear-gradient(135deg, #15181a, #2d3236)",
+                }}>A</span>
+                <div>
+                  <div className="name">Admin console</div>
+                  <div className="text-[10px] font-mono tracking-widest uppercase" style={{ color: "var(--tz-ink-mute)" }}>
+                    Founder access
+                  </div>
+                </div>
               </div>
-              <nav className="flex flex-col gap-1" aria-label="Admin navigation">
+
+              <div className="tz-sidebar-section">
+                <div className="tz-sidebar-section-title">Operations</div>
                 {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="px-3 py-2 rounded-lg text-[14px] text-ink-60 hover:text-ink hover-fill transition-colors"
-                  >
+                  <Link key={item.href} href={item.href} className="tz-navitem">
+                    <span
+                      style={{
+                        width: 20, height: 20, borderRadius: 5,
+                        display: "grid", placeItems: "center",
+                        background: "var(--tz-surface-3)",
+                        color: "var(--tz-ink-mute)",
+                        font: "600 10px var(--tz-mono)",
+                      }}
+                      aria-hidden
+                    >
+                      {item.icon}
+                    </span>
                     {item.label}
                   </Link>
                 ))}
-              </nav>
-              <div className="mt-5 pt-5 hairline-t flex items-center justify-between gap-3">
-                <span className="text-nano font-mono uppercase tracking-widest text-ink-40">
-                  Admin
-                </span>
-                <AccountMenu email={user?.email || "admin"} size={32} />
+              </div>
+
+              <div className="tz-sidebar-section">
+                <div className="tz-sidebar-section-title">Shortcuts</div>
+                <Link href="/portal" className="tz-navitem">
+                  <span
+                    style={{
+                      width: 20, height: 20, borderRadius: 5,
+                      display: "grid", placeItems: "center",
+                      background: "rgba(107,159,30,0.12)",
+                      color: "var(--tz-acid-dim)",
+                      font: "600 10px var(--tz-mono)",
+                    }}
+                    aria-hidden
+                  >
+                    ↗
+                  </span>
+                  Customer portal
+                </Link>
+              </div>
+
+              <div className="mt-5 pt-4 flex items-center justify-between gap-3"
+                style={{ borderTop: "1px solid var(--tz-border)" }}>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)" }}>
+                    Admin
+                  </div>
+                  <div className="text-[12px] truncate" style={{ color: "var(--tz-ink-dim)" }}>
+                    {user?.email || "—"}
+                  </div>
+                </div>
+                <AccountMenu email={user?.email || "admin"} size={30} />
               </div>
             </div>
           </aside>

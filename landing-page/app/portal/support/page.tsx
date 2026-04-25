@@ -15,70 +15,74 @@ export default async function SupportPage() {
 
   return (
     <>
-      <span className="eye">
-        <span className="eye-dot" aria-hidden />
-        Support
-      </span>
-      <h1 className="mt-3 font-display text-[36px] font-semibold leading-[1.1] text-ink">
-        Open a ticket.
-      </h1>
-      <p className="mt-3 text-[15px] text-ink-60 max-w-[640px]">
-        Install questions, licensing, strategies, anything else. Founder replies within 24 hours.
-      </p>
+      <div className="tz-topbar">
+        <div>
+          <h1 className="tz-topbar-title">Support.</h1>
+          <div className="tz-topbar-sub">
+            Install questions, licensing, strategies — founder replies within 24 hours.
+          </div>
+        </div>
+      </div>
 
       <form
         action="/api/portal/tickets"
         method="POST"
-        className="mt-10 glass-card-soft p-6 flex flex-col gap-4"
+        className="tz-card flex flex-col gap-4"
       >
-        <Field label="Subject">
+        <div>
+          <label className="tz-field-label">Subject</label>
           <input
             name="subject"
             required
             maxLength={140}
             placeholder="Indicator not loading on TradingView"
-            className="input"
+            className="tz-input"
           />
-        </Field>
-        <Field label="Message" hint="Plain text. Up to 5000 characters.">
+        </div>
+        <div>
+          <label className="tz-field-label">Message</label>
           <textarea
             name="body"
             required
-            rows={8}
+            rows={7}
             maxLength={5000}
             placeholder="Describe the issue, what you tried, any error messages, the symbol + timeframe."
-            className="input"
+            className="tz-input"
           />
-        </Field>
+          <div className="mt-1.5 text-[11px]" style={{ color: "var(--tz-ink-mute)" }}>
+            Plain text · up to 5000 characters
+          </div>
+        </div>
         <div>
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="tz-btn tz-btn-primary">
             Open ticket →
           </button>
         </div>
       </form>
 
-      <h2 className="mt-16 h-card">Your tickets</h2>
-      <div className="mt-5 flex flex-col gap-3">
+      <h2 className="mt-10 mb-4 tz-card-title">Your tickets</h2>
+      <div className="flex flex-col gap-2.5">
         {tickets.length === 0 ? (
-          <div className="glass-card-soft p-6 text-[14px] text-ink-60">No tickets yet.</div>
+          <div className="tz-card" style={{ color: "var(--tz-ink-mute)", fontSize: 14 }}>
+            No tickets yet.
+          </div>
         ) : (
           tickets.map((t) => (
-            <Link
-              key={t.id}
-              href={`/portal/support/${t.id}`}
-              className="feat-card !p-5 hover:border-rule-3 transition-colors"
-            >
-              <div className="flex items-center justify-between gap-4">
-                <h3 className="text-[15px] font-semibold text-ink min-w-0 truncate">
-                  {t.subject}
-                </h3>
-                <StatusChip status={t.status} />
-              </div>
-              <div className="mt-2 flex items-center justify-between gap-2 text-[12px] text-ink-60">
-                <span>Opened {new Date(t.created_at).toISOString().slice(0, 10)}</span>
-                <time className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40">
-                  Last activity {new Date(t.updated_at).toISOString().slice(0, 10)}
-                </time>
+            <Link key={t.id} href={`/portal/support/${t.id}`} className="tz-tilerow">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-[14.5px] font-semibold truncate" style={{ color: "var(--tz-ink)" }}>
+                    {t.subject}
+                  </h3>
+                  <StatusChip status={t.status} />
+                </div>
+                <div className="mt-1.5 flex items-center justify-between gap-2 text-[12px]"
+                  style={{ color: "var(--tz-ink-mute)" }}>
+                  <span>Opened {new Date(t.created_at).toISOString().slice(0, 10)}</span>
+                  <time className="font-mono text-[10.5px] uppercase tracking-widest">
+                    Activity {new Date(t.updated_at).toISOString().slice(0, 10)}
+                  </time>
+                </div>
               </div>
             </Link>
           ))
@@ -88,30 +92,15 @@ export default async function SupportPage() {
   );
 }
 
-function Field({
-  label, hint, children,
-}: {
-  label: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="flex flex-col gap-1.5">
-      <span className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40">{label}</span>
-      {children}
-      {hint && <span className="text-[12px] text-ink-60">{hint}</span>}
-    </label>
-  );
-}
-
 function StatusChip({ status }: { status: Ticket["status"] }) {
   const cls =
-    status === "open"
-      ? "chip chip-acid"
-      : status === "waiting"
-      ? "chip chip-new"
-      : status === "resolved"
-      ? "chip"
-      : "chip";
-  return <span className={cls}>{STATUS_LABEL[status]}</span>;
+    status === "open" ? "tz-chip tz-chip-acid" :
+    status === "waiting" ? "tz-chip tz-chip-amber" :
+    "tz-chip";
+  return (
+    <span className={cls}>
+      {status === "open" && <span className="tz-chip-dot" />}
+      {STATUS_LABEL[status]}
+    </span>
+  );
 }
