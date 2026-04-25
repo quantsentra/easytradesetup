@@ -5,10 +5,10 @@ const cols = [
   {
     title: "Product",
     links: [
-      { href: "/product", label: "Golden Indicator" },
-      { href: "/pricing", label: "Pricing" },
-      { href: "/compare", label: "Compare" },
-      { href: "/sample", label: "Free Sample" },
+      { href: "/product",   label: "Features" },
+      { href: "/pricing",   label: "Pricing" },
+      { href: "/sample",    label: "Library" },
+      { href: "/resources", label: "Resources" },
     ],
   },
   {
@@ -19,10 +19,11 @@ const cols = [
     ],
   },
   {
-    title: "Resources",
+    title: "Account",
     links: [
-      { href: "/docs/install", label: "Install Guide" },
-      { href: "/docs/faq", label: "FAQ" },
+      { href: "https://portal.easytradesetup.com/sign-in", label: "Login" },
+      { href: "https://portal.easytradesetup.com/sign-up", label: "Sign up" },
+      { href: "https://portal.easytradesetup.com/", label: "Customer portal" },
     ],
   },
   {
@@ -69,16 +70,31 @@ export default function Footer() {
               <div key={col.title}>
                 <h5 className="text-caption font-semibold text-ink mb-4">{col.title}</h5>
                 <ul className="space-y-2.5">
-                  {col.links.map((l) => (
-                    <li key={l.href}>
-                      <Link
-                        href={l.href}
-                        className="text-caption text-ink-40 hover:text-ink transition-colors"
-                      >
-                        {l.label}
-                      </Link>
-                    </li>
-                  ))}
+                  {col.links.map((l) => {
+                    const external = l.href.startsWith("http");
+                    if (external) {
+                      return (
+                        <li key={l.href}>
+                          <a
+                            href={l.href}
+                            className="text-caption text-ink-40 hover:text-ink transition-colors"
+                          >
+                            {l.label}
+                          </a>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li key={l.href}>
+                        <Link
+                          href={l.href}
+                          className="text-caption text-ink-40 hover:text-ink transition-colors"
+                        >
+                          {l.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}

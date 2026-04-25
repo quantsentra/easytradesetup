@@ -2,6 +2,7 @@ import Link from "next/link";
 import Price from "@/components/ui/Price";
 import ReservationNotice from "@/components/ui/ReservationNotice";
 import { OFFER_LABEL } from "@/lib/pricing";
+// Note: hero CTA hides price on mobile per CRO request — full label only on sm+.
 
 export default function Hero() {
   return (
@@ -165,7 +166,11 @@ export default function Hero() {
 
             <div className="mt-6 lg:mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link href="/checkout" className="btn btn-acid btn-lg w-full sm:w-auto justify-center">
-                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+                <span className="sm:hidden">Reserve your spot</span>
+                <span className="hidden sm:inline">
+                  Reserve · <Price variant="amount" />
+                </span>
+                <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link
                 href="/sample"

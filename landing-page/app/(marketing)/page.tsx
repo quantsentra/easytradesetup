@@ -15,8 +15,8 @@ export default function HomePage() {
       <CleanVsNoisy />
       <Bundle />
       <MultiMarket />
-      <PricingTeaser />
       <FAQTeaser />
+      <PricingTeaser />
       <FinalCTA />
     </>
   );

@@ -1253,6 +1253,60 @@
     color: var(--tz-acid);
   }
 
+  /* ---- Marketing /resources cards ---- */
+  .resource-card {
+    display: flex;
+    gap: 14px;
+    padding: 18px 20px;
+    background: var(--c-panel);
+    border: 1px solid var(--c-rule);
+    border-radius: 14px;
+    text-decoration: none;
+    transition: border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .resource-card:hover {
+    border-color: rgba(43,123,255,0.32);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -16px rgba(43,123,255,0.32);
+  }
+  .resource-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    border: 1px solid;
+    flex-shrink: 0;
+  }
+
+  /* ---- Portal mobile drawer link ---- */
+  .portal-mobile-link {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 13px;
+    border-radius: 8px;
+    font: 500 14.5px var(--tz-sans);
+    text-decoration: none;
+    transition: background .12s, color .12s;
+  }
+  .portal-mobile-link:hover {
+    background: var(--tz-surface-2);
+    color: var(--tz-ink) !important;
+  }
+
+  /* ---- Site disclaimer strip (below footer) ---- */
+  .site-disclaimer {
+    background: var(--c-bg-2);
+    border-top: 1px solid var(--c-rule);
+  }
+  .site-disclaimer-inner {
+    padding: 18px 0 22px;
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: var(--c-ink-40);
+    max-width: 900px;
+  }
+  .site-disclaimer-inner strong {
+    color: var(--c-ink-60);
+  }
+
   .tz-table {
     width: 100%;
     border-collapse: separate;

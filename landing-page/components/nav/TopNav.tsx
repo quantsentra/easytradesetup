@@ -5,20 +5,19 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import AccountMenu from "@/components/auth/AccountMenu";
-import Price from "@/components/ui/Price";
 
 const navItems = [
-  { href: "/product",  label: "Product" },
-  { href: "/pricing",  label: "Pricing" },
-  { href: "/compare",  label: "Compare" },
-  { href: "/sample",   label: "Sample" },
-  { href: "/docs/faq", label: "FAQ" },
+  { href: "/product",   label: "Features" },
+  { href: "/resources", label: "Resources" },
+  { href: "/sample",    label: "Library" },
+  { href: "/pricing",   label: "Pricing" },
 ];
 
 function isActive(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
   if (href === "/") return pathname === "/";
-  if (href.startsWith("/docs")) return pathname.startsWith("/docs");
+  if (href === "/sample") return pathname.startsWith("/sample");
+  if (href === "/resources") return pathname.startsWith("/resources") || pathname.startsWith("/docs");
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -57,7 +56,6 @@ export default function TopNav() {
     };
   }, [open]);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
@@ -66,17 +64,7 @@ export default function TopNav() {
     <header className="sticky top-0 z-50 above-bg nav-bar">
       <div className="container-wide flex items-center justify-between gap-6 h-16">
         <Link href="/" aria-label="EasyTradeSetup home" className="inline-flex items-center gap-2.5 flex-shrink-0">
-          <span
-            className="w-7 h-7 rounded-full grid place-items-center text-white"
-            style={{
-              background: "linear-gradient(135deg, #2B7BFF, #22D3EE)",
-              boxShadow: "0 0 0 1px rgba(255,255,255,.12), 0 4px 12px rgba(43,123,255,.35)",
-            }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M5 13l4 4 10-11" />
-            </svg>
-          </span>
+          <BrandMark />
           <span className="font-display text-[15px] font-semibold tracking-tight text-ink">
             EasyTradeSetup
           </span>
@@ -99,20 +87,21 @@ export default function TopNav() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
-          <Link
-            href="/contact"
-            aria-current={pathname === "/contact" ? "page" : undefined}
-            className={`text-[13px] transition-colors px-2 ${pathname === "/contact" ? "text-ink font-medium" : "text-ink-60 hover:text-ink"}`}
-          >
-            Contact
-          </Link>
           {loaded && !isSignedIn && (
-            <a
-              href="https://portal.easytradesetup.com/sign-in"
-              className="text-[13px] px-2 text-ink-60 hover:text-ink transition-colors"
-            >
-              Sign in
-            </a>
+            <>
+              <a
+                href="https://portal.easytradesetup.com/sign-in"
+                className="text-[13px] px-2 text-ink-60 hover:text-ink transition-colors"
+              >
+                Login
+              </a>
+              <a
+                href="https://portal.easytradesetup.com/sign-up"
+                className="btn btn-acid"
+              >
+                Sign up <span className="arrow" aria-hidden>→</span>
+              </a>
+            </>
           )}
           {loaded && isSignedIn && (
             <>
@@ -125,10 +114,6 @@ export default function TopNav() {
               <AccountMenu email={email || ""} size={28} />
             </>
           )}
-          <Link href="/checkout" className="btn btn-acid">
-            Reserve · <Price variant="amount" />
-            <span className="arrow" aria-hidden>→</span>
-          </Link>
         </div>
 
         <div className="lg:hidden flex items-center gap-2">
@@ -169,22 +154,23 @@ export default function TopNav() {
                 </Link>
               );
             })}
-            <Link
-              href="/contact"
-              onClick={() => setOpen(false)}
-              aria-current={pathname === "/contact" ? "page" : undefined}
-              className={`nav-link-mobile hairline-b ${pathname === "/contact" ? "nav-link-mobile-active" : ""}`}
-            >
-              Contact
-            </Link>
             {loaded && !isSignedIn && (
-              <a
-                href="https://portal.easytradesetup.com/sign-in"
-                onClick={() => setOpen(false)}
-                className="nav-link-mobile hairline-b"
-              >
-                Sign in
-              </a>
+              <>
+                <a
+                  href="https://portal.easytradesetup.com/sign-in"
+                  onClick={() => setOpen(false)}
+                  className="nav-link-mobile hairline-b"
+                >
+                  Login
+                </a>
+                <a
+                  href="https://portal.easytradesetup.com/sign-up"
+                  onClick={() => setOpen(false)}
+                  className="btn btn-acid btn-lg mt-6 justify-center"
+                >
+                  Sign up <span className="arrow" aria-hidden>→</span>
+                </a>
+              </>
             )}
             {loaded && isSignedIn && (
               <a
@@ -195,16 +181,37 @@ export default function TopNav() {
                 Portal
               </a>
             )}
-            <Link
-              href="/checkout"
-              onClick={() => setOpen(false)}
-              className="btn btn-acid btn-lg mt-6 justify-center"
-            >
-              Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
-            </Link>
           </div>
         </div>
       )}
     </header>
+  );
+}
+
+export function BrandMark({ size = 28 }: { size?: number }) {
+  return (
+    <span
+      aria-hidden
+      className="rounded-full grid place-items-center text-white flex-shrink-0"
+      style={{
+        width: size,
+        height: size,
+        background: "linear-gradient(135deg, #2B7BFF, #22D3EE)",
+        boxShadow: "0 0 0 1px rgba(255,255,255,.12), 0 4px 12px rgba(43,123,255,.35)",
+      }}
+    >
+      <svg
+        width={size * 0.5}
+        height={size * 0.5}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M5 13l4 4 10-11" />
+      </svg>
+    </span>
   );
 }

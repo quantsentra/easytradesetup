@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getUser } from "@/lib/auth-server";
 import { isAdmin } from "@/lib/admin";
 import AccountMenu from "@/components/auth/AccountMenu";
+import { BrandMark } from "@/components/nav/TopNav";
+import PortalMobileNav from "@/components/nav/PortalMobileNav";
 import { LAUNCH_END_DATE_LABEL } from "@/lib/launch";
 
 export const metadata: Metadata = {
@@ -19,6 +21,8 @@ const navItems = [
   { href: "/portal/account",   label: "Account",     icon: UserIcon },
 ];
 
+const mobileNavItems = navItems.map(({ href, label }) => ({ href, label }));
+
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const user = await getUser();
   const email = user?.email || "";
@@ -30,9 +34,9 @@ export default async function PortalLayout({ children }: { children: React.React
       <header className="tz-header">
         <div className="tz-header-inner">
           <Link href="/portal" className="tz-header-brand">
-            <span className="tz-header-mark" aria-hidden>E</span>
+            <BrandMark size={28} />
             <span className="tz-header-name">EasyTradeSetup</span>
-            <span className="tz-header-badge">Portal</span>
+            <span className="tz-header-badge hidden sm:inline-flex">Portal</span>
           </Link>
 
           <div className="tz-header-spacer" />
@@ -58,13 +62,15 @@ export default async function PortalLayout({ children }: { children: React.React
           </a>
 
           <AccountMenu email={email} size={32} />
+
+          <PortalMobileNav items={mobileNavItems} isAdmin={admin} />
         </div>
       </header>
 
-      {/* MAIN — sidebar + content */}
+      {/* MAIN — sidebar (lg+) + content */}
       <div className="container-wide flex-1 w-full py-6 sm:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-8">
-          <aside className="lg:sticky lg:top-[84px] lg:self-start">
+          <aside className="hidden lg:block lg:sticky lg:top-[84px] lg:self-start">
             <nav className="tz-sidenav">
               <div className="tz-sidenav-section-title">Workspace</div>
               {navItems.map(({ href, label, icon: Icon }) => (
@@ -84,7 +90,7 @@ export default async function PortalLayout({ children }: { children: React.React
       <footer className="tz-footer">
         <div className="container-wide tz-footer-inner">
           <div className="tz-footer-left">
-            <span className="tz-footer-mark" aria-hidden>E</span>
+            <BrandMark size={20} />
             <span>
               EasyTradeSetup · Golden Indicator <strong>v2.4</strong>
             </span>
