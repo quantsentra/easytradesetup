@@ -1277,6 +1277,24 @@
     flex-shrink: 0;
   }
 
+  /* ---- Hero slider dots ---- */
+  .hero-dot {
+    width: 7px; height: 7px;
+    border-radius: 999px;
+    background: var(--c-rule-3);
+    transition: background .15s, width .15s;
+    cursor: pointer;
+    border: 0;
+    padding: 0;
+  }
+  .hero-dot:hover {
+    background: var(--c-ink-40);
+  }
+  .hero-dot[data-active="true"] {
+    width: 22px;
+    background: linear-gradient(90deg, #2B7BFF, #22D3EE);
+  }
+
   /* ---- Portal mobile drawer link ---- */
   .portal-mobile-link {
     display: flex; align-items: center; justify-content: space-between;

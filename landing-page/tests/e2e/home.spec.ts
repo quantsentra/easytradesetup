@@ -53,7 +53,7 @@ test.describe("Home page — marketing integrity", () => {
     await expect(page.getByText(/free pine scripts exist/i)).toBeVisible();
     await expect(page.getByText(/signal service/i).first()).toBeVisible();
     await expect(page.getByText(/refund work/i)).toBeVisible();
-    await expect(page.getByText(/repaint/i).first()).toBeVisible();
+    await expect(page.getByText(/does it repaint/i)).toBeVisible();
   });
 
   test("FinalCTA reinforces structure-vs-confusion framing", async ({ page }) => {
