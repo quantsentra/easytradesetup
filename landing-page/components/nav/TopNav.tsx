@@ -107,12 +107,12 @@ export default function TopNav() {
             Contact
           </Link>
           {loaded && !isSignedIn && (
-            <Link
-              href="/sign-in"
+            <a
+              href="https://portal.easytradesetup.com/sign-in"
               className="text-[13px] px-2 text-ink-60 hover:text-ink transition-colors"
             >
               Sign in
-            </Link>
+            </a>
           )}
           {loaded && isSignedIn && (
             <>
@@ -178,13 +178,13 @@ export default function TopNav() {
               Contact
             </Link>
             {loaded && !isSignedIn && (
-              <Link
-                href="/sign-in"
+              <a
+                href="https://portal.easytradesetup.com/sign-in"
                 onClick={() => setOpen(false)}
                 className="nav-link-mobile hairline-b"
               >
                 Sign in
-              </Link>
+              </a>
             )}
             {loaded && isSignedIn && (
               <a

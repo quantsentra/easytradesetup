@@ -8,88 +8,18 @@ export default function Hero() {
     <section className="relative above-bg overflow-hidden">
       <div className="grain" aria-hidden />
 
-      <div className="container-wide relative pt-10 sm:pt-14 md:pt-16 pb-14 sm:pb-16 md:pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-center">
-          {/* LEFT — copy column */}
-          <div className="max-w-[620px]">
-            <div
-              className="inline-flex items-center gap-2 rounded-full px-3 py-1.5"
-              style={{
-                background: "rgba(143, 204, 42, 0.10)",
-                border: "1px solid rgba(143, 204, 42, 0.35)",
-              }}
-            >
-              <span className="pulse-dot" aria-hidden />
-              <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-acid">
-                v2.4 · {OFFER_LABEL} live
-              </span>
-            </div>
+      <div className="container-wide relative pt-8 sm:pt-12 md:pt-16 pb-12 sm:pb-16 md:pb-20">
+        {/* MOBILE-ONLY headline block — appears before the chart so users see
+            the value prop, then the visual proof, then the conversion stack. */}
+        <div className="lg:hidden">
+          <Eyebrow />
+          <Headline className="mt-4 text-[34px] sm:text-[44px]" />
+        </div>
 
-            <h1 className="mt-5 font-display font-semibold text-[38px] sm:text-[48px] lg:text-[58px] leading-[1.02] tracking-[-0.03em] text-ink">
-              One TradingView indicator<br />
-              to read the market with{" "}
-              <span
-                className="word-rotator"
-                aria-label="structure, clarity, discipline, confidence"
-              >
-                <span className="word" style={{ "--word-i": 0 } as React.CSSProperties}>
-                  structure
-                </span>
-                <span className="word" style={{ "--word-i": 1 } as React.CSSProperties}>
-                  clarity
-                </span>
-                <span className="word" style={{ "--word-i": 2 } as React.CSSProperties}>
-                  discipline
-                </span>
-                <span className="word" style={{ "--word-i": 3 } as React.CSSProperties}>
-                  confidence
-                </span>
-                <svg viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden>
-                  <path
-                    d="M2 8 Q 100 2, 200 7 T 398 6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </span>{" "}
-              <br />— not noise.
-            </h1>
-
-            <p className="mt-5 max-w-[520px] text-[15px] sm:text-[16px] leading-[1.55] text-ink-60">
-              Golden Indicator combines market structure, trend regime, key levels, supply /
-              demand zones, pullback context, and a risk framework into one Pine v5 indicator.
-              Bar-close logic. No signal service. You decide every trade.
-            </p>
-
-            <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
-              <Link href="/checkout" className="btn btn-acid btn-lg">
-                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
-              </Link>
-              <Link
-                href="/sample"
-                className="inline-flex items-center gap-1.5 text-[14px] font-medium text-ink-60 hover:text-ink transition-colors px-2 py-2"
-              >
-                View free sample <span aria-hidden>→</span>
-              </Link>
-            </div>
-
-            <div className="mt-5">
-              <ReservationNotice />
-            </div>
-
-            <div className="mt-8 flex flex-wrap items-center gap-6">
-              <Stat num="6" label="Bundle items" />
-              <Divider />
-              <Stat num="24/5" label="Markets covered" />
-              <Divider />
-              <Stat num="0" label="Subscriptions" color="acid" />
-            </div>
-          </div>
-
-          {/* RIGHT — terminal chart mockup */}
-          <div className="relative lg:scale-[1.04] xl:scale-[1.08] origin-left">
+        {/* Main two-column grid. On mobile it stacks chart first, copy second. */}
+        <div className="mt-6 lg:mt-0 grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-14 items-center">
+          {/* CHART — order-1 on mobile (right after H1), order-2 on lg */}
+          <div className="order-1 lg:order-2 relative lg:scale-[1.04] xl:scale-[1.08] origin-left">
             <div
               aria-hidden
               className="absolute pointer-events-none"
@@ -106,17 +36,17 @@ export default function Hero() {
                   <span className="y" />
                   <span className="g" />
                 </div>
-                <span className="font-mono text-[11px] font-medium uppercase tracking-widest text-ink-40">
+                <span className="font-mono text-[10.5px] sm:text-[11px] font-medium uppercase tracking-widest text-ink-40">
                   NIFTY 50 · 15m · Golden v2.4
                 </span>
                 <span className="ml-auto chip chip-acid chip-live">LIVE</span>
               </div>
 
               {/* Price row */}
-              <div className="flex items-baseline gap-3 px-5 pt-5 pb-2">
-                <span className="stat-num text-[34px] sm:text-[42px] text-ink">24,852.15</span>
+              <div className="flex items-baseline gap-2 sm:gap-3 px-4 sm:px-5 pt-4 sm:pt-5 pb-2">
+                <span className="stat-num text-[28px] sm:text-[42px] text-ink">24,852.15</span>
                 <span
-                  className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-mono text-[12px] font-bold tz-num"
+                  className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-mono text-[11px] sm:text-[12px] font-bold tz-num"
                   style={{
                     background: "rgba(34, 197, 94, 0.12)",
                     color: "#22C55E",
@@ -127,9 +57,9 @@ export default function Hero() {
               </div>
 
               {/* Chart SVG */}
-              <div className="relative px-5 pb-5">
+              <div className="relative px-4 sm:px-5 pb-4 sm:pb-5">
                 <span
-                  className="absolute top-2 right-7 chip chip-up"
+                  className="absolute top-1.5 right-5 sm:top-2 sm:right-7 chip chip-up"
                   aria-hidden
                 >
                   UPTREND
@@ -168,7 +98,7 @@ export default function Hero() {
                   <circle cx="560" cy="100" r="5" fill="#22D3EE" stroke="#0B0F17" strokeWidth="2" />
                 </svg>
                 {/* Legend */}
-                <div className="mt-3 flex flex-wrap gap-4 font-mono text-[10px] font-bold uppercase tracking-widest text-ink-40">
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 font-mono text-[10px] font-bold uppercase tracking-widest text-ink-40">
                   <LegendItem color="#22D3EE" label="Regime" />
                   <LegendItem color="#2B7BFF" label="Key Level" />
                   <LegendItem color="#8FCC2A" label="Entry" />
@@ -177,7 +107,7 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Floating streak badge — overlaps chart bottom-right edge */}
+            {/* Floating "bar-close only" badge — desktop only */}
             <div
               className="hidden sm:flex absolute -bottom-3 -right-3 lg:-right-5 items-center gap-3 px-3.5 py-2 rounded-xl bg-panel border border-rule-2 z-10"
               style={{
@@ -202,13 +132,121 @@ export default function Hero() {
               </div>
             </div>
 
-            <p className="mt-4 text-center font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40">
+            {/* Mobile-only mini badge row — replaces floating badge on phones */}
+            <div className="sm:hidden mt-3 flex items-center justify-center gap-3 font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-acid" aria-hidden />
+                Bar-close only
+              </span>
+              <span className="text-ink-20">·</span>
+              <span>No repaint</span>
+              <span className="text-ink-20">·</span>
+              <span>No flicker</span>
+            </div>
+
+            <p className="mt-3 sm:mt-4 text-center font-mono text-[10px] sm:text-[10.5px] font-bold uppercase tracking-widest text-ink-40">
               Illustrative · Not live · Not a trade recommendation
             </p>
+          </div>
+
+          {/* COPY — order-2 on mobile (after chart), order-1 on lg */}
+          <div className="order-2 lg:order-1 max-w-[620px]">
+            {/* Eyebrow + H1 only render here on lg; mobile already showed them above. */}
+            <div className="hidden lg:block">
+              <Eyebrow />
+              <Headline className="mt-5 text-[58px]" />
+            </div>
+
+            <p className="mt-2 lg:mt-5 max-w-[520px] text-[15px] sm:text-[16px] leading-[1.55] text-ink-60">
+              Golden Indicator combines market structure, trend regime, key levels, supply /
+              demand zones, pullback context, and a risk framework into one Pine v5 indicator.
+              Bar-close logic. No signal service. You decide every trade.
+            </p>
+
+            <div className="mt-6 lg:mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+              <Link href="/checkout" className="btn btn-acid btn-lg w-full sm:w-auto justify-center">
+                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+              </Link>
+              <Link
+                href="/sample"
+                className="inline-flex items-center justify-center sm:justify-start gap-1.5 text-[14px] font-medium text-ink-60 hover:text-ink transition-colors px-2 py-2"
+              >
+                View free sample <span aria-hidden>→</span>
+              </Link>
+            </div>
+
+            <div className="mt-5">
+              <ReservationNotice />
+            </div>
+
+            {/* Stats — 3-up grid on mobile, inline with dividers on sm+ */}
+            <div className="mt-7 sm:mt-8 grid grid-cols-3 sm:flex sm:flex-wrap sm:items-center gap-3 sm:gap-6">
+              <Stat num="6" label="Bundle items" />
+              <Divider />
+              <Stat num="24/5" label="Markets" />
+              <Divider />
+              <Stat num="0" label="Subscriptions" color="acid" />
+            </div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function Eyebrow() {
+  return (
+    <div
+      className="inline-flex items-center gap-2 rounded-full px-3 py-1.5"
+      style={{
+        background: "rgba(143, 204, 42, 0.10)",
+        border: "1px solid rgba(143, 204, 42, 0.35)",
+      }}
+    >
+      <span className="pulse-dot" aria-hidden />
+      <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-acid">
+        v2.4 · {OFFER_LABEL} live
+      </span>
+    </div>
+  );
+}
+
+function Headline({ className = "" }: { className?: string }) {
+  return (
+    <h1
+      className={`font-display font-semibold leading-[1.04] tracking-[-0.03em] text-ink ${className}`}
+    >
+      One TradingView indicator
+      <br className="hidden sm:inline" />{" "}
+      to read the market with{" "}
+      <span
+        className="word-rotator"
+        aria-label="structure, clarity, discipline, confidence"
+      >
+        <span className="word" style={{ "--word-i": 0 } as React.CSSProperties}>
+          structure
+        </span>
+        <span className="word" style={{ "--word-i": 1 } as React.CSSProperties}>
+          clarity
+        </span>
+        <span className="word" style={{ "--word-i": 2 } as React.CSSProperties}>
+          discipline
+        </span>
+        <span className="word" style={{ "--word-i": 3 } as React.CSSProperties}>
+          confidence
+        </span>
+        <svg viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden>
+          <path
+            d="M2 8 Q 100 2, 200 7 T 398 6"
+            stroke="currentColor"
+            strokeWidth="2"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </svg>
+      </span>{" "}
+      — not noise.
+    </h1>
   );
 }
 
@@ -221,7 +259,7 @@ function Stat({ num, label, color }: { num: string; label: string; color?: "acid
       >
         {num}
       </div>
-      <div className="mt-1 font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40">
+      <div className="mt-1 font-mono text-[10px] sm:text-[10.5px] font-bold uppercase tracking-widest text-ink-40">
         {label}
       </div>
     </div>
@@ -229,7 +267,7 @@ function Stat({ num, label, color }: { num: string; label: string; color?: "acid
 }
 
 function Divider() {
-  return <div className="h-8 w-px bg-rule-2" aria-hidden />;
+  return <div className="hidden sm:block h-8 w-px bg-rule-2" aria-hidden />;
 }
 
 function LegendItem({ color, label }: { color: string; label: string }) {

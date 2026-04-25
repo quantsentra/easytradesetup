@@ -97,6 +97,23 @@ function planHostnameRouting(req: NextRequest): RoutedPlan {
         ),
       };
     }
+    // Auth pages live on the portal subdomain so OAuth callbacks land on the
+    // same host as the eventual session cookie. Sending /sign-in /sign-up
+    // /auth/* on marketing to the portal avoids a double sign-in flow.
+    if (
+      pathname === "/sign-in" ||
+      pathname === "/sign-up" ||
+      pathname === "/auth/callback" ||
+      pathname.startsWith("/auth/")
+    ) {
+      return {
+        kind: "redirect",
+        response: NextResponse.redirect(
+          new URL(`${pathname}${search}`, `https://${PORTAL_HOST}`),
+          301,
+        ),
+      };
+    }
   }
 
   return { kind: "passthrough", externalPath: pathname };
