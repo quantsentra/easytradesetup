@@ -8,10 +8,10 @@ export default function Hero() {
     <section className="relative above-bg overflow-hidden">
       <div className="grain" aria-hidden />
 
-      <div className="container-wide relative pt-14 sm:pt-20 md:pt-24 pb-16 sm:pb-20 md:pb-24">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-10 lg:gap-16 items-center">
+      <div className="container-wide relative pt-10 sm:pt-14 md:pt-16 pb-14 sm:pb-16 md:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-10 lg:gap-14 items-center">
           {/* LEFT — copy column */}
-          <div>
+          <div className="max-w-[620px]">
             <div
               className="inline-flex items-center gap-2 rounded-full px-3 py-1.5"
               style={{
@@ -25,7 +25,7 @@ export default function Hero() {
               </span>
             </div>
 
-            <h1 className="mt-6 font-display font-semibold text-[50px] sm:text-[66px] lg:text-[78px] leading-[0.98] tracking-[-0.035em] text-ink">
+            <h1 className="mt-5 font-display font-semibold text-[38px] sm:text-[48px] lg:text-[58px] leading-[1.02] tracking-[-0.03em] text-ink">
               One TradingView indicator<br />
               to read the market with{" "}
               <span
@@ -57,13 +57,13 @@ export default function Hero() {
               <br />— not noise.
             </h1>
 
-            <p className="mt-7 max-w-[540px] text-[17px] sm:text-[18px] leading-[1.55] text-ink-60">
+            <p className="mt-5 max-w-[520px] text-[15px] sm:text-[16px] leading-[1.55] text-ink-60">
               Golden Indicator combines market structure, trend regime, key levels, supply /
               demand zones, pullback context, and a risk framework into one Pine v5 indicator.
               Bar-close logic. No signal service. You decide every trade.
             </p>
 
-            <div className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="mt-7 flex flex-col sm:flex-row items-start sm:items-center gap-3">
               <Link href="/checkout" className="btn btn-acid btn-lg">
                 Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
@@ -75,11 +75,11 @@ export default function Hero() {
               </Link>
             </div>
 
-            <div className="mt-6">
+            <div className="mt-5">
               <ReservationNotice />
             </div>
 
-            <div className="mt-12 flex flex-wrap items-center gap-7">
+            <div className="mt-8 flex flex-wrap items-center gap-6">
               <Stat num="6" label="Bundle items" />
               <Divider />
               <Stat num="24/5" label="Markets covered" />
@@ -89,7 +89,7 @@ export default function Hero() {
           </div>
 
           {/* RIGHT — terminal chart mockup */}
-          <div className="relative">
+          <div className="relative lg:scale-[1.04] xl:scale-[1.08] origin-left">
             <div
               aria-hidden
               className="absolute pointer-events-none"
@@ -114,7 +114,7 @@ export default function Hero() {
 
               {/* Price row */}
               <div className="flex items-baseline gap-3 px-5 pt-5 pb-2">
-                <span className="stat-num text-[32px] sm:text-[38px] text-ink">24,852.15</span>
+                <span className="stat-num text-[34px] sm:text-[42px] text-ink">24,852.15</span>
                 <span
                   className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 font-mono text-[12px] font-bold tz-num"
                   style={{
@@ -134,7 +134,7 @@ export default function Hero() {
                 >
                   UPTREND
                 </span>
-                <svg viewBox="0 0 800 240" preserveAspectRatio="none" className="w-full h-auto" aria-label="NIFTY 15-minute chart with Golden Indicator overlay">
+                <svg viewBox="0 0 800 320" preserveAspectRatio="none" className="w-full h-auto" aria-label="NIFTY 15-minute chart with Golden Indicator overlay">
                   <defs>
                     <linearGradient id="hero-area" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0" stopColor="#22D3EE" stopOpacity="0.45" />
@@ -146,26 +146,26 @@ export default function Hero() {
                       <stop offset="1" stopColor="#F0C05A" />
                     </linearGradient>
                   </defs>
-                  <line x1="0" y1="140" x2="800" y2="140" stroke="#2B7BFF" strokeOpacity=".5" strokeDasharray="4 6" strokeWidth="1.5" />
-                  <line x1="0" y1="80" x2="800" y2="80" stroke="#F0C05A" strokeOpacity=".45" strokeDasharray="4 6" strokeWidth="1.5" />
+                  <line x1="0" y1="187" x2="800" y2="187" stroke="#2B7BFF" strokeOpacity=".5" strokeDasharray="4 6" strokeWidth="1.5" />
+                  <line x1="0" y1="107" x2="800" y2="107" stroke="#F0C05A" strokeOpacity=".45" strokeDasharray="4 6" strokeWidth="1.5" />
                   <path
-                    d="M0,180 L40,160 L80,170 L120,140 L160,150 L200,120 L240,130 L280,100 L320,110 L360,90 L400,120 L440,70 L480,80 L520,60 L560,75 L600,50 L640,65 L680,45 L720,40 L760,55 L800,30 L800,240 L0,240 Z"
+                    d="M0,240 L40,213 L80,227 L120,187 L160,200 L200,160 L240,173 L280,133 L320,147 L360,120 L400,160 L440,93 L480,107 L520,80 L560,100 L600,67 L640,87 L680,60 L720,53 L760,73 L800,40 L800,320 L0,320 Z"
                     fill="url(#hero-area)"
                   />
                   <path
-                    d="M0,180 L40,160 L80,170 L120,140 L160,150 L200,120 L240,130 L280,100 L320,110 L360,90 L400,120 L440,70 L480,80 L520,60 L560,75 L600,50 L640,65 L680,45 L720,40 L760,55 L800,30"
+                    d="M0,240 L40,213 L80,227 L120,187 L160,200 L200,160 L240,173 L280,133 L320,147 L360,120 L400,160 L440,93 L480,107 L520,80 L560,100 L600,67 L640,87 L680,60 L720,53 L760,73 L800,40"
                     stroke="url(#hero-line)"
                     strokeWidth="2.4"
                     fill="none"
                   />
                   {/* BUY marker */}
-                  <g transform="translate(440, 70)">
+                  <g transform="translate(440, 93)">
                     <rect x="-22" y="-30" width="44" height="22" rx="4" fill="#8FCC2A" />
                     <text x="0" y="-14" fontFamily="JetBrains Mono" fontSize="10" fontWeight="700" fill="#0B0F17" textAnchor="middle">BUY</text>
                     <circle r="4" fill="#8FCC2A" />
                   </g>
                   {/* Pullback cyan dot */}
-                  <circle cx="560" cy="75" r="5" fill="#22D3EE" stroke="#0B0F17" strokeWidth="2" />
+                  <circle cx="560" cy="100" r="5" fill="#22D3EE" stroke="#0B0F17" strokeWidth="2" />
                 </svg>
                 {/* Legend */}
                 <div className="mt-3 flex flex-wrap gap-4 font-mono text-[10px] font-bold uppercase tracking-widest text-ink-40">
@@ -177,9 +177,9 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Floating streak badge */}
+            {/* Floating streak badge — overlaps chart bottom-right edge */}
             <div
-              className="absolute -top-4 -right-4 sm:-right-6 flex items-center gap-3 px-4 py-2.5 rounded-xl bg-panel border border-rule-2"
+              className="hidden sm:flex absolute -bottom-3 -right-3 lg:-right-5 items-center gap-3 px-3.5 py-2 rounded-xl bg-panel border border-rule-2 z-10"
               style={{
                 boxShadow: "var(--c-shadow-term)",
               }}
@@ -216,8 +216,8 @@ function Stat({ num, label, color }: { num: string; label: string; color?: "acid
   return (
     <div>
       <div
-        className="stat-num text-[28px] sm:text-[30px]"
-        style={{ color: color === "acid" ? "#8FCC2A" : "#EDF1FA" }}
+        className="stat-num text-[22px] sm:text-[24px]"
+        style={{ color: color === "acid" ? "#8FCC2A" : "var(--c-ink)" }}
       >
         {num}
       </div>
