@@ -447,7 +447,7 @@ export default function ArchitecturePage() {
           Three hosts, one Vercel project, one Supabase instance. All non-static traffic flows through
           middleware first — host header decides whether the request renders marketing, portal, admin, or auth.
         </p>
-        <Mermaid chart={overviewChart} />
+        <Mermaid chart={overviewChart} title="01-system-overview" />
       </Section>
 
       {/* 2 */}
@@ -457,7 +457,7 @@ export default function ArchitecturePage() {
           auth cookie lives on a single host (no double sign-in). Portal-side passthroughs render literal
           paths; everything else rewrites under <code>/portal/*</code>.
         </p>
-        <Mermaid chart={routingChart} />
+        <Mermaid chart={routingChart} title="02-host-routing" />
       </Section>
 
       {/* 3 */}
@@ -467,7 +467,7 @@ export default function ArchitecturePage() {
           <code>admins</code> table membership. Six programmatic SEO pages under{" "}
           <code>/indicator/[market]</code>.
         </p>
-        <Mermaid chart={routesChart} />
+        <Mermaid chart={routesChart} title="03-route-map" />
       </Section>
 
       {/* 4 */}
@@ -477,7 +477,7 @@ export default function ArchitecturePage() {
           <code>user_id text</code> for compatibility with prior Clerk shape — cast at join boundaries. RLS
           enabled on every app table; service-role bypasses for server-side queries only.
         </p>
-        <Mermaid chart={dataChart} />
+        <Mermaid chart={dataChart} title="04-data-model" />
       </Section>
 
       {/* 5 */}
@@ -486,7 +486,7 @@ export default function ArchitecturePage() {
           All sign-in paths target <code>portal.easytradesetup.com</code>. www-side <code>/sign-in</code> 301s
           to portal before form render so the session cookie always lives on a single host.
         </p>
-        <Mermaid chart={authChart} />
+        <Mermaid chart={authChart} title="05-auth-flow" />
       </Section>
 
       {/* 6 */}
@@ -495,7 +495,7 @@ export default function ArchitecturePage() {
           No raw IP stored. <code>visitor_id</code> = SHA-256 of (salt + IP + UA + day) — rotates daily.
           Bot regex drops crawlers. Skip-list excludes /api, /portal, /admin, /sign-*, /auth.
         </p>
-        <Mermaid chart={trackingChart} />
+        <Mermaid chart={trackingChart} title="06-pageview-pipeline" />
       </Section>
 
       {/* 7 */}
@@ -504,7 +504,7 @@ export default function ArchitecturePage() {
           Push to main triggers two parallel paths: GitHub Actions runs unit + e2e for verification; Vercel
           auto-deploys to all three domains.
         </p>
-        <Mermaid chart={cicdChart} />
+        <Mermaid chart={cicdChart} title="07-cicd-pipeline" />
       </Section>
 
       {/* 8 */}

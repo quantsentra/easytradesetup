@@ -144,7 +144,7 @@ export default async function AdminOverview() {
           </div>
         </div>
         <div className="tz-topbar-actions">
-          <Link href="/admin/customers" className="tz-btn">Customers</Link>
+          <Link href="/admin/checklist" className="tz-btn">MVP checklist</Link>
           <Link href="/admin/updates" className="tz-btn tz-btn-primary">Publish a note →</Link>
         </div>
       </div>

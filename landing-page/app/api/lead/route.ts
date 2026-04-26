@@ -1,7 +1,21 @@
 import { NextResponse } from "next/server";
+import crypto from "node:crypto";
+import { Resend } from "resend";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
+import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { OFFER_USD, OFFER_INR } from "@/lib/pricing";
 
 export const runtime = "nodejs";
+
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+// Default to Resend's pre-verified test sender so the integration works the
+// moment RESEND_API_KEY is set; swap for noreply@easytradesetup.com once
+// the domain is verified in Resend dashboard.
+const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "EasyTradeSetup <onboarding@resend.dev>";
+const NOTIFY_EMAIL = process.env.LEAD_NOTIFY_EMAIL || "thomas@easytradesetup.com";
+const LEAD_SALT = process.env.LEAD_SALT || "ets-lead-salt-2026";
+
+const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 // 6 submissions per IP per minute. Users rarely need more than a couple
 // (fat-finger retry, different source). Bots hammering for list-farming
@@ -120,13 +134,105 @@ export async function POST(req: Request) {
   }
 
   const source = (payload.source || "unknown").trim().slice(0, 64);
+  const ua = req.headers.get("user-agent")?.slice(0, 500) || null;
+  const country = req.headers.get("x-vercel-ip-country") || null;
+  const referer = req.headers.get("referer")?.slice(0, 500) || null;
+  const ipHash = crypto
+    .createHash("sha256")
+    .update(`${LEAD_SALT}:${ip}`)
+    .digest("hex")
+    .slice(0, 32);
 
-  // PII guard: log a redacted form of the email only. Full address goes to
-  // the downstream sink (Resend / Sheet / DB) once wired, never to stdout.
-  console.log("[lead]", { email: redactEmail(email), source });
+  console.log("[lead]", { email: redactEmail(email), source, country });
+
+  // 1. Persist to Supabase (best-effort — never fail the request on DB issues).
+  try {
+    const supa = createSupabaseAdmin();
+    await supa.from("leads").insert({
+      email,
+      source,
+      ip_hash: ipHash,
+      user_agent: ua,
+      country,
+      referer,
+    });
+  } catch (e) {
+    console.error("[lead] db insert failed", e);
+  }
+
+  // 2. Send Resend emails (best-effort, non-blocking).
+  if (resend) {
+    const offerLabel = `$${OFFER_USD} / ₹${OFFER_INR.toLocaleString("en-IN")}`;
+    Promise.allSettled([
+      // Welcome / confirmation to lead
+      resend.emails.send({
+        from: FROM_EMAIL,
+        to: email,
+        subject: "You're on the list — Golden Indicator launch",
+        html: welcomeEmail(offerLabel),
+      }),
+      // Admin notification
+      resend.emails.send({
+        from: FROM_EMAIL,
+        to: NOTIFY_EMAIL,
+        subject: `New lead · ${redactEmail(email)} · ${source}`,
+        html: notifyEmail({ email, source, country, referer, ua }),
+      }),
+    ]).then((results) => {
+      results.forEach((r, i) => {
+        if (r.status === "rejected") {
+          console.error(`[lead] resend ${i === 0 ? "welcome" : "notify"} failed`, r.reason);
+        }
+      });
+    });
+  } else {
+    console.warn("[lead] RESEND_API_KEY not set — emails skipped");
+  }
 
   if (contentType.startsWith("application/json")) {
     return NextResponse.json({ ok: true });
   }
   return new Response(null, { status: 303, headers: { Location: `${pickRedirectOrigin(req)}/thank-you` } });
+}
+
+function welcomeEmail(offerLabel: string): string {
+  return `<!doctype html><html><body style="font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif;background:#faf9f5;padding:24px;color:#15181a;line-height:1.55">
+<div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid rgba(21,24,26,.08);border-radius:14px;padding:32px;box-shadow:0 4px 16px -4px rgba(0,0,0,.07)">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+<div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#2B7BFF,#22D3EE);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">✓</div>
+<div style="font-weight:600;font-size:16px">EasyTradeSetup</div>
+</div>
+<h1 style="font-size:22px;margin:0 0 12px;letter-spacing:-.02em">You're on the list.</h1>
+<p style="margin:0 0 16px;color:rgba(21,24,26,.72)">We've saved your email. The moment payments go live (UPI for India, Gumroad for global), you'll receive a secure payment link at the inaugural price of <strong>${offerLabel}</strong> — locked in even if retail moves up.</p>
+<p style="margin:0 0 16px;color:rgba(21,24,26,.72)">In the meantime:</p>
+<ul style="color:rgba(21,24,26,.72);padding-left:20px">
+<li><a href="https://www.easytradesetup.com/sample" style="color:#2B7BFF;text-decoration:none">Read a free chapter</a> from the Trade Logic PDF</li>
+<li><a href="https://www.easytradesetup.com/compare" style="color:#2B7BFF;text-decoration:none">See how Golden Indicator compares</a> to LuxAlgo, TradingLite, etc.</li>
+<li><a href="https://www.easytradesetup.com/docs/install" style="color:#2B7BFF;text-decoration:none">Browse the install guide</a></li>
+</ul>
+<hr style="border:none;border-top:1px solid rgba(21,24,26,.08);margin:24px 0"/>
+<p style="font-size:12px;color:rgba(21,24,26,.52);margin:0">EasyTradeSetup is a chart tool, not investment advice. We are not SEBI-registered. You decide every trade.</p>
+</div>
+</body></html>`;
+}
+
+function notifyEmail(d: {
+  email: string; source: string;
+  country: string | null; referer: string | null; ua: string | null;
+}): string {
+  const row = (k: string, v: string | null) =>
+    `<tr><td style="padding:6px 0;color:rgba(21,24,26,.52);font-size:12px;text-transform:uppercase;letter-spacing:.08em">${k}</td><td style="padding:6px 0;font-family:monospace;font-size:13px">${v || "—"}</td></tr>`;
+  return `<!doctype html><html><body style="font-family:-apple-system,system-ui,sans-serif;background:#faf9f5;padding:20px">
+<div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid rgba(21,24,26,.08);border-radius:12px;padding:24px">
+<div style="font-size:11px;font-family:monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(21,24,26,.52);margin-bottom:8px">New lead · ${new Date().toISOString().slice(0,16).replace("T"," ")}</div>
+<h2 style="margin:0 0 16px;font-size:18px">${d.email}</h2>
+<table style="width:100%;border-collapse:collapse">
+${row("Source", d.source)}
+${row("Country", d.country)}
+${row("Referer", d.referer)}
+${row("User-Agent", d.ua)}
+</table>
+<p style="margin:20px 0 0;font-size:12px;color:rgba(21,24,26,.52)">View all leads: <a href="https://portal.easytradesetup.com/admin/customers" style="color:#2B7BFF">/admin</a></p>
+</div>
+</body></html>`;
 }

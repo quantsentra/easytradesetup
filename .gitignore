@@ -35,3 +35,9 @@ secrets.json
 .next/
 **/.next/
 
+# Node modules and root package manifests (npm ought to run from landing-page/ only)
+node_modules/
+**/node_modules/
+/package.json
+/package-lock.json
+
