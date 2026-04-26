@@ -22,7 +22,10 @@ type SymbolDef = {
   code: Code;
   yahooTicker: string;        // e.g. ^NSEI
   stooqTicker: string | null; // e.g. ^dji  (null = no stooq alternative)
-  twelveTicker: string | null; // e.g. NIFTY 50:NSE  (null = unsupported on free tier)
+  // Twelve Data: try each variant in order, keep first that returns a price.
+  // Free tier coverage varies by symbol — NIFTY especially has multiple
+  // listing names depending on the plan.
+  twelveTickers: string[];
   label: string;
   sub: string;
   marketName: string;
@@ -36,7 +39,7 @@ const SYMBOLS: SymbolDef[] = [
     code: "nifty",
     yahooTicker: "^NSEI",
     stooqTicker: null,         // Stooq doesn't expose NIFTY for free
-    twelveTicker: "NIFTY 50",  // Twelve Data has NIFTY 50 on free tier
+    twelveTickers: ["NIFTY 50", "NSEI", "^NSEI", "NIFTY"],
     label: "NIFTY 50",
     sub: "NSE · India",
     marketName: "NSE",
@@ -52,7 +55,7 @@ const SYMBOLS: SymbolDef[] = [
     code: "gold",
     yahooTicker: "GC=F",
     stooqTicker: "gc.f",
-    twelveTicker: "XAU/USD",   // Spot gold — close-enough proxy for COMEX GC
+    twelveTickers: ["XAU/USD", "GC=F", "GC"],
     label: "GOLD · GC",
     sub: "COMEX · Futures",
     marketName: "COMEX",
@@ -68,7 +71,7 @@ const SYMBOLS: SymbolDef[] = [
     code: "us30",
     yahooTicker: "^DJI",
     stooqTicker: "^dji",
-    twelveTicker: "DJI",
+    twelveTickers: ["DJI", "^DJI", "DJI:INDEX"],
     label: "US 30 · DOW",
     sub: "Dow Jones · NYSE",
     marketName: "NYSE",
@@ -157,45 +160,48 @@ async function fetchYahoo(s: SymbolDef): Promise<Quote | null> {
 
 async function fetchTwelveData(s: SymbolDef): Promise<Quote | null> {
   const apiKey = process.env.TWELVE_DATA_API_KEY;
-  if (!apiKey || !s.twelveTicker) return null;
-  try {
-    const symbol = encodeURIComponent(s.twelveTicker);
-    // /quote = single-call price + day-stats. /time_series for sparkline.
-    const url = `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${apiKey}`;
-    const res = await fetch(url, {
-      headers: { "User-Agent": UA, Accept: "application/json" },
-      next: { revalidate: 300 },
-    });
-    if (!res.ok) return null;
-    const json = await res.json();
-    // Free tier sometimes returns { code: 404, status: "error" } — treat as miss.
-    if (!json || json.status === "error" || json.code) return null;
+  if (!apiKey || s.twelveTickers.length === 0) return null;
 
-    const price = Number(json.close);
-    const prevClose = Number(json.previous_close ?? json.open ?? price);
-    if (!isFinite(price) || price <= 0) return null;
+  for (const ticker of s.twelveTickers) {
+    try {
+      const symbol = encodeURIComponent(ticker);
+      const url = `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${apiKey}`;
+      const res = await fetch(url, {
+        headers: { "User-Agent": UA, Accept: "application/json" },
+        next: { revalidate: 300 },
+      });
+      if (!res.ok) continue;
+      const json = await res.json();
+      // Free tier returns { code: 404, status: "error" } for unsupported symbols.
+      if (!json || json.status === "error" || (json.code && json.code !== 200)) continue;
 
-    const change = price - prevClose;
-    const changePct = prevClose ? (change / prevClose) * 100 : 0;
-    const isOpen = json.is_market_open === true || json.is_market_open === "true";
-    const ts = json.timestamp ? Number(json.timestamp) : Math.floor(Date.now() / 1000);
+      const price = Number(json.close);
+      const prevClose = Number(json.previous_close ?? json.open ?? price);
+      if (!isFinite(price) || price <= 0) continue;
 
-    return baseQuote(s, {
-      price,
-      prevClose,
-      change,
-      changePct,
-      marketState: isOpen ? "REGULAR" : "CLOSED",
-      isLive: isOpen,
-      lastUpdate: isFinite(ts) ? ts : Math.floor(Date.now() / 1000),
-      // Twelve Data /quote doesn't include intraday bars; synthesise a 2-point
-      // series so the sparkline still draws a single trend line.
-      series: [prevClose, price],
-      source: "twelvedata",
-    });
-  } catch {
-    return null;
+      const change = price - prevClose;
+      const changePct = prevClose ? (change / prevClose) * 100 : 0;
+      const isOpen = json.is_market_open === true || json.is_market_open === "true";
+      const ts = json.timestamp ? Number(json.timestamp) : Math.floor(Date.now() / 1000);
+
+      return baseQuote(s, {
+        price,
+        prevClose,
+        change,
+        changePct,
+        marketState: isOpen ? "REGULAR" : "CLOSED",
+        isLive: isOpen,
+        lastUpdate: isFinite(ts) ? ts : Math.floor(Date.now() / 1000),
+        // Twelve Data /quote returns a single price; synthesise a 2-point
+        // series so the sparkline still draws a trend line.
+        series: [prevClose, price],
+        source: "twelvedata",
+      });
+    } catch {
+      continue;
+    }
   }
+  return null;
 }
 
 async function fetchStooq(s: SymbolDef): Promise<Quote | null> {
