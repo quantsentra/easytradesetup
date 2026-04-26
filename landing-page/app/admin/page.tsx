@@ -2,6 +2,7 @@ import Link from "next/link";
 import { listAllUsers } from "@/lib/auth-server";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { OFFER_USD, OFFER_INR, format, USD_SET } from "@/lib/pricing";
+import Sparkline from "@/components/admin/Sparkline";
 
 type EntRow = {
   user_id: string;
@@ -133,6 +134,30 @@ async function loadOverview() {
     .slice(0, 10);
   const totalCountryUniques = topCountries.reduce((sum, c) => sum + c.count, 0);
 
+  // 14-day visitor sparkline (uniques per day)
+  const visitorDays: number[] = Array(14).fill(0);
+  const now = Date.now();
+  const visitorsByDay: Map<number, Set<string>> = new Map();
+  for (let i = 0; i < 14; i++) visitorsByDay.set(i, new Set());
+  for (const p of pageviews) {
+    const ageDays = Math.floor((now - Date.parse(p.at)) / (24 * 3600e3));
+    if (ageDays >= 0 && ageDays < 14) {
+      visitorsByDay.get(ageDays)!.add(p.visitor_id);
+    }
+  }
+  for (let i = 0; i < 14; i++) {
+    visitorDays[13 - i] = visitorsByDay.get(i)!.size;
+  }
+
+  // 14-day revenue sparkline (paid orders × OFFER_USD per day)
+  const revenueDays: number[] = Array(14).fill(0);
+  for (const e of paid) {
+    const ageDays = Math.floor((now - Date.parse(e.granted_at)) / (24 * 3600e3));
+    if (ageDays >= 0 && ageDays < 14) {
+      revenueDays[13 - ageDays] += OFFER_USD;
+    }
+  }
+
   return {
     users,
     activeCount,
@@ -164,6 +189,8 @@ async function loadOverview() {
     topPaths,
     topCountries,
     totalCountryUniques,
+    visitorDays,
+    revenueDays,
   };
 }
 
@@ -206,12 +233,24 @@ export default async function AdminOverview() {
           </div>
         </div>
         <div className="tz-kpi">
-          <div className="tz-kpi-label">Revenue · combined</div>
-          <div className="tz-kpi-value tz-num" style={{ color: "var(--tz-acid-dim)" }}>
-            {format(USD_SET, d.revenueUsd)}
+          <div className="flex items-start justify-between gap-2">
+            <div style={{ minWidth: 0 }}>
+              <div className="tz-kpi-label">Revenue · combined</div>
+              <div className="tz-kpi-value tz-num" style={{ color: "var(--tz-acid-dim)" }}>
+                {format(USD_SET, d.revenueUsd)}
+              </div>
+            </div>
+            <Sparkline
+              data={d.revenueDays}
+              width={88}
+              height={28}
+              color="#2B7BFF"
+              fillColor="rgba(43,123,255,0.16)"
+              ariaLabel="14-day revenue trend"
+            />
           </div>
           <div className="tz-kpi-delta">
-            ≈ ₹{d.revenueInr.toLocaleString("en-IN")} · @ {format(USD_SET, OFFER_USD)} offer
+            ≈ ₹{d.revenueInr.toLocaleString("en-IN")} · 14d
           </div>
         </div>
         <div className="tz-kpi">
@@ -300,11 +339,23 @@ export default async function AdminOverview() {
       {/* Traffic strip — anonymous pageviews */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         <div className="tz-kpi acc">
-          <div className="tz-kpi-label">Visitors · today</div>
-          <div className="tz-kpi-value tz-num" style={{ fontSize: 22, color: "var(--tz-acid-dim)" }}>
-            {d.uniquesToday}
+          <div className="flex items-start justify-between gap-2">
+            <div style={{ minWidth: 0 }}>
+              <div className="tz-kpi-label">Visitors · today</div>
+              <div className="tz-kpi-value tz-num" style={{ fontSize: 22, color: "var(--tz-acid-dim)" }}>
+                {d.uniquesToday}
+              </div>
+            </div>
+            <Sparkline
+              data={d.visitorDays}
+              width={70}
+              height={26}
+              color="#22D3EE"
+              fillColor="rgba(34,211,238,0.18)"
+              ariaLabel="14-day visitor trend"
+            />
           </div>
-          <div className="tz-kpi-delta">{d.pvToday} pageviews</div>
+          <div className="tz-kpi-delta">{d.pvToday} pageviews · 14d</div>
         </div>
         <div className="tz-kpi">
           <div className="tz-kpi-label">Visitors · 7d</div>

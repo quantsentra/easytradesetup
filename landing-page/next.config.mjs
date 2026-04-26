@@ -34,6 +34,13 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Image optimization: prefer AVIF (best compression) then WebP, fall back
+  // to PNG/JPEG. Cache optimized variants for a year — chart screenshots
+  // change rarely, and content-hashed URLs invalidate naturally on new builds.
+  images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 31_536_000,
+  },
   async headers() {
     return [
       {
