@@ -23,7 +23,7 @@ const ALLOWED_CONTENT_TYPES = [
 
 // Canonical site origin — used as fallback for post-submit redirects.
 const SITE_ORIGIN =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://easytradesetup.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.easytradesetup.com";
 
 // Allowlist of hostnames we will honor when choosing a redirect target.
 // Uses the real browser-facing Host header (or X-Forwarded-Host) rather than

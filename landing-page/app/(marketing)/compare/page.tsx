@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Golden Indicator vs LuxAlgo & TrendSpider",
     description: "Pricing, repaint behavior, and claims — side by side.",
-    url: "https://easytradesetup.com/compare",
+    url: "https://www.easytradesetup.com/compare",
     type: "article",
   },
 };

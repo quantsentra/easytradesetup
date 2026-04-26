@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://easytradesetup.com"),
+  metadataBase: new URL("https://www.easytradesetup.com"),
   title: {
     default:
       "Golden Indicator — TradingView Pine v5 for NIFTY, SPX, Gold & BTC · EasyTradeSetup",
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     alternateLocale: ["en_US"],
-    url: "https://easytradesetup.com",
+    url: "https://www.easytradesetup.com",
     siteName: "EasyTradeSetup",
     title: "Golden Indicator — one TradingView Pine v5 for any market",
     description: "Structure, regime, levels, supply / demand — fused on one chart. Bar-close only, no repaint, no signal service.",

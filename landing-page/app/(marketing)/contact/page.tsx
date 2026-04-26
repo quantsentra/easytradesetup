@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Contact EasyTradeSetup",
     description: "Founder replies within 24 hours. hello@easytradesetup.com",
-    url: "https://easytradesetup.com/contact",
+    url: "https://www.easytradesetup.com/contact",
     type: "website",
   },
 };

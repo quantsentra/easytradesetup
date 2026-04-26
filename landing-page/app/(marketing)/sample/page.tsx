@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Free Trade Logic sample chapter",
     description: "Setup rules, entry logic, invalidation — no email.",
-    url: "https://easytradesetup.com/sample",
+    url: "https://www.easytradesetup.com/sample",
     type: "article",
   },
 };

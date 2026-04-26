@@ -31,7 +31,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "anthropic-ai", disallow: "/" },
       { userAgent: "ClaudeBot", disallow: "/" },
     ],
-    sitemap: "https://easytradesetup.com/sitemap.xml",
-    host: "https://easytradesetup.com",
+    sitemap: "https://www.easytradesetup.com/sitemap.xml",
+    host: "https://www.easytradesetup.com",
   };
 }

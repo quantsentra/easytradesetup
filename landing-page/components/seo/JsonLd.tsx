@@ -1,7 +1,7 @@
 import { OFFER_USD, OFFER_INR, RETAIL_USD } from "@/lib/pricing";
 import { LAUNCH_END_DATE } from "@/lib/launch";
 
-const SITE_URL = "https://easytradesetup.com";
+const SITE_URL = "https://www.easytradesetup.com";
 
 export function OrganizationJsonLd() {
   const data = {
@@ -178,6 +178,43 @@ export function SoftwareApplicationJsonLd() {
     ],
   };
   return <Script data={data} id="ld-software" />;
+}
+
+/**
+ * HowTo schema — eligible for the "How to" rich result. Used on
+ * /docs/install. Each step needs name + text. URL anchors optional.
+ */
+export function HowToJsonLd({
+  name,
+  description,
+  totalTimeMinutes,
+  steps,
+}: {
+  name: string;
+  description: string;
+  totalTimeMinutes: number;
+  steps: Array<{ name: string; text: string; url?: string }>;
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name,
+    description,
+    totalTime: `PT${totalTimeMinutes}M`,
+    estimatedCost: { "@type": "MonetaryAmount", currency: "USD", value: "0" },
+    tool: [
+      { "@type": "HowToTool", name: "TradingView account (free or paid)" },
+      { "@type": "HowToTool", name: "Web browser" },
+    ],
+    step: steps.map((s, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: s.name,
+      text: s.text,
+      ...(s.url ? { url: s.url } : {}),
+    })),
+  };
+  return <Script data={data} id="ld-howto" />;
 }
 
 type FAQ = { q: string; a: string };

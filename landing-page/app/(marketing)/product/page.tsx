@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Golden Indicator — one pane, every market",
     description: "Structure, regime, levels, supply / demand — fused on one chart.",
-    url: "https://easytradesetup.com/product",
+    url: "https://www.easytradesetup.com/product",
     type: "website",
   },
 };

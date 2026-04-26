@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
 import Prose from "@/components/ui/Prose";
-import { PageBreadcrumbs } from "@/components/seo/JsonLd";
+import { PageBreadcrumbs, HowToJsonLd } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
   title: "Install Golden Indicator on TradingView",
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Install Golden Indicator on TradingView",
     description: "Pine v5 setup in 90 seconds. Works on the free plan.",
-    url: "https://easytradesetup.com/docs/install",
+    url: "https://www.easytradesetup.com/docs/install",
     type: "article",
   },
 };
@@ -26,6 +26,33 @@ export default function InstallPage() {
   return (
     <>
       <PageBreadcrumbs name="Install" path="/docs/install" />
+      <HowToJsonLd
+        name="Install Golden Indicator on TradingView"
+        description="Step-by-step setup of the Golden Indicator Pine v5 script on TradingView. Works on the free plan."
+        totalTimeMinutes={3}
+        steps={[
+          {
+            name: "Open the Pine Editor on TradingView",
+            text: "Sign in to TradingView, open any chart, and click the Pine Editor tab at the bottom of the screen.",
+          },
+          {
+            name: "Paste the Golden Indicator source",
+            text: "Open the Golden-Indicator.pine file from your purchase email, copy its contents, and paste them into the Pine Editor — replacing the default template.",
+          },
+          {
+            name: "Save the script",
+            text: "Click Save. Name it Golden Indicator. Pine 5 compiler runs and confirms there are no errors.",
+          },
+          {
+            name: "Add the indicator to your chart",
+            text: "Click Add to chart. The regime, key levels, supply / demand zones, and structural break markers render on the active chart.",
+          },
+          {
+            name: "Configure alerts (optional)",
+            text: "Right-click any signal on the chart and choose Add alert. The script exposes alertcondition() events for entries, structural breaks, and regime flips.",
+          },
+        ]}
+      />
       <PageHeader eyebrow="Docs / Install" title="Install on TradingView" lede="Ninety seconds, start to finish." />
       <section className="bg-surface">
         <div className="container-wide py-16">

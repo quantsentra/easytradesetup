@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Trading resources — install guide, risk calc, strategy library",
     description: "Docs, tools, and daily pre-market notes for Golden Indicator users.",
-    url: "https://easytradesetup.com/resources",
+    url: "https://www.easytradesetup.com/resources",
   },
 };
 

@@ -54,7 +54,7 @@ export default async function PortalLayout({ children }: { children: React.React
           )}
 
           <a
-            href="https://easytradesetup.com"
+            href="https://www.easytradesetup.com"
             target="_blank"
             rel="noopener"
             className="tz-header-link hidden sm:inline-flex"
@@ -101,7 +101,7 @@ export default async function PortalLayout({ children }: { children: React.React
             <span className="tz-footer-dot" aria-hidden>·</span>
             <Link href="/portal/support" className="tz-footer-link">Support</Link>
             <span className="tz-footer-dot" aria-hidden>·</span>
-            <a href="https://easytradesetup.com/legal/terms" className="tz-footer-link">Terms</a>
+            <a href="https://www.easytradesetup.com/legal/terms" className="tz-footer-link">Terms</a>
           </div>
         </div>
       </footer>

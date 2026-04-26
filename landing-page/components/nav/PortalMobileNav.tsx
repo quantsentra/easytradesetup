@@ -140,7 +140,7 @@ export default function PortalMobileNav({
                   </Link>
                 )}
                 <a
-                  href="https://easytradesetup.com"
+                  href="https://www.easytradesetup.com"
                   target="_blank"
                   rel="noopener"
                   onClick={() => setOpen(false)}

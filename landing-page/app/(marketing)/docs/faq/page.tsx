@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "FAQ — Golden Indicator",
     description: "Repaint, signals, markets, refunds — every question answered.",
-    url: "https://easytradesetup.com/docs/faq",
+    url: "https://www.easytradesetup.com/docs/faq",
     type: "article",
   },
 };

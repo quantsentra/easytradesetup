@@ -6,7 +6,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <a href="#main" className="skip-link">Skip to content</a>
       <header className="border-b border-rule/40">
         <div className="container-wide flex items-center justify-between py-5">
-          <Link href="https://easytradesetup.com" className="flex items-center gap-2 text-ink no-underline">
+          <Link href="https://www.easytradesetup.com" className="flex items-center gap-2 text-ink no-underline">
             <span
               aria-hidden
               className="grid place-items-center h-7 w-7 rounded-md font-mono text-[12px] font-bold"
@@ -22,7 +22,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </span>
           </Link>
           <Link
-            href="https://easytradesetup.com"
+            href="https://www.easytradesetup.com"
             className="text-[12px] font-mono uppercase tracking-widest text-ink-60 hover:text-ink"
           >
             ← Back to site

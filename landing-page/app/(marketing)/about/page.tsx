@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About EasyTradeSetup",
     description: "One-off trading tools for working traders. No subscription, no signals.",
-    url: "https://easytradesetup.com/about",
+    url: "https://www.easytradesetup.com/about",
     type: "website",
   },
 };
