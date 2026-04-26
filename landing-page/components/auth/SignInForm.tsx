@@ -4,6 +4,7 @@ import { useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 
 type Mode = "sign-in" | "sign-up";
+type Method = "magic" | "password";
 
 export default function SignInForm({
   redirectTo,
@@ -17,6 +18,8 @@ export default function SignInForm({
   mode?: Mode;
 }) {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [method, setMethod] = useState<Method>("magic");
   const [busy, setBusy] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
@@ -45,6 +48,20 @@ export default function SignInForm({
     setBusy(true);
     try {
       const supa = supabaseBrowser();
+
+      if (method === "password") {
+        const { error } = await supa.auth.signInWithPassword({
+          email: email.trim(),
+          password,
+        });
+        if (error) {
+          setLocalError(error.message);
+        } else {
+          window.location.href = redirectTo;
+        }
+        return;
+      }
+
       const callback = `${window.location.origin}/auth/callback?redirect=${encodeURIComponent(redirectTo)}`;
       const { error } = await supa.auth.signInWithOtp({
         email: email.trim(),
@@ -129,12 +146,41 @@ export default function SignInForm({
                 autoComplete="email"
               />
             </label>
+
+            {method === "password" && (
+              <label className="flex flex-col gap-1.5">
+                <span className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40">
+                  Password
+                </span>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  className="input"
+                  autoComplete="current-password"
+                />
+              </label>
+            )}
+
             <button
               type="submit"
-              disabled={busy || !email}
+              disabled={busy || !email || (method === "password" && !password)}
               className="btn btn-primary justify-center disabled:opacity-60"
             >
-              {busy ? "Sending link…" : "Email me a sign-in link"}
+              {busy
+                ? method === "password" ? "Signing in…" : "Sending link…"
+                : method === "password" ? "Sign in" : "Email me a sign-in link"}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setMethod(method === "magic" ? "password" : "magic"); setLocalError(null); }}
+              className="text-[12px] text-cyan hover:underline mt-1 self-center"
+            >
+              {method === "magic" ? "Use password instead" : "Use magic link instead"}
             </button>
           </form>
         </>
@@ -153,7 +199,7 @@ export default function SignInForm({
       )}
 
       <p className="mt-2 text-center text-nano font-mono uppercase tracking-widest text-ink-40">
-        No password · Magic link expires in 1 hour
+        {method === "password" ? "Password sign-in · Static account" : "Magic link expires in 1 hour"}
       </p>
     </div>
   );
