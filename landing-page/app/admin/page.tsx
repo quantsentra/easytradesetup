@@ -23,7 +23,32 @@ function inRange(iso: string | null, range: Range): boolean {
   return now - d <= span;
 }
 
-type PageviewRow = { visitor_id: string; path: string; at: string };
+type PageviewRow = { visitor_id: string; path: string; country: string | null; at: string };
+
+function flagEmoji(code: string): string {
+  if (!code || code.length !== 2) return "🌐";
+  const A = 0x1f1e6;
+  const a = "A".charCodeAt(0);
+  return String.fromCodePoint(A + code.charCodeAt(0) - a, A + code.charCodeAt(1) - a);
+}
+
+const COUNTRY_NAMES: Record<string, string> = {
+  IN: "India", US: "United States", GB: "United Kingdom", AE: "UAE",
+  SG: "Singapore", AU: "Australia", CA: "Canada", DE: "Germany",
+  FR: "France", JP: "Japan", BR: "Brazil", PK: "Pakistan",
+  BD: "Bangladesh", LK: "Sri Lanka", NP: "Nepal", PH: "Philippines",
+  ID: "Indonesia", MY: "Malaysia", TH: "Thailand", VN: "Vietnam",
+  NL: "Netherlands", IT: "Italy", ES: "Spain", PL: "Poland",
+  TR: "Turkey", SA: "Saudi Arabia", ZA: "South Africa", NG: "Nigeria",
+  EG: "Egypt", MX: "Mexico", AR: "Argentina", CN: "China",
+  HK: "Hong Kong", KR: "South Korea", TW: "Taiwan", IE: "Ireland",
+  CH: "Switzerland", SE: "Sweden", NO: "Norway", DK: "Denmark",
+  FI: "Finland", BE: "Belgium", AT: "Austria", IL: "Israel",
+};
+function countryName(code: string): string {
+  if (code === "??") return "Unknown";
+  return COUNTRY_NAMES[code] || code;
+}
 
 async function loadOverview() {
   const users = await listAllUsers(500);
@@ -39,7 +64,7 @@ async function loadOverview() {
       supa.from("entitlements").select("user_id,active,granted_at,source"),
       supa.from("tickets").select("id", { count: "exact", head: true }).in("status", ["open", "waiting"]),
       supa.from("downloads").select("id", { count: "exact", head: true }),
-      supa.from("pageviews").select("visitor_id,path,at").gte("at", since30),
+      supa.from("pageviews").select("visitor_id,path,country,at").gte("at", since30),
     ]);
     entitlements = (ent.data as EntRow[]) || [];
     openTickets = tk.count ?? 0;
@@ -95,6 +120,19 @@ async function loadOverview() {
     .slice(0, 5)
     .map(([path, count]) => ({ path, count }));
 
+  // Top 10 countries in last 30 days — unique visitors per country
+  const countryVisitors = new Map<string, Set<string>>();
+  for (const p of pvMonth) {
+    const cc = (p.country || "").toUpperCase() || "??";
+    if (!countryVisitors.has(cc)) countryVisitors.set(cc, new Set());
+    countryVisitors.get(cc)!.add(p.visitor_id);
+  }
+  const topCountries = [...countryVisitors.entries()]
+    .map(([code, set]) => ({ code, count: set.size }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 10);
+  const totalCountryUniques = topCountries.reduce((sum, c) => sum + c.count, 0);
+
   return {
     users,
     activeCount,
@@ -124,6 +162,8 @@ async function loadOverview() {
     uniquesWeek,
     uniquesMonth,
     topPaths,
+    topCountries,
+    totalCountryUniques,
   };
 }
 
@@ -285,45 +325,102 @@ export default async function AdminOverview() {
         </div>
       </div>
 
-      {/* Top paths */}
-      <div className="tz-card mb-6">
-        <div className="tz-card-head">
-          <div>
-            <div className="tz-card-title">Top pages · 7d</div>
-            <div className="tz-card-sub">Where visitors are landing.</div>
+      {/* Top paths + countries 2-up */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6">
+        {/* Top paths */}
+        <div className="tz-card">
+          <div className="tz-card-head">
+            <div>
+              <div className="tz-card-title">Top pages · 7d</div>
+              <div className="tz-card-sub">Where visitors are landing.</div>
+            </div>
           </div>
-        </div>
-        {d.topPaths.length === 0 ? (
-          <p className="text-[13.5px]" style={{ color: "var(--tz-ink-mute)" }}>
-            No traffic logged yet — pageview tracking starts after deploy + first visits.
-          </p>
-        ) : (
-          <ul className="flex flex-col gap-1">
-            {d.topPaths.map((p) => {
-              const pct = d.pvWeek > 0 ? Math.round((p.count / d.pvWeek) * 100) : 0;
-              return (
-                <li key={p.path} className="flex items-center gap-3 py-2"
-                  style={{ borderBottom: "1px solid var(--tz-border)" }}>
-                  <span className="font-mono text-[12.5px] flex-1 truncate" style={{ color: "var(--tz-ink)" }}>
-                    {p.path}
-                  </span>
-                  <div style={{
-                    width: 120, height: 6, borderRadius: 3,
-                    background: "var(--tz-surface-3)", overflow: "hidden",
-                  }}>
+          {d.topPaths.length === 0 ? (
+            <p className="text-[13.5px]" style={{ color: "var(--tz-ink-mute)" }}>
+              No traffic logged yet — pageview tracking starts after deploy + first visits.
+            </p>
+          ) : (
+            <ul className="flex flex-col gap-1">
+              {d.topPaths.map((p) => {
+                const pct = d.pvWeek > 0 ? Math.round((p.count / d.pvWeek) * 100) : 0;
+                return (
+                  <li key={p.path} className="flex items-center gap-3 py-2"
+                    style={{ borderBottom: "1px solid var(--tz-border)" }}>
+                    <span className="font-mono text-[12.5px] flex-1 truncate" style={{ color: "var(--tz-ink)" }}>
+                      {p.path}
+                    </span>
                     <div style={{
-                      width: `${pct}%`, height: "100%",
-                      background: "linear-gradient(90deg, var(--tz-acid), var(--tz-cyan))",
-                    }} />
-                  </div>
-                  <span className="tz-num text-[12.5px]" style={{ color: "var(--tz-ink-dim)", minWidth: 60, textAlign: "right" }}>
-                    {p.count} · {pct}%
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        )}
+                      width: 80, height: 6, borderRadius: 3,
+                      background: "var(--tz-surface-3)", overflow: "hidden", flexShrink: 0,
+                    }}>
+                      <div style={{
+                        width: `${pct}%`, height: "100%",
+                        background: "linear-gradient(90deg, var(--tz-acid), var(--tz-cyan))",
+                      }} />
+                    </div>
+                    <span className="tz-num text-[12.5px]" style={{ color: "var(--tz-ink-dim)", minWidth: 56, textAlign: "right" }}>
+                      {p.count} · {pct}%
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+
+        {/* Top countries */}
+        <div className="tz-card">
+          <div className="tz-card-head">
+            <div>
+              <div className="tz-card-title">Top countries · 30d</div>
+              <div className="tz-card-sub">Unique visitors by region.</div>
+            </div>
+          </div>
+          {d.topCountries.length === 0 ? (
+            <p className="text-[13.5px]" style={{ color: "var(--tz-ink-mute)" }}>
+              No geo data yet — country resolves from edge IP on first marketing visit.
+            </p>
+          ) : (
+            <ul className="flex flex-col gap-1">
+              {d.topCountries.map((c) => {
+                const pct = d.totalCountryUniques > 0
+                  ? Math.round((c.count / d.totalCountryUniques) * 100)
+                  : 0;
+                return (
+                  <li key={c.code} className="flex items-center gap-3 py-2"
+                    style={{ borderBottom: "1px solid var(--tz-border)" }}>
+                    <span style={{
+                      width: 28, fontSize: 18,
+                      flexShrink: 0, lineHeight: 1,
+                    }} aria-hidden>
+                      {flagEmoji(c.code)}
+                    </span>
+                    <span className="font-mono text-[12.5px]" style={{
+                      width: 36, color: "var(--tz-ink)", flexShrink: 0,
+                    }}>
+                      {c.code}
+                    </span>
+                    <span className="text-[12.5px] flex-1 truncate" style={{ color: "var(--tz-ink-dim)" }}>
+                      {countryName(c.code)}
+                    </span>
+                    <div style={{
+                      width: 60, height: 6, borderRadius: 3,
+                      background: "var(--tz-surface-3)", overflow: "hidden", flexShrink: 0,
+                    }}>
+                      <div style={{
+                        width: `${pct}%`, height: "100%",
+                        background: "linear-gradient(90deg, var(--tz-cyan), var(--tz-acid))",
+                      }} />
+                    </div>
+                    <span className="tz-num text-[12.5px]" style={{ color: "var(--tz-ink-dim)", minWidth: 56, textAlign: "right" }}>
+                      {c.count} · {pct}%
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
       </div>
 
       {/* Recent purchases */}
