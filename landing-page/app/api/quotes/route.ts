@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
 
 /**
- * Hero ticker quotes. Fetched server-side and cached at the edge for 5 min.
+ * Hero ticker quotes. Fetched server-side and cached at the edge for 5 min,
+ * stale-while-revalidate 30 min so transient upstream blips never cause an
+ * empty hero on the marketing page.
  *
- * Strategy:
- *   1. Try Yahoo (query2 -> query1) for live OHLC + market state.
- *   2. Fall back to Stooq's free CSV endpoint when Yahoo throttles
- *      (Vercel egress IPs sometimes get 429ed).
- *   3. Final fallback: baked-in last-known close so the hero never
- *      renders empty even if both upstreams are down.
+ * Source chain (per symbol):
+ *   1. Yahoo (query2 → query1)        — free, gives intraday sparkline series.
+ *   2. Twelve Data /quote             — free tier 800/day with API key.
+ *                                       Reliable on Vercel IPs (key auth, no IP block).
+ *                                       Crucially the only free source with NIFTY.
+ *   3. Stooq CSV                      — free, no key. No NIFTY, but solid for DJI + gold.
+ *   4. Baked-in last-known close      — final fallback. Hero never renders empty.
  */
 
 export const runtime = "nodejs";
@@ -19,6 +22,7 @@ type SymbolDef = {
   code: Code;
   yahooTicker: string;        // e.g. ^NSEI
   stooqTicker: string | null; // e.g. ^dji  (null = no stooq alternative)
+  twelveTicker: string | null; // e.g. NIFTY 50:NSE  (null = unsupported on free tier)
   label: string;
   sub: string;
   marketName: string;
@@ -31,7 +35,8 @@ const SYMBOLS: SymbolDef[] = [
   {
     code: "nifty",
     yahooTicker: "^NSEI",
-    stooqTicker: null, // Stooq doesn't expose NIFTY for free
+    stooqTicker: null,         // Stooq doesn't expose NIFTY for free
+    twelveTicker: "NIFTY 50",  // Twelve Data has NIFTY 50 on free tier
     label: "NIFTY 50",
     sub: "NSE · India",
     marketName: "NSE",
@@ -47,6 +52,7 @@ const SYMBOLS: SymbolDef[] = [
     code: "gold",
     yahooTicker: "GC=F",
     stooqTicker: "gc.f",
+    twelveTicker: "XAU/USD",   // Spot gold — close-enough proxy for COMEX GC
     label: "GOLD · GC",
     sub: "COMEX · Futures",
     marketName: "COMEX",
@@ -62,6 +68,7 @@ const SYMBOLS: SymbolDef[] = [
     code: "us30",
     yahooTicker: "^DJI",
     stooqTicker: "^dji",
+    twelveTicker: "DJI",
     label: "US 30 · DOW",
     sub: "Dow Jones · NYSE",
     marketName: "NYSE",
@@ -91,7 +98,7 @@ type Quote = {
   isLive: boolean;
   lastUpdate: number;
   series: number[];
-  source: "yahoo" | "stooq" | "fallback";
+  source: "yahoo" | "twelvedata" | "stooq" | "fallback";
   ok: true;
 };
 
@@ -146,6 +153,49 @@ async function fetchYahoo(s: SymbolDef): Promise<Quote | null> {
     }
   }
   return null;
+}
+
+async function fetchTwelveData(s: SymbolDef): Promise<Quote | null> {
+  const apiKey = process.env.TWELVE_DATA_API_KEY;
+  if (!apiKey || !s.twelveTicker) return null;
+  try {
+    const symbol = encodeURIComponent(s.twelveTicker);
+    // /quote = single-call price + day-stats. /time_series for sparkline.
+    const url = `https://api.twelvedata.com/quote?symbol=${symbol}&apikey=${apiKey}`;
+    const res = await fetch(url, {
+      headers: { "User-Agent": UA, Accept: "application/json" },
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    // Free tier sometimes returns { code: 404, status: "error" } — treat as miss.
+    if (!json || json.status === "error" || json.code) return null;
+
+    const price = Number(json.close);
+    const prevClose = Number(json.previous_close ?? json.open ?? price);
+    if (!isFinite(price) || price <= 0) return null;
+
+    const change = price - prevClose;
+    const changePct = prevClose ? (change / prevClose) * 100 : 0;
+    const isOpen = json.is_market_open === true || json.is_market_open === "true";
+    const ts = json.timestamp ? Number(json.timestamp) : Math.floor(Date.now() / 1000);
+
+    return baseQuote(s, {
+      price,
+      prevClose,
+      change,
+      changePct,
+      marketState: isOpen ? "REGULAR" : "CLOSED",
+      isLive: isOpen,
+      lastUpdate: isFinite(ts) ? ts : Math.floor(Date.now() / 1000),
+      // Twelve Data /quote doesn't include intraday bars; synthesise a 2-point
+      // series so the sparkline still draws a single trend line.
+      series: [prevClose, price],
+      source: "twelvedata",
+    });
+  } catch {
+    return null;
+  }
 }
 
 async function fetchStooq(s: SymbolDef): Promise<Quote | null> {
@@ -227,6 +277,7 @@ function baseQuote(s: SymbolDef, core: QuoteCore): Quote {
 async function fetchOne(s: SymbolDef): Promise<Quote> {
   return (
     (await fetchYahoo(s)) ||
+    (await fetchTwelveData(s)) ||
     (await fetchStooq(s)) ||
     fallbackQuote(s)
   );
@@ -238,7 +289,10 @@ export async function GET() {
     { quotes, fetchedAt: Date.now() },
     {
       headers: {
-        "cache-control": "public, s-maxage=300, stale-while-revalidate=600",
+        // 5min fresh, then serve stale up to 30min while revalidating in
+        // background. Survives multi-minute upstream outages without ever
+        // returning empty data.
+        "cache-control": "public, s-maxage=300, stale-while-revalidate=1800",
       },
     },
   );
