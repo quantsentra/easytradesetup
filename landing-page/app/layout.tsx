@@ -120,7 +120,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FFFFFF",
+  // Brand navy — sets mobile browser chrome bg to match site backdrop
+  // so the URL bar / status bar don't flash white on scroll.
+  themeColor: "#05070F",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
