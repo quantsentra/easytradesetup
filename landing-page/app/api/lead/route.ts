@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { Resend } from "resend";
+import { checkBotId } from "botid/server";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { OFFER_USD, OFFER_INR } from "@/lib/pricing";
@@ -89,6 +90,28 @@ export async function POST(req: Request) {
       { ok: false, error: "Too many requests" },
       { status: 429, headers: { "Retry-After": String(rl.retryAfterSec) } },
     );
+  }
+
+  // Vercel BotID verdict — silent bot detection (no captcha shown to users
+  // unless escalated). isBot=true means high confidence non-human; reject
+  // without ever inserting to leads or firing emails.
+  try {
+    const verdict = await checkBotId();
+    if (verdict.isBot) {
+      // Pretend success so attackers can't fingerprint the filter.
+      // Lead is silently dropped.
+      console.log("[lead] botid blocked", { ip });
+      if ((req.headers.get("content-type") || "").startsWith("application/json")) {
+        return NextResponse.json({ ok: true });
+      }
+      return new Response(null, {
+        status: 303,
+        headers: { Location: `${pickRedirectOrigin(req)}/thank-you` },
+      });
+    }
+  } catch {
+    // BotID not configured (local dev, missing env) — fall through and
+    // let other defenses (rate-limit, honeypot) catch abuse.
   }
 
   // Enforce Content-Length where provided. formData()/json() do not impose

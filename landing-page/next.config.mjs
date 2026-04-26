@@ -1,4 +1,5 @@
 import { withSentryConfig } from "@sentry/nextjs";
+import { withBotId } from "botid/next/config";
 
 /** @type {import('next').NextConfig} */
 
@@ -59,8 +60,15 @@ const nextConfig = {
 // upload attempts.
 const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN;
 
+// Wrap with Vercel BotID — adds bot-detection to protected routes.
+// Routes listed here get an automatic challenge layer; checkBotId()
+// in the route handler reads the verdict.
+const wrappedConfig = withBotId(nextConfig);
+
 export default dsn
-  ? withSentryConfig(nextConfig, {
+  ? // @ts-ignore — Sentry's wrapper expects NextConfig but BotID's wrapper
+    // returns a compatible shape; type narrowing through the chain is noisy.
+    withSentryConfig(wrappedConfig, {
       org: process.env.SENTRY_ORG || "easytradesetup",
       project: process.env.SENTRY_PROJECT || "easytradesetup",
       // Only upload source maps when an auth token is available — otherwise
@@ -75,4 +83,4 @@ export default dsn
       // strip them. Path is excluded from middleware auth via passthrough.
       tunnelRoute: "/monitoring",
     })
-  : nextConfig;
+  : wrappedConfig;

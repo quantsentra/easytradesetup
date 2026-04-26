@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BotIdClient } from "botid/client";
 import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
 import { OFFER_LABEL } from "@/lib/pricing";
@@ -14,6 +15,8 @@ export const metadata: Metadata = {
 export default function CheckoutPage() {
   return (
     <>
+      {/* Vercel BotID — silent bot detection on form submission. */}
+      <BotIdClient protect={[{ path: "/api/lead", method: "POST" }]} />
       <PageHeader
         eyebrow="Buy · Inaugural offer"
         title={<>Buy Golden Indicator.</>}
