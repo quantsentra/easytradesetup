@@ -1,0 +1,9 @@
+{
+  "framework": "nextjs",
+  "buildCommand": "next build",
+  "installCommand": "npm install",
+  "crons": [
+    { "path": "/api/quotes", "schedule": "*/30 * * * *" },
+    { "path": "/api/health", "schedule": "0 */6 * * *" }
+  ]
+}
