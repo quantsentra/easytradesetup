@@ -75,13 +75,18 @@ export async function listRecentIssues(limit = 25): Promise<SentryIssue[]> {
   return data || [];
 }
 
+type StatsResp = {
+  intervals?: string[];
+  groups?: Array<{
+    totals?: Record<string, number>;
+    series?: Record<string, number[]>;
+  }>;
+};
+
 /** Total event count for a project over a period (e.g. "24h", "7d", "30d"). */
 export async function eventCount(period: string): Promise<number> {
-  const path = `/api/0/projects/${ORG}/${PROJECT}/stats_v2/?statsPeriod=${period}&interval=1h&field=sum(quantity)&category=error`;
-  type StatsResp = {
-    intervals?: string[];
-    groups?: Array<{ totals?: Record<string, number> }>;
-  };
+  const interval = period === "24h" ? "1h" : period === "7d" ? "6h" : "1d";
+  const path = `/api/0/projects/${ORG}/${PROJECT}/stats_v2/?statsPeriod=${period}&interval=${interval}&field=sum(quantity)&category=error`;
   const data = await call<StatsResp>(path);
   if (!data?.groups) return 0;
   return data.groups.reduce(
@@ -90,31 +95,90 @@ export async function eventCount(period: string): Promise<number> {
   );
 }
 
+/** Bucketed event time-series for sparkline / line chart. */
+export async function eventsTimeSeries(period: string): Promise<Array<{ time: string; count: number }>> {
+  const interval = period === "24h" ? "1h" : period === "7d" ? "6h" : "1d";
+  const path = `/api/0/projects/${ORG}/${PROJECT}/stats_v2/?statsPeriod=${period}&interval=${interval}&field=sum(quantity)&category=error`;
+  const data = await call<StatsResp>(path);
+  if (!data?.intervals || !data?.groups || data.groups.length === 0) return [];
+  const series = data.groups[0].series?.["sum(quantity)"] || [];
+  return data.intervals.map((time, i) => ({ time, count: series[i] || 0 }));
+}
+
+export type SentryEvent = {
+  id: string;
+  eventID: string;
+  title: string;
+  dateCreated: string;
+  user?: { id?: string; email?: string; username?: string; ip_address?: string } | null;
+  tags?: Array<{ key: string; value: string }>;
+  entries?: Array<{
+    type: string;
+    data: Record<string, unknown>;
+  }>;
+  metadata?: { type?: string; value?: string };
+  platform?: string;
+  context?: Record<string, unknown>;
+};
+
+/** Single issue detail. */
+export async function getIssue(issueId: string): Promise<SentryIssue | null> {
+  return call<SentryIssue>(`/api/0/issues/${issueId}/`);
+}
+
+/** Latest event for an issue — has the stack trace + tags + user. */
+export async function getLatestEvent(issueId: string): Promise<SentryEvent | null> {
+  return call<SentryEvent>(`/api/0/issues/${issueId}/events/latest/`);
+}
+
+/** Mutate issue status — resolve or ignore. Requires event:write scope on token. */
+export async function updateIssue(
+  issueId: string,
+  status: "resolved" | "ignored" | "unresolved",
+): Promise<boolean> {
+  if (!TOKEN) return false;
+  try {
+    const res = await fetch(`${HOST}/api/0/issues/${issueId}/`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 /** Aggregate snapshot for the admin tile. Returns null if not configured. */
 export async function fetchSnapshot(): Promise<{
   issues: SentryIssue[];
   stats: SentryStats;
+  series24h: Array<{ time: string; count: number }>;
+  events7d: number;
+  events30d: number;
 } | null> {
   if (!sentryConfigured()) return null;
 
-  const [issues, ev24, ev7d] = await Promise.all([
+  const [issues, ev24, ev7d, ev30d, series] = await Promise.all([
     listRecentIssues(25),
     eventCount("24h"),
     eventCount("7d"),
+    eventCount("30d"),
+    eventsTimeSeries("24h"),
   ]);
-
-  const unresolvedTotal = issues.length;
-  // "Resolved this week" — derived heuristic; Sentry's API doesn't expose
-  // this directly without a separate query. Treat as 0 for now and fetch
-  // properly once issue volume justifies it.
-  void ev7d;
 
   return {
     issues,
     stats: {
-      unresolvedTotal,
+      unresolvedTotal: issues.length,
       resolvedThisWeek: 0,
       rawEvents24h: ev24,
     },
+    series24h: series,
+    events7d: ev7d,
+    events30d: ev30d,
   };
 }
