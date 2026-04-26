@@ -14,15 +14,37 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const navItems = [
-  { href: "/admin",           label: "Overview",     icon: HomeIcon },
-  { href: "/admin/customers", label: "Customers",    icon: UsersIcon },
-  { href: "/admin/tickets",   label: "Tickets",      icon: ChatIcon },
-  { href: "/admin/updates",   label: "Market notes", icon: NoteIcon },
-  { href: "/admin/audit",     label: "Audit log",    icon: AuditIcon },
+// Sidebar grouped into sections so new menu items slot cleanly without
+// reshuffling the existing IA. To add an item: append to its section.
+// To add a section: push a new object to navSections.
+const navSections: Array<{
+  title: string;
+  items: Array<{ href: string; label: string; icon: () => React.JSX.Element }>;
+}> = [
+  {
+    title: "Operations",
+    items: [
+      { href: "/admin",           label: "Overview",  icon: HomeIcon },
+      { href: "/admin/customers", label: "Customers", icon: UsersIcon },
+      { href: "/admin/tickets",   label: "Tickets",   icon: ChatIcon },
+    ],
+  },
+  {
+    title: "Content",
+    items: [
+      { href: "/admin/updates", label: "Market notes", icon: NoteIcon },
+    ],
+  },
+  {
+    title: "System",
+    items: [
+      { href: "/admin/architecture", label: "Architecture", icon: MapIcon },
+      { href: "/admin/audit",        label: "Audit log",    icon: AuditIcon },
+    ],
+  },
 ];
 
-const mobileNavItems = navItems.map(({ href, label }) => ({ href, label }));
+const mobileNavItems = navSections.flatMap((s) => s.items).map(({ href, label }) => ({ href, label }));
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getUser();
@@ -68,12 +90,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-8">
           <aside className="hidden lg:block lg:sticky lg:top-[84px] lg:self-start">
             <nav className="tz-sidenav">
-              <div className="tz-sidenav-section-title">Operations</div>
-              {navItems.map(({ href, label, icon: Icon }) => (
-                <Link key={href} href={href} className="tz-sidenav-item">
-                  <span className="tz-sidenav-icon" aria-hidden><Icon /></span>
-                  {label}
-                </Link>
+              {navSections.map((section, idx) => (
+                <div key={section.title} style={{ marginTop: idx === 0 ? 0 : 14 }}>
+                  <div className="tz-sidenav-section-title">{section.title}</div>
+                  {section.items.map(({ href, label, icon: Icon }) => (
+                    <Link key={href} href={href} className="tz-sidenav-item">
+                      <span className="tz-sidenav-icon" aria-hidden><Icon /></span>
+                      {label}
+                    </Link>
+                  ))}
+                </div>
               ))}
             </nav>
           </aside>
@@ -140,6 +166,13 @@ function AuditIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 6h16M4 12h16M4 18h10" />
+    </svg>
+  );
+}
+function MapIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v16M15 6v16" />
     </svg>
   );
 }
