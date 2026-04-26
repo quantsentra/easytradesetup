@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Mermaid from "@/components/admin/Mermaid";
+import PrintButton from "@/components/admin/PrintButton";
 
 export const metadata = {
   title: "Architecture · Admin",
@@ -379,9 +380,7 @@ export default function ArchitecturePage() {
           </div>
         </div>
         <div className="tz-topbar-actions">
-          <a href="https://www.easytradesetup.com/docs/architecture.html" target="_blank" rel="noopener" className="tz-btn">
-            ↗ Standalone HTML
-          </a>
+          <PrintButton />
           <Link href="/admin" className="tz-btn tz-btn-primary">← Overview</Link>
         </div>
       </div>
