@@ -60,6 +60,18 @@ export default async function AdminCustomersPage() {
             {rows.length} users · <strong style={{ color: "var(--tz-acid-dim)" }}>{activeCount} active license{activeCount === 1 ? "" : "s"}</strong>.
           </div>
         </div>
+        <div className="tz-topbar-actions">
+          <a
+            href="/api/admin/customers/export"
+            download
+            className="tz-btn"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden style={{ marginRight: 6 }}>
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
+            Export CSV
+          </a>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
