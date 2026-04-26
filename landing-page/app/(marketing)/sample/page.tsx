@@ -30,7 +30,7 @@ export default function SamplePage() {
       <PageHeader
         eyebrow="Free sample"
         title={<>A chapter from the playbook. No email required.</>}
-        lede="This is one setup from the 50-page Trade Logic PDF shipped with Golden Indicator. Same format, same rigour — just ungated so you can judge the quality before you reserve."
+        lede="This is one setup from the 50-page Trade Logic PDF shipped with Golden Indicator. Same format, same rigour — just ungated so you can judge the quality before you buy."
       />
 
       <section className="bg-surface">
@@ -153,7 +153,7 @@ export default function SamplePage() {
                 href="/checkout"
                 className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body font-medium hover:brightness-110 transition-all"
               >
-                Reserve the full bundle
+                Buy the full bundle
               </Link>
               <Link href="/compare" className="link-apple chevron">
                 See how we compare

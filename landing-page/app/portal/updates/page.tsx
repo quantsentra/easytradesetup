@@ -42,11 +42,11 @@ export default async function UpdatesPage() {
         <div className="tz-card">
           <p className="text-[15px]" style={{ color: "var(--tz-ink-dim)" }}>
             Daily pre-market notes — NIFTY, SPX, Gold, BTC — are published inside the portal for
-            active customers. Reserve the launch price to unlock.
+            active customers. Buy at the inaugural price to unlock.
           </p>
           <div className="mt-5">
             <Link href="/checkout" className="tz-btn tz-btn-primary">
-              Reserve · lifetime access →
+              Buy · lifetime access →
             </Link>
           </div>
         </div>

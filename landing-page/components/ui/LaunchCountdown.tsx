@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import {
   LAUNCH_END_DATE,
   LAUNCH_END_DATE_LABEL,
-  RESERVATION_CAP,
 } from "@/lib/launch";
 
 function computeDelta(nowMs: number): {
@@ -67,7 +66,7 @@ export default function LaunchCountdown({
         </div>
       )}
       <div className="mt-4 text-caption text-ink-60">
-        {LAUNCH_END_DATE_LABEL} · or first {RESERVATION_CAP} reservations — whichever comes first
+        Inaugural offer ends {LAUNCH_END_DATE_LABEL}
       </div>
     </div>
   );

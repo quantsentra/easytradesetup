@@ -63,7 +63,7 @@ export default async function PortalDashboard() {
                   <>Lifetime access active. Your portal ships at the version you bought — plus every future update.</>
                 )
               ) : (
-                <>You don&apos;t have an active license yet. Reserve the launch price to unlock the portal.</>
+                <>You don&apos;t have an active license yet. Buy at the inaugural price to unlock the portal.</>
               )}
             </p>
 
@@ -80,7 +80,7 @@ export default async function PortalDashboard() {
               ) : (
                 <>
                   <Link href="/checkout" className="tz-btn tz-btn-primary">
-                    Reserve · $49 →
+                    Buy · $49 →
                   </Link>
                   <Link href="/portal/docs" className="tz-btn">
                     Browse strategies
@@ -125,7 +125,7 @@ export default async function PortalDashboard() {
       {/* ============ KPI BENTO ============ */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
         <Kpi label="License" value={active ? "Active" : "None"}
-          delta={active ? "Lifetime · one payment" : "Reserve to unlock"}
+          delta={active ? "Lifetime · one payment" : "Buy to unlock"}
           accent={active ? "blue" : undefined} />
         <Kpi label="New notes" value={String(newNotesSince)}
           delta={newNotesSince > 0 ? "Unread since last visit" : "All caught up"}
@@ -194,7 +194,7 @@ export default async function PortalDashboard() {
             title="Golden Indicator"
             sub="Pine v5 · latest version"
             href={active ? "/portal/downloads" : "/checkout"}
-            cta={active ? "Download" : "Reserve"}
+            cta={active ? "Download" : "Buy"}
             icon="↓"
             tone="blue"
             locked={!active}
@@ -203,7 +203,7 @@ export default async function PortalDashboard() {
             title="Trade Logic PDF"
             sub="50+ pages · 8 setups"
             href={active ? "/portal/downloads" : "/checkout"}
-            cta={active ? "Open" : "Reserve"}
+            cta={active ? "Open" : "Buy"}
             icon="📕"
             tone="gold"
             locked={!active}
@@ -212,7 +212,7 @@ export default async function PortalDashboard() {
             title="Risk Calculator"
             sub="Position sizer · R-multiple"
             href={active ? "/portal/docs/risk-calculator" : "/checkout"}
-            cta={active ? "Open" : "Reserve"}
+            cta={active ? "Open" : "Buy"}
             icon="⌗"
             tone="cyan"
             locked={!active}
@@ -243,7 +243,7 @@ export default async function PortalDashboard() {
             </p>
           </div>
           <Link href="/checkout" className="tz-btn tz-btn-primary tz-btn-lg flex-shrink-0">
-            Reserve · $49 →
+            Buy · $49 →
           </Link>
         </section>
       )}
@@ -356,7 +356,7 @@ function LockedFeed() {
         </h3>
         <p className="mt-2 text-[13.5px]" style={{ color: "var(--tz-ink-dim)" }}>
           NIFTY · BANKNIFTY · SPX · XAU · BTC. One short note before the open. Bias, key levels,
-          a pullback plan. Reserve to unlock the daily stream.
+          a pullback plan. Buy to unlock the daily stream.
         </p>
         <div className="mt-4 flex flex-col gap-2 opacity-50">
           {["NIFTY — pre-market plan", "SPX bias · Asia hand-off", "BANKNIFTY · expiry tilt"].map((t) => (
@@ -364,7 +364,7 @@ function LockedFeed() {
               <span className="tz-feed-dot" aria-hidden />
               <div className="min-w-0 flex-1">
                 <h3 className="tz-feed-title">{t}</h3>
-                <p className="tz-feed-excerpt">Reserve to read.</p>
+                <p className="tz-feed-excerpt">Buy to read.</p>
               </div>
             </div>
           ))}

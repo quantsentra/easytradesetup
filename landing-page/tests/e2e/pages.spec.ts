@@ -12,7 +12,7 @@ const routes: Array<{ path: string; mustContain: RegExp }> = [
   { path: "/docs/faq", mustContain: /asked.*answered|faq/i },
   { path: "/contact", mustContain: /contact|hello@easytradesetup/i },
   { path: "/about", mustContain: /about|easytradesetup/i },
-  { path: "/thank-you", mustContain: /thank|reserved/i },
+  { path: "/thank-you", mustContain: /thank|order confirmed/i },
   { path: "/legal/disclaimer", mustContain: /disclaimer/i },
   { path: "/legal/privacy", mustContain: /privacy/i },
   { path: "/legal/terms", mustContain: /terms/i },

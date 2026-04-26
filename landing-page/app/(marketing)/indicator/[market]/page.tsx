@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Price from "@/components/ui/Price";
-import ReservationNotice from "@/components/ui/ReservationNotice";
 import { ProductJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 
 /**
@@ -299,7 +298,7 @@ export default async function IndicatorMarketPage({
 
             <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link href="/checkout" className="btn btn-acid btn-lg">
-                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+                Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link
                 href="/sample"
@@ -307,10 +306,6 @@ export default async function IndicatorMarketPage({
               >
                 View free sample <span aria-hidden>→</span>
               </Link>
-            </div>
-
-            <div className="mt-5">
-              <ReservationNotice />
             </div>
           </div>
         </div>
@@ -395,7 +390,7 @@ export default async function IndicatorMarketPage({
 
             <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
               <Link href="/checkout" className="btn btn-primary btn-lg">
-                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+                Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link href="/compare" className="btn btn-outline btn-lg">
                 See how it compares

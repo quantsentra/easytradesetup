@@ -13,18 +13,13 @@ test.describe("Home page — marketing integrity", () => {
   });
 
   test("hero CTA links point to checkout + sample", async ({ page }) => {
-    const reserve = page.getByRole("link", { name: /reserve.*\$49|reserve.*₹4,599/i }).first();
-    await expect(reserve).toBeVisible();
-    await expect(reserve).toHaveAttribute("href", "/checkout");
+    const buy = page.getByRole("link", { name: /buy.*\$49|buy.*₹4,599|buy golden indicator/i }).first();
+    await expect(buy).toBeVisible();
+    await expect(buy).toHaveAttribute("href", "/checkout");
 
     const sample = page.getByRole("link", { name: /free sample/i }).first();
     await expect(sample).toBeVisible();
     await expect(sample).toHaveAttribute("href", "/sample");
-  });
-
-  test("reservation notice shows claimed counter + days-left", async ({ page }) => {
-    await expect(page.getByText(/\d+ \/ 500 claimed/i).first()).toBeVisible();
-    await expect(page.getByText(/left · ends 15 may 2026/i).first()).toBeVisible();
   });
 
   test("markets marquee renders symbols", async ({ page }) => {

@@ -91,12 +91,12 @@ export default async function UpdateDetailPage({
         </div>
         <div className="tz-card">
           <p className="text-[15px]" style={{ color: "var(--tz-ink-dim)" }}>
-            Market notes are published inside the portal for active customers. Reserve the launch
+            Market notes are published inside the portal for active customers. Buy at the inaugural
             price to unlock.
           </p>
           <div className="mt-5">
             <Link href="/checkout" className="tz-btn tz-btn-primary">
-              Reserve · lifetime access →
+              Buy · lifetime access →
             </Link>
           </div>
         </div>

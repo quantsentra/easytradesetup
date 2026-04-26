@@ -3,7 +3,6 @@ import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Bundle from "@/components/sections/Bundle";
 import Price from "@/components/ui/Price";
-import ReservationNotice from "@/components/ui/ReservationNotice";
 import { ProductJsonLd, SoftwareApplicationJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
@@ -101,10 +100,9 @@ export default function ProductPage() {
 
       <section className="above-bg">
         <div className="container-wide py-14 sm:py-16 text-center">
-          <ReservationNotice />
-          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
             <Link href="/checkout" className="btn btn-primary btn-lg">
-              Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+              Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
             </Link>
             <Link href="/sample" className="btn btn-outline btn-lg">
               Read a free chapter

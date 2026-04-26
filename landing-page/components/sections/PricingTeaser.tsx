@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Price from "@/components/ui/Price";
 import PaymentLogos from "@/components/ui/PaymentLogos";
-import ReservationNotice from "@/components/ui/ReservationNotice";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 const included = [
@@ -53,10 +52,6 @@ export default function PricingTeaser() {
               disciplined trading process.
             </p>
 
-            <div className="mt-6 flex justify-center">
-              <ReservationNotice />
-            </div>
-
             <ul className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 max-w-xl mx-auto text-left">
               {included.map((f) => (
                 <li key={f} className="flex items-start gap-2.5 text-caption text-ink">
@@ -77,7 +72,7 @@ export default function PricingTeaser() {
 
             <div className="mt-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
               <Link href="/checkout" className="btn btn-acid btn-lg w-full sm:w-auto">
-                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+                Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link href="/pricing" className="btn btn-outline btn-lg w-full sm:w-auto">
                 See full pricing

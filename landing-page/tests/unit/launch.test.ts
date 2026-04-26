@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import {
   LAUNCH_END_DATE,
   LAUNCH_END_DATE_LABEL,
-  RESERVATION_CAP,
   daysUntilLaunchEnd,
 } from "@/lib/launch";
 
@@ -14,11 +13,6 @@ describe("lib/launch", () => {
   it("LAUNCH_END_DATE_LABEL is human-readable", () => {
     expect(LAUNCH_END_DATE_LABEL).toMatch(/[A-Za-z]/);
     expect(LAUNCH_END_DATE_LABEL.length).toBeGreaterThan(5);
-  });
-
-  it("RESERVATION_CAP is a positive integer", () => {
-    expect(Number.isInteger(RESERVATION_CAP)).toBe(true);
-    expect(RESERVATION_CAP).toBeGreaterThan(0);
   });
 
   it("daysUntilLaunchEnd returns 0 when today is after launch end", () => {

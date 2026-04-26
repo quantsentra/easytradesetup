@@ -70,15 +70,6 @@ async function loadOverview() {
       name: usersById.get(e.user_id)?.fullName || "",
     }));
 
-  // 14-day signup sparkline
-  const days: number[] = Array(14).fill(0);
-  const now = Date.now();
-  for (const u of users) {
-    if (!u.createdAt) continue;
-    const ageDays = Math.floor((now - Date.parse(u.createdAt)) / (24 * 3600e3));
-    if (ageDays >= 0 && ageDays < 14) days[13 - ageDays] += 1;
-  }
-
   return {
     users,
     activeCount,
@@ -94,7 +85,6 @@ async function loadOverview() {
     openTickets,
     downloads,
     recent,
-    days,
     today: orders.filter((e) => inRange(e.granted_at, "today")).length,
     week: orders.filter((e) => inRange(e.granted_at, "week")).length,
     month: orders.filter((e) => inRange(e.granted_at, "month")).length,
@@ -108,53 +98,22 @@ async function loadOverview() {
 export default async function AdminOverview() {
   const d = await loadOverview();
   const conv = d.users.length > 0 ? Math.round((d.activeCount / d.users.length) * 100) : 0;
-  const maxDay = Math.max(1, ...d.days);
 
   return (
     <>
-      {/* Welcome hero */}
-      <div className="tz-hero-card mb-6">
-        <div className="tz-hero-grid">
-          <div>
-            <div className="text-[11px] font-mono uppercase tracking-[0.16em]" style={{ color: "var(--tz-ink-mute)" }}>
-              Overview · Founder console
-            </div>
-            <h1 className="tz-hero-title">Welcome back, founder.</h1>
-            <p className="tz-hero-sub">
-              {d.openTickets > 0
-                ? `${d.openTickets} open ticket${d.openTickets === 1 ? "" : "s"} waiting · `
-                : "Inbox clear · "}
-              {d.signupsToday} new signup{d.signupsToday === 1 ? "" : "s"} today.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
-              <Link href="/admin/customers" className="tz-btn tz-btn-primary">View customers →</Link>
-              <Link href="/admin/tickets" className="tz-btn">Inbox</Link>
-              <Link href="/admin/updates" className="tz-btn">Publish note</Link>
-            </div>
+      <div className="tz-topbar">
+        <div>
+          <h1 className="tz-topbar-title">Overview.</h1>
+          <div className="tz-topbar-sub">
+            {d.openTickets > 0
+              ? `${d.openTickets} open ticket${d.openTickets === 1 ? "" : "s"} waiting · `
+              : "Inbox clear · "}
+            {d.signupsToday} new signup{d.signupsToday === 1 ? "" : "s"} today.
           </div>
-          <div className="tz-hero-vis">
-            <div className="text-[10px] font-mono uppercase tracking-widest mb-2" style={{ color: "var(--tz-ink-mute)" }}>
-              Signups · last 14 days
-            </div>
-            <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 80 }}>
-              {d.days.map((v, i) => (
-                <div
-                  key={i}
-                  style={{
-                    flex: 1,
-                    height: `${(v / maxDay) * 100}%`,
-                    minHeight: 3,
-                    borderRadius: 3,
-                    background: v > 0
-                      ? "linear-gradient(180deg, var(--tz-acid) 0%, var(--tz-cyan) 100%)"
-                      : "var(--tz-surface-3)",
-                    opacity: v > 0 ? 1 : 0.6,
-                  }}
-                  title={`${v} signup${v === 1 ? "" : "s"}`}
-                />
-              ))}
-            </div>
-          </div>
+        </div>
+        <div className="tz-topbar-actions">
+          <Link href="/admin/customers" className="tz-btn">Customers</Link>
+          <Link href="/admin/updates" className="tz-btn tz-btn-primary">Publish a note →</Link>
         </div>
       </div>
 

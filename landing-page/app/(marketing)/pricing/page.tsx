@@ -4,7 +4,6 @@ import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
 import LaunchCountdown from "@/components/ui/LaunchCountdown";
 import PaymentLogos from "@/components/ui/PaymentLogos";
-import ReservationNotice from "@/components/ui/ReservationNotice";
 import { ProductJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
@@ -77,13 +76,9 @@ export default function PricingPage() {
             </div>
             <p className="mt-2 text-caption text-ink-40">One-time · Taxes included</p>
 
-            <div className="mt-6 flex justify-center">
-              <ReservationNotice />
-            </div>
-
             <div className="mt-8 flex flex-col sm:flex-row flex-wrap justify-center gap-3">
               <Link href="/checkout" className="btn btn-primary btn-lg">
-                Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+                Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link href="/sample" className="btn btn-outline btn-lg">
                 Read free chapter

@@ -276,7 +276,7 @@ export default function ComparePage() {
 
           <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/checkout" className="btn btn-primary btn-lg">
-              Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+              Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
             </Link>
             <Link href="/sample" className="btn btn-outline btn-lg">
               Read free chapter first

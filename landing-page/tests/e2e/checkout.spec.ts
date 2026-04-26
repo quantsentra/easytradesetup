@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Checkout page — reservation flow", () => {
+test.describe("Checkout page — buy flow", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/checkout");
   });
@@ -10,13 +10,13 @@ test.describe("Checkout page — reservation flow", () => {
     await expect(page.getByRole("link", { name: /trading disclaimer/i }).first()).toBeVisible();
   });
 
-  test("shows price, retail strike-through, and offer label", async ({ page }) => {
+  test("shows price, retail strike-through, and launch price label", async ({ page }) => {
     await expect(page.getByText(/retail/i).first()).toBeVisible();
     await expect(page.getByText(/launch price/i).first()).toBeVisible();
     await expect(page.getByText(/\$49|₹4,599/).first()).toBeVisible();
   });
 
-  test("reservation email form is wired to /api/lead", async ({ page }) => {
+  test("buy email form is wired to /api/lead", async ({ page }) => {
     const form = page.locator("form[action='/api/lead']");
     await expect(form).toBeVisible();
     const emailInput = form.locator("input[name='email']");

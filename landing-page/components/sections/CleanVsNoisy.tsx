@@ -65,7 +65,7 @@ export default function CleanVsNoisy() {
 
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link href="/checkout" className="btn btn-primary">
-            Reserve · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
+            Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
           </Link>
           <Link href="/compare" className="btn btn-ghost">
             See how it compares

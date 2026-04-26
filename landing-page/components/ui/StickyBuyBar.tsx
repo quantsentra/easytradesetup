@@ -45,7 +45,7 @@ export default function StickyBuyBar() {
           href="/checkout"
           className="btn btn-primary flex-none"
         >
-          Reserve
+          Buy
         </Link>
       </div>
     </div>
