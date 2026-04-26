@@ -6,10 +6,22 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // Thank-you is a conversion surface, not content — keep it out of
-        // Google. API is never crawlable. Test-results and build artifacts
-        // should never reach the edge but blocked explicitly as defense.
-        disallow: ["/api/", "/thank-you", "/_next/", "/test-results/"],
+        // Thank-you is a conversion surface, not content. Portal / admin /
+        // sign-in / sign-up redirect to a noindex subdomain anyway, but we
+        // keep them out of crawl budget too. /api is never crawlable.
+        disallow: [
+          "/api/",
+          "/auth/",
+          "/admin",
+          "/admin/",
+          "/portal",
+          "/portal/",
+          "/sign-in",
+          "/sign-up",
+          "/thank-you",
+          "/_next/",
+          "/test-results/",
+        ],
       },
       // Block AI scrapers we do not want ingesting our copy. Keep Googlebot,
       // Bingbot, and friends unblocked above.

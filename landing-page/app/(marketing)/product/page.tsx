@@ -4,7 +4,7 @@ import PageHeader from "@/components/ui/PageHeader";
 import Bundle from "@/components/sections/Bundle";
 import Price from "@/components/ui/Price";
 import ReservationNotice from "@/components/ui/ReservationNotice";
-import { ProductJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
+import { ProductJsonLd, SoftwareApplicationJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
   title: "Golden Indicator — TradingView Pine v5 for any market",
@@ -60,6 +60,7 @@ export default function ProductPage() {
   return (
     <>
       <ProductJsonLd />
+      <SoftwareApplicationJsonLd />
       <PageBreadcrumbs name="Product" path="/product" />
       <PageHeader
         eyebrow="Golden Indicator"

@@ -25,25 +25,55 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://easytradesetup.com"),
   title: {
-    default: "Golden Indicator — one TradingView Pine v5 for any market · EasyTradeSetup",
+    default:
+      "Golden Indicator — TradingView Pine v5 for NIFTY, SPX, Gold & BTC · EasyTradeSetup",
     template: "%s · EasyTradeSetup",
   },
   description:
-    "Golden Indicator fuses market structure, regime bias, key levels, and supply / demand into one non-repainting Pine v5 script. NIFTY, SPX, XAU, BTC, forex. One-time $49 / ₹4,599. 7-day refund.",
+    "One non-repainting TradingView Pine Script v5 indicator for NIFTY 50, BANKNIFTY, SPX 500, NASDAQ 100, Gold, Silver, Crude, forex, and crypto. Market structure (BOS / CHoCH), regime bias, key levels (PDH / PDL), supply / demand zones. One-time $49 / ₹4,599. 7-day refund. No subscription.",
   keywords: [
+    // Product / category
     "TradingView Pine v5 indicator",
-    "no repaint indicator",
+    "TradingView indicator no repaint",
+    "best Pine Script indicator",
+    "non-repainting indicator",
+    "bar-close indicator",
+    "all-in-one TradingView indicator",
+    "trading indicator one-time payment",
+    "lifetime access trading indicator",
+    // Setup type
     "market structure indicator",
+    "BOS CHoCH indicator",
+    "supply and demand indicator",
     "price action indicator",
+    "smart money concepts indicator",
+    "key levels indicator PDH PDL",
+    "trend regime indicator",
+    "pullback indicator",
+    // India-specific
     "NIFTY 50 indicator",
     "BANKNIFTY intraday indicator",
-    "SPX indicator",
-    "XAU gold indicator",
+    "FINNIFTY indicator",
+    "NSE Pine Script",
+    "Indian retail trader indicator",
+    "NIFTY weekly expiry indicator",
+    "BANKNIFTY expiry strategy",
+    // Global markets
+    "SPX 500 indicator",
+    "S&P 500 TradingView indicator",
+    "NASDAQ 100 indicator",
+    "Dow Jones indicator",
+    "XAU USD gold indicator",
+    "Silver trading indicator",
     "BTC TradingView indicator",
-    "supply and demand indicator",
-    "Pine Script one-time payment",
+    "crypto Pine Script indicator",
+    "forex Pine Script",
+    // Competitor / intent
     "LuxAlgo alternative",
     "TrendSpider alternative",
+    "MarketSmith alternative",
+    "Pine Script v5 indicator buy",
+    "TradingView indicator paid",
   ],
   authors: [{ name: "EasyTradeSetup" }],
   creator: "EasyTradeSetup",
@@ -67,6 +97,14 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/",
+  },
+  // Search Console + Bing verification — set GOOGLE_SITE_VERIFICATION
+  // and BING_SITE_VERIFICATION on Vercel to render the meta tags.
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION }
+      : undefined,
   },
   robots: {
     index: true,

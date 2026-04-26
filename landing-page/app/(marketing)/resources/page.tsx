@@ -2,10 +2,24 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Resources",
+  title: "Resources — install guide, risk calculator, strategy library",
   description:
-    "Documentation, install guide, risk calculator, and trading notes for the Golden Indicator.",
+    "Everything around the Golden Indicator: TradingView install guide, free risk calculator, sample setups for NIFTY / BANKNIFTY / SPX / XAU / BTC, full strategy library, and daily pre-market notes.",
+  keywords: [
+    "TradingView Pine indicator install guide",
+    "trading risk calculator",
+    "position sizing calculator",
+    "NIFTY pre-market notes",
+    "BANKNIFTY trading strategy",
+    "Pine Script v5 documentation",
+    "supply demand zone strategy",
+  ],
   alternates: { canonical: "/resources" },
+  openGraph: {
+    title: "Trading resources — install guide, risk calc, strategy library",
+    description: "Docs, tools, and daily pre-market notes for Golden Indicator users.",
+    url: "https://easytradesetup.com/resources",
+  },
 };
 
 type Resource = {

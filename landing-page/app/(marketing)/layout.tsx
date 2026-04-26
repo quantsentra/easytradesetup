@@ -6,7 +6,7 @@ import OfferBanner from "@/components/ui/OfferBanner";
 import StickyBuyBar from "@/components/ui/StickyBuyBar";
 import ExitIntent from "@/components/ui/ExitIntent";
 import BackToTop from "@/components/ui/BackToTop";
-import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/JsonLd";
+import { OrganizationJsonLd, WebSiteJsonLd, SiteNavigationJsonLd } from "@/components/seo/JsonLd";
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -23,6 +23,7 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
       <BackToTop />
       <OrganizationJsonLd />
       <WebSiteJsonLd />
+      <SiteNavigationJsonLd />
     </>
   );
 }
