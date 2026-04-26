@@ -5,6 +5,7 @@ import { isAdmin } from "@/lib/admin";
 import AccountMenu from "@/components/auth/AccountMenu";
 import { BrandMark } from "@/components/nav/TopNav";
 import PortalMobileNav from "@/components/nav/PortalMobileNav";
+import BackToTop from "@/components/ui/BackToTop";
 import { LAUNCH_END_DATE_LABEL } from "@/lib/launch";
 
 export const metadata: Metadata = {
@@ -104,6 +105,8 @@ export default async function PortalLayout({ children }: { children: React.React
           </div>
         </div>
       </footer>
+
+      <BackToTop />
     </div>
   );
 }
