@@ -168,15 +168,23 @@ export async function POST(req: Request) {
       resend.emails.send({
         from: FROM_EMAIL,
         to: email,
+        replyTo: NOTIFY_EMAIL,
         subject: "You're on the list — Golden Indicator launch",
         html: welcomeEmail(offerLabel),
+        text: welcomeText(offerLabel),
+        headers: {
+          "List-Unsubscribe": `<mailto:${NOTIFY_EMAIL}?subject=unsubscribe>`,
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
       }),
       // Admin notification
       resend.emails.send({
         from: FROM_EMAIL,
         to: NOTIFY_EMAIL,
+        replyTo: email,
         subject: `New lead · ${redactEmail(email)} · ${source}`,
         html: notifyEmail({ email, source, country, referer, ua }),
+        text: notifyText({ email, source, country, referer }),
       }),
     ]).then((results) => {
       results.forEach((r, i) => {
@@ -196,24 +204,146 @@ export async function POST(req: Request) {
 }
 
 function welcomeEmail(offerLabel: string): string {
-  return `<!doctype html><html><body style="font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif;background:#faf9f5;padding:24px;color:#15181a;line-height:1.55">
-<div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid rgba(21,24,26,.08);border-radius:14px;padding:32px;box-shadow:0 4px 16px -4px rgba(0,0,0,.07)">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
-<div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#2B7BFF,#22D3EE);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">✓</div>
-<div style="font-weight:600;font-size:16px">EasyTradeSetup</div>
+  // Table-based layout for Outlook compatibility. Inline styles only.
+  // Bg-color fallbacks accompany every gradient for clients that strip it.
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="x-apple-disable-message-reformatting" />
+<title>You're on the list</title>
+<style>
+  @media only screen and (max-width:600px){
+    .container{width:100%!important}
+    .px{padding-left:24px!important;padding-right:24px!important}
+    h1{font-size:24px!important}
+    .btn a{display:block!important;width:100%!important;box-sizing:border-box}
+  }
+</style>
+</head>
+<body style="margin:0;padding:0;background:#faf9f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#15181a;-webkit-font-smoothing:antialiased">
+<!-- Preheader (hidden in body but shown as inbox preview) -->
+<div style="display:none;font-size:1px;color:#fefefe;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden">
+Your spot is locked. We'll send the secure payment link the moment checkout opens — at ${offerLabel}, locked in.
 </div>
-<h1 style="font-size:22px;margin:0 0 12px;letter-spacing:-.02em">You're on the list.</h1>
-<p style="margin:0 0 16px;color:rgba(21,24,26,.72)">We've saved your email. The moment payments go live (UPI for India, Gumroad for global), you'll receive a secure payment link at the inaugural price of <strong>${offerLabel}</strong> — locked in even if retail moves up.</p>
-<p style="margin:0 0 16px;color:rgba(21,24,26,.72)">In the meantime:</p>
-<ul style="color:rgba(21,24,26,.72);padding-left:20px">
-<li><a href="https://www.easytradesetup.com/sample" style="color:#2B7BFF;text-decoration:none">Read a free chapter</a> from the Trade Logic PDF</li>
-<li><a href="https://www.easytradesetup.com/compare" style="color:#2B7BFF;text-decoration:none">See how Golden Indicator compares</a> to LuxAlgo, TradingLite, etc.</li>
-<li><a href="https://www.easytradesetup.com/docs/install" style="color:#2B7BFF;text-decoration:none">Browse the install guide</a></li>
-</ul>
-<hr style="border:none;border-top:1px solid rgba(21,24,26,.08);margin:24px 0"/>
-<p style="font-size:12px;color:rgba(21,24,26,.52);margin:0">EasyTradeSetup is a chart tool, not investment advice. We are not SEBI-registered. You decide every trade.</p>
-</div>
-</body></html>`;
+
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#faf9f5;padding:32px 16px">
+  <tr>
+    <td align="center">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="560" class="container" style="max-width:560px;background:#ffffff;border:1px solid #e5e4dd;border-radius:14px">
+        <tr>
+          <td class="px" style="padding:32px 36px 8px">
+
+            <!-- Brand row -->
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td valign="middle" style="background-color:#2B7BFF;background-image:linear-gradient(135deg,#2B7BFF 0%,#22D3EE 100%);width:36px;height:36px;border-radius:9px;text-align:center;color:#ffffff;font-weight:700;font-size:18px;line-height:36px">
+                  &#10003;
+                </td>
+                <td valign="middle" style="padding-left:12px;font-weight:600;font-size:16px;color:#15181a;letter-spacing:-0.01em">
+                  EasyTradeSetup
+                </td>
+              </tr>
+            </table>
+
+            <h1 style="font-size:28px;line-height:1.15;letter-spacing:-0.025em;margin:24px 0 12px;color:#15181a;font-weight:700">
+              You're on the list.
+            </h1>
+
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.55;color:rgba(21,24,26,0.72)">
+              We've saved your email. The moment payments go live — <strong style="color:#15181a">UPI for India, Gumroad for global</strong> — you'll receive a secure payment link at the inaugural price of <strong style="color:#15181a">${offerLabel}</strong>, locked in even if retail moves up.
+            </p>
+
+          </td>
+        </tr>
+
+        <!-- CTA button -->
+        <tr>
+          <td class="px" style="padding:8px 36px 24px">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" class="btn">
+              <tr>
+                <td style="background-color:#2B7BFF;background-image:linear-gradient(135deg,#2B7BFF 0%,#22D3EE 100%);border-radius:10px">
+                  <a href="https://www.easytradesetup.com/sample" style="display:inline-block;padding:14px 24px;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;letter-spacing:-0.005em;border-radius:10px">
+                    Read a free chapter →
+                  </a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="px" style="padding:0 36px">
+            <p style="margin:0 0 12px;font-size:13px;line-height:1.5;color:rgba(21,24,26,0.52);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace">
+              While you wait
+            </p>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+              <tr>
+                <td style="padding:8px 0;border-top:1px solid #efede4">
+                  <a href="https://www.easytradesetup.com/sample" style="color:#1e5fb8;text-decoration:none;font-size:14px;font-weight:500">→ Read a free chapter</a>
+                  <span style="color:rgba(21,24,26,0.52);font-size:13px"> from the Trade Logic PDF</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;border-top:1px solid #efede4">
+                  <a href="https://www.easytradesetup.com/compare" style="color:#1e5fb8;text-decoration:none;font-size:14px;font-weight:500">→ See how it compares</a>
+                  <span style="color:rgba(21,24,26,0.52);font-size:13px"> to LuxAlgo, TradingLite, etc.</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;border-top:1px solid #efede4;border-bottom:1px solid #efede4">
+                  <a href="https://www.easytradesetup.com/docs/install" style="color:#1e5fb8;text-decoration:none;font-size:14px;font-weight:500">→ Install guide</a>
+                  <span style="color:rgba(21,24,26,0.52);font-size:13px"> — TradingView setup in 60 seconds</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td class="px" style="padding:24px 36px 32px">
+            <p style="margin:0 0 8px;font-size:12.5px;line-height:1.55;color:rgba(21,24,26,0.52)">
+              Reply to this email any time — it goes straight to ${NOTIFY_EMAIL.replace(/.*<|>.*/g, "") || NOTIFY_EMAIL}. We read every one.
+            </p>
+            <p style="margin:0;font-size:11px;line-height:1.55;color:rgba(21,24,26,0.40)">
+              EasyTradeSetup is a chart tool, not investment advice. We are not SEBI-registered. You decide every trade.
+              <br/>
+              You're receiving this because you joined the launch list at easytradesetup.com.
+              <a href="mailto:${NOTIFY_EMAIL}?subject=unsubscribe" style="color:rgba(21,24,26,0.52);text-decoration:underline">Unsubscribe</a>.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</body>
+</html>`;
+}
+
+function welcomeText(offerLabel: string): string {
+  return [
+    "You're on the list.",
+    "",
+    `We've saved your email. The moment payments go live — UPI for India, Gumroad for global — you'll receive a secure payment link at the inaugural price of ${offerLabel}, locked in even if retail moves up.`,
+    "",
+    "While you wait:",
+    "  • Read a free chapter:  https://www.easytradesetup.com/sample",
+    "  • See how it compares:  https://www.easytradesetup.com/compare",
+    "  • Install guide:        https://www.easytradesetup.com/docs/install",
+    "",
+    `Reply to this email any time — it goes straight to ${NOTIFY_EMAIL}. We read every one.`,
+    "",
+    "—",
+    "EasyTradeSetup is a chart tool, not investment advice. We are not SEBI-registered. You decide every trade.",
+    `Unsubscribe: mailto:${NOTIFY_EMAIL}?subject=unsubscribe`,
+  ].join("\n");
+}
+
+function escapeHtml(s: string | null): string {
+  if (!s) return "—";
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
 function notifyEmail(d: {
@@ -221,18 +351,53 @@ function notifyEmail(d: {
   country: string | null; referer: string | null; ua: string | null;
 }): string {
   const row = (k: string, v: string | null) =>
-    `<tr><td style="padding:6px 0;color:rgba(21,24,26,.52);font-size:12px;text-transform:uppercase;letter-spacing:.08em">${k}</td><td style="padding:6px 0;font-family:monospace;font-size:13px">${v || "—"}</td></tr>`;
-  return `<!doctype html><html><body style="font-family:-apple-system,system-ui,sans-serif;background:#faf9f5;padding:20px">
-<div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid rgba(21,24,26,.08);border-radius:12px;padding:24px">
-<div style="font-size:11px;font-family:monospace;letter-spacing:.16em;text-transform:uppercase;color:rgba(21,24,26,.52);margin-bottom:8px">New lead · ${new Date().toISOString().slice(0,16).replace("T"," ")}</div>
-<h2 style="margin:0 0 16px;font-size:18px">${d.email}</h2>
-<table style="width:100%;border-collapse:collapse">
-${row("Source", d.source)}
-${row("Country", d.country)}
-${row("Referer", d.referer)}
-${row("User-Agent", d.ua)}
+    `<tr><td style="padding:8px 0;color:rgba(21,24,26,0.52);font-size:11px;text-transform:uppercase;letter-spacing:0.08em;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;width:90px;vertical-align:top">${k}</td><td style="padding:8px 0;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:13px;color:#15181a;word-break:break-all">${escapeHtml(v)}</td></tr>`;
+  return `<!doctype html>
+<html><head><meta charset="utf-8"/><title>New lead</title></head>
+<body style="margin:0;padding:0;background:#faf9f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="padding:24px 16px">
+  <tr>
+    <td align="center">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="540" style="max-width:540px;background:#ffffff;border:1px solid #e5e4dd;border-radius:12px">
+        <tr>
+          <td style="padding:24px 28px">
+            <div style="font-size:11px;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;letter-spacing:0.16em;text-transform:uppercase;color:rgba(21,24,26,0.52);margin-bottom:6px">
+              New lead · ${new Date().toISOString().slice(0,16).replace("T", " ")} UTC
+            </div>
+            <h2 style="margin:0 0 16px;font-size:18px;color:#15181a;word-break:break-all">${escapeHtml(d.email)}</h2>
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid #efede4">
+              ${row("Source", d.source)}
+              ${row("Country", d.country)}
+              ${row("Referer", d.referer)}
+              ${row("UA", d.ua)}
+            </table>
+            <p style="margin:20px 0 0;font-size:12px;color:rgba(21,24,26,0.52)">
+              <a href="https://portal.easytradesetup.com/admin/customers" style="color:#1e5fb8;text-decoration:none;font-weight:500">View all leads →</a>
+              <br/>
+              Reply to this email to respond directly to the lead.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 </table>
-<p style="margin:20px 0 0;font-size:12px;color:rgba(21,24,26,.52)">View all leads: <a href="https://portal.easytradesetup.com/admin/customers" style="color:#2B7BFF">/admin</a></p>
-</div>
 </body></html>`;
+}
+
+function notifyText(d: {
+  email: string; source: string;
+  country: string | null; referer: string | null;
+}): string {
+  return [
+    `New lead · ${new Date().toISOString().slice(0,16).replace("T", " ")} UTC`,
+    "",
+    `Email:    ${d.email}`,
+    `Source:   ${d.source}`,
+    `Country:  ${d.country || "—"}`,
+    `Referer:  ${d.referer || "—"}`,
+    "",
+    "View all: https://portal.easytradesetup.com/admin/customers",
+    "Reply to this email to respond directly.",
+  ].join("\n");
 }
