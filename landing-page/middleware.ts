@@ -14,6 +14,7 @@ const PORTAL_PASSTHROUGH_PREFIXES = [
   "/favicon",
   "/robots.txt",
   "/sitemap.xml",
+  "/monitoring", // Sentry tunnel route — must reach Sentry, not the portal app
 ];
 
 function isPortalHost(host: string | null): boolean {
