@@ -2,67 +2,35 @@
 
 import { useEffect, useRef, useState } from "react";
 
-declare global {
-  interface Window {
-    mermaid?: {
-      initialize: (cfg: Record<string, unknown>) => void;
-      run: (opts?: { nodes?: HTMLElement[] }) => Promise<void>;
-      render?: (id: string, text: string) => Promise<{ svg: string }>;
-    };
-  }
-}
-
-let loaderPromise: Promise<void> | null = null;
-
-function loadMermaid(): Promise<void> {
-  if (typeof window === "undefined") return Promise.resolve();
-  if (window.mermaid) return Promise.resolve();
-  if (loaderPromise) return loaderPromise;
-
-  loaderPromise = new Promise<void>((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>(
-      'script[data-mermaid-loader="1"]',
-    );
-    if (existing) {
-      existing.addEventListener("load", () => resolve(), { once: true });
-      existing.addEventListener("error", () => reject(new Error("mermaid load failed")), { once: true });
-      return;
-    }
-    const s = document.createElement("script");
-    s.src = "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js";
-    s.async = true;
-    s.dataset.mermaidLoader = "1";
-    s.onload = () => {
-      if (window.mermaid) {
-        window.mermaid.initialize({
-          startOnLoad: false,
-          theme: "base",
-          themeVariables: {
-            primaryColor: "#ffffff",
-            primaryTextColor: "#15181a",
-            primaryBorderColor: "#2B7BFF",
-            lineColor: "#2B7BFF",
-            secondaryColor: "#22D3EE",
-            tertiaryColor: "#faf9f5",
-            fontFamily: "Inter Tight, system-ui, sans-serif",
-            fontSize: "13px",
-          },
-          flowchart: { curve: "basis", padding: 16 },
-          sequence: { actorMargin: 50, boxMargin: 10 },
-        });
-        resolve();
-      } else {
-        reject(new Error("mermaid global missing after load"));
-      }
-    };
-    s.onerror = () => reject(new Error("Failed to load mermaid"));
-    document.head.appendChild(s);
-  });
-
-  return loaderPromise;
-}
-
 let renderCounter = 0;
+let initPromise: Promise<typeof import("mermaid").default> | null = null;
+
+async function getMermaid() {
+  if (initPromise) return initPromise;
+  initPromise = (async () => {
+    const mod = await import("mermaid");
+    const m = mod.default;
+    m.initialize({
+      startOnLoad: false,
+      theme: "base",
+      themeVariables: {
+        primaryColor: "#ffffff",
+        primaryTextColor: "#15181a",
+        primaryBorderColor: "#2B7BFF",
+        lineColor: "#2B7BFF",
+        secondaryColor: "#22D3EE",
+        tertiaryColor: "#faf9f5",
+        fontFamily: "Inter Tight, system-ui, sans-serif",
+        fontSize: "13px",
+      },
+      flowchart: { curve: "basis", padding: 16 },
+      sequence: { actorMargin: 50, boxMargin: 10 },
+      securityLevel: "loose",
+    });
+    return m;
+  })();
+  return initPromise;
+}
 
 export default function Mermaid({ chart }: { chart: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -70,14 +38,15 @@ export default function Mermaid({ chart }: { chart: string }) {
 
   useEffect(() => {
     let cancelled = false;
-    loadMermaid()
-      .then(async () => {
-        if (cancelled || !ref.current || !window.mermaid?.render) return;
+    getMermaid()
+      .then(async (m) => {
+        if (cancelled || !ref.current) return;
         try {
           const id = `mmd-${++renderCounter}-${Date.now()}`;
-          const { svg } = await window.mermaid.render(id, chart);
+          const { svg } = await m.render(id, chart);
           if (!cancelled && ref.current) {
             ref.current.innerHTML = svg;
+            setError(null);
           }
         } catch (e) {
           if (!cancelled) {
