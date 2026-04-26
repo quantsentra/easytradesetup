@@ -23,24 +23,30 @@ function inRange(iso: string | null, range: Range): boolean {
   return now - d <= span;
 }
 
+type PageviewRow = { visitor_id: string; path: string; at: string };
+
 async function loadOverview() {
   const users = await listAllUsers(500);
 
   let entitlements: EntRow[] = [];
   let openTickets = 0;
   let downloads = 0;
+  let pageviews: PageviewRow[] = [];
   try {
     const supa = createSupabaseAdmin();
-    const [ent, tk, dl] = await Promise.all([
+    const since30 = new Date(Date.now() - 30 * 24 * 3600e3).toISOString();
+    const [ent, tk, dl, pv] = await Promise.all([
       supa.from("entitlements").select("user_id,active,granted_at,source"),
       supa.from("tickets").select("id", { count: "exact", head: true }).in("status", ["open", "waiting"]),
       supa.from("downloads").select("id", { count: "exact", head: true }),
+      supa.from("pageviews").select("visitor_id,path,at").gte("at", since30),
     ]);
     entitlements = (ent.data as EntRow[]) || [];
     openTickets = tk.count ?? 0;
     downloads = dl.count ?? 0;
+    pageviews = (pv.data as PageviewRow[]) || [];
   } catch {
-    // service-role missing in dev — fall through with zeros
+    // service-role missing or pageviews table not migrated yet — degrade silently.
   }
 
   // Treat any non-refund entitlement as a "purchase order"
@@ -70,6 +76,25 @@ async function loadOverview() {
       name: usersById.get(e.user_id)?.fullName || "",
     }));
 
+  // Pageview aggregates
+  const pvToday = pageviews.filter((p) => inRange(p.at, "today"));
+  const pvWeek = pageviews.filter((p) => inRange(p.at, "week"));
+  const pvMonth = pageviews;
+
+  const uniquesToday = new Set(pvToday.map((p) => p.visitor_id)).size;
+  const uniquesWeek = new Set(pvWeek.map((p) => p.visitor_id)).size;
+  const uniquesMonth = new Set(pvMonth.map((p) => p.visitor_id)).size;
+
+  // Top 5 paths in last 7 days
+  const pathCounts = new Map<string, number>();
+  for (const p of pvWeek) {
+    pathCounts.set(p.path, (pathCounts.get(p.path) || 0) + 1);
+  }
+  const topPaths = [...pathCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([path, count]) => ({ path, count }));
+
   return {
     users,
     activeCount,
@@ -92,6 +117,13 @@ async function loadOverview() {
     globalWeek: global.filter((e) => inRange(e.granted_at, "week")).length,
     signupsToday: users.filter((u) => inRange(u.createdAt, "today")).length,
     signupsWeek: users.filter((u) => inRange(u.createdAt, "week")).length,
+    pvToday: pvToday.length,
+    pvWeek: pvWeek.length,
+    pvMonth: pvMonth.length,
+    uniquesToday,
+    uniquesWeek,
+    uniquesMonth,
+    topPaths,
   };
 }
 
@@ -199,7 +231,7 @@ export default async function AdminOverview() {
       </div>
 
       {/* Secondary strip — windowed */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         <div className="tz-kpi">
           <div className="tz-kpi-label">Orders today</div>
           <div className="tz-kpi-value tz-num" style={{ fontSize: 22 }}>{d.today}</div>
@@ -223,6 +255,75 @@ export default async function AdminOverview() {
           </div>
           <div className="tz-kpi-delta">{d.downloads} downloads all-time</div>
         </div>
+      </div>
+
+      {/* Traffic strip — anonymous pageviews */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+        <div className="tz-kpi acc">
+          <div className="tz-kpi-label">Visitors · today</div>
+          <div className="tz-kpi-value tz-num" style={{ fontSize: 22, color: "var(--tz-acid-dim)" }}>
+            {d.uniquesToday}
+          </div>
+          <div className="tz-kpi-delta">{d.pvToday} pageviews</div>
+        </div>
+        <div className="tz-kpi">
+          <div className="tz-kpi-label">Visitors · 7d</div>
+          <div className="tz-kpi-value tz-num" style={{ fontSize: 22 }}>{d.uniquesWeek}</div>
+          <div className="tz-kpi-delta">{d.pvWeek} pageviews</div>
+        </div>
+        <div className="tz-kpi">
+          <div className="tz-kpi-label">Visitors · 30d</div>
+          <div className="tz-kpi-value tz-num" style={{ fontSize: 22 }}>{d.uniquesMonth}</div>
+          <div className="tz-kpi-delta">{d.pvMonth} pageviews</div>
+        </div>
+        <div className="tz-kpi">
+          <div className="tz-kpi-label">Pages / visitor</div>
+          <div className="tz-kpi-value tz-num" style={{ fontSize: 22 }}>
+            {d.uniquesWeek > 0 ? (d.pvWeek / d.uniquesWeek).toFixed(1) : "—"}
+          </div>
+          <div className="tz-kpi-delta">7-day avg</div>
+        </div>
+      </div>
+
+      {/* Top paths */}
+      <div className="tz-card mb-6">
+        <div className="tz-card-head">
+          <div>
+            <div className="tz-card-title">Top pages · 7d</div>
+            <div className="tz-card-sub">Where visitors are landing.</div>
+          </div>
+        </div>
+        {d.topPaths.length === 0 ? (
+          <p className="text-[13.5px]" style={{ color: "var(--tz-ink-mute)" }}>
+            No traffic logged yet — pageview tracking starts after deploy + first visits.
+          </p>
+        ) : (
+          <ul className="flex flex-col gap-1">
+            {d.topPaths.map((p) => {
+              const pct = d.pvWeek > 0 ? Math.round((p.count / d.pvWeek) * 100) : 0;
+              return (
+                <li key={p.path} className="flex items-center gap-3 py-2"
+                  style={{ borderBottom: "1px solid var(--tz-border)" }}>
+                  <span className="font-mono text-[12.5px] flex-1 truncate" style={{ color: "var(--tz-ink)" }}>
+                    {p.path}
+                  </span>
+                  <div style={{
+                    width: 120, height: 6, borderRadius: 3,
+                    background: "var(--tz-surface-3)", overflow: "hidden",
+                  }}>
+                    <div style={{
+                      width: `${pct}%`, height: "100%",
+                      background: "linear-gradient(90deg, var(--tz-acid), var(--tz-cyan))",
+                    }} />
+                  </div>
+                  <span className="tz-num text-[12.5px]" style={{ color: "var(--tz-ink-dim)", minWidth: 60, textAlign: "right" }}>
+                    {p.count} · {pct}%
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
 
       {/* Recent purchases */}
