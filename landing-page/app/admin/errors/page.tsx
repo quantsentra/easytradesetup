@@ -7,6 +7,7 @@ import {
 } from "@/lib/sentry-client";
 import Sparkline from "@/components/admin/Sparkline";
 import IssueActions from "@/components/admin/IssueActions";
+import SentryTestButton from "@/components/admin/SentryTestButton";
 
 export const metadata = {
   title: "Errors · Admin",
@@ -57,6 +58,7 @@ export default async function ErrorsPage() {
           </div>
         </div>
         <div className="tz-topbar-actions">
+          <SentryTestButton />
           {configured && (
             <a
               href={sentryDashboardUrl()}
