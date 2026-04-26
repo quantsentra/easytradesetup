@@ -155,22 +155,22 @@ export default function TopNav() {
               );
             })}
             {loaded && !isSignedIn && (
-              <>
+              <div className="grid grid-cols-2 gap-3 mt-6">
                 <a
                   href="https://portal.easytradesetup.com/sign-in"
                   onClick={() => setOpen(false)}
-                  className="nav-link-mobile hairline-b"
+                  className="btn btn-outline btn-lg justify-center"
                 >
                   Login
                 </a>
                 <a
                   href="https://portal.easytradesetup.com/sign-up"
                   onClick={() => setOpen(false)}
-                  className="btn btn-acid btn-lg mt-6 justify-center"
+                  className="btn btn-acid btn-lg justify-center"
                 >
                   Sign up <span className="arrow" aria-hidden>→</span>
                 </a>
-              </>
+              </div>
             )}
             {loaded && isSignedIn && (
               <a

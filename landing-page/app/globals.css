@@ -1281,8 +1281,9 @@
   .back-to-top {
     position: fixed;
     right: 18px;
-    /* StickyBuyBar (lg:hidden) sits at bottom on mobile; clear it. */
-    bottom: 84px;
+    /* StickyBuyBar (lg:hidden) sits at bottom on mobile; clear it
+       with breathing room + iOS home-indicator safe area. */
+    bottom: calc(104px + env(safe-area-inset-bottom));
     z-index: 45;
     width: 44px;
     height: 44px;
