@@ -35,7 +35,7 @@ export default function PortalMobileNav({
         aria-label="Toggle navigation"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        className="lg:hidden w-10 h-10 inline-flex flex-col items-center justify-center gap-[5px] rounded-lg transition-colors"
+        className="lg:hidden w-10 h-10 inline-flex flex-col items-center justify-center gap-[5px] rounded-lg hover-fill transition-colors"
         style={{ color: "var(--tz-ink)" }}
       >
         <span
@@ -50,111 +50,61 @@ export default function PortalMobileNav({
 
       {open && (
         <div
-          className="lg:hidden fixed inset-0 z-[60]"
-          style={{
-            background: "rgba(10, 12, 16, 0.62)",
-            backdropFilter: "blur(4px)",
-            WebkitBackdropFilter: "blur(4px)",
-          }}
-          onClick={() => setOpen(false)}
+          className="lg:hidden absolute left-0 right-0 top-full nav-mobile"
+          style={{ borderTop: "1px solid var(--tz-border)" }}
         >
-          <div
-            className="absolute right-0 top-0 bottom-0 w-[92%] max-w-[360px] flex flex-col"
-            style={{
-              background: "#ffffff",
-              borderLeft: "1px solid var(--tz-border)",
-              boxShadow: "var(--tz-shadow-lg)",
-              overflowY: "auto",
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="flex items-center justify-between px-5 h-14"
-              style={{ borderBottom: "1px solid var(--tz-border)" }}
-            >
-              <span
-                className="font-mono text-[10.5px] font-bold uppercase tracking-widest"
-                style={{ color: "var(--tz-ink-mute)" }}
-              >
-                Portal menu
-              </span>
-              <button
-                type="button"
-                aria-label="Close menu"
-                onClick={() => setOpen(false)}
-                className="w-8 h-8 inline-flex items-center justify-center rounded-md"
-                style={{ color: "var(--tz-ink-dim)" }}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            </div>
-
-            <nav className="px-3 py-3 flex flex-col gap-1">
-              {items.map((item) => {
-                const active =
-                  pathname === item.href ||
-                  (item.href !== "/portal" && pathname?.startsWith(`${item.href}/`));
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className="portal-mobile-link"
-                    style={{
-                      background: active ? "var(--tz-surface-2)" : undefined,
-                      color: active ? "var(--tz-ink)" : "var(--tz-ink-dim)",
-                      fontWeight: active ? 600 : 500,
-                    }}
-                  >
-                    {item.label}
-                    {active && (
-                      <span
-                        className="font-mono text-[9px] font-bold uppercase tracking-widest"
-                        style={{ color: "var(--tz-acid)" }}
-                      >
-                        current
-                      </span>
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            <div
-              className="px-5 py-4 mt-2"
-              style={{ borderTop: "1px solid var(--tz-border)" }}
-            >
-              <div
-                className="font-mono text-[10px] font-bold uppercase tracking-widest mb-2"
-                style={{ color: "var(--tz-ink-mute)" }}
-              >
-                Shortcuts
-              </div>
-              <div className="flex flex-col gap-1">
-                {isAdmin && (
-                  <Link
-                    href="/admin"
-                    onClick={() => setOpen(false)}
-                    className="portal-mobile-link"
-                    style={{ color: "var(--tz-ink-dim)" }}
-                  >
-                    Admin console →
-                  </Link>
-                )}
-                <a
-                  href="https://www.easytradesetup.com"
-                  target="_blank"
-                  rel="noopener"
+          <div className="container-wide py-4 flex flex-col">
+            {items.map((item) => {
+              const active =
+                pathname === item.href ||
+                (item.href !== "/portal" && item.href !== "/admin" && pathname?.startsWith(`${item.href}/`));
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
                   onClick={() => setOpen(false)}
-                  className="portal-mobile-link"
-                  style={{ color: "var(--tz-ink-dim)" }}
+                  aria-current={active ? "page" : undefined}
+                  className={`nav-link-mobile hairline-b ${active ? "nav-link-mobile-active" : ""}`}
                 >
-                  ↗ Marketing site
-                </a>
-              </div>
+                  <span className="flex items-center gap-3">
+                    {active && <span className="nav-dot" aria-hidden />}
+                    <span>{item.label}</span>
+                  </span>
+                  {active && (
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-acid">
+                      current
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+            <div className="grid grid-cols-2 gap-3 mt-6">
+              {isAdmin ? (
+                <Link
+                  href="/admin"
+                  onClick={() => setOpen(false)}
+                  className="btn btn-outline btn-lg justify-center"
+                >
+                  Admin
+                </Link>
+              ) : (
+                <Link
+                  href="/portal"
+                  onClick={() => setOpen(false)}
+                  className="btn btn-outline btn-lg justify-center"
+                >
+                  Portal
+                </Link>
+              )}
+              <a
+                href="https://www.easytradesetup.com"
+                target="_blank"
+                rel="noopener"
+                onClick={() => setOpen(false)}
+                className="btn btn-acid btn-lg justify-center"
+              >
+                Site <span aria-hidden>→</span>
+              </a>
             </div>
           </div>
         </div>
