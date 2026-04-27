@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
+import { getUser } from "@/lib/auth-server";
+
+const PORTAL_ORIGIN = "https://portal.easytradesetup.com";
 
 export const metadata: Metadata = {
   title: "Thank you",
@@ -45,6 +48,8 @@ export default async function ThankYouPage({
   const sp = (await searchParams) || {};
   const session = await fetchSession(sp.session_id);
   const isStripe = !!sp.session_id;
+  const authedUser = await getUser();
+  const isSignedIn = !!authedUser;
 
   return (
     <section className="above-bg">
@@ -67,10 +72,12 @@ export default async function ThankYouPage({
         {isStripe && session?.paid && (
           <p className="mt-6 text-body-lg text-ink-60 leading-relaxed">
             Paid <strong className="text-ink">{fmt(session.amountTotal, session.currency)}</strong>.
-            Magic-link email is on the way to{" "}
-            <strong className="text-ink">{session.email || "your inbox"}</strong> — tap it to drop
-            straight into your portal. Indicator unlock, install guide, and Trade Logic PDF are
-            inside.
+            {isSignedIn ? (
+              <> Your license is active on this account — tap below to land in the portal.</>
+            ) : (
+              <> Magic-link email is on the way to <strong className="text-ink">{session.email || "your inbox"}</strong> — tap it to sign into your portal.</>
+            )}{" "}
+            Stripe will email a separate PDF invoice receipt within a minute.
           </p>
         )}
 
@@ -92,10 +99,10 @@ export default async function ThankYouPage({
           {isStripe && session?.paid ? (
             <>
               <a
-                href="https://portal.easytradesetup.com/sign-in"
+                href={isSignedIn ? `${PORTAL_ORIGIN}/portal` : `${PORTAL_ORIGIN}/sign-in`}
                 className="btn btn-primary"
               >
-                Open my portal
+                {isSignedIn ? "Open my portal →" : "Sign in to portal"}
               </a>
               <Link href="/docs/install" className="btn btn-outline">
                 Install guide

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { BotIdClient } from "botid/client";
 import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
 import StripeBuyButton from "@/components/checkout/StripeBuyButton";
 import { OFFER_LABEL, OFFER_USD, OFFER_INR } from "@/lib/pricing";
+import { getUser } from "@/lib/auth-server";
 
 export const metadata: Metadata = {
   title: "Buy Golden Indicator — inaugural launch price",
@@ -13,6 +15,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/checkout" },
 };
 
+export const dynamic = "force-dynamic";
+
+const PORTAL_ORIGIN = "https://portal.easytradesetup.com";
+
 export default async function CheckoutPage({
   searchParams,
 }: {
@@ -20,6 +26,15 @@ export default async function CheckoutPage({
 }) {
   const sp = (await searchParams) || {};
   const cancelled = sp.cancelled === "1";
+
+  // Login-first: anonymous purchases create orphan entitlements. Send
+  // unauthed visitors to sign-in and bring them back here on success.
+  const user = await getUser();
+  if (!user) {
+    const redirectUrl = `${PORTAL_ORIGIN}/sign-in?redirect=${encodeURIComponent("https://www.easytradesetup.com/checkout")}`;
+    redirect(redirectUrl);
+  }
+  const userEmail = user.email || "";
 
   return (
     <>
@@ -71,11 +86,12 @@ export default async function CheckoutPage({
               </div>
               <h2 className="mt-3 h-tile">One tap. <Price variant="amount" />. Lifetime access.</h2>
               <p className="mt-4 text-body text-muted leading-relaxed">
+                Signed in as <strong className="text-ink">{userEmail}</strong>.
                 Tap the button — Stripe handles the rest. Apple Pay, Google Pay,
-                or card — your choice on the next screen. Pay{" "}
+                or card on the next screen. Pay{" "}
                 <strong className="text-ink">${OFFER_USD}</strong> (retail{" "}
                 <span className="line-through decoration-muted-faint/60">${149}</span>),
-                land back here with your portal magic-link in your inbox.
+                bounce straight to your portal — your license unlocks instantly.
               </p>
 
               <div className="mt-8">
