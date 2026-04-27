@@ -277,13 +277,14 @@ export const ITEMS: ReadinessItem[] = [
   },
   {
     id: "ops.ci-actions",
-    title: "GitHub Actions CI gating PR merges",
+    title: "Test gate before deploy",
     category: "Operations",
     severity: "warning",
-    description: "npm test + npm run build should run on every PR before merge.",
+    description: "Solo-dev path: Vercel build command runs `npm test && next build` on every push, so failing unit tests fail the deploy. No GitHub Actions needed unless you onboard collaborators.",
     fixSteps: [
-      "Add .github/workflows/ci.yml — pnpm install + test + build on Node 20",
-      "Branch protection: require status check before merge to main",
+      "vercel.json buildCommand set to `npm test && next build` (committed)",
+      "Push any change → confirm Vercel build log shows vitest output before next build",
+      "Tick this item once first such deploy is green",
     ],
   },
   {
