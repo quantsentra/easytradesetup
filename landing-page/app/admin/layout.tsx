@@ -38,6 +38,7 @@ const navSections: Array<{
   {
     title: "System",
     items: [
+      { href: "/admin/readiness",       label: "Launch readiness", icon: RocketIcon },
       { href: "/admin/checklist",       label: "MVP checklist",  icon: CheckIcon },
       { href: "/admin/qa",              label: "QA suite",       icon: ShieldIcon },
       { href: "/admin/errors",          label: "Errors",         icon: AlertIcon },
@@ -200,6 +201,16 @@ function CardIcon() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="6" width="20" height="14" rx="2" />
       <line x1="2" y1="11" x2="22" y2="11" />
+    </svg>
+  );
+}
+function RocketIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 16c-2 1-2 4-2 4s3 0 4-2" />
+      <path d="M14 6l4 4-8 8H6v-4z" />
+      <path d="M14 6c3-3 7-3 7-3s0 4-3 7" />
+      <circle cx="15" cy="9" r="1" />
     </svg>
   );
 }
