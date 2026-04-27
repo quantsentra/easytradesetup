@@ -14,6 +14,7 @@ type Result = {
   amount?: number;
   currency?: string;
   alreadyGranted?: boolean;
+  entitlementGranted?: boolean;
   warnings?: string[];
   error?: string;
 };
@@ -70,7 +71,14 @@ export default function StripeRecoverButton({
           }}>
             {result.ok
               ? result.alreadyGranted ? "✓ already granted" : "✓ granted + email sent"
-              : `✗ ${result.error || "failed"}`}
+              : result.entitlementGranted
+                ? "⚠ partial — see details"
+                : `✗ ${result.error || "no license written"}`}
+          </span>
+        )}
+        {result?.warnings && result.warnings.length > 0 && (
+          <span className="text-[10.5px]" style={{ color: "var(--tz-amber)" }}>
+            ⚠ {result.warnings[0]}
           </span>
         )}
       </div>
@@ -109,26 +117,35 @@ export default function StripeRecoverButton({
               <div className="font-mono text-[11px] uppercase tracking-widest mb-2" style={{
                 color: "var(--tz-win)", fontWeight: 700,
               }}>
-                {result.alreadyGranted ? "✓ Already granted (no double-fulfil)" : "✓ Fulfilled"}
+                {result.alreadyGranted ? "✓ Already granted (no double-fulfil)" : "✓ License granted + email sent"}
               </div>
               <div className="text-[13px]" style={{ color: "var(--tz-ink)" }}>
                 Buyer: <strong>{result.email}</strong> · {result.currency?.toUpperCase()} {result.amount?.toFixed(2)}
               </div>
               {result.warnings && result.warnings.length > 0 && (
-                <ul className="mt-2 text-[12px]" style={{ color: "var(--tz-amber)" }}>
-                  {result.warnings.map((w, i) => <li key={i}>• {w}</li>)}
+                <ul className="mt-2 text-[12px] space-y-1" style={{ color: "var(--tz-amber)" }}>
+                  {result.warnings.map((w, i) => <li key={i}>⚠ {w}</li>)}
                 </ul>
               )}
             </>
           ) : (
             <>
               <div className="font-mono text-[11px] uppercase tracking-widest mb-2" style={{
-                color: "var(--tz-loss)", fontWeight: 700,
+                color: result.entitlementGranted ? "var(--tz-amber)" : "var(--tz-loss)", fontWeight: 700,
               }}>
-                ✗ Failed
+                {result.entitlementGranted ? "⚠ Partial fulfilment" : "✗ License not granted"}
               </div>
               <div className="text-[13px]" style={{ color: "var(--tz-ink-dim)" }}>
-                {result.error}
+                {result.error || "See warnings below."}
+              </div>
+              {result.warnings && result.warnings.length > 0 && (
+                <ul className="mt-2 text-[12px] space-y-1" style={{ color: "var(--tz-amber)" }}>
+                  {result.warnings.map((w, i) => <li key={i}>⚠ {w}</li>)}
+                </ul>
+              )}
+              <div className="mt-3 text-[11.5px]" style={{ color: "var(--tz-ink-mute)" }}>
+                Most common cause: migration <code>019_stripe.sql</code> not run in Supabase, or
+                <code> SUPABASE_SERVICE_ROLE_KEY</code> missing in Vercel env.
               </div>
             </>
           )}

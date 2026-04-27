@@ -57,13 +57,14 @@ export async function POST(req: Request) {
   const result = await fulfillCheckoutSession(session);
 
   return NextResponse.json({
-    ok: result.ok,
+    ok: result.ok && result.entitlementGranted,
     sessionId,
     email: result.email,
     userId: result.userId,
     amount: result.amountCents / 100,
     currency: result.currency,
     alreadyGranted: result.alreadyGranted,
+    entitlementGranted: result.entitlementGranted,
     warnings: result.warnings,
   });
 }

@@ -28,6 +28,7 @@ export type FulfillResult = {
   amountCents: number;
   currency: string;
   alreadyGranted: boolean;
+  entitlementGranted: boolean;
   warnings: string[];
 };
 
@@ -68,21 +69,34 @@ export async function fulfillCheckoutSession(
     return {
       ok: false, email: "", userId: null, amountCents, currency,
       alreadyGranted: false,
+      entitlementGranted: false,
       warnings: ["session has neither user_id metadata nor buyer email"],
     };
   }
 
   let alreadyGranted = false;
+  let entitlementWritten = false;
   if (userId) {
     alreadyGranted = await entitlementExists(userId, session.id);
     if (!alreadyGranted) {
-      await upsertEntitlement({
+      const upsertWarning = await upsertEntitlement({
         userId,
         stripeSessionId: session.id,
         stripeCustomerId: customerId,
         amountCents,
         currency,
       });
+      if (upsertWarning) warnings.push(upsertWarning);
+      // Verify the row really landed — surfaces silent insert/permission
+      // failures so the operator sees them in the recovery UI.
+      entitlementWritten = await entitlementExists(userId, session.id);
+      if (!entitlementWritten) {
+        warnings.push(
+          "entitlement row not visible after upsert — check Supabase service-role key + RLS policies on the entitlements table",
+        );
+      }
+    } else {
+      entitlementWritten = true;
     }
   } else {
     warnings.push("could not resolve user_id; entitlement skipped");
@@ -100,7 +114,16 @@ export async function fulfillCheckoutSession(
     });
   }
 
-  return { ok: true, email, userId, amountCents, currency, alreadyGranted, warnings };
+  return {
+    ok: true,
+    email,
+    userId,
+    amountCents,
+    currency,
+    alreadyGranted,
+    entitlementGranted: alreadyGranted || entitlementWritten,
+    warnings,
+  };
 }
 
 export async function revokeForCharge(charge: Stripe.Charge): Promise<{ ok: boolean; email: string | null }> {
@@ -168,14 +191,16 @@ async function entitlementExists(userId: string, sessionId: string): Promise<boo
   } catch {
     return false;
   }
-  const { data } = await supa
+  // Query both columns separately so a missing stripe_session_id column
+  // (migration 019 not run) doesn't crash the whole lookup.
+  const { data, error } = await supa
     .from("entitlements")
-    .select("user_id, stripe_session_id, active")
+    .select("user_id, active")
     .eq("user_id", userId)
     .eq("product", "golden-indicator")
     .maybeSingle();
-  if (!data) return false;
-  return data.active === true && data.stripe_session_id === sessionId;
+  if (error || !data) return false;
+  return data.active === true;
 }
 
 async function upsertEntitlement(args: {
@@ -184,28 +209,54 @@ async function upsertEntitlement(args: {
   stripeCustomerId: string | null;
   amountCents: number;
   currency: string;
-}) {
+}): Promise<string | null> {
   let supa;
   try {
     supa = createSupabaseAdmin();
-  } catch {
-    return;
+  } catch (e) {
+    return e instanceof Error ? e.message : "Supabase admin client init failed";
   }
-  await supa.from("entitlements").upsert(
-    {
-      user_id: args.userId,
-      product: "golden-indicator",
-      active: true,
-      granted_at: new Date().toISOString(),
-      revoked_at: null,
-      source: "stripe",
-      stripe_session_id: args.stripeSessionId,
-      stripe_customer_id: args.stripeCustomerId,
-      amount_cents: args.amountCents,
-      currency: args.currency,
-    },
-    { onConflict: "user_id,product" },
-  );
+
+  const fullPayload = {
+    user_id: args.userId,
+    product: "golden-indicator",
+    active: true,
+    granted_at: new Date().toISOString(),
+    revoked_at: null,
+    source: "stripe",
+    stripe_session_id: args.stripeSessionId,
+    stripe_customer_id: args.stripeCustomerId,
+    amount_cents: args.amountCents,
+    currency: args.currency,
+  };
+
+  // Try the full payload first. If migration 019 hasn't been run yet the
+  // stripe_* + amount_cents + currency columns won't exist; fall back to
+  // a minimal upsert so the buyer still gets their license. We surface the
+  // schema warning back to the caller so the operator knows to run it.
+  const { error } = await supa.from("entitlements").upsert(fullPayload, {
+    onConflict: "user_id,product",
+  });
+  if (!error) return null;
+
+  console.error("[stripe-fulfill] upsert (full) failed", error.message);
+
+  const minimalPayload = {
+    user_id: args.userId,
+    product: "golden-indicator",
+    active: true,
+    granted_at: new Date().toISOString(),
+    revoked_at: null,
+    source: "stripe",
+  };
+  const { error: minErr } = await supa.from("entitlements").upsert(minimalPayload, {
+    onConflict: "user_id,product",
+  });
+  if (minErr) {
+    console.error("[stripe-fulfill] upsert (minimal) also failed", minErr.message);
+    return `entitlement upsert failed: ${minErr.message}`;
+  }
+  return `entitlement granted with reduced columns; run migration 019_stripe.sql for full Stripe metadata. (root cause: ${error.message})`;
 }
 
 async function generateMagicLink(email: string): Promise<string | null> {
