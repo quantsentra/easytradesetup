@@ -20,6 +20,17 @@ type SessionRow = {
   granted: boolean;
 };
 
+type PaymentRow = {
+  id: string;
+  email: string | null;
+  amount: number;
+  currency: string;
+  created: number;
+  status: string;
+  hasCheckoutSession: boolean;
+  cardBrand: string | null;
+};
+
 async function loadRecentSessions(): Promise<{ rows: SessionRow[]; configured: boolean }> {
   if (!stripeConfigured()) return { rows: [], configured: false };
   const stripe = getStripe();
@@ -59,6 +70,51 @@ async function loadRecentSessions(): Promise<{ rows: SessionRow[]; configured: b
   return { rows, configured: true };
 }
 
+// Mirror Stripe's "Payments → All transactions" view so the operator sees
+// the full picture — Checkout Sessions, Payment Links, invoices, manual
+// payments — in one place. Only Checkout Sessions can be replayed via this
+// tool; Payment Links / manual ones are shown for visibility only.
+async function loadRecentPayments(): Promise<PaymentRow[]> {
+  if (!stripeConfigured()) return [];
+  const stripe = getStripe();
+  const intents = await stripe.paymentIntents.list({ limit: 30 });
+
+  // Build a quick set of payment_intent IDs that came from Checkout
+  // Sessions so we can mark the rest as "Other (Payment Link / Manual)".
+  const fromCheckout = new Set<string>();
+  try {
+    const sessions = await stripe.checkout.sessions.list({ limit: 30 });
+    for (const s of sessions.data) {
+      if (s.payment_intent) {
+        const pi = typeof s.payment_intent === "string" ? s.payment_intent : s.payment_intent.id;
+        fromCheckout.add(pi);
+      }
+    }
+  } catch {
+    // Falls through; everything will display as "?" provenance
+  }
+
+  return intents.data.map((p) => {
+    const charge = p.latest_charge && typeof p.latest_charge !== "string" ? p.latest_charge : null;
+    return {
+      id: p.id,
+      email:
+        charge?.billing_details?.email ||
+        p.receipt_email ||
+        null,
+      amount: (p.amount_received || p.amount || 0) / 100,
+      currency: (p.currency || "usd").toLowerCase(),
+      created: p.created,
+      status: p.status,
+      hasCheckoutSession: fromCheckout.has(p.id),
+      cardBrand:
+        charge?.payment_method_details?.card?.brand ||
+        charge?.payment_method_details?.type ||
+        null,
+    };
+  });
+}
+
 function fmtMoney(amount: number, currency: string): string {
   if (currency === "usd") return `$${amount.toFixed(2)}`;
   if (currency === "inr") return `₹${amount.toLocaleString("en-IN")}`;
@@ -74,8 +130,12 @@ function relTime(unixSec: number): string {
 }
 
 export default async function StripeRecoverPage() {
-  const { rows, configured } = await loadRecentSessions();
+  const [{ rows, configured }, payments] = await Promise.all([
+    loadRecentSessions(),
+    loadRecentPayments(),
+  ]);
   const ungranted = rows.filter((r) => !r.granted);
+  const succeededPayments = payments.filter((p) => p.status === "succeeded");
 
   return (
     <>
@@ -173,6 +233,75 @@ export default async function StripeRecoverPage() {
                     </td>
                     <td>
                       {!r.granted && <StripeRecoverButton sessionId={r.id} compact />}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Full Payment Intents view — mirrors Stripe Dashboard Payments tab */}
+      <div className="tz-card mt-6" style={{ padding: 0, overflow: "hidden" }}>
+        <div className="tz-card-head" style={{
+          padding: "18px 20px", marginBottom: 0,
+          borderBottom: "1px solid var(--tz-border)",
+        }}>
+          <div>
+            <div className="tz-card-title">All Stripe payments · last 30</div>
+            <div className="tz-card-sub">
+              Mirror of Stripe Dashboard → Payments. Replay only works for Checkout-Session payments
+              (the rest came from Payment Links, invoices, or the dashboard).
+            </div>
+          </div>
+        </div>
+        {succeededPayments.length === 0 ? (
+          <p className="text-[13.5px] p-6" style={{ color: "var(--tz-ink-mute)" }}>
+            No payments yet.
+          </p>
+        ) : (
+          <div style={{ overflowX: "auto" }}>
+            <table className="tz-table" style={{ minWidth: 820 }}>
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Buyer</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Source</th>
+                  <th>Payment ID</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {succeededPayments.map((p) => (
+                  <tr key={p.id}>
+                    <td>
+                      <span className="tz-chip tz-chip-acid">
+                        <span className="tz-chip-dot" />
+                        Succeeded
+                      </span>
+                    </td>
+                    <td style={{ color: "var(--tz-ink)" }}>
+                      {p.email || <span style={{ color: "var(--tz-ink-mute)" }}>—</span>}
+                    </td>
+                    <td className="tz-num">{fmtMoney(p.amount, p.currency)}</td>
+                    <td className="text-[12.5px]" style={{ color: "var(--tz-ink-dim)", textTransform: "capitalize" }}>
+                      {p.cardBrand || "—"}
+                    </td>
+                    <td>
+                      {p.hasCheckoutSession ? (
+                        <span className="tz-chip tz-chip-cyan">Checkout</span>
+                      ) : (
+                        <span className="tz-chip">Other</span>
+                      )}
+                    </td>
+                    <td className="font-mono text-[11.5px]" style={{ color: "var(--tz-acid-dim)" }}>
+                      {p.id.length > 26 ? p.id.slice(0, 22) + "…" : p.id}
+                    </td>
+                    <td className="tz-num text-[12px]" style={{ color: "var(--tz-ink-dim)" }}>
+                      {relTime(p.created)}
                     </td>
                   </tr>
                 ))}
