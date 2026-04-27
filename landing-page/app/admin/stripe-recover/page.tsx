@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import StripeRecoverButton from "@/components/admin/StripeRecoverButton";
+import StripeSessionsTable, { type SessionRow as TblSessionRow } from "@/components/admin/StripeSessionsTable";
+import StripePaymentsTable, { type PaymentRow as TblPaymentRow } from "@/components/admin/StripePaymentsTable";
 
 export const metadata = {
   title: "Stripe recovery · Admin",
@@ -35,9 +37,11 @@ async function loadRecentSessions(): Promise<{ rows: SessionRow[]; configured: b
   if (!stripeConfigured()) return { rows: [], configured: false };
   const stripe = getStripe();
 
-  // Pull the most recent 30 paid sessions. Cross-reference with the
-  // entitlements table to flag which ones are already granted.
-  const sessions = await stripe.checkout.sessions.list({ limit: 30 });
+  // Pull recent paid sessions. Cross-reference with the entitlements
+  // table to flag which ones are already granted. Page size is large
+  // enough to give the client-side table several pages of data without
+  // hitting Stripe more than once per render.
+  const sessions = await stripe.checkout.sessions.list({ limit: 100 });
 
   const sessionIds = sessions.data
     .map((s) => s.id)
@@ -77,13 +81,13 @@ async function loadRecentSessions(): Promise<{ rows: SessionRow[]; configured: b
 async function loadRecentPayments(): Promise<PaymentRow[]> {
   if (!stripeConfigured()) return [];
   const stripe = getStripe();
-  const intents = await stripe.paymentIntents.list({ limit: 30 });
+  const intents = await stripe.paymentIntents.list({ limit: 100 });
 
   // Build a quick set of payment_intent IDs that came from Checkout
   // Sessions so we can mark the rest as "Other (Payment Link / Manual)".
   const fromCheckout = new Set<string>();
   try {
-    const sessions = await stripe.checkout.sessions.list({ limit: 30 });
+    const sessions = await stripe.checkout.sessions.list({ limit: 100 });
     for (const s of sessions.data) {
       if (s.payment_intent) {
         const pi = typeof s.payment_intent === "string" ? s.payment_intent : s.payment_intent.id;
@@ -113,20 +117,6 @@ async function loadRecentPayments(): Promise<PaymentRow[]> {
         null,
     };
   });
-}
-
-function fmtMoney(amount: number, currency: string): string {
-  if (currency === "usd") return `$${amount.toFixed(2)}`;
-  if (currency === "inr") return `₹${amount.toLocaleString("en-IN")}`;
-  return `${amount.toFixed(2)} ${currency.toUpperCase()}`;
-}
-
-function relTime(unixSec: number): string {
-  const sec = Date.now() / 1000 - unixSec;
-  if (sec < 60) return `${Math.floor(sec)}s ago`;
-  if (sec < 3600) return `${Math.floor(sec / 60)}m ago`;
-  if (sec < 86400) return `${Math.floor(sec / 3600)}h ago`;
-  return new Date(unixSec * 1000).toISOString().slice(0, 10);
 }
 
 export default async function StripeRecoverPage() {
@@ -178,137 +168,37 @@ export default async function StripeRecoverPage() {
         <StripeRecoverButton />
       </div>
 
-      {/* Auto-detected list of ungranted paid sessions */}
+      {/* Auto-detected list of paid sessions — search / filter / paginate */}
       <div className="tz-card" style={{ padding: 0, overflow: "hidden" }}>
         <div className="tz-card-head" style={{
-          padding: "18px 20px", marginBottom: 0,
+          padding: "16px 18px", marginBottom: 0,
           borderBottom: "1px solid var(--tz-border)",
         }}>
-          <div>
-            <div className="tz-card-title">Recent paid sessions · last 30</div>
+          <div style={{ minWidth: 0 }}>
+            <div className="tz-card-title">Paid sessions</div>
             <div className="tz-card-sub">
               ✓ = entitlement already granted in Supabase. ⚠ = needs replay.
             </div>
           </div>
         </div>
-        {rows.length === 0 ? (
-          <p className="text-[13.5px] p-6" style={{ color: "var(--tz-ink-mute)" }}>
-            No paid sessions in Stripe yet.
-          </p>
-        ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table className="tz-table" style={{ minWidth: 760 }}>
-              <thead>
-                <tr>
-                  <th>Status</th>
-                  <th>Buyer</th>
-                  <th>Amount</th>
-                  <th>Session ID</th>
-                  <th>Paid</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((r) => (
-                  <tr key={r.id}>
-                    <td>
-                      {r.granted ? (
-                        <span className="tz-chip tz-chip-acid">
-                          <span className="tz-chip-dot" />
-                          Granted
-                        </span>
-                      ) : (
-                        <span className="tz-chip tz-chip-amber">⚠ Needs replay</span>
-                      )}
-                    </td>
-                    <td style={{ color: "var(--tz-ink)" }}>
-                      {r.email || <span style={{ color: "var(--tz-ink-mute)" }}>—</span>}
-                    </td>
-                    <td className="tz-num">{fmtMoney(r.amount, r.currency)}</td>
-                    <td className="font-mono text-[11.5px]" style={{ color: "var(--tz-acid-dim)" }}>
-                      {r.id.length > 28 ? r.id.slice(0, 24) + "…" : r.id}
-                    </td>
-                    <td className="tz-num text-[12px]" style={{ color: "var(--tz-ink-dim)" }}>
-                      {relTime(r.created)}
-                    </td>
-                    <td>
-                      {!r.granted && <StripeRecoverButton sessionId={r.id} compact />}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <StripeSessionsTable rows={rows as TblSessionRow[]} />
       </div>
 
       {/* Full Payment Intents view — mirrors Stripe Dashboard Payments tab */}
       <div className="tz-card mt-6" style={{ padding: 0, overflow: "hidden" }}>
         <div className="tz-card-head" style={{
-          padding: "18px 20px", marginBottom: 0,
+          padding: "16px 18px", marginBottom: 0,
           borderBottom: "1px solid var(--tz-border)",
         }}>
-          <div>
-            <div className="tz-card-title">All Stripe payments · last 30</div>
+          <div style={{ minWidth: 0 }}>
+            <div className="tz-card-title">All Stripe payments</div>
             <div className="tz-card-sub">
               Mirror of Stripe Dashboard → Payments. Replay only works for Checkout-Session payments
               (the rest came from Payment Links, invoices, or the dashboard).
             </div>
           </div>
         </div>
-        {succeededPayments.length === 0 ? (
-          <p className="text-[13.5px] p-6" style={{ color: "var(--tz-ink-mute)" }}>
-            No payments yet.
-          </p>
-        ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table className="tz-table" style={{ minWidth: 820 }}>
-              <thead>
-                <tr>
-                  <th>Status</th>
-                  <th>Buyer</th>
-                  <th>Amount</th>
-                  <th>Method</th>
-                  <th>Source</th>
-                  <th>Payment ID</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {succeededPayments.map((p) => (
-                  <tr key={p.id}>
-                    <td>
-                      <span className="tz-chip tz-chip-acid">
-                        <span className="tz-chip-dot" />
-                        Succeeded
-                      </span>
-                    </td>
-                    <td style={{ color: "var(--tz-ink)" }}>
-                      {p.email || <span style={{ color: "var(--tz-ink-mute)" }}>—</span>}
-                    </td>
-                    <td className="tz-num">{fmtMoney(p.amount, p.currency)}</td>
-                    <td className="text-[12.5px]" style={{ color: "var(--tz-ink-dim)", textTransform: "capitalize" }}>
-                      {p.cardBrand || "—"}
-                    </td>
-                    <td>
-                      {p.hasCheckoutSession ? (
-                        <span className="tz-chip tz-chip-cyan">Checkout</span>
-                      ) : (
-                        <span className="tz-chip">Other</span>
-                      )}
-                    </td>
-                    <td className="font-mono text-[11.5px]" style={{ color: "var(--tz-acid-dim)" }}>
-                      {p.id.length > 26 ? p.id.slice(0, 22) + "…" : p.id}
-                    </td>
-                    <td className="tz-num text-[12px]" style={{ color: "var(--tz-ink-dim)" }}>
-                      {relTime(p.created)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <StripePaymentsTable rows={succeededPayments as TblPaymentRow[]} />
       </div>
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest"
