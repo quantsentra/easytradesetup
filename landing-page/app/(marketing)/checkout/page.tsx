@@ -3,28 +3,53 @@ import Link from "next/link";
 import { BotIdClient } from "botid/client";
 import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
-import { OFFER_LABEL } from "@/lib/pricing";
+import StripeBuyButton from "@/components/checkout/StripeBuyButton";
+import { OFFER_LABEL, OFFER_USD, OFFER_INR } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Buy Golden Indicator — inaugural launch price",
   description:
-    "Buy Golden Indicator at the inaugural launch price. $49 / ₹4,599 — UPI for India, Gumroad for global. Lifetime access, one-time payment.",
+    "Buy Golden Indicator at the inaugural launch price. $49 one-time, lifetime access. Stripe checkout for global cards, UPI for India coming soon.",
   alternates: { canonical: "/checkout" },
 };
 
-export default function CheckoutPage() {
+export default async function CheckoutPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ cancelled?: string }>;
+}) {
+  const sp = (await searchParams) || {};
+  const cancelled = sp.cancelled === "1";
+
   return (
     <>
       {/* Vercel BotID — silent bot detection on form submission. */}
-      <BotIdClient protect={[{ path: "/api/lead", method: "POST" }]} />
+      <BotIdClient
+        protect={[
+          { path: "/api/lead", method: "POST" },
+          { path: "/api/stripe/checkout", method: "POST" },
+        ]}
+      />
       <PageHeader
         eyebrow="Buy · Inaugural offer"
         title={<>Buy Golden Indicator.</>}
-        lede="One-time payment, lifetime access. India: UPI via secure gateway. Global: Gumroad checkout. Drop your email below — we'll send the secure payment link the moment payments go live (within days)."
+        lede={`One-time payment, lifetime access. Pay $${OFFER_USD} via Stripe — secure card checkout. India users: UPI via Razorpay coming in days; drop your email and we'll alert you when it goes live.`}
       />
 
       <section className="bg-surface">
         <div className="container-wide py-16">
+          {cancelled && (
+            <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 flex items-start gap-3">
+              <svg width="18" height="18" viewBox="0 0 24 24" className="flex-shrink-0 mt-0.5" aria-hidden>
+                <circle cx="12" cy="12" r="10" fill="none" stroke="#F59E0B" strokeWidth="1.8" />
+                <path d="M12 8v5 M12 16h.01" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <div className="text-caption leading-relaxed text-amber-200">
+                <strong className="font-semibold">Checkout cancelled.</strong> No charge made. Tap the button below whenever you're ready.
+              </div>
+            </div>
+          )}
+
           <div className="mb-8 rounded-xl border border-amber-500/30 bg-amber-500/10 px-5 py-4 flex items-start gap-3">
             <svg width="18" height="18" viewBox="0 0 24 24" className="flex-shrink-0 mt-0.5" aria-hidden>
               <circle cx="12" cy="12" r="10" fill="none" stroke="#F59E0B" strokeWidth="1.8" />
@@ -42,46 +67,24 @@ export default function CheckoutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
             <div className="lg:col-span-3 card-apple p-6 sm:p-8 md:p-10">
               <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">
-                Step 1 · Get the payment link
+                Step 1 · Pay
               </div>
-              <h2 className="mt-3 h-tile">Drop your email. Get the payment link.</h2>
+              <h2 className="mt-3 h-tile">Pay <Price variant="amount" /> — unlock lifetime access.</h2>
               <p className="mt-4 text-body text-muted leading-relaxed">
-                Pay just{" "}
-                <strong className="text-ink"><Price variant="amount" /></strong> (retail{" "}
-                <span className="line-through decoration-muted-faint/60"><Price variant="retail" /></span>).
-                One-time payment, lifetime access. India pays via UPI, global via Gumroad. Payments go live within a few days — early buyers get the link first.
+                Secure card checkout via Stripe. You'll land on Stripe's hosted payment page,
+                pay <strong className="text-ink">${OFFER_USD}</strong> (retail{" "}
+                <span className="line-through decoration-muted-faint/60">${149}</span>),
+                and bounce back here with your portal access ready.
               </p>
-              <form action="/api/lead" method="POST" className="mt-8 flex flex-col sm:flex-row gap-3">
-                <input type="hidden" name="source" value="checkout" />
-                {/* Honeypot — real users don't see or fill this. */}
-                <input
-                  type="text"
-                  name="website"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  aria-hidden="true"
-                  style={{ position: "absolute", left: "-9999px", width: 1, height: 1, opacity: 0 }}
-                />
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  maxLength={254}
-                  placeholder="you@example.com"
-                  aria-label="Email address"
-                  className="flex-1 bg-surface border border-rule rounded-lg px-4 py-3 text-body text-ink focus:outline-none focus:border-blue transition-colors"
-                />
-                <button
-                  type="submit"
-                  className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body hover:brightness-110 transition-all"
-                >
-                  Get payment link
-                </button>
-              </form>
-              <ul className="mt-6 space-y-2 text-caption text-muted">
+
+              <div className="mt-8">
+                <StripeBuyButton label={`Pay $${OFFER_USD} →`} />
+              </div>
+
+              <ul className="mt-8 space-y-2 text-caption text-muted">
                 <li className="flex items-start gap-2">
                   <span className="text-[#2da44e] mt-0.5">✓</span>
-                  <span>One email with your secure payment link. No drip sequence, no newsletter.</span>
+                  <span>Lifetime access — no subscription, no renewals.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#2da44e] mt-0.5">✓</span>
@@ -89,7 +92,11 @@ export default function CheckoutPage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#2da44e] mt-0.5">✓</span>
-                  <span>Unsubscribe with one click. We don&apos;t sell your email.</span>
+                  <span>7-day refund window, no questions asked.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-[#2da44e] mt-0.5">✓</span>
+                  <span>Magic link emailed on payment — straight to your portal.</span>
                 </li>
               </ul>
 
@@ -98,8 +105,14 @@ export default function CheckoutPage() {
                   Payment methods
                 </div>
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-caption text-muted">
-                  <span className="inline-flex items-center gap-1.5"><span className="font-semibold text-ink">UPI</span> <span className="text-muted-faint">· India</span></span>
-                  <span className="inline-flex items-center gap-1.5"><span className="font-semibold text-ink">Gumroad</span> <span className="text-muted-faint">· Global · cards / PayPal</span></span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="font-semibold text-ink">Stripe</span>
+                    <span className="text-muted-faint">· cards · live now · USD ${OFFER_USD}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="font-semibold text-muted-faint">UPI · India</span>
+                    <span className="text-muted-faint">· coming soon · ₹{OFFER_INR.toLocaleString("en-IN")}</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -136,7 +149,7 @@ export default function CheckoutPage() {
                   "7-day no-questions refund",
                   "Lifetime updates included",
                   "One-time payment — no subscription",
-                  "Priority email on launch day",
+                  "Magic link on payment confirmation",
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-2">
                     <svg width="14" height="14" viewBox="0 0 14 14" className="mt-1 flex-shrink-0" aria-hidden>

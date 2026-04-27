@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Checkout page — buy flow", () => {
+test.describe("Checkout page — Stripe buy flow", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/checkout");
   });
@@ -16,20 +16,19 @@ test.describe("Checkout page — buy flow", () => {
     await expect(page.getByText(/\$49|₹4,599/).first()).toBeVisible();
   });
 
-  test("buy email form is wired to /api/lead", async ({ page }) => {
-    const form = page.locator("form[action='/api/lead']");
-    await expect(form).toBeVisible();
-    const emailInput = form.locator("input[name='email']");
-    await expect(emailInput).toHaveAttribute("type", "email");
-    await expect(emailInput).toHaveAttribute("required", "");
-    const sourceInput = form.locator("input[name='source']");
-    await expect(sourceInput).toHaveValue("checkout");
+  test("Stripe buy button is wired and email input is optional", async ({ page }) => {
+    const button = page.getByRole("button", { name: /pay \$\d+/i });
+    await expect(button).toBeVisible();
+    const email = page.getByPlaceholder(/you@example.com/i);
+    await expect(email).toBeVisible();
+    await expect(email).toHaveAttribute("type", "email");
+    // Optional — no `required` attribute. Stripe collects email on hosted page.
+    await expect(email).not.toHaveAttribute("required", "");
   });
 
-  test("form submits email and redirects to /thank-you", async ({ page }) => {
-    await page.locator("form[action='/api/lead'] input[name='email']").fill("test@example.com");
-    await page.locator("form[action='/api/lead'] button[type='submit']").click();
-    await expect(page).toHaveURL(/\/thank-you/);
+  test("payment methods strip lists Stripe", async ({ page }) => {
+    await expect(page.getByText(/stripe/i).first()).toBeVisible();
+    await expect(page.getByText(/cards · live now/i)).toBeVisible();
   });
 
   test("order preview lists the bundle benefits", async ({ page }) => {
