@@ -192,6 +192,7 @@ export default function DataTable<T>({
               value={query}
               onChange={(e) => { setQuery(e.target.value); setPage(1); }}
               placeholder={searchPlaceholder}
+              aria-label={searchPlaceholder}
               className="tz-input"
               style={{
                 flex: "1 1 200px", minWidth: 0, height: 32, padding: "0 10px",
@@ -200,33 +201,40 @@ export default function DataTable<T>({
               }}
             />
           )}
-          {showFilters && filterChips!.map((c) => {
-            const active = activeFilters.has(c.id);
-            const color = c.color || "var(--tz-ink-dim)";
-            return (
-              <button
-                key={c.id}
-                type="button"
-                onClick={() => toggleFilter(c.id)}
-                className="tz-chip"
-                style={{
-                  background: active ? color : "transparent",
-                  color: active ? "#fff" : color,
-                  borderColor: color,
-                  cursor: "pointer",
-                  fontWeight: 600,
-                  whiteSpace: "nowrap",
-                  fontSize: 11.5,
-                }}
-              >
-                {c.label}
-              </button>
-            );
-          })}
+          {showFilters && (
+            <div role="group" aria-label="Filters" style={{ display: "inline-flex", flexWrap: "wrap", gap: 6 }}>
+              {filterChips!.map((c) => {
+                const active = activeFilters.has(c.id);
+                const color = c.color || "var(--tz-ink-dim)";
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => toggleFilter(c.id)}
+                    aria-pressed={active}
+                    aria-label={`Filter: ${c.label}`}
+                    className="tz-chip"
+                    style={{
+                      background: active ? color : "transparent",
+                      color: active ? "#fff" : color,
+                      borderColor: color,
+                      cursor: "pointer",
+                      fontWeight: 600,
+                      whiteSpace: "nowrap",
+                      fontSize: 11.5,
+                    }}
+                  >
+                    {c.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
           {exportFilename && (
             <button
               type="button"
               onClick={exportCsv}
+              aria-label="Export current rows as CSV"
               className="tz-btn"
               style={{ height: 32, padding: "0 12px", fontSize: 12, marginLeft: "auto" }}
             >
@@ -247,6 +255,12 @@ export default function DataTable<T>({
                 return (
                   <th
                     key={c.id}
+                    aria-sort={
+                      !sortable ? undefined
+                      : !isSorted ? "none"
+                      : sortDir === "asc" ? "ascending"
+                      : "descending"
+                    }
                     style={{
                       cursor: sortable ? "pointer" : "default",
                       minWidth: c.minWidth || undefined,
@@ -254,11 +268,24 @@ export default function DataTable<T>({
                       userSelect: "none",
                     }}
                     onClick={sortable ? () => toggleSort(c.id) : undefined}
+                    onKeyDown={
+                      sortable
+                        ? (e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              toggleSort(c.id);
+                            }
+                          }
+                        : undefined
+                    }
+                    tabIndex={sortable ? 0 : -1}
+                    role={sortable ? "button" : undefined}
+                    aria-label={sortable ? `Sort by ${c.label}` : undefined}
                   >
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
                       {c.label}
                       {sortable && (
-                        <span style={{ opacity: isSorted ? 1 : 0.25, fontSize: 10 }}>
+                        <span aria-hidden style={{ opacity: isSorted ? 1 : 0.25, fontSize: 10 }}>
                           {isSorted ? (sortDir === "asc" ? "▲" : "▼") : "▲"}
                         </span>
                       )}

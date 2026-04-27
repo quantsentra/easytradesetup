@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: "%s · EasyTradeSetup",
   },
   description:
-    "One non-repainting TradingView Pine Script v5 indicator for NIFTY 50, BANKNIFTY, SPX 500, NASDAQ 100, Gold, Silver, Crude, forex, and crypto. Market structure (BOS / CHoCH), regime bias, key levels (PDH / PDL), supply / demand zones. One-time $49 / ₹4,599. 7-day refund. No subscription.",
+    "One non-repainting TradingView Pine Script v5 indicator for NIFTY 50, BANKNIFTY, SPX 500, NASDAQ 100, Gold, Silver, Crude, forex, and crypto. Market structure (BOS / CHoCH), regime bias, key levels (PDH / PDL), supply / demand zones. One-time $49 / ₹4,599 — 67% off retail, always. Lifetime updates, no subscription.",
   keywords: [
     // Product / category
     "TradingView Pine v5 indicator",
@@ -97,6 +97,14 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "/",
+    // hreflang tells Google we serve both Indian and global English audiences
+    // from the same URL (currency switches via geo cookie). x-default points
+    // to the same URL so crawlers without a regional preference still index it.
+    languages: {
+      "en-IN": "/",
+      "en-US": "/",
+      "x-default": "/",
+    },
   },
   // Search Console + Bing verification — set GOOGLE_SITE_VERIFICATION
   // and BING_SITE_VERIFICATION on Vercel to render the meta tags.

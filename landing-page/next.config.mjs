@@ -8,12 +8,19 @@ import { withBotId } from "botid/next/config";
 // script to an external file served with nonce, or wire Edge Middleware that
 // correctly propagates nonce to Next's hydration bundles.
 const securityHeaders = [
-  { key: "X-Content-Type-Options",     value: "nosniff" },
-  { key: "X-Frame-Options",            value: "DENY" },
-  { key: "X-DNS-Prefetch-Control",     value: "on" },
-  { key: "Strict-Transport-Security",  value: "max-age=31536000; includeSubDomains; preload" },
-  { key: "Referrer-Policy",            value: "strict-origin-when-cross-origin" },
-  { key: "Permissions-Policy",         value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" },
+  { key: "X-Content-Type-Options",       value: "nosniff" },
+  { key: "X-Frame-Options",              value: "DENY" },
+  { key: "X-DNS-Prefetch-Control",       value: "on" },
+  { key: "Strict-Transport-Security",    value: "max-age=31536000; includeSubDomains; preload" },
+  { key: "Referrer-Policy",              value: "strict-origin-when-cross-origin" },
+  { key: "Permissions-Policy",           value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" },
+  // Cross-origin isolation. COOP locks the browsing context group so a
+  // popup from another origin can't reach back into our window. CORP
+  // tells the browser only same-origin pages may embed our resources.
+  // COEP intentionally omitted — would block third-party assets (Stripe
+  // js, Vercel scripts, fonts) without coreswide subresource changes.
+  { key: "Cross-Origin-Opener-Policy",   value: "same-origin" },
+  { key: "Cross-Origin-Resource-Policy", value: "same-site" },
   {
     key: "Content-Security-Policy",
     value: [

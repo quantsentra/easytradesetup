@@ -120,7 +120,7 @@ export default function RawEntitlementsTable({ rows }: { rows: RawEntRow[] }) {
       filterChips={filterChips}
       exportFilename="entitlements"
       emptyMessage="No entitlement rows."
-      rowActions={(r) => <RevokeEntitlementButton userId={r.userId} email={r.email} />}
+      rowActions={(r) => <RevokeEntitlementButton userId={r.userId} email={r.email} active={r.active} />}
     />
   );
 }

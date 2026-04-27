@@ -86,7 +86,7 @@ export default function CustomerTable({ rows }: { rows: CustomerRow[] }) {
       exportFilename="customers"
       emptyMessage="No users yet."
       rowActions={(r) =>
-        r.active ? <RevokeEntitlementButton userId={r.userId} email={r.email} /> : null
+        r.active ? <RevokeEntitlementButton userId={r.userId} email={r.email} active /> : null
       }
     />
   );
