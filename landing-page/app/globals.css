@@ -1481,6 +1481,61 @@
     font-weight: 600;
     box-shadow: var(--tz-shadow-sm);
   }
+
+  /* ---- Mobile responsiveness for admin/portal tz-* shell ---- */
+  @media (max-width: 640px) {
+    .tz-topbar {
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px 0 16px;
+      margin-bottom: 16px;
+    }
+    .tz-topbar-title {
+      font-size: 19px;
+    }
+    .tz-topbar-sub {
+      font-size: 12.5px;
+    }
+    .tz-topbar-actions {
+      margin-left: 0;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .tz-topbar-actions .tz-btn {
+      flex: 1 1 auto;
+      justify-content: center;
+      min-width: 0;
+    }
+    .tz-card {
+      padding: 14px 14px;
+    }
+    .tz-card-head {
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .tz-kpi {
+      padding: 14px;
+    }
+    .tz-kpi-value {
+      font-size: 22px;
+    }
+    .tz-table th,
+    .tz-table td {
+      padding: 10px 10px;
+      font-size: 12px;
+    }
+    .tz-header-inner {
+      gap: 10px;
+      padding: 0 14px;
+    }
+    .tz-header-name {
+      font-size: 14px;
+    }
+    .tz-section-link {
+      font-size: 12px;
+    }
+  }
 }
 
 @layer utilities {

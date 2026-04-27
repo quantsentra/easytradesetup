@@ -148,14 +148,16 @@ export default function Mermaid({
         display: "flex", justifyContent: "space-between", alignItems: "center",
         padding: "10px 14px", borderBottom: "1px solid var(--tz-border)",
         background: "var(--tz-surface-2)",
+        flexWrap: "wrap", gap: 8,
       }}>
         <span className="font-mono text-[10.5px]" style={{
           textTransform: "uppercase", letterSpacing: ".14em",
           color: "var(--tz-ink-mute)",
+          minWidth: 0, overflow: "hidden", textOverflow: "ellipsis",
         }}>
           {title}
         </span>
-        <div style={{ display: "flex", gap: 6 }}>
+        <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
           <button
             type="button"
             onClick={openInNewTab}
