@@ -35,35 +35,65 @@ export async function POST(req: Request) {
   try {
     const supa = createSupabaseAdmin();
 
-    // Snapshot the row before delete so the response can confirm what was
-    // removed (admin sees source/granted_at to verify they revoked the
-    // right one).
-    const { data: before } = await supa
-      .from("entitlements")
-      .select("user_id, active, granted_at, source, amount_cents, currency, stripe_session_id")
-      .eq("user_id", userId)
-      .maybeSingle();
-
-    if (!before) {
-      return NextResponse.json({ ok: false, error: "No entitlement found for that user" }, { status: 404 });
+    // Snapshot the row before delete. Migration 019 added stripe_session_id /
+    // amount_cents / currency — fall back to minimal projection if those
+    // columns don't exist yet, so revoke still works on pre-019 schemas.
+    type EntSnap = {
+      user_id: string;
+      active: boolean;
+      granted_at: string;
+      source: string;
+      amount_cents?: number | null;
+      currency?: string | null;
+      stripe_session_id?: string | null;
+    };
+    let before: EntSnap | null = null;
+    {
+      const full = await supa
+        .from("entitlements")
+        .select("user_id, active, granted_at, source, amount_cents, currency, stripe_session_id")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (full.error) {
+        // Most likely cause: migration 019 not applied. Retry with the
+        // pre-019 column set so the operator can still revoke.
+        const minimal = await supa
+          .from("entitlements")
+          .select("user_id, active, granted_at, source")
+          .eq("user_id", userId)
+          .maybeSingle();
+        if (minimal.error) throw minimal.error;
+        before = (minimal.data as EntSnap) || null;
+      } else {
+        before = (full.data as EntSnap) || null;
+      }
     }
 
-    const { error } = await supa.from("entitlements").delete().eq("user_id", userId);
-    if (error) throw error;
+    if (!before) {
+      return NextResponse.json({ ok: false, error: `No entitlement row for user_id "${userId}"` }, { status: 404 });
+    }
+
+    const { error: delError, count } = await supa
+      .from("entitlements")
+      .delete({ count: "exact" })
+      .eq("user_id", userId);
+    if (delError) throw delError;
 
     return NextResponse.json({
       ok: true,
+      deletedCount: count ?? 0,
       revoked: {
         userId,
         source: before.source,
         grantedAt: before.granted_at,
-        sessionId: before.stripe_session_id,
-        amountCents: before.amount_cents,
-        currency: before.currency,
+        sessionId: before.stripe_session_id ?? null,
+        amountCents: before.amount_cents ?? null,
+        currency: before.currency ?? null,
       },
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Database error";
+    console.error("[entitlement-revoke] failed", msg);
     return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
 }
