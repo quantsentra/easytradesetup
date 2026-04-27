@@ -59,7 +59,11 @@ export async function POST(req: Request) {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      payment_method_types: ["card"],
+      // payment_method_types intentionally omitted — Stripe auto-enables
+      // every method enabled in the Dashboard for this account (cards,
+      // Apple Pay, Google Pay, Link, etc). Apple Pay domain verification
+      // is handled automatically because we use the hosted checkout.stripe.com
+      // flow, so no .well-known files need to live on www.easytradesetup.com.
       line_items: [
         {
           quantity: 1,
@@ -74,9 +78,13 @@ export async function POST(req: Request) {
           },
         },
       ],
-      // Email is optional on submit — Stripe collects it on the hosted page
-      // if not provided. When provided we prefill so the buyer skips a step.
+      // Stripe collects the email on the hosted page when not provided —
+      // the new one-tap flow doesn't ask. Pre-fill only when the API
+      // caller explicitly passes it (legacy support).
       ...(email ? { customer_email: email } : {}),
+      // Always create a Stripe Customer record. Saves the buyer's payment
+      // method for future SKUs (Mentor PDF, etc.) without re-entering.
+      customer_creation: "always",
       // Capture metadata for later attribution / refund-flow auditing.
       metadata: {
         product: "golden-indicator",
@@ -95,6 +103,9 @@ export async function POST(req: Request) {
       // Billing address optional — keeps friction low. Card-only US/global,
       // localised tax handled later when Stripe Tax flips on.
       billing_address_collection: "auto",
+      // Phone number not required — keeps the form short, US/EU buyers
+      // tend to bounce when phones are mandatory.
+      phone_number_collection: { enabled: false },
     });
 
     if (!session.url) {

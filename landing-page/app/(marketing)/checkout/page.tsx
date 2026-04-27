@@ -69,12 +69,13 @@ export default async function CheckoutPage({
               <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">
                 Step 1 · Pay
               </div>
-              <h2 className="mt-3 h-tile">Pay <Price variant="amount" /> — unlock lifetime access.</h2>
+              <h2 className="mt-3 h-tile">One tap. <Price variant="amount" />. Lifetime access.</h2>
               <p className="mt-4 text-body text-muted leading-relaxed">
-                Secure card checkout via Stripe. You'll land on Stripe's hosted payment page,
-                pay <strong className="text-ink">${OFFER_USD}</strong> (retail{" "}
+                Tap the button — Stripe handles the rest. Apple Pay, Google Pay,
+                or card — your choice on the next screen. Pay{" "}
+                <strong className="text-ink">${OFFER_USD}</strong> (retail{" "}
                 <span className="line-through decoration-muted-faint/60">${149}</span>),
-                and bounce back here with your portal access ready.
+                land back here with your portal magic-link in your inbox.
               </p>
 
               <div className="mt-8">

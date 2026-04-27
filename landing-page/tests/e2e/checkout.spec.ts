@@ -16,14 +16,13 @@ test.describe("Checkout page — Stripe buy flow", () => {
     await expect(page.getByText(/\$49|₹4,599/).first()).toBeVisible();
   });
 
-  test("Stripe buy button is wired and email input is optional", async ({ page }) => {
+  test("Stripe buy button is wired (one-tap, no email field)", async ({ page }) => {
     const button = page.getByRole("button", { name: /pay \$\d+/i });
     await expect(button).toBeVisible();
-    const email = page.getByPlaceholder(/you@example.com/i);
-    await expect(email).toBeVisible();
-    await expect(email).toHaveAttribute("type", "email");
-    // Optional — no `required` attribute. Stripe collects email on hosted page.
-    await expect(email).not.toHaveAttribute("required", "");
+    await expect(button).toBeEnabled();
+    // Email field intentionally removed for friction-free flow — Stripe
+    // collects it on the hosted page.
+    await expect(page.getByPlaceholder(/you@example.com/i)).toHaveCount(0);
   });
 
   test("payment methods strip lists Stripe", async ({ page }) => {
