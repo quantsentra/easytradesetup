@@ -228,12 +228,41 @@ export const ITEMS: ReadinessItem[] = [
     title: "CSP without unsafe-inline / unsafe-eval",
     category: "Security",
     severity: "warning",
-    description: "Current CSP allows inline scripts to keep the FOUC theme-init script working. Migrate that script behind a nonce to tighten.",
+    description: "Strict CSP — inline scripts pass via per-request nonce + 'strict-dynamic' instead of 'unsafe-inline'.",
     fixSteps: [
-      "Move FOUC theme-init script to external file with nonce",
-      "Drop 'unsafe-inline' / 'unsafe-eval' from script-src in next.config.mjs",
-      "Tick this item once shipped",
+      "middleware.ts generates a nonce per request and emits CSP",
+      "components/seo/JsonLd.tsx reads the nonce from x-nonce and applies it",
+      "next.config.mjs CSP block is empty — middleware is the only writer",
     ],
+    auto: async () => {
+      // Inspect the live CSP header by hitting the deployed home page from
+      // the same origin. If 'unsafe-inline' / 'unsafe-eval' are gone from
+      // script-src, the migration shipped successfully.
+      try {
+        const url = process.env.VERCEL_URL
+          ? `https://${process.env.VERCEL_URL}/`
+          : "http://localhost:3000/";
+        const ctl = new AbortController();
+        const t = setTimeout(() => ctl.abort(), 5_000);
+        const res = await fetch(url, { cache: "no-store", signal: ctl.signal });
+        clearTimeout(t);
+        const csp = res.headers.get("content-security-policy") || "";
+        const scriptSrc = (csp.match(/script-src[^;]*/i) || [""])[0];
+        const hasUnsafeInline = /'unsafe-inline'/.test(scriptSrc);
+        const hasUnsafeEval = /'unsafe-eval'/.test(scriptSrc);
+        const hasNonce = /'nonce-[A-Za-z0-9+/=_-]+'/.test(scriptSrc);
+        const ok = hasNonce && !hasUnsafeInline && !hasUnsafeEval;
+        const detail = ok
+          ? "script-src has nonce + strict-dynamic, no unsafe-*"
+          : `script-src${hasUnsafeInline ? " has 'unsafe-inline'" : ""}${hasUnsafeEval ? " has 'unsafe-eval'" : ""}${!hasNonce ? " missing nonce" : ""}`;
+        return { done: ok, detail };
+      } catch (e) {
+        return {
+          done: false,
+          detail: e instanceof Error ? `Probe failed: ${e.message}` : "Probe failed",
+        };
+      }
+    },
   },
   {
     id: "ops.staging-environment",

@@ -3,10 +3,10 @@ import { withBotId } from "botid/next/config";
 
 /** @type {import('next').NextConfig} */
 
-// Security headers applied to every route. CSP uses 'unsafe-inline' on
-// script-src for the FOUC theme-init script. Planned follow-up: extract the
-// script to an external file served with nonce, or wire Edge Middleware that
-// correctly propagates nonce to Next's hydration bundles.
+// Security headers applied to every route. CSP is set per-request by
+// middleware.ts (so it can attach a nonce that Next's hydration scripts
+// + our JSON-LD inline script pass cleanly). Everything else is static
+// and shared across all routes.
 const securityHeaders = [
   { key: "X-Content-Type-Options",       value: "nosniff" },
   { key: "X-Frame-Options",              value: "DENY" },
@@ -18,27 +18,9 @@ const securityHeaders = [
   // popup from another origin can't reach back into our window. CORP
   // tells the browser only same-origin pages may embed our resources.
   // COEP intentionally omitted — would block third-party assets (Stripe
-  // js, Vercel scripts, fonts) without coreswide subresource changes.
+  // js, Vercel scripts, fonts) without sitewide subresource changes.
   { key: "Cross-Origin-Opener-Policy",   value: "same-origin" },
   { key: "Cross-Origin-Resource-Policy", value: "same-site" },
-  {
-    key: "Content-Security-Policy",
-    value: [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vitals.vercel-insights.com https://challenges.cloudflare.com https://js.stripe.com https://*.js.stripe.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' data: https://fonts.gstatic.com",
-      "img-src 'self' data: blob: https:",
-      "connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://api.coingecko.com https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com",
-      "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://hooks.stripe.com",
-      "worker-src 'self' blob:",
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "object-src 'none'",
-      "upgrade-insecure-requests",
-    ].join("; "),
-  },
 ];
 
 const nextConfig = {

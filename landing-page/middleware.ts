@@ -126,6 +126,34 @@ function planHostnameRouting(req: NextRequest): RoutedPlan {
   return { kind: "passthrough", externalPath: pathname };
 }
 
+// Per-request CSP nonce. Next 14+ auto-applies this to its hydration
+// scripts when the request carries an `x-nonce` header — and our custom
+// JSON-LD `<Script>` reads the same header server-side, so both code paths
+// pass a strict CSP without 'unsafe-inline'.
+function buildCsp(nonce: string): string {
+  const dev = process.env.NODE_ENV === "development";
+  return [
+    "default-src 'self'",
+    // 'strict-dynamic' lets nonced scripts load further scripts (Next's
+    // chunk loader, Vercel Analytics, BotID). 'unsafe-eval' kept in dev
+    // only — Next dev mode uses eval; the prod bundle does not.
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' ${dev ? "'unsafe-eval'" : ""} https:`,
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    "img-src 'self' data: blob: https:",
+    "connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://api.coingecko.com https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com",
+    "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://hooks.stripe.com",
+    "worker-src 'self' blob:",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    "object-src 'none'",
+    "upgrade-insecure-requests",
+  ]
+    .filter(Boolean)
+    .join("; ");
+}
+
 export async function middleware(req: NextRequest) {
   const plan = planHostnameRouting(req);
 
@@ -138,12 +166,28 @@ export async function middleware(req: NextRequest) {
   const logicalPath =
     plan.kind === "rewrite" ? new URL(plan.to, req.url).pathname : plan.externalPath;
 
+  // Generate per-request nonce. Server components read this from
+  // `headers().get("x-nonce")` to apply to inline scripts.
+  const nonce = crypto.randomUUID().replace(/-/g, "");
+  const csp = buildCsp(nonce);
+
+  // Inject x-nonce into the request headers Next forwards to server
+  // components, so they can read it via headers().
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-nonce", nonce);
+  requestHeaders.set("Content-Security-Policy", csp);
+
   // Build the response we'll eventually return. Cookie mutations from
   // Supabase auth attach here regardless of rewrite vs next.
   const res =
     plan.kind === "rewrite"
-      ? NextResponse.rewrite(new URL(plan.to, req.url), { request: req })
-      : NextResponse.next({ request: req });
+      ? NextResponse.rewrite(new URL(plan.to, req.url), {
+          request: { headers: requestHeaders },
+        })
+      : NextResponse.next({ request: { headers: requestHeaders } });
+
+  // Echo CSP on the response so the browser actually enforces it.
+  res.headers.set("Content-Security-Policy", csp);
 
   // Currency cookie — geo-aware default, ?ccy= manual override.
   // Re-resolved every request so the cookie self-heals if it goes stale,

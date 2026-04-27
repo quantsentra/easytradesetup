@@ -254,11 +254,16 @@ export function PageBreadcrumbs({ name, path }: { name: string; path: string }) 
   );
 }
 
-function Script({ data, id }: { data: unknown; id: string }) {
+async function Script({ data, id }: { data: unknown; id: string }) {
+  // Read the per-request nonce that middleware writes to x-nonce so this
+  // inline JSON-LD passes a strict CSP without falling back to unsafe-inline.
+  const { headers } = await import("next/headers");
+  const nonce = (await headers()).get("x-nonce") || undefined;
   return (
     <script
       type="application/ld+json"
       id={id}
+      nonce={nonce}
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
