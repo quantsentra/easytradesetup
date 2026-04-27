@@ -18,10 +18,29 @@ export async function POST(req: Request) {
   if (!user) return NextResponse.json({ ok: false, error: "Not signed in" }, { status: 401 });
   if (!(await isAdmin(user.id))) return NextResponse.json({ ok: false, error: "Forbidden" }, { status: 403 });
 
-  // Origin determines which deploy the suite probes. Honour the Host header
-  // (Vercel sets it to the resolved deployment URL) — falls back to www.
+  // Origin determines which deploy the suite probes. Marketing routes live
+  // on www (or apex) — when the admin caller is on portal.* / a Vercel
+  // preview URL / localhost, probing the request host returns 307s for
+  // every marketing path because middleware bounces non-portal pages back
+  // to sign-in. So:
+  //   1. body { origin } overrides everything (manual diagnostic from devs)
+  //   2. production → always use the canonical marketing origin
+  //   3. local / preview → fall back to the request host
   const url = new URL(req.url);
-  const origin = `${url.protocol}//${url.host}`;
+  let bodyOrigin: string | null = null;
+  try {
+    if ((req.headers.get("content-length") || "0") !== "0") {
+      const body = (await req.json()) as { origin?: string };
+      const v = (body.origin || "").trim();
+      if (v && /^https?:\/\//i.test(v)) bodyOrigin = v.replace(/\/+$/, "");
+    }
+  } catch { /* empty / invalid body — fine */ }
+
+  const origin =
+    bodyOrigin
+    ?? (process.env.VERCEL_ENV === "production"
+        ? "https://www.easytradesetup.com"
+        : `${url.protocol}//${url.host}`);
 
   const result = await runSuite(origin);
 
