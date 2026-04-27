@@ -7,7 +7,6 @@ import {
   OFFER_USD,
   OFFER_INR,
 } from "@/lib/pricing";
-import { LAUNCH_END_DATE, daysUntilLaunchEnd } from "@/lib/launch";
 
 // Comprehensive QA suite — runs ~50 checks across 8 dimensions and returns
 // a structured report that persists to the qa_runs table. Designed to be
@@ -740,18 +739,19 @@ const pricingSteps = (): Step[] => [
     },
   },
   {
-    id: "price.launch-window",
+    id: "price.permanent-discount",
     category: "Pricing",
-    name: "Launch window not expired",
+    name: "Launch price discount messaging coherent",
     run: async () => {
-      const days = daysUntilLaunchEnd();
-      const ok = days > 0;
-      const warn = ok && days <= 7;
+      // Permanent-launch-price model: just verify offer < retail and the
+      // discount is in a reasonable range (50-80% off) so copy stays honest.
+      const ratio = 1 - OFFER_USD / RETAIL_USD;
+      const ok = ratio >= 0.5 && ratio <= 0.8;
       return {
-        id: "price.launch-window", category: "Pricing", name: "Launch window not expired",
-        status: !ok ? "fail" : warn ? "warn" : "pass",
-        detail: ok ? `${days} day(s) until ${LAUNCH_END_DATE}` : `Window closed (ends ${LAUNCH_END_DATE})`,
-        fix: !ok ? "Update LAUNCH_END_DATE in lib/launch.ts or remove inaugural framing" : undefined,
+        id: "price.permanent-discount", category: "Pricing", name: "Launch price discount messaging coherent",
+        status: ok ? "pass" : "warn",
+        detail: `${Math.round(ratio * 100)}% off retail · $${OFFER_USD} vs $${RETAIL_USD}`,
+        fix: ok ? undefined : "Adjust OFFER_USD or RETAIL_USD so the discount sits between 50% and 80% — current copy says 67%",
       };
     },
   },

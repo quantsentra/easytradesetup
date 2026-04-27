@@ -185,7 +185,7 @@ export default async function OG() {
                   boxShadow: "0 0 12px #22D3EE",
                 }}
               />
-              Inaugural offer · live
+              Launch price · 67% off retail
             </div>
             <div
               style={{
@@ -194,7 +194,7 @@ export default async function OG() {
                 fontWeight: 500,
               }}
             >
-              One-time payment · Lifetime access · 7-day refund
+              One-time payment · Lifetime access · No subscriptions
             </div>
           </div>
 

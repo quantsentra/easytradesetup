@@ -63,7 +63,7 @@ export default async function PortalDashboard() {
                   <>Lifetime access active. Your portal ships at the version you bought — plus every future update.</>
                 )
               ) : (
-                <>You don&apos;t have an active license yet. Buy at the inaugural price to unlock the portal.</>
+                <>You don&apos;t have an active license yet. Buy at the launch price to unlock the portal.</>
               )}
             </p>
 
@@ -234,11 +234,11 @@ export default async function PortalDashboard() {
           <div className="min-w-0">
             <span className="tz-chip tz-chip-cyan">
               <span className="tz-chip-dot" style={{ background: "var(--tz-cyan)" }} />
-              Inaugural offer · live
+              Launch price · 67% off retail
             </span>
             <h2 className="tz-cta-title">Lock in the launch price first.</h2>
             <p className="tz-cta-sub">
-              Inaugural window still open. One-time payment, lifetime access, 7-day refund.
+              One permanent price — 67% off retail, always. One-time payment, lifetime access.
               Your portal unlocks the moment payment clears.
             </p>
           </div>

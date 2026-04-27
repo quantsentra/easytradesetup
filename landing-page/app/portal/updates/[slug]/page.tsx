@@ -91,7 +91,7 @@ export default async function UpdateDetailPage({
         </div>
         <div className="tz-card">
           <p className="text-[15px]" style={{ color: "var(--tz-ink-dim)" }}>
-            Market notes are published inside the portal for active customers. Buy at the inaugural
+            Market notes are published inside the portal for active customers. Buy at the launch
             price to unlock.
           </p>
           <div className="mt-5">

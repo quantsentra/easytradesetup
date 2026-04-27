@@ -15,9 +15,9 @@ import {
 import { getUser } from "@/lib/auth-server";
 
 export const metadata: Metadata = {
-  title: "Buy Golden Indicator — inaugural launch price",
+  title: "Buy Golden Indicator — launch price, 67% off retail",
   description:
-    "Buy Golden Indicator at the inaugural launch price. $49 / ₹4,599 one-time, lifetime access. Stripe checkout for global cards. UPI for India coming.",
+    "Buy Golden Indicator at the launch price. $49 / ₹4,599 one-time, lifetime access — 67% off retail, always. Stripe checkout for global cards + INR. UPI via Razorpay coming.",
   alternates: { canonical: "/checkout" },
 };
 
@@ -78,9 +78,9 @@ export default async function CheckoutPage({
               currency,
               unit_amount: offerAmount * 100,
               product_data: {
-                name: "Golden Indicator — Inaugural",
-                description: `Lifetime access · TradingView Pine v5 indicator + bundle. Retail ${retailLabel}, inaugural ${offerLabel}.`,
-                metadata: { sku: "golden-indicator", tier: "inaugural" },
+                name: "Golden Indicator — Launch price",
+                description: `Lifetime access · TradingView Pine v5 indicator + bundle. Launch price ${offerLabel} (retail ${retailLabel}).`,
+                metadata: { sku: "golden-indicator", tier: "launch" },
               },
             },
           },
@@ -91,15 +91,15 @@ export default async function CheckoutPage({
         metadata: {
           user_id: user.id,
           product: "golden-indicator",
-          tier: "inaugural",
+          tier: "launch",
           offer_amount: String(offerAmount),
           currency,
         },
         invoice_creation: {
           enabled: true,
           invoice_data: {
-            description: "Golden Indicator — Inaugural offer (lifetime access)",
-            metadata: { product: "golden-indicator", tier: "inaugural", user_id: user.id, currency },
+            description: "Golden Indicator — Launch price (lifetime access)",
+            metadata: { product: "golden-indicator", tier: "launch", user_id: user.id, currency },
             footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/portal/support",
           },
         },
@@ -133,9 +133,9 @@ export default async function CheckoutPage({
         ]}
       />
       <PageHeader
-        eyebrow="Buy · Inaugural offer"
+        eyebrow="Buy · Launch price"
         title={<>Buy Golden Indicator.</>}
-        lede={`One-time payment, lifetime access. Pay ${symbol}${currency === "inr" ? offerAmount.toLocaleString("en-IN") : offerAmount} via Stripe — secure card / UPI-debit checkout. India users: full UPI gateway via Razorpay landing soon; for now Stripe accepts INR via Indian + international cards.`}
+        lede={`One-time payment, lifetime access. Pay ${symbol}${currency === "inr" ? offerAmount.toLocaleString("en-IN") : offerAmount} via Stripe — 67% off retail, always. India: full UPI gateway via Razorpay landing soon; Stripe accepts INR via Indian + international cards in the meantime.`}
       />
 
       <section className="bg-surface">
@@ -211,7 +211,7 @@ export default async function CheckoutPage({
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#2da44e] mt-0.5">✓</span>
-                  <span>Inaugural price locked — even if retail moves up later.</span>
+                  <span>Same price for everyone — no countdowns, no time pressure.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#2da44e] mt-0.5">✓</span>

@@ -92,9 +92,9 @@ export async function POST(req: Request) {
             currency,
             unit_amount: offer * 100,
             product_data: {
-              name: "Golden Indicator — Inaugural",
-              description: `Lifetime access · TradingView Pine v5 indicator + bundle. Retail ${symbol}${formattedRetail}, inaugural ${symbol}${formattedOffer}.`,
-              metadata: { sku: "golden-indicator", tier: "inaugural" },
+              name: "Golden Indicator — Launch price",
+              description: `Lifetime access · TradingView Pine v5 indicator + bundle. Launch price ${symbol}${formattedOffer} (retail ${symbol}${formattedRetail}).`,
+              metadata: { sku: "golden-indicator", tier: "launch" },
             },
           },
         },
@@ -105,17 +105,17 @@ export async function POST(req: Request) {
       metadata: {
         user_id: user.id,
         product: "golden-indicator",
-        tier: "inaugural",
+        tier: "launch",
         offer_amount: String(offer),
         currency,
       },
       invoice_creation: {
         enabled: true,
         invoice_data: {
-          description: "Golden Indicator — Inaugural offer (lifetime access)",
+          description: "Golden Indicator — Launch price (lifetime access)",
           metadata: {
             product: "golden-indicator",
-            tier: "inaugural",
+            tier: "launch",
             user_id: user.id,
             currency,
           },

@@ -18,7 +18,7 @@ export default async function DownloadsPage() {
         </div>
         <div className="tz-card">
           <p className="text-[15px]" style={{ color: "var(--tz-ink-dim)" }}>
-            Your download library unlocks the moment your license activates. Buy at the inaugural price
+            Your download library unlocks the moment your license activates. Buy at the launch price
             to get access.
           </p>
           <div className="mt-5">

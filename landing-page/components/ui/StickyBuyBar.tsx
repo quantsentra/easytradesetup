@@ -35,7 +35,7 @@ export default function StickyBuyBar() {
       >
         <div className="min-w-0">
           <div className="text-nano uppercase tracking-widest text-ink-40 font-semibold">
-            Inaugural · Launch price
+            Launch price · 67% off
           </div>
           <div className="text-caption font-semibold tabular-nums truncate text-ink">
             <Price variant="strike-offer" />

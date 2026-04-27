@@ -1,12 +1,16 @@
-// Inaugural launch window for Golden Indicator.
-// Edit the end date here; every countdown on the site updates.
+// Launch-window helpers — kept as a stable shim so existing importers
+// don't break. The product is permanently at the launch price; there is
+// no countdown, no expiry, no inaugural window. Components that read
+// these values render no countdown UI.
+//
+// Don't reintroduce a date here without also updating the copy strategy
+// across /pricing, /checkout, OfferBanner, and the QA suite. The current
+// model is "one permanent price, framed as 67% off retail."
 
-export const LAUNCH_START_DATE = "2026-04-01"; // ISO date — inaugural window opens
-export const LAUNCH_END_DATE = "2026-05-15";   // ISO date — inaugural pricing ends at this date (23:59 IST)
-export const LAUNCH_END_DATE_LABEL = "15 May 2026"; // human-readable copy
+export const LAUNCH_END_DATE = "9999-12-31";   // sentinel — far future, never expires
+export const LAUNCH_END_DATE_LABEL = "always";  // human-readable; reads naturally in "ends always" → "always available"
 
-export function daysUntilLaunchEnd(today: Date = new Date()): number {
-  const end = new Date(`${LAUNCH_END_DATE}T23:59:59+05:30`);
-  const ms = end.getTime() - today.getTime();
-  return Math.max(0, Math.ceil(ms / 86_400_000));
+export function daysUntilLaunchEnd(_today: Date = new Date()): number {
+  // No expiry — always 0 to signal "no countdown to render".
+  return 0;
 }

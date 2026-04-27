@@ -1,5 +1,4 @@
 import { OFFER_USD, OFFER_INR, RETAIL_USD } from "@/lib/pricing";
-import { LAUNCH_END_DATE } from "@/lib/launch";
 
 const SITE_URL = "https://www.easytradesetup.com";
 
@@ -100,8 +99,7 @@ export function ProductJsonLd() {
         "@type": "Offer",
         priceCurrency: "USD",
         price: OFFER_USD,
-        priceValidUntil: LAUNCH_END_DATE,
-        availability: "https://schema.org/PreOrder",
+        availability: "https://schema.org/InStock",
         url: `${SITE_URL}/checkout`,
         seller: { "@type": "Organization", name: "EasyTradeSetup" },
       },
@@ -109,8 +107,7 @@ export function ProductJsonLd() {
         "@type": "Offer",
         priceCurrency: "INR",
         price: OFFER_INR,
-        priceValidUntil: LAUNCH_END_DATE,
-        availability: "https://schema.org/PreOrder",
+        availability: "https://schema.org/InStock",
         url: `${SITE_URL}/checkout`,
         seller: { "@type": "Organization", name: "EasyTradeSetup" },
       },
@@ -153,16 +150,14 @@ export function SoftwareApplicationJsonLd() {
         "@type": "Offer",
         priceCurrency: "USD",
         price: OFFER_USD,
-        priceValidUntil: LAUNCH_END_DATE,
-        availability: "https://schema.org/PreOrder",
+        availability: "https://schema.org/InStock",
         url: `${SITE_URL}/checkout`,
       },
       {
         "@type": "Offer",
         priceCurrency: "INR",
         price: OFFER_INR,
-        priceValidUntil: LAUNCH_END_DATE,
-        availability: "https://schema.org/PreOrder",
+        availability: "https://schema.org/InStock",
         url: `${SITE_URL}/checkout`,
       },
     ],

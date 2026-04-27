@@ -275,7 +275,7 @@ Your spot is locked. We'll send the secure payment link the moment checkout open
             </h1>
 
             <p style="margin:0 0 16px;font-size:15px;line-height:1.55;color:rgba(21,24,26,0.72)">
-              We've saved your email. The moment payments go live — <strong style="color:#15181a">UPI for India, Gumroad for global</strong> — you'll receive a secure payment link at the inaugural price of <strong style="color:#15181a">${offerLabel}</strong>, locked in even if retail moves up.
+              We've saved your email. Stripe checkout is live now (USD + INR cards) and UPI via Razorpay is landing soon. Buy whenever — the launch price of <strong style="color:#15181a">${offerLabel}</strong> stays put. 67% off retail, always.
             </p>
 
           </td>
@@ -349,7 +349,7 @@ function welcomeText(offerLabel: string): string {
   return [
     "You're on the list.",
     "",
-    `We've saved your email. The moment payments go live — UPI for India, Gumroad for global — you'll receive a secure payment link at the inaugural price of ${offerLabel}, locked in even if retail moves up.`,
+    `We've saved your email. Stripe checkout is live now (USD + INR cards) and UPI via Razorpay is landing soon. Buy whenever — the launch price of ${offerLabel} stays put. 67% off retail, always.`,
     "",
     "While you wait:",
     "  • Read a free chapter:  https://www.easytradesetup.com/sample",

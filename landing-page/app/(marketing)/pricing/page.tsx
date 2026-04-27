@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/ui/PageHeader";
 import Price from "@/components/ui/Price";
-import LaunchCountdown from "@/components/ui/LaunchCountdown";
 import PaymentLogos from "@/components/ui/PaymentLogos";
 import { ProductJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
@@ -10,7 +9,7 @@ import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 export const metadata: Metadata = {
   title: "Pricing — one-time, lifetime, no subscription",
   description:
-    "Golden Indicator inaugural launch: $49 / ₹4,599 (retail $149 / ₹13,999). One-time payment, lifetime updates, no recurring fees. Support tickets, 24h human reply.",
+    "Golden Indicator launch price: $49 / ₹4,599 (retail $149 / ₹13,999) — 67% off, always. One-time payment, lifetime updates, no recurring fees. Support tickets, 24h human reply.",
   keywords: [
     "TradingView indicator price",
     "Pine Script one-time payment",
@@ -88,11 +87,7 @@ export default function PricingPage() {
               Instant delivery · Lifetime access · Support tickets, 24h reply
             </p>
 
-            <div className="mt-10 pt-8 hairline-t">
-              <LaunchCountdown />
-            </div>
-
-            <div className="mt-8 pt-6 hairline-t">
+            <div className="mt-10 pt-6 hairline-t">
               <PaymentLogos />
             </div>
           </div>

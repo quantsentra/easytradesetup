@@ -44,7 +44,7 @@ export default function PricingTeaser() {
               <Price variant="strike-offer" />
             </h2>
             <p className="mt-4 body-muted max-w-xl mx-auto">
-              Inaugural launch price — over 60% off retail. One payment, lifetime access. No
+              Launch price — 67% off retail, always. One payment, lifetime access. No
               monthly billing, no locked tiers, no recurring charges.
             </p>
             <p className="mt-3 text-caption text-ink-60 max-w-xl mx-auto">

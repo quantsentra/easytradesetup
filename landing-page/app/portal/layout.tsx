@@ -6,7 +6,6 @@ import AccountMenu from "@/components/auth/AccountMenu";
 import { BrandMark } from "@/components/nav/TopNav";
 import PortalMobileNav from "@/components/nav/PortalMobileNav";
 import BackToTop from "@/components/ui/BackToTop";
-import { LAUNCH_END_DATE_LABEL } from "@/lib/launch";
 
 export const metadata: Metadata = {
   title: "Portal",
@@ -97,7 +96,7 @@ export default async function PortalLayout({ children }: { children: React.React
             </span>
           </div>
           <div className="tz-footer-right">
-            <span>Inaugural offer · ends {LAUNCH_END_DATE_LABEL}</span>
+            <span>Launch price · 67% off retail, always</span>
             <span className="tz-footer-dot" aria-hidden>·</span>
             <Link href="/portal/support" className="tz-footer-link">Support</Link>
             <span className="tz-footer-dot" aria-hidden>·</span>

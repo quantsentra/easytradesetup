@@ -83,7 +83,7 @@ async function loadOverview() {
   const manual = orders.filter((e) => e.source === "manual");
   const activeCount = orders.filter((e) => e.active).length;
 
-  // Revenue: paid orders × inaugural offer. Manual grants excluded.
+  // Revenue: paid orders × launch price. Manual grants excluded.
   const revenueUsd = paid.length * OFFER_USD;
   const revenueInr = paid.length * OFFER_INR;
   const indiaRevenueInr = india.length * OFFER_INR;
@@ -562,7 +562,7 @@ export default async function AdminOverview() {
 
       <p className="mt-4 text-[10.5px] font-mono uppercase tracking-widest"
         style={{ color: "var(--tz-ink-mute)" }}>
-        Revenue estimate · paid orders × {format(USD_SET, OFFER_USD)} (inaugural offer). Real per-order amounts will land when Stripe/Razorpay webhook is wired.
+        Revenue estimate · paid orders × {format(USD_SET, OFFER_USD)} (launch price). Real per-order amounts come from Stripe metadata once webhooks fully populate.
       </p>
     </>
   );

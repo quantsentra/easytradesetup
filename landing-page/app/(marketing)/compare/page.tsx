@@ -248,7 +248,7 @@ export default function ComparePage() {
                 Save $1,400–$2,000
               </div>
               <p className="mt-2 text-caption text-ink-60 leading-relaxed">
-                Versus a typical $39-$58/month subscription over 36 months, at the inaugural launch price of{" "}
+                Versus a typical $39-$58/month subscription over 36 months, at our launch price of{" "}
                 <Price variant="amount" />.
               </p>
             </div>
