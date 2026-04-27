@@ -10,7 +10,7 @@ import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 export const metadata: Metadata = {
   title: "Pricing — one-time, lifetime, no subscription",
   description:
-    "Golden Indicator inaugural launch: $49 / ₹4,599 (retail $149 / ₹13,999). One-time payment, lifetime updates, no recurring fees. 7-day refund.",
+    "Golden Indicator inaugural launch: $49 / ₹4,599 (retail $149 / ₹13,999). One-time payment, lifetime updates, no recurring fees. Support tickets, 24h human reply.",
   keywords: [
     "TradingView indicator price",
     "Pine Script one-time payment",
@@ -85,7 +85,7 @@ export default function PricingPage() {
               </Link>
             </div>
             <p className="mt-5 text-nano font-mono uppercase tracking-widest text-ink-40">
-              Instant delivery · Lifetime access · 7-day refund
+              Instant delivery · Lifetime access · Support tickets, 24h reply
             </p>
 
             <div className="mt-10 pt-8 hairline-t">

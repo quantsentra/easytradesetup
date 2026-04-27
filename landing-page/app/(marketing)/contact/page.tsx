@@ -5,7 +5,7 @@ import { PageBreadcrumbs } from "@/components/seo/JsonLd";
 export const metadata: Metadata = {
   title: "Contact — Golden Indicator support",
   description:
-    "Get in touch with the EasyTradeSetup team. Email hello@easytradesetup.com — founder replies within 24 hours. Refund, install, feature requests.",
+    "Get in touch with the EasyTradeSetup team. Email hello@easytradesetup.com — founder replies within 24 hours. Install help, feature requests, bulk licensing.",
   keywords: ["EasyTradeSetup contact", "Golden Indicator support", "TradingView indicator help"],
   alternates: { canonical: "/contact" },
   openGraph: {
@@ -42,7 +42,7 @@ export default function ContactPage() {
               <div className="text-micro font-semibold text-muted-faint uppercase tracking-wider">Before you write</div>
               <ul className="mt-5 space-y-3 text-caption text-muted">
                 <li>— For install issues, check <a href="/docs/install" className="link-apple">docs/install</a> first.</li>
-                <li>— For refund requests, include order ID and reason.</li>
+                <li>— For install / setup help, attach a TradingView screenshot showing the issue.</li>
                 <li>— For bulk licensing (trading rooms, academies), mention team size.</li>
               </ul>
             </div>

@@ -31,7 +31,7 @@ const cols = [
     links: [
       { href: "/legal/terms", label: "Terms" },
       { href: "/legal/privacy", label: "Privacy" },
-      { href: "/legal/refund", label: "Refund Policy" },
+      { href: "/legal/refund", label: "Returns Policy" },
       { href: "/legal/disclaimer", label: "Trading Disclaimer" },
     ],
   },

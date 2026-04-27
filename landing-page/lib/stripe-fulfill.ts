@@ -8,8 +8,14 @@ import { createSupabaseAdmin } from "@/lib/supabase/server";
 // upserted, and the email send tolerates repeats (Stripe may resend events).
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
+// Sender. Default to Resend's shared sandbox domain so the integration
+// works the moment the API key is set, but Gmail/Outlook will spam-flag
+// onboarding@resend.dev because that domain has poor reputation. Set
+// PURCHASE_FROM_EMAIL to "EasyTradeSetup <welcome@easytradesetup.com>"
+// once the easytradesetup.com domain is verified in Resend (DKIM + SPF).
 const FROM_EMAIL = process.env.PURCHASE_FROM_EMAIL || "EasyTradeSetup <onboarding@resend.dev>";
 const NOTIFY_EMAIL = process.env.LEAD_NOTIFY_EMAIL || "thomas@easytradesetup.com";
+const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "thomas@easytradesetup.com";
 const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL || "https://www.easytradesetup.com";
 const PORTAL_ORIGIN = "https://portal.easytradesetup.com";
 
@@ -238,48 +244,122 @@ async function sendBuyerEmail(
   if (!resend) return;
   const amount = fmtMoney(args.amountCents, args.currency);
   const portalCta = args.magicLink || `${PORTAL_ORIGIN}/sign-in`;
-  const subject = `Welcome — your Golden Indicator is unlocked`;
+  const docsUrl = `${PORTAL_ORIGIN}/portal/docs/install`;
+  const supportUrl = `${PORTAL_ORIGIN}/portal/support`;
+  const subject = `Your Golden Indicator access is ready`;
+  const preheader = `Open the portal, install on TradingView, follow the guide. Receipt to follow from Stripe.`;
 
+  // Spam-mitigation considerations for this template:
+  //   - Plain transactional language; no caps, no $ in subject, no urgency.
+  //   - Plain-text version matches HTML 1:1 so spam filters don't see a
+  //     mismatch between visible body and source.
+  //   - List-Unsubscribe + List-Unsubscribe-Post = RFC 8058 one-click unsub
+  //     (Gmail/Yahoo bulk-sender rule from Feb 2024).
+  //   - Reply-To set to a human inbox.
+  //   - From address quality matters most: switch FROM_EMAIL to a verified
+  //     easytradesetup.com sender once Resend domain is set up.
   const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" />
 <title>${subject}</title></head>
-<body style="margin:0;padding:0;background:#faf9f5;font-family:Inter,Arial,sans-serif;color:#15181a;">
-<div style="display:none;max-height:0;overflow:hidden;">Payment confirmed. Tap the button below to access your portal — Pine indicator, install guide, and refund window.</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf9f5;padding:24px 12px;">
+<body style="margin:0;padding:0;background:#faf9f5;font-family:-apple-system,BlinkMacSystemFont,'Inter',Arial,sans-serif;color:#15181a;">
+<div style="display:none;max-height:0;overflow:hidden;font-size:1px;line-height:1px;color:#faf9f5;">${preheader}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf9f5;padding:32px 12px;">
 <tr><td align="center">
-<table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;background:#fff;border:1px solid rgba(21,24,26,0.08);border-radius:14px;">
-<tr><td style="padding:28px 32px 20px;border-bottom:1px solid rgba(21,24,26,0.08);">
-<div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(21,24,26,0.52);font-family:'Space Grotesk',Arial,sans-serif;">Payment confirmed</div>
-<h1 style="margin:8px 0 0;font:600 24px 'Space Grotesk',Arial,sans-serif;letter-spacing:-0.02em;">Welcome aboard.</h1>
-<p style="margin:8px 0 0;font-size:14.5px;color:rgba(21,24,26,0.72);line-height:1.55;">${amount} processed. Lifetime access unlocked.</p>
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid rgba(21,24,26,0.08);border-radius:14px;overflow:hidden;">
+
+<tr><td style="padding:28px 32px 24px;background:linear-gradient(135deg,rgba(43,123,255,0.08) 0%,rgba(34,211,238,0.04) 100%);border-bottom:1px solid rgba(21,24,26,0.06);">
+<div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#2B7BFF;font-weight:600;">Order confirmed · ${amount}</div>
+<h1 style="margin:10px 0 6px;font:600 26px -apple-system,'Inter',Arial,sans-serif;letter-spacing:-0.02em;color:#15181a;">Your access is ready.</h1>
+<p style="margin:0;font-size:14.5px;color:rgba(21,24,26,0.72);line-height:1.55;">Lifetime access to Golden Indicator + the full bundle. Stripe is emailing your PDF invoice separately.</p>
 </td></tr>
-<tr><td style="padding:24px 32px;">
-<p style="margin:0;font-size:14.5px;line-height:1.6;color:#15181a;">Your portal is ready. Tap below to land straight inside — install guide, indicator unlock instructions, Trade Logic PDF, and Risk Calculator are waiting. Stripe will email a separate PDF invoice receipt to you within minutes.</p>
-<table role="presentation" cellpadding="0" cellspacing="0" style="margin:20px 0 4px;"><tr><td>
-<a href="${portalCta}" style="display:inline-block;background:#2B7BFF;color:#fff;text-decoration:none;font:600 14px Inter,Arial,sans-serif;padding:12px 22px;border-radius:9px;">Open the portal →</a>
+
+<tr><td style="padding:28px 32px 8px;">
+<p style="margin:0 0 18px;font-size:14.5px;line-height:1.6;color:#15181a;">Tap below to land straight in your portal — sign-in is automatic via this link.</p>
+<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 8px;"><tr><td>
+<a href="${portalCta}" style="display:inline-block;background:#2B7BFF;color:#ffffff;text-decoration:none;font:600 15px -apple-system,'Inter',Arial,sans-serif;padding:14px 26px;border-radius:10px;">Open my portal &nbsp;→</a>
 </td></tr></table>
-<p style="margin:18px 0 0;font-size:13px;color:rgba(21,24,26,0.52);line-height:1.55;">If the button doesn't work, paste this in your browser:<br /><span style="word-break:break-all;">${portalCta}</span></p>
+<p style="margin:14px 0 0;font-size:12px;color:rgba(21,24,26,0.52);line-height:1.55;">Button not working? Paste this URL into your browser:<br /><span style="word-break:break-all;color:rgba(21,24,26,0.66);">${portalCta}</span></p>
 </td></tr>
-<tr><td style="padding:18px 32px 24px;border-top:1px solid rgba(21,24,26,0.08);font-size:12.5px;color:rgba(21,24,26,0.52);line-height:1.55;">
-<strong style="color:rgba(21,24,26,0.72);">Refund window:</strong> 7 days, no-questions. Reply to this email to claim.<br />
-<strong style="color:rgba(21,24,26,0.72);">Educational tool</strong> — not investment advice. You decide every trade.
+
+<tr><td style="padding:24px 32px;border-top:1px solid rgba(21,24,26,0.06);">
+<div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(21,24,26,0.52);font-weight:600;margin-bottom:14px;">Next steps · 15 minutes</div>
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+<tr><td style="vertical-align:top;padding:0 0 14px;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td style="width:32px;vertical-align:top;"><div style="width:24px;height:24px;border-radius:999px;background:#2B7BFF;color:#ffffff;font:700 12px Arial,sans-serif;text-align:center;line-height:24px;">1</div></td>
+<td style="padding-left:8px;">
+<div style="font:600 14px -apple-system,'Inter',Arial,sans-serif;color:#15181a;">Open the portal</div>
+<div style="font-size:13.5px;color:rgba(21,24,26,0.72);line-height:1.55;margin-top:2px;">Tap the button above — you'll land signed in.</div>
+</td></tr></table>
+</td></tr>
+
+<tr><td style="vertical-align:top;padding:0 0 14px;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td style="width:32px;vertical-align:top;"><div style="width:24px;height:24px;border-radius:999px;background:#2B7BFF;color:#ffffff;font:700 12px Arial,sans-serif;text-align:center;line-height:24px;">2</div></td>
+<td style="padding-left:8px;">
+<div style="font:600 14px -apple-system,'Inter',Arial,sans-serif;color:#15181a;">Install on TradingView</div>
+<div style="font-size:13.5px;color:rgba(21,24,26,0.72);line-height:1.55;margin-top:2px;">Step-by-step <a href="${docsUrl}" style="color:#2B7BFF;text-decoration:underline;">install guide</a> — 5 minutes from copy to chart.</div>
+</td></tr></table>
+</td></tr>
+
+<tr><td style="vertical-align:top;padding:0 0 14px;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td style="width:32px;vertical-align:top;"><div style="width:24px;height:24px;border-radius:999px;background:#2B7BFF;color:#ffffff;font:700 12px Arial,sans-serif;text-align:center;line-height:24px;">3</div></td>
+<td style="padding-left:8px;">
+<div style="font:600 14px -apple-system,'Inter',Arial,sans-serif;color:#15181a;">Read the Trade Logic PDF</div>
+<div style="font-size:13.5px;color:rgba(21,24,26,0.72);line-height:1.55;margin-top:2px;">~50 pages · 8 setups. Don't skip — the indicator is a decision layer, the PDF is how to use it.</div>
+</td></tr></table>
+</td></tr>
+
+<tr><td style="vertical-align:top;">
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td style="width:32px;vertical-align:top;"><div style="width:24px;height:24px;border-radius:999px;background:#2B7BFF;color:#ffffff;font:700 12px Arial,sans-serif;text-align:center;line-height:24px;">4</div></td>
+<td style="padding-left:8px;">
+<div style="font:600 14px -apple-system,'Inter',Arial,sans-serif;color:#15181a;">Trade your way</div>
+<div style="font-size:13.5px;color:rgba(21,24,26,0.72);line-height:1.55;margin-top:2px;">Educational tool. Not a profit machine. Follow the playbook, manage risk, results compound over months not days.</div>
+</td></tr></table>
 </td></tr>
 </table>
-<p style="font-size:11px;color:rgba(21,24,26,0.40);margin:18px 0 0;font-family:Inter,Arial,sans-serif;">EasyTradeSetup · <a href="${SITE_ORIGIN}" style="color:rgba(21,24,26,0.52);">easytradesetup.com</a></p>
+</td></tr>
+
+<tr><td style="padding:20px 32px;background:rgba(43,123,255,0.04);border-top:1px solid rgba(21,24,26,0.06);">
+<div style="font:600 13px -apple-system,'Inter',Arial,sans-serif;color:#15181a;margin-bottom:4px;">Stuck on install or anything else?</div>
+<div style="font-size:13px;color:rgba(21,24,26,0.72);line-height:1.55;">Open a support ticket — <a href="${supportUrl}" style="color:#2B7BFF;text-decoration:underline;">portal.easytradesetup.com/portal/support</a> — and a human replies within 24h. Or just reply to this email.</div>
+</td></tr>
+
+<tr><td style="padding:18px 32px 22px;border-top:1px solid rgba(21,24,26,0.06);font-size:11.5px;color:rgba(21,24,26,0.52);line-height:1.6;">
+Educational tool · Not investment advice · Past performance does not guarantee future results. Trading involves substantial risk of loss. You decide every trade.
+</td></tr>
+
+</table>
+<p style="font-size:11px;color:rgba(21,24,26,0.40);margin:18px 0 0;font-family:-apple-system,Arial,sans-serif;">EasyTradeSetup · <a href="${SITE_ORIGIN}" style="color:rgba(21,24,26,0.52);text-decoration:none;">easytradesetup.com</a></p>
 </td></tr></table></body></html>`;
 
-  const text = `Payment confirmed — ${amount}.
+  const text = `Order confirmed — ${amount}.
 
-Your Golden Indicator portal is ready. Open here:
+Your Golden Indicator access is ready. Open the portal here:
 ${portalCta}
 
-Stripe will send a separate PDF invoice receipt to your inbox.
+Stripe is emailing your PDF invoice separately.
 
-Refund window: 7 days, no questions. Reply to this email to claim.
+NEXT STEPS — 15 minutes
+1) Open the portal (link above) — you'll land signed in.
+2) Install on TradingView: ${docsUrl}
+3) Read the Trade Logic PDF — ~50 pages, 8 setups.
+4) Trade your way. Educational tool — not a profit machine. Follow
+   the playbook, manage risk, results compound over months not days.
 
-Educational tool, not investment advice — you decide every trade.
+Stuck on install or anything else?
+Open a ticket at ${supportUrl} or just reply to this email — a human
+replies within 24h.
 
-— EasyTradeSetup`;
+Educational tool. Not investment advice. Past performance does not
+guarantee future results. Trading involves substantial risk of loss.
+You decide every trade.
+
+— EasyTradeSetup
+${SITE_ORIGIN}`;
 
   try {
     await resend.emails.send({
@@ -288,8 +368,15 @@ Educational tool, not investment advice — you decide every trade.
       subject,
       html,
       text,
-      replyTo: NOTIFY_EMAIL,
-      headers: { "List-Unsubscribe": `<mailto:${NOTIFY_EMAIL}?subject=Unsubscribe>` },
+      replyTo: SUPPORT_EMAIL,
+      headers: {
+        // Gmail/Yahoo bulk-sender rule (effective Feb 2024) requires
+        // List-Unsubscribe + List-Unsubscribe-Post for transactional
+        // bulk mail. Adding both unconditionally — even though this is
+        // a 1:1 transactional email — boosts inbox placement.
+        "List-Unsubscribe": `<mailto:${SUPPORT_EMAIL}?subject=Unsubscribe>`,
+        "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+      },
     });
   } catch (e) {
     console.error("[stripe-fulfill] buyer email failed", e);

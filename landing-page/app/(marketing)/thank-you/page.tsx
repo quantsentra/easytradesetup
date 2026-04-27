@@ -122,11 +122,11 @@ export default async function ThankYouPage({
 
         {isStripe && session?.paid && (
           <p className="mt-8 text-caption text-muted">
-            Need help? Reply to the welcome email or write{" "}
-            <a href="mailto:thomas@easytradesetup.com" className="underline">
-              thomas@easytradesetup.com
-            </a>
-            . 7-day refund window, no questions.
+            Stuck on install? Open a support ticket at{" "}
+            <a href="https://portal.easytradesetup.com/portal/support" className="underline">
+              portal · support
+            </a>{" "}
+            — human reply within 24h. Or reply to the welcome email.
           </p>
         )}
       </div>

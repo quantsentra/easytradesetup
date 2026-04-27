@@ -34,11 +34,12 @@ export default function TermsPage() {
               capital. You trade at your own risk.
             </p>
 
-            <h2>5. Payment & refunds</h2>
+            <h2>5. Payment & returns</h2>
             <p>
-              Indian customers are billed in Indian Rupees (₹2,499) inclusive of GST. International customers are
-              billed in US Dollars ($49). All applicable taxes are included in the displayed price. Refunds are
-              subject to our <a href="/legal/refund">refund policy</a>.
+              Indian customers are billed in Indian Rupees (₹4,599) inclusive of GST. International customers are
+              billed in US Dollars ($49). All applicable taxes are included in the displayed price. The product is
+              a one-time digital download; all sales are final once portal access is unlocked. Install issues are
+              addressed via support tickets — see our <a href="/legal/refund">returns policy</a>.
             </p>
 
             <h2>6. Limitation of liability</h2>

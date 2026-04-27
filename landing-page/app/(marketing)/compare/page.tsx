@@ -46,7 +46,7 @@ const rows: Row[] = [
   { label: "Founder accessible",     ets: "Direct email · 24h",    lux: "Ticket queue", ts: "Ticket queue", yt: "DM roulette" },
   { label: "Signals / trade calls",  ets: "No — tool only",        lux: "No",           ts: "No",           yt: "Often yes" },
   { label: "Fake performance claims",ets: "None",                  lux: "Restrained",   ts: "Restrained",   yt: "Common" },
-  { label: "Refund window",          ets: "7 days · no questions", lux: "Pro-rated",    ts: "Pro-rated",    yt: "Usually none" },
+  { label: "Support response",       ets: "24h human reply",       lux: "Forum-only",   ts: "Forum-only",   yt: "None" },
 ];
 
 const ETS_BG =
@@ -283,7 +283,7 @@ export default function ComparePage() {
             </Link>
           </div>
           <p className="mt-4 text-nano font-mono uppercase tracking-widest text-ink-40 text-center">
-            7-day refund · Lifetime updates · No subscription
+            Lifetime updates · No subscription · Support, 24h reply
           </p>
 
           <p className="mt-12 text-nano text-ink-40 max-w-2xl mx-auto text-center leading-relaxed">

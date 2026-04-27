@@ -80,7 +80,7 @@ export default function PricingTeaser() {
             </div>
 
             <p className="mt-5 text-nano font-mono uppercase tracking-widest text-ink-40">
-              One-time payment · Instant delivery · Lifetime access · 7-day refund
+              One-time payment · Instant delivery · Lifetime access · Support tickets, 24h reply
             </p>
 
             <div className="mt-10 pt-8 hairline-t">

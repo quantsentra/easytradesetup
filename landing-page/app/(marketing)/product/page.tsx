@@ -109,7 +109,7 @@ export default function ProductPage() {
             </Link>
           </div>
           <p className="mt-4 text-nano font-mono uppercase tracking-widest text-ink-40">
-            One-time · Lifetime updates · 7-day refund
+            One-time · Lifetime updates · Support tickets, 24h reply
           </p>
         </div>
       </section>

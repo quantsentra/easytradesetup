@@ -48,7 +48,7 @@ const MARKETS: Record<MarketKey, Market> = {
     searchTerm: "NIFTY 50 indicator TradingView",
     metaTitle: "NIFTY 50 Indicator for TradingView · Golden Indicator (Pine v5)",
     metaDescription:
-      "Non-repainting NIFTY 50 indicator for TradingView. Market structure, regime bias, opening-range breakout, PDH / PDL levels, supply / demand zones. Tuned for NSE intraday + weekly expiry. One-time $49 / ₹4,599. 7-day refund.",
+      "Non-repainting NIFTY 50 indicator for TradingView. Market structure, regime bias, opening-range breakout, PDH / PDL levels, supply / demand zones. Tuned for NSE intraday + weekly expiry. One-time $49 / ₹4,599. Lifetime updates.",
     keywords: [
       "NIFTY 50 indicator TradingView",
       "best NIFTY indicator",

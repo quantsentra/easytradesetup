@@ -102,7 +102,7 @@ export async function POST(req: Request) {
             tier: "inaugural",
             user_id: user.id,
           },
-          footer: "EasyTradeSetup · Educational tool, not investment advice. 7-day no-questions refund.",
+          footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/portal/support",
         },
       },
       // Buyer lands on /thank-you with the session_id — we verify there

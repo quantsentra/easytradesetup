@@ -79,7 +79,7 @@ const resources: Resource[] = [
   {
     href: "/legal/disclaimer",
     title: "Disclaimer + legal",
-    blurb: "Educational only. SEBI compliance note. Refund + privacy + terms in one place.",
+    blurb: "Educational only. SEBI compliance note. Returns + privacy + terms in one place.",
     meta: "Legal",
     tone: "gold",
     icon: <ScrollIcon />,

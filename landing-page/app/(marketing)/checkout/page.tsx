@@ -75,7 +75,7 @@ export default async function CheckoutPage({
           invoice_data: {
             description: "Golden Indicator — Inaugural offer (lifetime access)",
             metadata: { product: "golden-indicator", tier: "inaugural", user_id: user.id },
-            footer: "EasyTradeSetup · Educational tool, not investment advice. 7-day no-questions refund.",
+            footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/portal/support",
           },
         },
         success_url: `https://www.easytradesetup.com/thank-you?session_id={CHECKOUT_SESSION_ID}`,
@@ -171,11 +171,11 @@ export default async function CheckoutPage({
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#2da44e] mt-0.5">✓</span>
-                  <span>7-day refund window, no questions asked.</span>
+                  <span>Install or usage issue? Open a support ticket — human reply within 24h.</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-[#2da44e] mt-0.5">✓</span>
-                  <span>Magic link emailed on payment — straight to your portal.</span>
+                  <span>Lifetime updates — every script revision, free.</span>
                 </li>
               </ul>
 
@@ -225,9 +225,9 @@ export default async function CheckoutPage({
 
               <ul className="mt-6 pt-6 hairline-t space-y-2.5 text-caption text-muted">
                 {[
-                  "7-day no-questions refund",
-                  "Lifetime updates included",
                   "One-time payment — no subscription",
+                  "Lifetime updates included",
+                  "Support ticket replies within 24h",
                   "Magic link on payment confirmation",
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-2">

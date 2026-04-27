@@ -2,39 +2,81 @@ import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
 import Prose from "@/components/ui/Prose";
 
-export const metadata: Metadata = { title: "Refund Policy" };
+export const metadata: Metadata = {
+  title: "Returns Policy",
+  description:
+    "All sales are final. The product is a one-time digital download — Pine Script + bundle, delivered instantly on payment. Install help via support tickets.",
+};
 
-export default function RefundPage() {
+export default function ReturnsPage() {
   return (
     <>
-      <PageHeader eyebrow="Legal" title="Refund Policy" lede="Last updated: 2026-04-21" />
+      <PageHeader
+        eyebrow="Legal"
+        title="Returns Policy"
+        lede="Last updated: 2026-04-27"
+      />
       <section className="bg-surface">
         <div className="container-wide py-16">
           <Prose>
-            <h2>7-day refund window</h2>
+            <h2>All sales are final</h2>
             <p>
-              If the Pine Script fails to install, throws errors on your chart, or does not function as documented, you
-              can request a full refund within 7 days of purchase.
+              Golden Indicator is a one-time digital download — Pine Script source plus the
+              bundled materials (Trade Logic PDF, Risk Calculator, Chart Gallery, Daily Notes
+              email list, lifetime updates). Once your portal access is unlocked and the
+              materials are delivered, the sale is final.
             </p>
 
-            <h2>How to request</h2>
-            <ol>
-              <li>Email <a href="mailto:hello@easytradesetup.com">hello@easytradesetup.com</a>.</li>
-              <li>Include your order ID and a short description of the issue (screenshots help).</li>
-              <li>Refund is processed within 5-7 business days to the original payment method.</li>
-            </ol>
+            <h2>Why no refunds</h2>
+            <p>
+              Trading tools cannot be "returned" once delivered the same way a physical product
+              can. The Pine Script source can be downloaded, installed, copied, and screenshotted
+              the moment you receive it. Offering refunds turns the product into a free trial,
+              which is unfair to buyers who pay and stay.
+            </p>
 
-            <h2>Not eligible</h2>
+            <h2>If something does not work, we fix it</h2>
+            <p>
+              Install issues, errors on your TradingView chart, or anything that prevents you from
+              using the indicator as documented &mdash; open a support ticket from your portal:
+              {" "}
+              <a href="https://portal.easytradesetup.com/portal/support">portal &rarr; support</a>.
+              A human replies within 24 hours and walks you through the fix.
+            </p>
+            <p>
+              If we cannot make it work for your environment after a genuine support attempt,
+              we will refund you in full. The policy protects against impulse-refunds and
+              outcome-disappointment, not against genuine technical failure on our side.
+            </p>
+
+            <h2>What is not a refund situation</h2>
             <ul>
-              <li>Change of mind after successful install.</li>
-              <li>Dissatisfaction with trading outcomes (the product is a tool, not a signal service).</li>
-              <li>Requests made after 7 days from purchase date.</li>
+              <li>You changed your mind after install.</li>
+              <li>Trading results disappointed you. The product is a chart tool. It does not
+                  predict markets, and we make no profit claims. You decide every trade.</li>
+              <li>You no longer have access to the original payment method.</li>
+              <li>You bought it for someone else without their consent.</li>
             </ul>
 
-            <h2>Why this policy</h2>
+            <h2>Chargebacks</h2>
             <p>
-              The product is a one-time digital download. A short refund window gives you enough time to install and
-              evaluate, while protecting the business from serial refund abuse.
+              We share order details, delivery confirmation, IP logs, and download timestamps
+              with the payment processor on request. Chargebacks filed without first opening a
+              support ticket are disputed in full.
+            </p>
+
+            <h2>Indian buyers</h2>
+            <p>
+              Indian Consumer Protection (E-Commerce) Rules 2020 permit a "no return" policy on
+              digital goods that have been downloaded or accessed. By completing checkout you
+              acknowledge the digital nature of the product and waive return rights once access
+              is granted.
+            </p>
+
+            <h2>Contact</h2>
+            <p>
+              Support: <a href="https://portal.easytradesetup.com/portal/support">portal &rarr; support</a>{" "}
+              (preferred). Or email <a href="mailto:thomas@easytradesetup.com">thomas@easytradesetup.com</a>.
             </p>
           </Prose>
         </div>

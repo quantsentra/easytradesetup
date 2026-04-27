@@ -47,7 +47,7 @@ test.describe("Home page — marketing integrity", () => {
   test("FAQ teaser includes key objection handlers", async ({ page }) => {
     await expect(page.getByText(/free pine scripts exist/i)).toBeVisible();
     await expect(page.getByText(/signal service/i).first()).toBeVisible();
-    await expect(page.getByText(/refund work/i)).toBeVisible();
+    await expect(page.getByText(/guarantee profits/i)).toBeVisible();
     await expect(page.getByText(/does it repaint/i)).toBeVisible();
   });
 

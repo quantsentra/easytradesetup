@@ -49,7 +49,7 @@ export default function FinalCTA() {
                 <Price variant="amount" />/month. Ever.
               </p>
               <p className="mt-4 font-mono text-[10.5px] font-bold uppercase tracking-widest" style={{ color: "rgba(237, 241, 250, 0.5)" }}>
-                7-day refund · Instant email delivery · Educational, not investment advice
+                Instant access · Lifetime updates · Support, 24h reply · Educational, not investment advice
               </p>
             </div>
 

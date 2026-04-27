@@ -22,8 +22,12 @@ const faqs: Array<[string, string]> = [
     "Yes. Pine Script v5 runs on every TradingView tier including the free plan. No upgrade needed.",
   ],
   [
-    "How does the 7-day refund work?",
-    "Email within 7 days of purchase — full refund, no forms, no questions. Reply from the founder within 24 hours.",
+    "What if the indicator does not work on my chart?",
+    "Open a support ticket from the portal — a human replies within 24 hours and walks you through the install. The script is Pine v5 standard; if it doesn't render, it's a setup issue we can fix.",
+  ],
+  [
+    "Will this guarantee profits?",
+    "No. Nothing guarantees trading profits. Golden Indicator is a decision-support tool — clean regime read, key levels, momentum confirmation. Used with the Trade Logic PDF and disciplined risk management, results compound over months. Not a profit machine. You decide every trade.",
   ],
 ];
 

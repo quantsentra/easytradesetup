@@ -5,18 +5,18 @@ import { FAQPageJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 export const metadata: Metadata = {
   title: "FAQ — Golden Indicator questions answered",
   description:
-    "Golden Indicator FAQ — repaint, signals, markets, timeframes, refunds. Everything traders ask before buying a TradingView Pine v5 indicator.",
+    "Golden Indicator FAQ — repaint, signals, markets, timeframes, support. Everything traders ask before buying a TradingView Pine v5 indicator.",
   keywords: [
     "TradingView indicator FAQ",
     "Pine Script questions",
     "no repaint indicator",
-    "Golden Indicator refund",
+    "Golden Indicator support",
     "NIFTY indicator FAQ",
   ],
   alternates: { canonical: "/docs/faq" },
   openGraph: {
     title: "FAQ — Golden Indicator",
-    description: "Repaint, signals, markets, refunds — every question answered.",
+    description: "Repaint, signals, markets, support — every question answered.",
     url: "https://www.easytradesetup.com/docs/faq",
     type: "article",
   },
@@ -40,7 +40,8 @@ const faqs = [
       ["How do I receive the files?", "By email, within seconds of payment. The email contains the .pine file, trade-logic PDF, and risk calculator link."],
       ["Do I need to enter card details every month?", "No. It's a one-time payment. No recurring charges, ever."],
       ["Are taxes included in the price?", "Yes. India: ₹4,599 inclusive of GST. International: $49 inclusive of applicable taxes."],
-      ["Refund policy?", "7-day refund window. Email hello@easytradesetup.com within 7 days of purchase for a full refund — no questions, no forms. See refund policy."],
+      ["What if I have install or usage problems?", "Open a support ticket from your portal — portal.easytradesetup.com/portal/support. A human replies within 24h with a fix. The script is Pine v5 standard; if it does not render or behaves unexpectedly, we walk you through the resolution."],
+      ["Is there a refund?", "All sales are final once portal access is unlocked — see returns policy. The product is a downloadable digital script; refunds turn it into a free trial. If the indicator genuinely cannot be made to work in your environment after a real support attempt, we refund in full. Trading-outcome dissatisfaction is not a refund situation."],
     ],
   },
   {
