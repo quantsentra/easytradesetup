@@ -1684,4 +1684,28 @@
   @media (prefers-reduced-motion: reduce) {
     .marquee-track { animation: none; }
   }
+
+  /* Skeleton loader — neutral gray shimmer that reads on both the dark
+     admin/portal shell and the light marketing surfaces. */
+  @keyframes ets-shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+  }
+  .ets-skel {
+    display: block;
+    background: linear-gradient(
+      90deg,
+      rgb(127 127 127 / 10%) 0%,
+      rgb(127 127 127 / 22%) 50%,
+      rgb(127 127 127 / 10%) 100%
+    );
+    background-size: 200% 100%;
+    animation: ets-shimmer 1.4s ease-in-out infinite;
+    border-radius: 6px;
+    color: transparent;
+    user-select: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ets-skel { animation: none; }
+  }
 }
