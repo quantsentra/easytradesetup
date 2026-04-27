@@ -40,7 +40,7 @@ export async function POST(req: Request) {
   let session;
   try {
     session = await getStripe().checkout.sessions.retrieve(sessionId, {
-      expand: ["customer"],
+      expand: ["customer", "invoice"],
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Stripe API error";

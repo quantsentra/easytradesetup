@@ -2,6 +2,7 @@ import "server-only";
 import type Stripe from "stripe";
 import { Resend } from "resend";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { getStripe } from "@/lib/stripe";
 
 // Shared fulfillment used by the webhook AND the manual recovery endpoint.
 // Idempotent: safe to invoke twice on the same session — entitlement is
@@ -105,8 +106,21 @@ export async function fulfillCheckoutSession(
   // Magic link only when we have an email — without one we can't deliver.
   const magicLink = email ? await generateMagicLink(email) : null;
 
+  // Fetch the Stripe-hosted invoice + PDF link so we can include them in
+  // the welcome email. Stripe finalises invoices asynchronously; usually
+  // ready within a couple of seconds of checkout.session.completed but
+  // not guaranteed. If the invoice is missing or not finalised, we send
+  // the welcome email without it — Stripe also emails its own invoice
+  // separately, so the buyer gets a receipt either way.
+  const invoiceLinks = await fetchInvoiceLinks(session);
+
   if (!options.skipBuyerEmail && email) {
-    await sendBuyerEmail(email, { amountCents, currency, magicLink });
+    await sendBuyerEmail(email, {
+      amountCents, currency, magicLink,
+      hostedInvoiceUrl: invoiceLinks.hostedInvoiceUrl,
+      invoicePdfUrl: invoiceLinks.invoicePdfUrl,
+      invoiceNumber: invoiceLinks.invoiceNumber,
+    });
   }
   if (!options.skipAdminEmail) {
     await sendAdminNotice(email || "(no email)", {
@@ -259,6 +273,32 @@ async function upsertEntitlement(args: {
   return `entitlement granted with reduced columns; run migration 019_stripe.sql for full Stripe metadata. (root cause: ${error.message})`;
 }
 
+type InvoiceLinks = {
+  hostedInvoiceUrl: string | null;
+  invoicePdfUrl: string | null;
+  invoiceNumber: string | null;
+};
+
+async function fetchInvoiceLinks(session: Stripe.Checkout.Session): Promise<InvoiceLinks> {
+  const empty: InvoiceLinks = { hostedInvoiceUrl: null, invoicePdfUrl: null, invoiceNumber: null };
+  const invoiceField = session.invoice;
+  if (!invoiceField) return empty;
+  try {
+    const invoice =
+      typeof invoiceField === "string"
+        ? await getStripe().invoices.retrieve(invoiceField)
+        : invoiceField;
+    return {
+      hostedInvoiceUrl: invoice.hosted_invoice_url || null,
+      invoicePdfUrl: invoice.invoice_pdf || null,
+      invoiceNumber: invoice.number || null,
+    };
+  } catch (e) {
+    console.error("[stripe-fulfill] invoice retrieve failed", e);
+    return empty;
+  }
+}
+
 async function generateMagicLink(email: string): Promise<string | null> {
   let supa;
   try {
@@ -290,7 +330,14 @@ function fmtMoney(amountCents: number, currency: string): string {
 
 async function sendBuyerEmail(
   email: string,
-  args: { amountCents: number; currency: string; magicLink: string | null },
+  args: {
+    amountCents: number;
+    currency: string;
+    magicLink: string | null;
+    hostedInvoiceUrl: string | null;
+    invoicePdfUrl: string | null;
+    invoiceNumber: string | null;
+  },
 ) {
   if (!resend) return;
   const amount = fmtMoney(args.amountCents, args.currency);
@@ -298,7 +345,10 @@ async function sendBuyerEmail(
   const docsUrl = `${PORTAL_ORIGIN}/portal/docs/install`;
   const supportUrl = `${PORTAL_ORIGIN}/portal/support`;
   const subject = `Your Golden Indicator access is ready`;
-  const preheader = `Open the portal, install on TradingView, follow the guide. Receipt to follow from Stripe.`;
+  const preheader = args.invoicePdfUrl
+    ? `Portal access + PDF invoice inside. Install in 5 minutes; trade with discipline.`
+    : `Open the portal, install on TradingView, follow the guide.`;
+  const invoiceLabel = args.invoiceNumber ? `Invoice ${args.invoiceNumber}` : "Invoice";
 
   // Spam-mitigation considerations for this template:
   //   - Plain transactional language; no caps, no $ in subject, no urgency.
@@ -319,9 +369,9 @@ async function sendBuyerEmail(
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border:1px solid rgba(21,24,26,0.08);border-radius:14px;overflow:hidden;">
 
 <tr><td style="padding:28px 32px 24px;background:linear-gradient(135deg,rgba(43,123,255,0.08) 0%,rgba(34,211,238,0.04) 100%);border-bottom:1px solid rgba(21,24,26,0.06);">
-<div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#2B7BFF;font-weight:600;">Order confirmed · ${amount}</div>
+<div style="font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:#2B7BFF;font-weight:600;">Order confirmed · ${amount}${args.invoiceNumber ? ` · ${args.invoiceNumber}` : ""}</div>
 <h1 style="margin:10px 0 6px;font:600 26px -apple-system,'Inter',Arial,sans-serif;letter-spacing:-0.02em;color:#15181a;">Your access is ready.</h1>
-<p style="margin:0;font-size:14.5px;color:rgba(21,24,26,0.72);line-height:1.55;">Lifetime access to Golden Indicator + the full bundle. Stripe is emailing your PDF invoice separately.</p>
+<p style="margin:0;font-size:14.5px;color:rgba(21,24,26,0.72);line-height:1.55;">Lifetime access to Golden Indicator + the full bundle.${args.invoicePdfUrl || args.hostedInvoiceUrl ? " Your invoice is below." : ""}</p>
 </td></tr>
 
 <tr><td style="padding:28px 32px 8px;">
@@ -331,6 +381,22 @@ async function sendBuyerEmail(
 </td></tr></table>
 <p style="margin:14px 0 0;font-size:12px;color:rgba(21,24,26,0.52);line-height:1.55;">Button not working? Paste this URL into your browser:<br /><span style="word-break:break-all;color:rgba(21,24,26,0.66);">${portalCta}</span></p>
 </td></tr>
+
+${(args.invoicePdfUrl || args.hostedInvoiceUrl) ? `<tr><td style="padding:14px 32px 22px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#faf9f5;border:1px solid rgba(21,24,26,0.08);border-radius:10px;">
+<tr><td style="padding:16px 18px;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+<td style="vertical-align:middle;">
+<div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(21,24,26,0.52);font-weight:600;">${invoiceLabel}</div>
+<div style="font-size:14px;color:#15181a;font-weight:600;margin-top:2px;">${amount}${args.invoiceNumber ? ` &middot; <span style='color:rgba(21,24,26,0.52);font-weight:500;'>${args.invoiceNumber}</span>` : ""}</div>
+</td>
+<td style="vertical-align:middle;text-align:right;white-space:nowrap;">
+${args.invoicePdfUrl ? `<a href="${args.invoicePdfUrl}" style="display:inline-block;background:#15181a;color:#ffffff;text-decoration:none;font:600 12.5px -apple-system,'Inter',Arial,sans-serif;padding:9px 14px;border-radius:7px;margin-right:6px;">PDF</a>` : ""}
+${args.hostedInvoiceUrl ? `<a href="${args.hostedInvoiceUrl}" style="display:inline-block;background:transparent;color:#2B7BFF;text-decoration:none;font:600 12.5px -apple-system,'Inter',Arial,sans-serif;padding:9px 14px;border-radius:7px;border:1px solid rgba(43,123,255,0.35);">View receipt</a>` : ""}
+</td>
+</tr></table>
+</td></tr></table>
+</td></tr>` : ""}
 
 <tr><td style="padding:24px 32px;border-top:1px solid rgba(21,24,26,0.06);">
 <div style="font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(21,24,26,0.52);font-weight:600;margin-bottom:14px;">Next steps · 15 minutes</div>
@@ -387,13 +453,16 @@ Educational tool · Not investment advice · Past performance does not guarantee
 <p style="font-size:11px;color:rgba(21,24,26,0.40);margin:18px 0 0;font-family:-apple-system,Arial,sans-serif;">EasyTradeSetup · <a href="${SITE_ORIGIN}" style="color:rgba(21,24,26,0.52);text-decoration:none;">easytradesetup.com</a></p>
 </td></tr></table></body></html>`;
 
+  const invoiceText =
+    args.invoicePdfUrl || args.hostedInvoiceUrl
+      ? `\n${invoiceLabel}${args.invoiceNumber ? ` (${args.invoiceNumber})` : ""}\n${args.invoicePdfUrl ? `Download PDF: ${args.invoicePdfUrl}\n` : ""}${args.hostedInvoiceUrl ? `View receipt: ${args.hostedInvoiceUrl}\n` : ""}`
+      : "";
+
   const text = `Order confirmed — ${amount}.
 
 Your Golden Indicator access is ready. Open the portal here:
 ${portalCta}
-
-Stripe is emailing your PDF invoice separately.
-
+${invoiceText}
 NEXT STEPS — 15 minutes
 1) Open the portal (link above) — you'll land signed in.
 2) Install on TradingView: ${docsUrl}
