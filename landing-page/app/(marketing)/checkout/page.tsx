@@ -36,6 +36,68 @@ export default async function CheckoutPage({
   }
   const userEmail = user.email || "";
 
+  // 1-click flow: signed-in buyer who arrived from a "Buy" CTA elsewhere
+  // expects to land on Stripe directly, not see another preview page. We
+  // create the Checkout Session server-side and redirect immediately.
+  // Skip auto-redirect when ?cancelled=1 (came back from Stripe cancel)
+  // so the user can read the cancellation banner + click Pay again.
+  if (!cancelled) {
+    try {
+      const { getStripe } = await import("@/lib/stripe");
+      const stripe = getStripe();
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        line_items: [
+          {
+            quantity: 1,
+            price_data: {
+              currency: "usd",
+              unit_amount: OFFER_USD * 100,
+              product_data: {
+                name: "Golden Indicator — Inaugural",
+                description: `Lifetime access · TradingView Pine v5 indicator + bundle. Retail $149, inaugural $${OFFER_USD}.`,
+                metadata: { sku: "golden-indicator", tier: "inaugural" },
+              },
+            },
+          },
+        ],
+        customer_email: userEmail,
+        customer_creation: "always",
+        client_reference_id: user.id,
+        metadata: {
+          user_id: user.id,
+          product: "golden-indicator",
+          tier: "inaugural",
+          offer_usd: String(OFFER_USD),
+        },
+        invoice_creation: {
+          enabled: true,
+          invoice_data: {
+            description: "Golden Indicator — Inaugural offer (lifetime access)",
+            metadata: { product: "golden-indicator", tier: "inaugural", user_id: user.id },
+            footer: "EasyTradeSetup · Educational tool, not investment advice. 7-day no-questions refund.",
+          },
+        },
+        success_url: `https://www.easytradesetup.com/thank-you?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `https://www.easytradesetup.com/checkout?cancelled=1`,
+        expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
+        allow_promotion_codes: true,
+        billing_address_collection: "auto",
+        phone_number_collection: { enabled: false },
+      });
+      if (session.url) {
+        redirect(session.url);
+      }
+    } catch (e) {
+      // Throwing inside Server Components inside a redirect is normal —
+      // Next signals redirects via a thrown sentinel. Re-throw any
+      // genuine errors so the user lands on the static fallback below.
+      if (e && typeof e === "object" && "digest" in e) throw e;
+      console.error("[checkout/page] Stripe session create failed", e);
+      // Fall through and render the static page so the buyer can retry.
+    }
+  }
+
   return (
     <>
       {/* Vercel BotID — silent bot detection on form submission. */}
