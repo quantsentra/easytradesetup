@@ -1343,13 +1343,15 @@
   /* ---- Portal mobile drawer link ---- */
   .portal-mobile-link {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 11px 13px;
-    border-radius: 8px;
-    font: 500 14.5px var(--tz-sans);
+    padding: 13px 14px;
+    border-radius: 9px;
+    font: 500 15px var(--tz-sans);
     text-decoration: none;
     transition: background .12s, color .12s;
+    min-height: 44px;
   }
-  .portal-mobile-link:hover {
+  .portal-mobile-link:hover,
+  .portal-mobile-link:active {
     background: var(--tz-surface-2);
     color: var(--tz-ink) !important;
   }

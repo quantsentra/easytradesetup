@@ -51,15 +51,20 @@ export default function PortalMobileNav({
       {open && (
         <div
           className="lg:hidden fixed inset-0 z-[60]"
-          style={{ background: "rgba(15, 18, 22, 0.45)" }}
+          style={{
+            background: "rgba(10, 12, 16, 0.62)",
+            backdropFilter: "blur(4px)",
+            WebkitBackdropFilter: "blur(4px)",
+          }}
           onClick={() => setOpen(false)}
         >
           <div
-            className="absolute right-0 top-0 bottom-0 w-[86%] max-w-[320px]"
+            className="absolute right-0 top-0 bottom-0 w-[92%] max-w-[360px] flex flex-col"
             style={{
-              background: "var(--tz-surface)",
+              background: "#ffffff",
               borderLeft: "1px solid var(--tz-border)",
               boxShadow: "var(--tz-shadow-lg)",
+              overflowY: "auto",
             }}
             onClick={(e) => e.stopPropagation()}
           >
