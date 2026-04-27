@@ -39,6 +39,7 @@ const navSections: Array<{
     title: "System",
     items: [
       { href: "/admin/checklist",       label: "MVP checklist",  icon: CheckIcon },
+      { href: "/admin/qa",              label: "QA suite",       icon: ShieldIcon },
       { href: "/admin/errors",          label: "Errors",         icon: AlertIcon },
       { href: "/admin/stripe-recover",  label: "Stripe recovery", icon: CardIcon },
       { href: "/admin/architecture",    label: "Architecture",   icon: MapIcon },
@@ -199,6 +200,14 @@ function CardIcon() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="6" width="20" height="14" rx="2" />
       <line x1="2" y1="11" x2="22" y2="11" />
+    </svg>
+  );
+}
+function ShieldIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z" />
+      <path d="M9 12l2 2 4-4" />
     </svg>
   );
 }
