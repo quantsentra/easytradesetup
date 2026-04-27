@@ -526,15 +526,48 @@ const seoSteps = (origin: string): Step[] => [
   {
     id: "seo.robots-allows",
     category: "SEO",
-    name: "robots.txt allows crawling",
+    name: "robots.txt allows search engines",
     run: async () => {
+      // Parse the file into per-user-agent blocks. Only flag a fail when
+      // the wildcard "*" group blocks everything — selective Disallow:/
+      // entries against named bots (GPTBot, CCBot, etc.) are intentional.
       const text = await (await fetchWithTimeout(`${origin}/robots.txt`)).text();
-      const blocksAll = /Disallow:\s*\/\s*$/m.test(text);
-      const allowsRoot = /Allow:\s*\//.test(text) || !blocksAll;
+      const lines = text.split(/\r?\n/);
+      let currentAgents: string[] = [];
+      const blocks = new Map<string, string[]>(); // ua → directives
+      for (const raw of lines) {
+        const line = raw.trim();
+        if (!line || line.startsWith("#")) continue;
+        const m = line.match(/^([A-Za-z-]+):\s*(.*)$/);
+        if (!m) continue;
+        const [, key, val] = m;
+        const lkey = key.toLowerCase();
+        if (lkey === "user-agent") {
+          currentAgents = currentAgents.length === 0 || blocks.has(currentAgents[0])
+            ? [val]
+            : [...currentAgents, val];
+        } else if (lkey === "allow" || lkey === "disallow") {
+          for (const ua of currentAgents) {
+            const arr = blocks.get(ua) || [];
+            arr.push(`${lkey}:${val}`);
+            blocks.set(ua, arr);
+          }
+          // Reset agent group once a directive lands so the next User-agent
+          // line starts a fresh group.
+          if (currentAgents.length > 0) currentAgents = [...currentAgents];
+        }
+      }
+      const wild = blocks.get("*") || [];
+      const wildBlocksRoot = wild.some((d) => /^disallow:\s*\/\s*$/i.test(d));
+      const ok = !wildBlocksRoot && wild.length > 0;
       return {
-        id: "seo.robots-allows", category: "SEO", name: "robots.txt allows crawling",
-        status: !blocksAll && allowsRoot ? "pass" : "fail",
-        detail: blocksAll ? "blanket Disallow: / — pre-launch only?" : "open to crawlers",
+        id: "seo.robots-allows", category: "SEO", name: "robots.txt allows search engines",
+        status: ok ? "pass" : "fail",
+        detail: ok
+          ? `User-agent: * has ${wild.length} directive(s); root not blocked`
+          : wildBlocksRoot
+            ? "Wildcard User-agent: * has Disallow: / — search engines blocked"
+            : "No User-agent: * group found",
       };
     },
   },

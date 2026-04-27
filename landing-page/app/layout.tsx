@@ -25,8 +25,8 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.easytradesetup.com"),
   title: {
-    default:
-      "Golden Indicator — TradingView Pine v5 for NIFTY, SPX, Gold & BTC · EasyTradeSetup",
+    // Trimmed to ~55 chars — Google truncates SERP titles past ~60.
+    default: "Golden Indicator · TradingView Pine v5 · EasyTradeSetup",
     template: "%s · EasyTradeSetup",
   },
   description:
