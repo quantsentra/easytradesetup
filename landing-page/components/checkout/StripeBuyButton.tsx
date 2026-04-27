@@ -6,13 +6,18 @@ import { useState, useTransition } from "react";
 // and redirects to Stripe's hosted page where Apple Pay / Google Pay /
 // Link / cards are offered. Email is collected by Stripe (no field here)
 // so the path is: tap → Stripe → pay → /thank-you. ~2 seconds.
+//
+// Currency: optional prop. When omitted, the API auto-resolves from the
+// x-vercel-ip-country header (IN → INR, else USD).
 
 export default function StripeBuyButton({
   className,
   label = "Pay $49 →",
+  currency,
 }: {
   className?: string;
   label?: string;
+  currency?: "usd" | "inr";
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +29,7 @@ export default function StripeBuyButton({
         const res = await fetch("/api/stripe/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: "{}",
+          body: JSON.stringify(currency ? { currency } : {}),
         });
         const json = await res.json();
         if (!res.ok || !json.ok || !json.url) {

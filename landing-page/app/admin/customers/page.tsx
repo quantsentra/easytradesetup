@@ -1,5 +1,6 @@
 import { listAllUsers } from "@/lib/auth-server";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
+import RevokeEntitlementButton from "@/components/admin/RevokeEntitlementButton";
 
 type Row = {
   userId: string;
@@ -106,12 +107,13 @@ export default async function AdminCustomersPage() {
                 <th>License</th>
                 <th>Granted</th>
                 <th>Source</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {rows.length === 0 ? (
                 <tr>
-                  <td colSpan={6} style={{ textAlign: "center", padding: 32, color: "var(--tz-ink-mute)" }}>
+                  <td colSpan={7} style={{ textAlign: "center", padding: 32, color: "var(--tz-ink-mute)" }}>
                     No users yet.
                   </td>
                 </tr>
@@ -145,6 +147,11 @@ export default async function AdminCustomersPage() {
                       <span className="font-mono text-[11.5px]" style={{ color: "var(--tz-ink-mute)" }}>
                         {r.source || "—"}
                       </span>
+                    </td>
+                    <td>
+                      {r.active && (
+                        <RevokeEntitlementButton userId={r.userId} email={r.email} />
+                      )}
                     </td>
                   </tr>
                 ))

@@ -1,7 +1,7 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { OFFER_USD, RETAIL_USD } from "@/lib/pricing";
+import { OFFER_USD, OFFER_INR, RETAIL_USD, RETAIL_INR } from "@/lib/pricing";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { getUser } from "@/lib/auth-server";
 
@@ -15,6 +15,13 @@ export const dynamic = "force-dynamic";
 // LOGIN-REQUIRED: The /checkout page enforces auth before this endpoint is
 // reached, but we double-check here. Anonymous purchases are rejected so
 // every entitlement maps to a real Supabase user_id from the start.
+//
+// CURRENCY: Body accepts { currency: "usd" | "inr" }. INR is the bridge
+// for India until the UPI gateway lands. Stripe accepts INR via cross-border
+// charging for international accounts. Defaults to country-derived choice
+// from the x-vercel-ip-country header, falling back to USD.
+
+type Body = { currency?: string };
 
 export async function POST(req: Request) {
   const user = await getUser();
@@ -25,8 +32,6 @@ export async function POST(req: Request) {
     );
   }
 
-  // Soft rate-limit: 5/min per IP. Stops payment-page abuse without
-  // blocking real buyers who hit "buy" twice in frustration.
   const limit = rateLimit(`stripe:${clientIp(req)}`, { max: 5, windowMs: 60_000 });
   if (!limit.allowed) {
     return NextResponse.json(
@@ -35,10 +40,31 @@ export async function POST(req: Request) {
     );
   }
 
-  // Buyer's authenticated email is the one we trust. Stripe-side mismatch
-  // is fine — the entitlement key is user_id from metadata, not the email.
-  const email = (user.email || "").trim().toLowerCase();
+  let body: Body = {};
+  try {
+    if ((req.headers.get("content-length") || "0") !== "0") {
+      body = (await req.json()) as Body;
+    }
+  } catch {
+    // Empty body is fine — falls through to default currency selection.
+  }
 
+  // Currency resolution: explicit body wins → IP country fallback → USD.
+  const requested = (body.currency || "").toLowerCase();
+  const country = (req.headers.get("x-vercel-ip-country") || "").toUpperCase();
+  const currency: "usd" | "inr" =
+    requested === "inr" ? "inr"
+    : requested === "usd" ? "usd"
+    : country === "IN" ? "inr"
+    : "usd";
+
+  const offer = currency === "inr" ? OFFER_INR : OFFER_USD;
+  const retail = currency === "inr" ? RETAIL_INR : RETAIL_USD;
+  const symbol = currency === "inr" ? "₹" : "$";
+  const formattedOffer = currency === "inr" ? offer.toLocaleString("en-IN") : String(offer);
+  const formattedRetail = currency === "inr" ? retail.toLocaleString("en-IN") : String(retail);
+
+  const email = (user.email || "").trim().toLowerCase();
   const origin =
     req.headers.get("origin") ||
     `https://${req.headers.get("host") || "www.easytradesetup.com"}`;
@@ -58,41 +84,31 @@ export async function POST(req: Request) {
       mode: "payment",
       // payment_method_types intentionally omitted — Stripe auto-enables
       // every method enabled in the Dashboard for this account (cards,
-      // Apple Pay, Google Pay, Link, etc). Apple Pay domain verification
-      // is handled automatically because we use the hosted checkout.stripe.com
-      // flow, so no .well-known files need to live on www.easytradesetup.com.
+      // Apple Pay, Google Pay, Link, etc).
       line_items: [
         {
           quantity: 1,
           price_data: {
-            currency: "usd",
-            unit_amount: OFFER_USD * 100,
+            currency,
+            unit_amount: offer * 100,
             product_data: {
               name: "Golden Indicator — Inaugural",
-              description: `Lifetime access · TradingView Pine v5 indicator + bundle. Retail $${RETAIL_USD}, inaugural $${OFFER_USD}.`,
+              description: `Lifetime access · TradingView Pine v5 indicator + bundle. Retail ${symbol}${formattedRetail}, inaugural ${symbol}${formattedOffer}.`,
               metadata: { sku: "golden-indicator", tier: "inaugural" },
             },
           },
         },
       ],
-      // Pre-fill the buyer's signed-in email so they don't retype it.
       ...(email ? { customer_email: email } : {}),
-      // Always create a Stripe Customer record. Saves the buyer's payment
-      // method for future SKUs (Mentor PDF, etc.) without re-entering.
       customer_creation: "always",
-      // user_id is the authoritative link from Stripe → Supabase. The
-      // webhook reads this first; email lookup is only the fallback for
-      // legacy / pre-auth-gated purchases.
       client_reference_id: user.id,
       metadata: {
         user_id: user.id,
         product: "golden-indicator",
         tier: "inaugural",
-        offer_usd: String(OFFER_USD),
+        offer_amount: String(offer),
+        currency,
       },
-      // Auto-create a Stripe-hosted PDF invoice + email it to the buyer.
-      // Independent of our Resend "welcome" email, this lands in their
-      // inbox as a proper receipt with our brand + product details.
       invoice_creation: {
         enabled: true,
         invoice_data: {
@@ -101,24 +117,16 @@ export async function POST(req: Request) {
             product: "golden-indicator",
             tier: "inaugural",
             user_id: user.id,
+            currency,
           },
           footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/portal/support",
         },
       },
-      // Buyer lands on /thank-you with the session_id — we verify there
-      // and show the entitlement state.
       success_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout?cancelled=1`,
-      // Grant 30 minutes to complete; abandoned sessions don't pollute the
-      // dashboard.
       expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
-      // Allow promo codes the founder may issue manually via Stripe.
       allow_promotion_codes: true,
-      // Billing address optional — keeps friction low. Card-only US/global,
-      // localised tax handled later when Stripe Tax flips on.
       billing_address_collection: "auto",
-      // Phone number not required — keeps the form short, US/EU buyers
-      // tend to bounce when phones are mandatory.
       phone_number_collection: { enabled: false },
     });
 
@@ -129,7 +137,7 @@ export async function POST(req: Request) {
       );
     }
 
-    return NextResponse.json({ ok: true, url: session.url, id: session.id });
+    return NextResponse.json({ ok: true, url: session.url, id: session.id, currency });
   } catch (e) {
     const msg = e instanceof Error ? e.message : "Stripe error";
     console.error("[stripe/checkout] failed", msg);
