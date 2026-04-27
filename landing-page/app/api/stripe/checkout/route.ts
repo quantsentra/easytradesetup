@@ -4,6 +4,8 @@ import { getStripe } from "@/lib/stripe";
 import { OFFER_USD, OFFER_INR, RETAIL_USD, RETAIL_INR } from "@/lib/pricing";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { getUser } from "@/lib/auth-server";
+import { CURRENCY_COOKIE, resolveCurrency } from "@/lib/currency";
+import { cookies } from "next/headers";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -49,14 +51,17 @@ export async function POST(req: Request) {
     // Empty body is fine — falls through to default currency selection.
   }
 
-  // Currency resolution: explicit body wins → IP country fallback → USD.
-  const requested = (body.currency || "").toLowerCase();
-  const country = (req.headers.get("x-vercel-ip-country") || "").toUpperCase();
-  const currency: "usd" | "inr" =
-    requested === "inr" ? "inr"
-    : requested === "usd" ? "usd"
-    : country === "IN" ? "inr"
-    : "usd";
+  // Currency resolution: explicit body → ets_ccy cookie → IP geo → USD.
+  // Cookie path stays the canonical source so a user who toggled in the
+  // header switcher gets billed in the currency they were quoted, not
+  // whatever their IP says.
+  const cookieStore = await cookies();
+  const cookieCcy = cookieStore.get(CURRENCY_COOKIE)?.value;
+  const currency = resolveCurrency({
+    query: body.currency || null,
+    cookie: cookieCcy,
+    ipCountry: req.headers.get("x-vercel-ip-country"),
+  });
 
   const offer = currency === "inr" ? OFFER_INR : OFFER_USD;
   const retail = currency === "inr" ? RETAIL_INR : RETAIL_USD;

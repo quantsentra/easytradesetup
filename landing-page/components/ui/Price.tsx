@@ -1,6 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { USD_SET, INR_SET, format, type PriceSet } from "@/lib/pricing";
+import { readCurrencyCookieClient } from "@/lib/currency";
+
+// Reads the ets_ccy cookie that middleware sets per request. Cookie value
+// is geo-derived on first visit (x-vercel-ip-country) and overridable via
+// ?ccy=inr|usd or the TopNav currency switcher.
 
 type Variant =
   | "amount"         // just the offer amount — "$49"
@@ -10,25 +15,21 @@ type Variant =
   | "amount-suffix"  // "$49 one-time"
   | "cta";           // "Get Golden Indicator — $49 →"
 
-function detectIndia(): boolean {
-  try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
-    if (tz === "Asia/Kolkata" || tz === "Asia/Calcutta") return true;
-    const lang = typeof navigator !== "undefined" ? navigator.language || "" : "";
-    if (lang.endsWith("-IN") || lang === "hi") return true;
-  } catch {
-    /* ignored */
-  }
-  return false;
-}
-
 export default function Price({ variant = "amount" }: { variant?: Variant }) {
   const [inIndia, setInIndia] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setInIndia(detectIndia());
+    setInIndia(readCurrencyCookieClient() === "inr");
     setReady(true);
+
+    // Cookie may flip mid-session if user toggles via the switcher in
+    // another tab; cheap re-check on visibility regain.
+    function recheck() {
+      setInIndia(readCurrencyCookieClient() === "inr");
+    }
+    document.addEventListener("visibilitychange", recheck);
+    return () => document.removeEventListener("visibilitychange", recheck);
   }, []);
 
   const set: PriceSet = inIndia ? INR_SET : USD_SET;
@@ -36,9 +37,12 @@ export default function Price({ variant = "amount" }: { variant?: Variant }) {
   const retail = format(set, set.retail);
 
   if (!ready) {
+    // Render a width-stable placeholder so the layout doesn't shift when
+    // the real value lands. Use the longest of the two so neither flashes.
+    const placeholder = format(INR_SET, INR_SET.offer);
     return (
       <span aria-hidden className="opacity-0 inline-block">
-        {format(USD_SET, USD_SET.offer)}
+        {placeholder}
       </span>
     );
   }

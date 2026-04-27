@@ -13,6 +13,8 @@ import {
   RETAIL_INR,
 } from "@/lib/pricing";
 import { getUser } from "@/lib/auth-server";
+import { cookies } from "next/headers";
+import { CURRENCY_COOKIE, resolveCurrency } from "@/lib/currency";
 
 export const metadata: Metadata = {
   title: "Buy Golden Indicator — launch price, 67% off retail",
@@ -43,16 +45,17 @@ export default async function CheckoutPage({
   }
   const userEmail = user.email || "";
 
-  // Currency resolution: ?ccy=usd|inr override → IN geo → USD default.
-  // Vercel injects x-vercel-ip-country on every request when the project
-  // is on a deployment with the geolocation feature.
+  // Currency resolution: ?ccy= → ets_ccy cookie → IN geo → USD default.
+  // Middleware writes the cookie so this page sees whatever the visitor
+  // last picked (or their initial geo verdict).
   const h = await headers();
-  const country = (h.get("x-vercel-ip-country") || "").toUpperCase();
-  const currency: "usd" | "inr" =
-    ccyOverride === "inr" ? "inr"
-    : ccyOverride === "usd" ? "usd"
-    : country === "IN" ? "inr"
-    : "usd";
+  const cookieStore = await cookies();
+  const cookieCcy = cookieStore.get(CURRENCY_COOKIE)?.value;
+  const currency = resolveCurrency({
+    query: ccyOverride,
+    cookie: cookieCcy,
+    ipCountry: h.get("x-vercel-ip-country"),
+  });
 
   const offerAmount = currency === "inr" ? OFFER_INR : OFFER_USD;
   const retailAmount = currency === "inr" ? RETAIL_INR : RETAIL_USD;

@@ -5,11 +5,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import AccountMenu from "@/components/auth/AccountMenu";
+import CurrencySwitcher from "@/components/ui/CurrencySwitcher";
 
 const navItems = [
   { href: "/product",   label: "Features" },
   { href: "/resources", label: "Resources" },
-  { href: "/sample",    label: "Library" },
+  { href: "/sample",    label: "Free sample" },
   { href: "/pricing",   label: "Pricing" },
 ];
 
@@ -87,6 +88,7 @@ export default function TopNav() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
+          <CurrencySwitcher />
           {loaded && !isSignedIn && (
             <>
               <a
@@ -117,6 +119,7 @@ export default function TopNav() {
         </div>
 
         <div className="lg:hidden flex items-center gap-2">
+          <CurrencySwitcher />
           <button
             aria-label="Toggle menu"
             aria-expanded={open}
