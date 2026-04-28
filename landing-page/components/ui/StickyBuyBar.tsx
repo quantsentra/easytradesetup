@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import Price from "@/components/ui/Price";
+import Price from "@/components/ui/PriceClient";
 
 const HIDDEN_ROUTES = ["/checkout", "/thank-you"];
 

@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: "%s · EasyTradeSetup",
   },
   description:
-    "One non-repainting TradingView Pine Script v5 indicator for NIFTY 50, BANKNIFTY, SPX 500, NASDAQ 100, Gold, Silver, Crude, forex, and crypto. Market structure (BOS / CHoCH), regime bias, key levels (PDH / PDL), supply / demand zones. One-time $49 / ₹4,599 — 67% off retail, always. Lifetime updates, no subscription.",
+    "Non-repainting TradingView Pine v5 indicator — structure, regime, levels, supply/demand on any chart. $49 / ₹4,599 one-time, lifetime updates, 67% off retail.",
   keywords: [
     // Product / category
     "TradingView Pine v5 indicator",

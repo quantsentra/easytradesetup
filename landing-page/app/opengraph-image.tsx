@@ -69,9 +69,12 @@ export default async function OG() {
               fontSize: 32,
               fontWeight: 800,
               boxShadow: "0 0 0 1px rgba(43,123,255,0.4), 0 12px 32px rgba(43,123,255,0.45)",
+              letterSpacing: -0.5,
             }}
           >
-            ✓
+            {/* "ETS" letter mark — replaces a ✓ glyph that triggered a
+                runtime dynamic-font fetch in @vercel/og. */}
+            ETS
           </div>
           <div
             style={{
@@ -218,7 +221,10 @@ export default async function OG() {
             >
               <span>${RETAIL_USD}</span>
               <span style={{ fontSize: 22 }}>·</span>
-              <span>₹{RETAIL_INR.toLocaleString("en-IN")}</span>
+              {/* "INR" prefix instead of ₹ — the rupee glyph triggers a
+                  runtime dynamic-font fetch in @vercel/og that intermittently
+                  fails with a 400. ASCII keeps the OG render deterministic. */}
+              <span>INR {RETAIL_INR.toLocaleString("en-IN")}</span>
             </div>
             <div
               style={{
@@ -249,7 +255,7 @@ export default async function OG() {
                   color: "transparent",
                 }}
               >
-                ₹{OFFER_INR.toLocaleString("en-IN")}
+                INR {OFFER_INR.toLocaleString("en-IN")}
               </span>
             </div>
           </div>

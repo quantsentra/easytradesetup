@@ -1,6 +1,8 @@
 import Link from "next/link";
 
-const faqs: Array<[string, string]> = [
+// Exported so app/(marketing)/page.tsx can hand them to FAQPageJsonLd —
+// avoids drift between visible FAQ list and the rich-result schema.
+export const homeFaqs: Array<[string, string]> = [
   [
     "Why pay when free Pine scripts exist on TradingView?",
     "Free scripts are single-purpose — one MA, one oscillator, one pattern. Golden Indicator fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one non-repainting engine. Plus the Trade Logic PDF and risk calculator. You're buying a system, not a plot.",
@@ -30,6 +32,9 @@ const faqs: Array<[string, string]> = [
     "No. Nothing guarantees trading profits. Golden Indicator is a decision-support tool — clean regime read, key levels, momentum confirmation. Used with the Trade Logic PDF and disciplined risk management, results compound over months. Not a profit machine. You decide every trade.",
   ],
 ];
+
+// Back-compat local alias so the rest of this file reads naturally.
+const faqs = homeFaqs;
 
 export default function FAQTeaser() {
   return (

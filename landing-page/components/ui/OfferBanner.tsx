@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Price from "@/components/ui/Price";
+import Price from "@/components/ui/PriceClient";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 const STORAGE_KEY = "ets_offer_banner_dismissed_v3";
