@@ -41,6 +41,15 @@ const nextConfig = {
       },
     ];
   },
+  // /resources was a sales-page-disguised-as-docs hub. Customer-only items
+  // already live in /portal; public canonicals live at /sample, /docs/install,
+  // /legal/disclaimer. Killed the route, 301 to /product so any inbound links
+  // (search, share, old TopNav cache) land on the bundle page instead of 404.
+  async redirects() {
+    return [
+      { source: "/resources", destination: "/product", permanent: true },
+    ];
+  },
 };
 
 // Wrap with Sentry only if a DSN is configured. Without DSN, withSentryConfig

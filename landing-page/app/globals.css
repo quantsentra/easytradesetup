@@ -1253,30 +1253,6 @@
     color: var(--tz-acid);
   }
 
-  /* ---- Marketing /resources cards ---- */
-  .resource-card {
-    display: flex;
-    gap: 14px;
-    padding: 18px 20px;
-    background: var(--c-panel);
-    border: 1px solid var(--c-rule);
-    border-radius: 14px;
-    text-decoration: none;
-    transition: border-color .15s, transform .15s, box-shadow .15s;
-  }
-  .resource-card:hover {
-    border-color: rgba(43,123,255,0.32);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 28px -16px rgba(43,123,255,0.32);
-  }
-  .resource-icon {
-    width: 40px; height: 40px;
-    border-radius: 10px;
-    display: grid; place-items: center;
-    border: 1px solid;
-    flex-shrink: 0;
-  }
-
   /* ---- Back-to-top floating button ---- */
   .back-to-top {
     position: fixed;

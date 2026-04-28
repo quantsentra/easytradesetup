@@ -9,7 +9,6 @@ const priorityMap: Array<[string, number, CF]> = [
   ["/product",            0.9, "weekly"],
   ["/pricing",            0.9, "weekly"],
   ["/checkout",           0.9, "weekly"],
-  ["/resources",          0.8, "monthly"],
   ["/sample",             0.8, "monthly"],
   // Programmatic SEO — per-market landing pages.
   ["/indicator/nifty",     0.85, "monthly"],

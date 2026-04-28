@@ -9,7 +9,6 @@ import CurrencySwitcher from "@/components/ui/CurrencySwitcher";
 
 const navItems = [
   { href: "/product",   label: "Features" },
-  { href: "/resources", label: "Resources" },
   { href: "/sample",    label: "Free sample" },
   { href: "/pricing",   label: "Pricing" },
 ];
@@ -18,7 +17,6 @@ function isActive(pathname: string | null, href: string): boolean {
   if (!pathname) return false;
   if (href === "/") return pathname === "/";
   if (href === "/sample") return pathname.startsWith("/sample");
-  if (href === "/resources") return pathname.startsWith("/resources") || pathname.startsWith("/docs");
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 

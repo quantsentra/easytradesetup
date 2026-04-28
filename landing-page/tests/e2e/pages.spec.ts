@@ -7,7 +7,6 @@ const routes: Array<{ path: string; mustContain: RegExp }> = [
   { path: "/pricing", mustContain: /one price.*forever/i },
   { path: "/compare", mustContain: /compare|alternatives|side by side/i },
   { path: "/sample", mustContain: /free sample|chapter/i },
-  { path: "/resources", mustContain: /resources|install guide|risk calculator/i },
   { path: "/docs/install", mustContain: /install/i },
   { path: "/docs/faq", mustContain: /asked.*answered|faq/i },
   { path: "/contact", mustContain: /contact|hello@easytradesetup/i },

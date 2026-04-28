@@ -102,7 +102,6 @@ const routesChart = `graph LR
         checkout["/checkout"]
         compare["/compare"]
         sample["/sample"]
-        resources["/resources"]
         ind["/indicator/[market]<br/>6 pages"]
         docs_install["/docs/install"]
         docs_faq["/docs/faq"]

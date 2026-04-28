@@ -65,12 +65,11 @@ export function SiteNavigationJsonLd() {
     "@type": "ItemList",
     name: "Primary navigation",
     itemListElement: [
-      { "@type": "SiteNavigationElement", position: 1, name: "Features",  url: `${SITE_URL}/product`   },
-      { "@type": "SiteNavigationElement", position: 2, name: "Resources", url: `${SITE_URL}/resources` },
-      { "@type": "SiteNavigationElement", position: 3, name: "Library",   url: `${SITE_URL}/sample`    },
-      { "@type": "SiteNavigationElement", position: 4, name: "Pricing",   url: `${SITE_URL}/pricing`   },
-      { "@type": "SiteNavigationElement", position: 5, name: "Compare",   url: `${SITE_URL}/compare`   },
-      { "@type": "SiteNavigationElement", position: 6, name: "FAQ",       url: `${SITE_URL}/docs/faq`  },
+      { "@type": "SiteNavigationElement", position: 1, name: "Features",    url: `${SITE_URL}/product`  },
+      { "@type": "SiteNavigationElement", position: 2, name: "Free sample", url: `${SITE_URL}/sample`   },
+      { "@type": "SiteNavigationElement", position: 3, name: "Pricing",     url: `${SITE_URL}/pricing`  },
+      { "@type": "SiteNavigationElement", position: 4, name: "Compare",     url: `${SITE_URL}/compare`  },
+      { "@type": "SiteNavigationElement", position: 5, name: "FAQ",         url: `${SITE_URL}/docs/faq` },
     ],
   };
   return <Script data={data} id="ld-sitenav" />;
