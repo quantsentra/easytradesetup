@@ -2,10 +2,13 @@ import { ImageResponse } from "next/og";
 import { OFFER_USD, OFFER_INR, RETAIL_USD, RETAIL_INR } from "@/lib/pricing";
 
 export const runtime = "edge";
-export const alt = "EasyTradeSetup — Golden Indicator · One TradingView indicator, every market";
+export const alt =
+  "EasyTradeSetup — Golden Indicator · One TradingView Pine v5 indicator for every market";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
+// Designed for THUMBNAIL legibility (WhatsApp / iMessage / X / Slack render
+// at ~200–400px wide). Big headline, big price, minimal chrome.
 export default async function OG() {
   return new ImageResponse(
     (
@@ -15,250 +18,189 @@ export default async function OG() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
           background:
-            "linear-gradient(135deg, #05070F 0%, #0E1530 60%, #0a1224 100%)",
-          padding: 72,
+            "linear-gradient(135deg, #05070F 0%, #0E1530 55%, #0a1224 100%)",
+          padding: 80,
           fontFamily: "sans-serif",
           color: "#ffffff",
           position: "relative",
+          textAlign: "center",
         }}
       >
-        {/* Aurora glow accents */}
+        {/* Single soft glow accent — too much aurora muddies the thumbnail */}
         <div
           style={{
             position: "absolute",
-            top: -120,
-            right: -120,
-            width: 520,
-            height: 520,
+            top: -200,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 900,
+            height: 600,
             borderRadius: 9999,
-            background: "radial-gradient(circle, rgba(43,123,255,0.32), transparent 65%)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: -180,
-            left: -120,
-            width: 520,
-            height: 520,
-            borderRadius: 9999,
-            background: "radial-gradient(circle, rgba(34,211,238,0.22), transparent 65%)",
+            background:
+              "radial-gradient(ellipse, rgba(43,123,255,0.22), transparent 65%)",
           }}
         />
 
-        {/* Brand row */}
+        {/* Brand row — small, top */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 16,
-            position: "relative",
+            gap: 14,
+            position: "absolute",
+            top: 48,
+            left: 56,
           }}
         >
           <div
             style={{
-              width: 56,
-              height: 56,
-              borderRadius: 14,
+              width: 44,
+              height: 44,
+              borderRadius: 11,
               background: "linear-gradient(135deg, #2B7BFF 0%, #22D3EE 100%)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               color: "#fff",
-              fontSize: 32,
+              fontSize: 22,
               fontWeight: 800,
-              boxShadow: "0 0 0 1px rgba(43,123,255,0.4), 0 12px 32px rgba(43,123,255,0.45)",
               letterSpacing: -0.5,
             }}
           >
-            {/* "ETS" letter mark — replaces a ✓ glyph that triggered a
-                runtime dynamic-font fetch in @vercel/og. */}
             ETS
           </div>
-          <div
+          <span
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
+              fontSize: 22,
+              fontWeight: 700,
+              letterSpacing: -0.4,
+              color: "rgba(255,255,255,0.92)",
             }}
           >
-            <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: -0.5 }}>
-              EasyTradeSetup
-            </span>
-            <span
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                letterSpacing: 2,
-                textTransform: "uppercase",
-                color: "#22D3EE",
-              }}
-            >
-              Golden Indicator · Pine v5
-            </span>
-          </div>
-        </div>
-
-        {/* Headline */}
-        <div
-          style={{
-            marginTop: 56,
-            fontSize: 104,
-            fontWeight: 800,
-            letterSpacing: -3.5,
-            lineHeight: 0.98,
-            maxWidth: 1040,
-            display: "flex",
-            flexDirection: "column",
-            position: "relative",
-          }}
-        >
-          <span>One TradingView</span>
-          <span>
-            indicator{" "}
-            <span
-              style={{
-                background: "linear-gradient(90deg, #2B7BFF 0%, #22D3EE 50%, #F0C05A 100%)",
-                backgroundClip: "text",
-                color: "transparent",
-              }}
-            >
-              for every market.
-            </span>
+            EasyTradeSetup
           </span>
         </div>
 
-        {/* Sub */}
+        {/* Eyebrow — top right */}
         <div
           style={{
-            marginTop: 28,
-            fontSize: 26,
-            color: "rgba(255,255,255,0.72)",
-            fontWeight: 500,
-            maxWidth: 960,
-            lineHeight: 1.35,
             display: "flex",
-            position: "relative",
+            position: "absolute",
+            top: 56,
+            right: 56,
+            padding: "8px 16px",
+            borderRadius: 999,
+            background: "rgba(34,211,238,0.12)",
+            border: "1px solid rgba(34,211,238,0.40)",
+            color: "#22D3EE",
+            fontSize: 16,
+            fontWeight: 700,
+            letterSpacing: 2,
+            textTransform: "uppercase",
           }}
         >
-          Structure · Regime · Levels · Volume — fused on one chart. Bar-close logic. No signal service. You decide every trade.
+          Pine v5 · No repaint
         </div>
 
-        {/* Bottom row */}
+        {/* Headline — single line each, no gradient (poor contrast at thumb) */}
         <div
           style={{
-            marginTop: "auto",
             display: "flex",
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            paddingTop: 32,
-            position: "relative",
+            flexDirection: "column",
+            alignItems: "center",
+            fontSize: 132,
+            fontWeight: 800,
+            letterSpacing: -5,
+            lineHeight: 0.95,
+            color: "#ffffff",
+          }}
+        >
+          <span>One indicator.</span>
+          <span
+            style={{
+              background:
+                "linear-gradient(90deg, #2B7BFF 0%, #22D3EE 50%, #F0C05A 100%)",
+              backgroundClip: "text",
+              color: "transparent",
+              marginTop: 6,
+            }}
+          >
+            Every market.
+          </span>
+        </div>
+
+        {/* Price block — biggest single element, drives the click */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            marginTop: 56,
           }}
         >
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
-              gap: 10,
+              alignItems: "baseline",
+              gap: 24,
+              fontSize: 96,
+              fontWeight: 800,
+              letterSpacing: -3,
+              color: "#ffffff",
             }}
           >
-            <div
+            <span>${OFFER_USD}</span>
+            <span
               style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                padding: "8px 16px",
-                borderRadius: 999,
-                background: "rgba(34,211,238,0.12)",
-                border: "1px solid rgba(34,211,238,0.40)",
-                color: "#22D3EE",
-                fontSize: 16,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: 2,
+                fontSize: 44,
+                color: "rgba(255,255,255,0.40)",
+                fontWeight: 600,
               }}
             >
-              <span
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: 999,
-                  background: "#22D3EE",
-                  boxShadow: "0 0 12px #22D3EE",
-                }}
-              />
-              Launch price · 67% off retail
-            </div>
-            <div
-              style={{
-                fontSize: 20,
-                color: "rgba(255,255,255,0.55)",
-                fontWeight: 500,
-              }}
-            >
-              One-time payment · Lifetime access · No subscriptions
-            </div>
+              ·
+            </span>
+            {/* "INR" prefix instead of ₹ — the rupee glyph triggers a
+                runtime dynamic-font fetch in @vercel/og that intermittently
+                fails with a 400. ASCII keeps the OG render deterministic. */}
+            <span>INR {OFFER_INR.toLocaleString("en-IN")}</span>
           </div>
-
           <div
             style={{
               display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-end",
+              alignItems: "baseline",
+              gap: 14,
+              marginTop: 8,
+              fontSize: 22,
+              color: "rgba(255,255,255,0.45)",
+              fontWeight: 500,
+              textDecoration: "line-through",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                gap: 16,
-                color: "rgba(255,255,255,0.40)",
-                fontSize: 26,
-                fontWeight: 600,
-                textDecoration: "line-through",
-              }}
-            >
-              <span>${RETAIL_USD}</span>
-              <span style={{ fontSize: 22 }}>·</span>
-              {/* "INR" prefix instead of ₹ — the rupee glyph triggers a
-                  runtime dynamic-font fetch in @vercel/og that intermittently
-                  fails with a 400. ASCII keeps the OG render deterministic. */}
-              <span>INR {RETAIL_INR.toLocaleString("en-IN")}</span>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-                gap: 16,
-                letterSpacing: -2.5,
-                fontWeight: 800,
-                marginTop: 4,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 84,
-                  background: "linear-gradient(135deg, #2B7BFF 0%, #22D3EE 100%)",
-                  backgroundClip: "text",
-                  color: "transparent",
-                }}
-              >
-                ${OFFER_USD}
-              </span>
-              <span style={{ fontSize: 38, color: "rgba(255,255,255,0.40)" }}>·</span>
-              <span
-                style={{
-                  fontSize: 84,
-                  background: "linear-gradient(135deg, #22D3EE 0%, #F0C05A 100%)",
-                  backgroundClip: "text",
-                  color: "transparent",
-                }}
-              >
-                INR {OFFER_INR.toLocaleString("en-IN")}
-              </span>
-            </div>
+            <span>${RETAIL_USD}</span>
+            <span>·</span>
+            <span>INR {RETAIL_INR.toLocaleString("en-IN")}</span>
           </div>
+        </div>
+
+        {/* Footer strip — bottom */}
+        <div
+          style={{
+            display: "flex",
+            position: "absolute",
+            bottom: 48,
+            left: 0,
+            right: 0,
+            justifyContent: "center",
+            fontSize: 22,
+            color: "rgba(255,255,255,0.62)",
+            fontWeight: 600,
+            letterSpacing: 0.5,
+          }}
+        >
+          One-time payment · Lifetime access · 67% off retail
         </div>
       </div>
     ),
