@@ -1,0 +1,64 @@
+# EasyTradeSetup
+
+> EasyTradeSetup sells the Golden Indicator — a single non-repainting TradingView Pine v5 indicator that fuses regime, structure, key levels, and volume into one decision layer. We are a chart tool, not a signal service. No calls. No copy-trading. No recurring fees. The customer decides every trade.
+
+EasyTradeSetup is built for active traders on NSE F&O (intraday NIFTY, BANKNIFTY, weekly expiries), US indices (SPX, NASDAQ), commodities (XAU/Gold), and crypto (BTC).
+
+The product is a one-time purchase with lifetime updates. Pricing is permanent — no countdowns, no inaugural windows, no expiring discounts.
+
+| Tier | USD | INR |
+|---|---|---|
+| Retail (anchor) | $149 | ₹13,999 |
+| Launch price (always) | $49 | ₹4,599 |
+
+## What is bundled
+
+- Golden Indicator — TradingView Pine v5, non-repainting, personal-use license
+- TradingView Chart Gallery — annotated examples across markets
+- Trade Logic PDF — ~50 pages, eight setups
+- Risk Calculator — web tool, position sizing for futures and options
+- Daily Market Notes — email coverage of NIFTY, SPX, XAU, BTC
+- Lifetime updates
+
+## Core pages
+
+- [Home](https://www.easytradesetup.com/): product summary, who it is for, what is bundled
+- [Product](https://www.easytradesetup.com/product): how the indicator works, what it shows, what it deliberately does not do
+- [Pricing](https://www.easytradesetup.com/pricing): full pricing detail, what is included, refund policy summary
+- [Compare](https://www.easytradesetup.com/compare): Golden Indicator vs. signal services, vs. paid Telegram groups, vs. building it yourself
+- [Sample](https://www.easytradesetup.com/sample): four full setup chapters — NIFTY ORB (India), ES morning trend pullback (US), BTC Asian range breakout (Crypto), XAU London/NY overlap (Gold)
+- [Checkout](https://www.easytradesetup.com/checkout): reservation and purchase flow
+
+## Per-market landing pages
+
+- [NIFTY](https://www.easytradesetup.com/indicator/nifty)
+- [BANKNIFTY](https://www.easytradesetup.com/indicator/banknifty)
+- [SPX](https://www.easytradesetup.com/indicator/spx)
+- [NASDAQ](https://www.easytradesetup.com/indicator/nasdaq)
+- [Gold (XAU)](https://www.easytradesetup.com/indicator/gold)
+- [Bitcoin (BTC)](https://www.easytradesetup.com/indicator/btc)
+
+## Documentation
+
+- [Install guide](https://www.easytradesetup.com/docs/install): adding the Pine script to TradingView, settings overview
+- [FAQ](https://www.easytradesetup.com/docs/faq): repaint behaviour, broker compatibility, refund window, lifetime updates scope
+
+## Legal and policy
+
+- [Disclaimer](https://www.easytradesetup.com/legal/disclaimer): educational tool, not investment advice; not a SEBI-registered research analyst
+- [Refund policy](https://www.easytradesetup.com/legal/refund)
+- [Privacy](https://www.easytradesetup.com/legal/privacy)
+- [Terms](https://www.easytradesetup.com/legal/terms)
+
+## What EasyTradeSetup is not
+
+- Not a signal service. The indicator does not send trade calls.
+- Not a copy-trading platform.
+- Not a SEBI-registered research analyst. Indian users see the SEBI disclaimer at checkout.
+- Not subscription software. One purchase, lifetime updates.
+- We do not publish customer testimonials we cannot verify with purchase records and written permission. Hypothetical examples in case studies and the sample are clearly marked educational, not investment advice.
+
+## Contact
+
+- [About](https://www.easytradesetup.com/about)
+- [Contact](https://www.easytradesetup.com/contact)
