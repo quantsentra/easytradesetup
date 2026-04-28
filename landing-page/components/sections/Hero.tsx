@@ -92,7 +92,7 @@ function Headline({ className = "" }: { className?: string }) {
     <h1
       className={`font-display font-semibold leading-[1.04] tracking-[-0.03em] text-ink ${className}`}
     >
-      One TradingView indicator
+      Golden Indicator — one TradingView indicator
       <br className="hidden sm:inline" />{" "}
       to read the market with{" "}
       <span

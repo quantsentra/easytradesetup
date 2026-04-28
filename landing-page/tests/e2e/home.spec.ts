@@ -5,8 +5,9 @@ test.describe("Home page — marketing integrity", () => {
     await page.goto("/");
   });
 
-  test("renders hero headline with structure-vs-noise positioning + accent word", async ({ page }) => {
+  test("renders hero headline with brand keyword + structure-vs-noise positioning + accent word", async ({ page }) => {
     const h1 = page.getByRole("heading", { level: 1 });
+    await expect(h1).toContainText(/golden indicator/i);
     await expect(h1).toContainText(/one tradingview indicator/i);
     await expect(h1).toContainText(/structure/i);
     await expect(h1).toContainText(/not noise/i);
