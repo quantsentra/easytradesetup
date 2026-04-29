@@ -297,7 +297,7 @@ export default async function IndicatorMarketPage({
             </p>
 
             <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <Link href="/checkout" className="btn btn-acid btn-lg">
+              <Link href="/checkout" className="btn btn-primary btn-lg">
                 Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link

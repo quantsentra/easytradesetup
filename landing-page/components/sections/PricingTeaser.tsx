@@ -52,6 +52,22 @@ export default function PricingTeaser() {
               disciplined trading process.
             </p>
 
+            <div
+              className="mt-6 inline-flex items-center gap-2.5 rounded-full px-4 py-1.5"
+              style={{
+                background: "rgba(43,123,255,0.10)",
+                border: "1px solid rgba(43,123,255,0.35)",
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <polygon points="23 7 16 12 23 17 23 7" />
+                <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+              </svg>
+              <span className="text-[12px] font-semibold tracking-wide text-ink">
+                Early access · first 100 buyers receive a personalized welcome video
+              </span>
+            </div>
+
             <ul className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 max-w-xl mx-auto text-left">
               {included.map((f) => (
                 <li key={f} className="flex items-start gap-2.5 text-caption text-ink">
@@ -71,7 +87,7 @@ export default function PricingTeaser() {
             </ul>
 
             <div className="mt-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3">
-              <Link href="/checkout" className="btn btn-acid btn-lg w-full sm:w-auto">
+              <Link href="/checkout" className="btn btn-primary btn-lg w-full sm:w-auto">
                 Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link href="/pricing" className="btn btn-outline btn-lg w-full sm:w-auto">

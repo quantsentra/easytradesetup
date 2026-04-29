@@ -102,7 +102,7 @@ export default async function MultiMarket() {
               ))}
             </ul>
             <div className="mt-9">
-              <Link href="/compare" className="btn btn-acid">
+              <Link href="/compare" className="btn btn-outline">
                 See how it compares <span className="arrow" aria-hidden>→</span>
               </Link>
             </div>

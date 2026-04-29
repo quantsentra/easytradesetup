@@ -101,7 +101,7 @@ export default function PortalMobileNav({
                 target="_blank"
                 rel="noopener"
                 onClick={() => setOpen(false)}
-                className="btn btn-acid btn-lg justify-center"
+                className="btn btn-primary btn-lg justify-center"
               >
                 Site <span aria-hidden>→</span>
               </a>

@@ -97,7 +97,7 @@ export default function TopNav() {
               </a>
               <a
                 href="https://portal.easytradesetup.com/sign-up"
-                className="btn btn-acid"
+                className="btn btn-primary"
               >
                 Sign up <span className="arrow" aria-hidden>→</span>
               </a>
@@ -167,7 +167,7 @@ export default function TopNav() {
                 <a
                   href="https://portal.easytradesetup.com/sign-up"
                   onClick={() => setOpen(false)}
-                  className="btn btn-acid btn-lg justify-center"
+                  className="btn btn-primary btn-lg justify-center"
                 >
                   Sign up <span className="arrow" aria-hidden>→</span>
                 </a>

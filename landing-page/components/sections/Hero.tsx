@@ -42,7 +42,7 @@ export default async function Hero() {
             </p>
 
             <div className="mt-6 lg:mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <Link href="/checkout" className="btn btn-acid btn-lg w-full sm:w-auto justify-center">
+              <Link href="/checkout" className="btn btn-primary btn-lg w-full sm:w-auto justify-center">
                 <span className="sm:hidden">Buy Golden Indicator</span>
                 <span className="hidden sm:inline">
                   Buy · <Price variant="amount" />

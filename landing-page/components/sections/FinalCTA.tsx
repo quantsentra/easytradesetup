@@ -54,7 +54,7 @@ export default function FinalCTA() {
             </div>
 
             <div className="flex flex-col sm:flex-row lg:flex-col gap-3 lg:w-[220px]">
-              <Link href="/checkout" className="btn btn-acid btn-lg justify-center">
+              <Link href="/checkout" className="btn btn-primary btn-lg justify-center">
                 Get Golden Indicator · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link

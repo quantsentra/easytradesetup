@@ -44,6 +44,18 @@ test.describe("Home page — marketing integrity", () => {
     await expect(page.getByText(/btc \/ usd/i).first()).toBeVisible();
   });
 
+  test("Compare teaser surfaces the head-to-head spec", async ({ page }) => {
+    await expect(page.getByText(/side by side/i).first()).toBeVisible();
+    await expect(page.getByText(/luxalgo/i).first()).toBeVisible();
+    await expect(page.getByText(/trendspider/i).first()).toBeVisible();
+  });
+
+  test("Pricing teaser shows the early-access scarcity badge", async ({ page }) => {
+    await expect(
+      page.getByText(/first 100 buyers receive a personalized welcome video/i),
+    ).toBeVisible();
+  });
+
   test("FAQ teaser includes key objection handlers", async ({ page }) => {
     await expect(page.getByText(/free pine scripts exist/i)).toBeVisible();
     await expect(page.getByText(/signal service/i).first()).toBeVisible();

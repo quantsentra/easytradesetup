@@ -2,6 +2,7 @@ import Hero from "@/components/sections/Hero";
 import CleanVsNoisy from "@/components/sections/CleanVsNoisy";
 import Bundle from "@/components/sections/Bundle";
 import MultiMarket from "@/components/sections/MultiMarket";
+import CompareTeaser from "@/components/sections/CompareTeaser";
 import PricingTeaser from "@/components/sections/PricingTeaser";
 import FAQTeaser, { homeFaqs } from "@/components/sections/FAQTeaser";
 import FinalCTA from "@/components/sections/FinalCTA";
@@ -23,6 +24,7 @@ export default function HomePage() {
       <CleanVsNoisy />
       <Bundle />
       <MultiMarket />
+      <CompareTeaser />
       <FAQTeaser />
       <PricingTeaser />
       <FinalCTA />
