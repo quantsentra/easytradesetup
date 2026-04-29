@@ -11,12 +11,13 @@ import { getStripe } from "@/lib/stripe";
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 // Sender. Default to Resend's shared sandbox domain so the integration
 // works the moment the API key is set, but Gmail/Outlook will spam-flag
-// onboarding@resend.dev because that domain has poor reputation. Set
-// PURCHASE_FROM_EMAIL to "EasyTradeSetup <welcome@easytradesetup.com>"
-// once the easytradesetup.com domain is verified in Resend (DKIM + SPF).
-const FROM_EMAIL = process.env.PURCHASE_FROM_EMAIL || "EasyTradeSetup <onboarding@resend.dev>";
-const NOTIFY_EMAIL = process.env.LEAD_NOTIFY_EMAIL || "thomas@easytradesetup.com";
-const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "thomas@easytradesetup.com";
+// Domain is Resend-verified (resend._domainkey.easytradesetup.com DKIM is
+// live) and welcome@easytradesetup.com is the operator inbox in Zoho.
+// Override with PURCHASE_FROM_EMAIL on Vercel only if a different sender
+// is needed for a specific environment.
+const FROM_EMAIL = process.env.PURCHASE_FROM_EMAIL || "EasyTradeSetup <welcome@easytradesetup.com>";
+const NOTIFY_EMAIL = process.env.LEAD_NOTIFY_EMAIL || "welcome@easytradesetup.com";
+const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "welcome@easytradesetup.com";
 const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL || "https://www.easytradesetup.com";
 const PORTAL_ORIGIN = "https://portal.easytradesetup.com";
 

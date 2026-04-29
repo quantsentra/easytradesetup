@@ -12,8 +12,8 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY;
 // Default to Resend's pre-verified test sender so the integration works the
 // moment RESEND_API_KEY is set; swap for noreply@easytradesetup.com once
 // the domain is verified in Resend dashboard.
-const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "EasyTradeSetup <onboarding@resend.dev>";
-const NOTIFY_EMAIL = process.env.LEAD_NOTIFY_EMAIL || "thomas@easytradesetup.com";
+const FROM_EMAIL = process.env.LEAD_FROM_EMAIL || "EasyTradeSetup <welcome@easytradesetup.com>";
+const NOTIFY_EMAIL = process.env.LEAD_NOTIFY_EMAIL || "welcome@easytradesetup.com";
 const LEAD_SALT = process.env.LEAD_SALT || "ets-lead-salt-2026";
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
