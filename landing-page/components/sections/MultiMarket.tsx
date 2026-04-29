@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { resolveHomeMarket } from "@/lib/geo";
 
 type Card = {
+  id: "nifty" | "spx" | "btc";
   symbol: string;
   name: string;
   tf: string;
@@ -9,48 +11,73 @@ type Card = {
   deltaPositive: boolean;
   setup: string;
   tone: "cyan" | "gold" | "blue";
-  rotate: string;
-  marginLeft?: string;
 };
 
-const cards: Card[] = [
-  {
-    symbol: "NIFTY 50",
-    name: "NSE Intraday",
-    tf: "15m",
-    price: "24,852.15",
-    delta: "+0.42%",
-    deltaPositive: true,
-    setup: "Opening-range bias confirmed · long above VWAP",
-    tone: "cyan",
-    rotate: "-1.5deg",
-  },
-  {
-    symbol: "SPX 500",
-    name: "US Futures",
-    tf: "1H",
-    price: "5,218.40",
-    delta: "+0.28%",
-    deltaPositive: true,
-    setup: "Regime bullish · HH / HL intact · key level 5,200",
-    tone: "blue",
-    rotate: "0.8deg",
-    marginLeft: "32px",
-  },
-  {
-    symbol: "BTC / USD",
-    name: "Crypto",
-    tf: "4H",
-    price: "71,420",
-    delta: "−0.18%",
-    deltaPositive: false,
-    setup: "Range regime · mean-revert setup at upper band",
-    tone: "gold",
-    rotate: "-0.6deg",
-  },
+const NIFTY: Card = {
+  id: "nifty",
+  symbol: "NIFTY 50",
+  name: "NSE Intraday",
+  tf: "15m",
+  price: "24,852.15",
+  delta: "+0.42%",
+  deltaPositive: true,
+  setup: "Opening-range bias confirmed · long above VWAP",
+  tone: "cyan",
+};
+const SPX: Card = {
+  id: "spx",
+  symbol: "SPX 500",
+  name: "US Futures",
+  tf: "1H",
+  price: "5,218.40",
+  delta: "+0.28%",
+  deltaPositive: true,
+  setup: "Regime bullish · HH / HL intact · key level 5,200",
+  tone: "blue",
+};
+const BTC: Card = {
+  id: "btc",
+  symbol: "BTC / USD",
+  name: "Crypto",
+  tf: "4H",
+  price: "71,420",
+  delta: "−0.18%",
+  deltaPositive: false,
+  setup: "Range regime · mean-revert setup at upper band",
+  tone: "gold",
+};
+
+// Stagger pattern that avoids the lower-card from optically clipping the
+// upper one; identical across both market orderings so the visual rhythm
+// stays consistent regardless of geo.
+const STAGGER: Array<{ rotate: string; marginLeft?: string }> = [
+  { rotate: "-1.5deg" },
+  { rotate: "0.8deg", marginLeft: "32px" },
+  { rotate: "-0.6deg" },
 ];
 
-export default function MultiMarket() {
+export default async function MultiMarket() {
+  const market = await resolveHomeMarket();
+  // India-first ordering surfaces NIFTY at the top; global ordering leads
+  // with SPX so US/EU visitors see a benchmark they recognise instantly.
+  const cards =
+    market === "in" ? [NIFTY, SPX, BTC] : [SPX, BTC, NIFTY];
+  const bullets =
+    market === "in"
+      ? [
+          "Tuned first for NIFTY / BankNifty weekly expiries",
+          "Runs clean on SPX, NASDAQ, DAX, FTSE",
+          "Commodities: Gold, Silver, Crude — ready",
+          "Crypto: BTC, ETH, major alts — bar-close safe",
+          "Forex majors + INR pairs included",
+        ]
+      : [
+          "Tuned first for SPX / NASDAQ / Dow morning trends",
+          "Runs clean on NIFTY, BankNifty, DAX, FTSE",
+          "Commodities: Gold, Silver, Crude — ready",
+          "Crypto: BTC, ETH, major alts — bar-close safe",
+          "Forex majors + INR pairs included",
+        ];
   return (
     <section className="above-bg">
       <div className="container-wide py-20 sm:py-24 md:py-28">
@@ -70,11 +97,9 @@ export default function MultiMarket() {
               scaling adapt automatically to whatever chart you paste it on.
             </p>
             <ul className="mt-8 space-y-4">
-              <Check>Tuned first for NIFTY / BankNifty weekly expiries</Check>
-              <Check>Runs clean on SPX, NASDAQ, DAX, FTSE</Check>
-              <Check>Commodities: Gold, Silver, Crude — ready</Check>
-              <Check>Crypto: BTC, ETH, major alts — bar-close safe</Check>
-              <Check>Forex majors + INR pairs included</Check>
+              {bullets.map((b) => (
+                <Check key={b}>{b}</Check>
+              ))}
             </ul>
             <div className="mt-9">
               <Link href="/compare" className="btn btn-acid">
@@ -85,8 +110,8 @@ export default function MultiMarket() {
 
           {/* RIGHT — stacked cards */}
           <div className="flex flex-col gap-4">
-            {cards.map((c) => (
-              <MarketCard key={c.symbol} card={c} />
+            {cards.map((c, i) => (
+              <MarketCard key={c.id} card={c} stagger={STAGGER[i] ?? STAGGER[0]} />
             ))}
           </div>
         </div>
@@ -95,7 +120,13 @@ export default function MultiMarket() {
   );
 }
 
-function MarketCard({ card }: { card: Card }) {
+function MarketCard({
+  card,
+  stagger,
+}: {
+  card: Card;
+  stagger: { rotate: string; marginLeft?: string };
+}) {
   const toneColors: Record<Card["tone"], { grad: string; stroke: string }> = {
     cyan: {
       grad: "linear-gradient(180deg, rgba(34,211,238,0.35), rgba(34,211,238,0))",
@@ -116,8 +147,8 @@ function MarketCard({ card }: { card: Card }) {
     <div
       className="term-frame"
       style={{
-        transform: `rotate(${card.rotate})`,
-        marginLeft: card.marginLeft,
+        transform: `rotate(${stagger.rotate})`,
+        marginLeft: stagger.marginLeft,
       }}
     >
       <div className="term-head">

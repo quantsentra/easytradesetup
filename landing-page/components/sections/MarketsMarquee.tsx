@@ -1,10 +1,13 @@
 import { fetchLiveQuotes, formatPrice, formatChange, type LiveQuote } from "@/lib/market-data";
+import { resolveHomeMarket } from "@/lib/geo";
 
 // Static symbols that ride along without live quotes — the ticker still
 // signals "we read any market", even without paid indices / forex data.
-const staticSymbols = [
+// Two orderings so the visitor's home market shows up first in the marquee.
+const STATIC_IN_FIRST = [
   "NIFTY 50",
   "BANK NIFTY",
+  "NIFTY WEEKLY",
   "SPX 500",
   "NASDAQ 100",
   "DOW JONES",
@@ -13,11 +16,24 @@ const staticSymbols = [
   "CRUDE OIL",
   "EUR / USD",
   "GBP / JPY",
+];
+const STATIC_GLOBAL_FIRST = [
+  "SPX 500",
+  "NASDAQ 100",
+  "DOW JONES",
+  "XAU / USD",
+  "SILVER",
+  "CRUDE OIL",
+  "EUR / USD",
+  "GBP / JPY",
+  "NIFTY 50",
+  "BANK NIFTY",
   "NIFTY WEEKLY",
 ];
 
 export default async function MarketsMarquee() {
-  const live = await fetchLiveQuotes();
+  const [live, market] = await Promise.all([fetchLiveQuotes(), resolveHomeMarket()]);
+  const staticSymbols = market === "in" ? STATIC_IN_FIRST : STATIC_GLOBAL_FIRST;
 
   return (
     <section aria-label="Markets ticker" className="relative">

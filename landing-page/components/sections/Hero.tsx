@@ -2,9 +2,11 @@ import Link from "next/link";
 import Price from "@/components/ui/Price";
 import HeroSlider from "@/components/ui/HeroSlider";
 import { OFFER_LABEL } from "@/lib/pricing";
+import { resolveHomeMarket } from "@/lib/geo";
 // Note: hero CTA hides price on mobile per CRO request — full label only on sm+.
 
-export default function Hero() {
+export default async function Hero() {
+  const homeMarket = await resolveHomeMarket();
   return (
     <section className="relative above-bg overflow-hidden">
       <div className="grain" aria-hidden />
@@ -22,7 +24,7 @@ export default function Hero() {
           {/* HERO SLIDER — 3-screen rotating live ticker (NIFTY/Gold/US30).
               order-1 on mobile (right after H1), order-2 on lg. */}
           <div className="order-1 lg:order-2 relative lg:scale-[1.04] xl:scale-[1.08] origin-left">
-            <HeroSlider />
+            <HeroSlider homeMarket={homeMarket} />
           </div>
 
           {/* COPY — order-2 on mobile (after chart), order-1 on lg */}

@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+type HomeMarket = "in" | "global";
 
 type Quote = {
   code: "nifty" | "gold" | "us30";
@@ -55,14 +57,15 @@ const FALLBACK: Quote[] = [
   makeFallback("us30",  "^DJI",  "US 30 · DOW", "Dow Jones · NYSE",  "NYSE",  "US",     "USD", 49230.7,  49085.8,  [49085, 49120, 49150, 49180, 49200, 49215, 49228, 49232, 49230, 49231]),
 ];
 
-function isIndianTimezone(): boolean {
-  if (typeof window === "undefined") return false;
-  try {
-    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return tz === "Asia/Kolkata" || tz === "Asia/Calcutta";
-  } catch {
-    return false;
-  }
+function orderQuotes<T extends { code: "nifty" | "gold" | "us30" }>(
+  qs: T[],
+  homeMarket: HomeMarket,
+): T[] {
+  const rank = (code: T["code"]) =>
+    homeMarket === "in"
+      ? code === "nifty" ? 0 : code === "gold" ? 1 : 2
+      : code === "us30" ? 0 : code === "gold" ? 1 : 2;
+  return [...qs].sort((a, b) => rank(a.code) - rank(b.code));
 }
 
 function formatPrice(n: number, currency: string): string {
@@ -77,21 +80,14 @@ function formatLastSync(unix: number): string {
   return `${hh}:${mm}`;
 }
 
-export default function HeroSlider() {
-  const [quotes, setQuotes] = useState<Quote[]>(FALLBACK);
+export default function HeroSlider({ homeMarket }: { homeMarket: HomeMarket }) {
+  // Server already resolved home market from cookie + IP geo, so the
+  // initial render is correctly ordered with no client-side flicker.
+  const [quotes, setQuotes] = useState<Quote[]>(() =>
+    orderQuotes(FALLBACK, homeMarket),
+  );
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-
-  // Reorder once on mount: India timezone -> NIFTY first.
-  // Otherwise keep the source order (NIFTY -> GOLD -> US30).
-  useEffect(() => {
-    if (!isIndianTimezone()) {
-      setQuotes((q) => {
-        // Already nifty-first; no-op for symmetry.
-        return q;
-      });
-    }
-  }, []);
 
   // Fetch quotes + refresh every 30s.
   useEffect(() => {
@@ -104,14 +100,7 @@ export default function HeroSlider() {
         const json = await res.json();
         const next: Quote[] = Array.isArray(json?.quotes) ? json.quotes : [];
         if (next.length) {
-          // Preserve home-region ordering chosen on mount: source order is
-          // already nifty-first which suits IST. For non-IST we surface
-          // US30 first so US visitors recognise the index immediately.
-          const inIst = isIndianTimezone();
-          const sorted = inIst
-            ? next
-            : [...next].sort((a, b) => regionRank(a.code) - regionRank(b.code));
-          setQuotes(sorted);
+          setQuotes(orderQuotes(next, homeMarket));
         }
       } catch {
         /* swallow */
@@ -123,7 +112,7 @@ export default function HeroSlider() {
       alive = false;
       clearInterval(id);
     };
-  }, []);
+  }, [homeMarket]);
 
   // Auto-rotate every ROTATE_MS while not paused / not reduced-motion.
   useEffect(() => {
@@ -268,11 +257,6 @@ export default function HeroSlider() {
       </div>
     </div>
   );
-}
-
-function regionRank(code: "nifty" | "gold" | "us30") {
-  // Non-IST users: US30 first, then GOLD, then NIFTY.
-  return code === "us30" ? 0 : code === "gold" ? 1 : 2;
 }
 
 function SparkSvg({ series, positive }: { series: number[]; positive: boolean }) {
