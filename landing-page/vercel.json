@@ -1,11 +1,5 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm test && next build",
-  "installCommand": "npm install",
-  "crons": [
-    {
-      "path": "/api/cron/uptime",
-      "schedule": "*/5 * * * *"
-    }
-  ]
+  "installCommand": "npm install"
 }
