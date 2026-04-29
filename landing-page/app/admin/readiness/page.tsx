@@ -9,7 +9,7 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-const CATEGORY_ORDER: Category[] = ["Email", "Payments", "Database", "Security", "Operations", "Content"];
+const CATEGORY_ORDER: Category[] = ["Email", "Payments", "Database", "Product", "Security", "Operations", "Content"];
 
 function severityChip(s: Severity, done: boolean) {
   if (done) {

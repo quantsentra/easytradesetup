@@ -9,7 +9,14 @@ import { createSupabaseAdmin } from "@/lib/supabase/server";
 // joined against launch_readiness_acks (manual confirmations).
 
 export type Severity = "blocker" | "warning";
-export type Category = "Email" | "Database" | "Payments" | "Security" | "Operations" | "Content";
+export type Category =
+  | "Email"
+  | "Database"
+  | "Payments"
+  | "Security"
+  | "Operations"
+  | "Content"
+  | "Product";
 
 export type AutoStatus = {
   done: boolean;
@@ -210,7 +217,99 @@ export const ITEMS: ReadinessItem[] = [
     ],
   },
 
+  // ------- PRODUCT BLOCKERS -----------------------------------------------
+  {
+    id: "product.pine-validated",
+    title: "Pine v5 source validated end-to-end",
+    category: "Product",
+    severity: "blocker",
+    description:
+      "Final indicator source compiles in TradingView with no errors, no repaint warnings, no console warnings. Smoke-tested across NIFTY, BANKNIFTY, SPX, ES, NAS, XAU, BTC, EUR/USD on multiple timeframes (5m, 15m, 1h, 4h, 1d).",
+    fixSteps: [
+      "Open the .pine source in TradingView → save as new script",
+      "Add to chart on each smoke-test symbol — confirm no errors / warnings",
+      "Replay session check: walk back ~50 bars; confirm no historical lines move on bar-close",
+      "Document version in script header (e.g. v2.4.0)",
+      "Tick this item once all smoke checks pass",
+    ],
+  },
+  {
+    id: "product.pine-delivered",
+    title: "Final Pine source delivered via /portal/downloads",
+    category: "Product",
+    severity: "blocker",
+    description:
+      "Customer who pays must reach the working source within seconds. /portal/downloads should serve the latest version + version history. Manual delivery via email is not durable.",
+    fixSteps: [
+      "Upload final .pine file to Supabase storage (or commit to repo + serve via signed URL)",
+      "Wire /portal/downloads to list active version + previous versions",
+      "Stripe webhook → entitlement → portal download is unlocked end-to-end tested",
+      "Tick this item once a real test purchase pulls the file successfully",
+    ],
+  },
+  {
+    id: "product.install-guide-shipped",
+    title: "Install guide complete with screenshots",
+    category: "Product",
+    severity: "blocker",
+    description:
+      "/docs/install must walk a brand-new TradingView user from zero → indicator on chart in under 5 minutes. Each step has a screenshot. Free TradingView plan compatibility called out explicitly.",
+    fixSteps: [
+      "Edit app/(marketing)/docs/install/page.tsx",
+      "Capture screenshots at 2x density: Pine editor, Save dialog, Add-to-chart menu, settings panel",
+      "Place screenshots under public/docs/install/",
+      "Add troubleshooting section: 'I don't see anything', 'Wrong colours', 'Settings reset'",
+      "Tick this item once a non-trader can complete the steps unaided",
+    ],
+  },
+
   // ------- WARNINGS --------------------------------------------------------
+  {
+    id: "product.strategy-screenshots",
+    title: "Strategy screenshots captured (8 setups)",
+    category: "Product",
+    severity: "warning",
+    description:
+      "Each setup in the Trade Logic PDF needs a real chart screenshot showing the indicator firing the setup with annotations: entry candle, stop, target, regime context. Stock images don't sell.",
+    fixSteps: [
+      "Identify a clean historical instance for each of the 8 setups",
+      "Annotate in TradingView (rectangles, lines, arrows) using brand palette",
+      "Export at 2x density, 1600px wide",
+      "Save under public/strategies/<setup-id>.png",
+      "Tick this item once all 8 are captured",
+    ],
+  },
+  {
+    id: "product.strategy-portal-pages",
+    title: "Each strategy rendered at /portal/strategies/[id]",
+    category: "Product",
+    severity: "warning",
+    description:
+      "Every strategy gets its own page inside the customer portal — annotated screenshot, setup logic, entry / exit / invalidation rules, risk framework. Mirrors the Trade Logic PDF but in interactive form.",
+    fixSteps: [
+      "Add app/portal/strategies/[id]/page.tsx",
+      "Reuse the Setup data shape from app/(marketing)/sample/setups.ts (extend if needed)",
+      "Embed the annotated screenshot at the top of each page",
+      "Add /portal/strategies index listing all 8 with thumbnails",
+      "Tick this item once all 8 pages render correctly on mobile + desktop",
+    ],
+  },
+  {
+    id: "product.strategy-pdf-export",
+    title: "Branded PDF export per strategy",
+    category: "Product",
+    severity: "warning",
+    description:
+      "Customer-facing 'Export to PDF' button on each strategy page. Output carries EasyTradeSetup branding: logo on cover, brand colours, founder watermark, page footer with site URL + educational disclaimer.",
+    fixSteps: [
+      "Pick PDF library (puppeteer for SSR PDF or @react-pdf/renderer for component-tree)",
+      "Build branded template: cover (logo + strategy name + ETS tag), body (annotated screenshot + rules), footer (URL + disclaimer)",
+      "Wire /api/portal/strategies/[id]/pdf — gated to entitlement holders only",
+      "Add 'Download PDF' button to /portal/strategies/[id]",
+      "Test across Chrome, Safari, Firefox — confirm fonts embed",
+      "Tick this item once a buyer can export all 8 strategies as PDF",
+    ],
+  },
   {
     id: "security.admin-2fa",
     title: "Admin account has 2FA enabled",
