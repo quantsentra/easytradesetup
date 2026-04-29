@@ -40,6 +40,7 @@ const navSections: Array<{
     items: [
       { href: "/admin/analytics",   label: "Analytics",   icon: ChartIcon },
       { href: "/admin/site-health", label: "Site health", icon: HeartbeatIcon },
+      { href: "/admin/releases",    label: "Releases",    icon: TagIcon },
     ],
   },
   {
@@ -241,6 +242,14 @@ function HeartbeatIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 12h4l2-6 4 12 2-6h6" />
+    </svg>
+  );
+}
+function TagIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 12l-8 8a2 2 0 0 1-2.83 0L2 12.83V4h8.83L20 13.17a2 2 0 0 1 0 2.83z" transform="translate(0 -1)" />
+      <line x1="7" y1="7" x2="7.01" y2="7" />
     </svg>
   );
 }

@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SETUPS, type Setup } from "./setups";
+
+type HomeMarket = "in" | "global";
 
 const FLAG: Record<Setup["id"], string> = {
   india: "IN",
@@ -11,8 +13,30 @@ const FLAG: Record<Setup["id"], string> = {
   gold: "XAU",
 };
 
-export default function SampleTabs() {
-  const [activeId, setActiveId] = useState<Setup["id"]>("india");
+// Geo-priority order for the tabs row + default active tab.
+//   IN visitor:     India → Gold → Crypto → US
+//   global visitor: US → Crypto → Gold → India
+function orderForMarket(homeMarket: HomeMarket): Setup["id"][] {
+  return homeMarket === "in"
+    ? ["india", "gold", "crypto", "us"]
+    : ["us", "crypto", "gold", "india"];
+}
+
+export default function SampleTabs({
+  homeMarket,
+}: {
+  homeMarket: HomeMarket;
+}) {
+  // Stable ordered list — order is decided server-side from geo cookie + IP,
+  // so first paint already shows the right tab in the first slot. No flicker.
+  const ordered = useMemo<Setup[]>(() => {
+    const ids = orderForMarket(homeMarket);
+    return ids
+      .map((id) => SETUPS.find((s) => s.id === id))
+      .filter((s): s is Setup => Boolean(s));
+  }, [homeMarket]);
+
+  const [activeId, setActiveId] = useState<Setup["id"]>(ordered[0].id);
 
   // Read ?market= on first paint so deep links land on the right tab.
   // Done in useEffect (not initial state) to avoid hydration mismatch with SSR.
@@ -24,72 +48,72 @@ export default function SampleTabs() {
     }
   }, []);
 
-  const active = SETUPS.find((s) => s.id === activeId) ?? SETUPS[0];
+  const active = ordered.find((s) => s.id === activeId) ?? ordered[0];
 
   return (
     <section className="bg-surface">
       <div className="container-x py-10 sm:py-14">
-        {/* Tabs row — horizontal scroll on mobile, equal-width row on >= sm */}
+        {/* Tabs — 2×2 grid on mobile (no horizontal scroll, no cut-off labels),
+            4-col row on >= sm. Each tab is full width within its grid cell so
+            target hit-area is consistent. */}
         <div
           role="tablist"
           aria-label="Sample setup market"
-          className="-mx-4 sm:mx-0 mb-8 sm:mb-10 overflow-x-auto no-scrollbar"
+          className="mb-8 sm:mb-10 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3"
         >
-          <div className="flex gap-2 sm:gap-3 px-4 sm:px-0 min-w-max sm:min-w-0 sm:grid sm:grid-cols-4">
-            {SETUPS.map((s) => {
-              const isActive = s.id === activeId;
-              return (
-                <button
-                  key={s.id}
-                  role="tab"
-                  type="button"
-                  aria-selected={isActive}
-                  aria-controls={`panel-${s.id}`}
-                  id={`tab-${s.id}`}
-                  onClick={() => {
-                    setActiveId(s.id);
-                    if (typeof window !== "undefined") {
-                      const url = new URL(window.location.href);
-                      url.searchParams.set("market", s.id);
-                      window.history.replaceState({}, "", url.toString());
-                    }
-                  }}
+          {ordered.map((s) => {
+            const isActive = s.id === activeId;
+            return (
+              <button
+                key={s.id}
+                role="tab"
+                type="button"
+                aria-selected={isActive}
+                aria-controls={`panel-${s.id}`}
+                id={`tab-${s.id}`}
+                onClick={() => {
+                  setActiveId(s.id);
+                  if (typeof window !== "undefined") {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("market", s.id);
+                    window.history.replaceState({}, "", url.toString());
+                  }
+                }}
+                className={[
+                  "group flex items-center gap-2.5 sm:gap-3 px-3 sm:px-4 py-3 rounded-xl border text-left transition-all min-w-0",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-link/50",
+                  isActive
+                    ? "bg-blue text-white border-blue shadow-md"
+                    : "bg-panel border-rule text-ink hover:border-rule-2 hover:bg-bg-2",
+                ].join(" ")}
+              >
+                <span
                   className={[
-                    "group flex items-center gap-2 sm:gap-3 px-4 py-3 rounded-xl border text-left transition-all whitespace-nowrap",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-link/50",
+                    "flex-none w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center font-mono text-[10.5px] sm:text-[11px] font-bold tracking-wider",
                     isActive
-                      ? "bg-blue text-white border-blue shadow-md"
-                      : "bg-panel border-rule text-ink hover:border-rule-2 hover:bg-bg-2",
+                      ? "bg-white/20 text-white"
+                      : "bg-blue-link/10 text-blue-link",
                   ].join(" ")}
+                  aria-hidden
                 >
+                  {FLAG[s.id]}
+                </span>
+                <span className="flex flex-col leading-tight min-w-0">
+                  <span className="text-[13px] sm:text-[15px] font-semibold truncate">
+                    {s.label}
+                  </span>
                   <span
                     className={[
-                      "flex-none w-9 h-9 rounded-lg flex items-center justify-center font-mono text-[11px] font-bold tracking-wider",
-                      isActive
-                        ? "bg-white/20 text-white"
-                        : "bg-blue-link/10 text-blue-link",
+                      "text-[10.5px] sm:text-[11px] font-mono uppercase tracking-wider truncate",
+                      isActive ? "text-white/70" : "text-muted-faint",
                     ].join(" ")}
-                    aria-hidden
                   >
-                    {FLAG[s.id]}
+                    {s.symbol.split(" · ")[0]}
                   </span>
-                  <span className="flex flex-col leading-tight">
-                    <span className="text-[14px] sm:text-[15px] font-semibold">
-                      {s.label}
-                    </span>
-                    <span
-                      className={[
-                        "text-[11px] font-mono uppercase tracking-wider",
-                        isActive ? "text-white/70" : "text-muted-faint",
-                      ].join(" ")}
-                    >
-                      {s.symbol.split(" · ")[0]}
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Panel — single active setup */}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/ui/PageHeader";
 import { PageBreadcrumbs } from "@/components/seo/JsonLd";
+import { resolveHomeMarket } from "@/lib/geo";
 import SampleTabs from "./sample-tabs";
 
 export const metadata: Metadata = {
@@ -26,7 +27,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function SamplePage() {
+export default async function SamplePage() {
+  const homeMarket = await resolveHomeMarket();
   return (
     <>
       <PageBreadcrumbs name="Sample" path="/sample" />
@@ -35,7 +37,7 @@ export default function SamplePage() {
         title={<>Four markets. Four setups. No email.</>}
         lede="One full chapter from the 50-page Trade Logic PDF for each market we trade — Indian indices, US indices, crypto, and gold. Same format, same rigour, ungated so you can judge the quality before you buy."
       />
-      <SampleTabs />
+      <SampleTabs homeMarket={homeMarket} />
     </>
   );
 }

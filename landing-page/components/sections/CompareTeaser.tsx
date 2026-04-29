@@ -65,12 +65,30 @@ export default function CompareTeaser() {
                     className="py-3 px-4 text-left text-[12px] font-semibold text-ink whitespace-nowrap"
                     style={{
                       background:
-                        "linear-gradient(180deg, rgba(43,123,255,0.16), rgba(34,211,238,0.06))",
+                        "linear-gradient(180deg, rgba(43,123,255,0.22), rgba(34,211,238,0.08))",
                       borderRadius: "10px 10px 0 0",
-                      boxShadow: "inset 1px 0 0 rgba(34,211,238,0.32), inset -1px 0 0 rgba(34,211,238,0.32), inset 0 1px 0 rgba(34,211,238,0.5)",
+                      boxShadow:
+                        "inset 1px 0 0 rgba(34,211,238,0.55), inset -1px 0 0 rgba(34,211,238,0.55), inset 0 1px 0 rgba(34,211,238,0.85)",
                     }}
                   >
-                    EasyTradeSetup
+                    <span className="flex flex-col items-start gap-1.5">
+                      <span
+                        className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-[0.14em]"
+                        style={{
+                          background: "rgba(143, 204, 42, 0.16)",
+                          border: "1px solid rgba(143, 204, 42, 0.45)",
+                          color: "#8FCC2A",
+                        }}
+                      >
+                        <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                          <path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" />
+                        </svg>
+                        Recommended
+                      </span>
+                      <span className="text-[13px] sm:text-[14px] font-semibold text-ink">
+                        EasyTradeSetup
+                      </span>
+                    </span>
                   </th>
                   <th className="py-3 px-4 text-left text-[12px] font-medium text-ink-60 whitespace-nowrap">
                     LuxAlgo
@@ -95,10 +113,10 @@ export default function CompareTeaser() {
                         className="py-4 px-4 text-[14px] font-semibold text-ink whitespace-nowrap"
                         style={{
                           background:
-                            "linear-gradient(180deg, rgba(43,123,255,0.10), rgba(34,211,238,0.04))",
+                            "linear-gradient(180deg, rgba(43,123,255,0.14), rgba(34,211,238,0.06))",
                           boxShadow: isLast
-                            ? "inset 1px 0 0 rgba(34,211,238,0.32), inset -1px 0 0 rgba(34,211,238,0.32), inset 0 -1px 0 rgba(34,211,238,0.4)"
-                            : "inset 1px 0 0 rgba(34,211,238,0.32), inset -1px 0 0 rgba(34,211,238,0.32)",
+                            ? "inset 1px 0 0 rgba(34,211,238,0.55), inset -1px 0 0 rgba(34,211,238,0.55), inset 0 -1px 0 rgba(34,211,238,0.7)"
+                            : "inset 1px 0 0 rgba(34,211,238,0.55), inset -1px 0 0 rgba(34,211,238,0.55)",
                           borderRadius: isLast ? "0 0 10px 10px" : undefined,
                         }}
                       >
