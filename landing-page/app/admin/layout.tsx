@@ -36,6 +36,12 @@ const navSections: Array<{
     ],
   },
   {
+    title: "Insights",
+    items: [
+      { href: "/admin/analytics", label: "Analytics", icon: ChartIcon },
+    ],
+  },
+  {
     title: "System",
     items: [
       { href: "/admin/readiness",       label: "Launch readiness", icon: RocketIcon },
@@ -219,6 +225,14 @@ function ShieldIcon() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6z" />
       <path d="M9 12l2 2 4-4" />
+    </svg>
+  );
+}
+function ChartIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 3v18h18" />
+      <path d="M7 14l4-4 3 3 5-7" />
     </svg>
   );
 }

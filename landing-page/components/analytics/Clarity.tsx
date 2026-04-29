@@ -1,9 +1,14 @@
 import { headers } from "next/headers";
+import Script from "next/script";
 
 // Microsoft Clarity loader — heatmaps, session recordings, funnels.
-// Injected as a server component so the per-request CSP nonce (set in
-// middleware.ts) reaches the inline bootstrap. Without the nonce the
-// strict-dynamic CSP would block it.
+// Server component so the per-request CSP nonce (set in middleware.ts)
+// is read and forwarded to the script tag.
+//
+// Uses next/script with strategy="afterInteractive" so the bootstrap
+// runs AFTER React hydrates the body. A raw inline <script> fires earlier
+// and synchronously mutates <head>, which caused a React hydration
+// mismatch (#418) on the live site.
 //
 // Renders nothing if NEXT_PUBLIC_CLARITY_ID is unset — keeps preview /
 // local builds clean of third-party traffic.
@@ -13,8 +18,6 @@ export default async function Clarity() {
 
   const nonce = (await headers()).get("x-nonce") || undefined;
 
-  // Standard Clarity bootstrap — appends a <script> tag for the loader
-  // shim and queues calls until it arrives. Same shape Microsoft ships.
   const snippet = `(function(c,l,a,r,i,t,y){
     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
     t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
@@ -22,8 +25,9 @@ export default async function Clarity() {
   })(window,document,"clarity","script","${id}");`;
 
   return (
-    <script
+    <Script
       id="ms-clarity"
+      strategy="afterInteractive"
       nonce={nonce}
       dangerouslySetInnerHTML={{ __html: snippet }}
     />
