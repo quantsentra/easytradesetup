@@ -42,7 +42,7 @@ export default function PrivacyPage() {
 
             <h2>4. Your rights</h2>
             <p>
-              Email <a href="mailto:hello@easytradesetup.com">hello@easytradesetup.com</a> to request data export or
+              Email <a href="mailto:welcome@easytradesetup.com">welcome@easytradesetup.com</a> to request data export or
               deletion. We&apos;ll respond within 30 days.
             </p>
 
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
             <p>
               If you would prefer not to be recorded, install a browser extension that blocks{" "}
               <code>clarity.ms</code>, or contact us at{" "}
-              <a href="mailto:hello@easytradesetup.com">hello@easytradesetup.com</a> and we will exclude your sessions
+              <a href="mailto:welcome@easytradesetup.com">welcome@easytradesetup.com</a> and we will exclude your sessions
               going forward.
             </p>
           </Prose>

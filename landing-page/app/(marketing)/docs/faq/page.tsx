@@ -72,7 +72,7 @@ export default function FAQPage() {
       <PageHeader
         eyebrow="FAQ"
         title={<>Asked. And answered.</>}
-        lede="If anything is missing, email hello@easytradesetup.com and we'll add it."
+        lede="If anything is missing, email welcome@easytradesetup.com and we'll add it."
       />
       <section className="bg-surface">
         <div className="container-x py-16 space-y-12">

@@ -11,8 +11,8 @@ type SendArgs = {
   replyTo?: string;
 };
 
-const FROM_DEFAULT = process.env.EMAIL_FROM || "EasyTradeSetup <hello@easytradesetup.com>";
-const ADMIN_NOTIFY = process.env.ADMIN_NOTIFY_EMAIL || "hello@easytradesetup.com";
+const FROM_DEFAULT = process.env.EMAIL_FROM || "EasyTradeSetup <welcome@easytradesetup.com>";
+const ADMIN_NOTIFY = process.env.ADMIN_NOTIFY_EMAIL || "welcome@easytradesetup.com";
 
 async function getClient(): Promise<{ emails: { send: (p: Record<string, unknown>) => Promise<unknown> } } | null> {
   const key = process.env.RESEND_API_KEY;

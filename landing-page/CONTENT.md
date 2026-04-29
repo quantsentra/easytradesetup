@@ -78,7 +78,7 @@ Shown on every page.
 - Body: Drop your email and we'll send a free 3-page sample from the Trade Logic PDF — structure, entry rules, invalidation. No spam. No follow-ups until launch.
 - Form: email → **Send sample** (disabled state: _Sending…_)
 - Success state: _Thanks — check your inbox. If it doesn't arrive in 5 minutes, peek in spam._
-- Error state: _Couldn't send right now. Please try again or email hello@easytradesetup.com._
+- Error state: _Couldn't send right now. Please try again or email welcome@easytradesetup.com._
 - Footer link: _Or [view the sample page](/sample) · unsubscribe any time · we don't sell emails._
 
 ---
@@ -498,7 +498,7 @@ Back link: **← See full pricing**
 
 - Eyebrow: **Compare**
 - Title: **Side by side with _the alternatives._**
-- Lede: We respect the competition. Every row below is verifiable from public listings. If you spot an error, email hello@easytradesetup.com and we'll correct it.
+- Lede: We respect the competition. Every row below is verifiable from public listings. If you spot an error, email welcome@easytradesetup.com and we'll correct it.
 
 ## Comparison table (abridged)
 
@@ -618,7 +618,7 @@ The first 15 minutes in Indian markets absorb the most overnight positioning and
 
 - Eyebrow: **FAQ**
 - Title: **Asked. And answered.**
-- Lede: If anything is missing, email hello@easytradesetup.com and we'll add it.
+- Lede: If anything is missing, email welcome@easytradesetup.com and we'll add it.
 
 ## Product
 
@@ -662,7 +662,7 @@ A: Yes. India: ₹4,599 inclusive of GST. International: $49 inclusive of applic
 
 ### Q: Refund policy?
 
-A: 7-day refund window. Email hello@easytradesetup.com within 7 days of purchase for a full refund — no questions, no forms. See refund policy.
+A: 7-day refund window. Email welcome@easytradesetup.com within 7 days of purchase for a full refund — no questions, no forms. See refund policy.
 
 ## Technical
 
@@ -769,7 +769,7 @@ Lean. Always. One indicator, one price, lifetime updates. New strategies are add
 ## Email card
 
 - EMAIL
-- hello@easytradesetup.com
+- welcome@easytradesetup.com
 - Response within 24 hours on business days.
 
 ## Before you write
@@ -855,7 +855,7 @@ Golden Indicator is sold globally. Users are responsible for compliance with the
 
 ### 4. Your rights
 
-Email hello@easytradesetup.com to request data export or deletion. We'll respond within 30 days.
+Email welcome@easytradesetup.com to request data export or deletion. We'll respond within 30 days.
 
 ### 5. Cookies
 
@@ -909,7 +909,7 @@ If the Pine Script fails to install, throws errors on your chart, or does not fu
 
 ### How to request
 
-1. Email hello@easytradesetup.com.
+1. Email welcome@easytradesetup.com.
 2. Include your order ID and a short description of the issue (screenshots help).
 3. Refund is processed within 5-7 business days to the original payment method.
 
@@ -983,7 +983,7 @@ The product is a one-time digital download. A short refund window gives you enou
 ## /contact
 
 - **Title:** Contact — Golden Indicator support
-- **Description:** Get in touch with the EasyTradeSetup team. Email hello@easytradesetup.com — founder replies within 24 hours. Refund, install, feature requests.
+- **Description:** Get in touch with the EasyTradeSetup team. Email welcome@easytradesetup.com — founder replies within 24 hours. Refund, install, feature requests.
 - **Keywords:** EasyTradeSetup contact · Golden Indicator support · TradingView indicator help
 
 ## /checkout

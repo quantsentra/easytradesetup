@@ -159,7 +159,7 @@ export default function ComparePage() {
       <PageHeader
         eyebrow="Compare"
         title={<>Side by side with <span className="grad-text-2">the alternatives.</span></>}
-        lede="We respect the competition. Every row below is verifiable from public listings. If you spot an error, email hello@easytradesetup.com and we'll correct it."
+        lede="We respect the competition. Every row below is verifiable from public listings. If you spot an error, email welcome@easytradesetup.com and we'll correct it."
       />
 
       <section className="above-bg">

@@ -152,8 +152,8 @@ NEXT_PUBLIC_SITE_URL                     = https://easytradesetup.com
 
 ```
 RESEND_API_KEY                           # ticket + purchase notifications
-EMAIL_FROM                               = EasyTradeSetup <hello@easytradesetup.com>
-ADMIN_NOTIFY_EMAIL                       = hello@easytradesetup.com
+EMAIL_FROM                               = EasyTradeSetup <welcome@easytradesetup.com>
+ADMIN_NOTIFY_EMAIL                       = welcome@easytradesetup.com
 ```
 
 ### Payments (not live yet)

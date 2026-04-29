@@ -51,8 +51,8 @@ export default async function AccountPage() {
             Prefer a private ticket? Open one in{" "}
             <a href="/portal/support" style={{ color: "var(--tz-acid-dim)" }}>/portal/support</a>.
             Or email{" "}
-            <a href="mailto:hello@easytradesetup.com" style={{ color: "var(--tz-acid-dim)" }}>
-              hello@easytradesetup.com
+            <a href="mailto:welcome@easytradesetup.com" style={{ color: "var(--tz-acid-dim)" }}>
+              welcome@easytradesetup.com
             </a>
             .
           </p>

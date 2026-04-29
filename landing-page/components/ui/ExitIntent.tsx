@@ -213,7 +213,7 @@ export default function ExitIntent() {
 
         {status === "error" && (
           <div className="mt-3 text-caption text-dn">
-            Couldn&apos;t send right now. Please try again or email hello@easytradesetup.com.
+            Couldn&apos;t send right now. Please try again or email welcome@easytradesetup.com.
           </div>
         )}
 

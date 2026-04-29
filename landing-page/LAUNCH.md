@@ -42,7 +42,7 @@ Gated sequence. Each block blocks the next — don't skip ahead.
 ## Gate 6 — inbound contact
 
 - [ ] Cloudflare Email Routing enabled for `easytradesetup.com`
-- [ ] `hello@easytradesetup.com` forwards to personal inbox
+- [ ] `welcome@easytradesetup.com` forwards to personal inbox
 - [ ] Test by emailing `hello@` from a separate account
 
 ## Gate 7 — payments (THE BIG ONE)

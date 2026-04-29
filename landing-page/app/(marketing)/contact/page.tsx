@@ -5,12 +5,12 @@ import { PageBreadcrumbs } from "@/components/seo/JsonLd";
 export const metadata: Metadata = {
   title: "Contact — Golden Indicator support",
   description:
-    "Get in touch with the EasyTradeSetup team. Email hello@easytradesetup.com — founder replies within 24 hours. Install help, feature requests, bulk licensing.",
+    "Get in touch with the EasyTradeSetup team. Email welcome@easytradesetup.com — founder replies within 24 hours. Install help, feature requests, bulk licensing.",
   keywords: ["EasyTradeSetup contact", "Golden Indicator support", "TradingView indicator help"],
   alternates: { canonical: "/contact" },
   openGraph: {
     title: "Contact EasyTradeSetup",
-    description: "Founder replies within 24 hours. hello@easytradesetup.com",
+    description: "Founder replies within 24 hours. welcome@easytradesetup.com",
     url: "https://www.easytradesetup.com/contact",
     type: "website",
   },
@@ -31,10 +31,10 @@ export default function ContactPage() {
             <div className="card-apple p-10">
               <div className="text-micro font-semibold text-blue-link uppercase tracking-wider">Email</div>
               <a
-                href="mailto:hello@easytradesetup.com"
+                href="mailto:welcome@easytradesetup.com"
                 className="mt-4 block h-tile text-blue-link hover:underline underline-offset-2"
               >
-                hello@easytradesetup.com
+                welcome@easytradesetup.com
               </a>
               <p className="mt-4 text-caption text-muted">Response within 24 hours on business days.</p>
             </div>

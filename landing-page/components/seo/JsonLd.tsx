@@ -22,7 +22,7 @@ export function OrganizationJsonLd() {
     contactPoint: [
       {
         "@type": "ContactPoint",
-        email: "hello@easytradesetup.com",
+        email: "welcome@easytradesetup.com",
         contactType: "customer support",
         availableLanguage: ["en"],
         url: `${SITE_URL}/contact`,
