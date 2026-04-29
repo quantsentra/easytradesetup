@@ -38,7 +38,8 @@ const navSections: Array<{
   {
     title: "Insights",
     items: [
-      { href: "/admin/analytics", label: "Analytics", icon: ChartIcon },
+      { href: "/admin/analytics",   label: "Analytics",   icon: ChartIcon },
+      { href: "/admin/site-health", label: "Site health", icon: HeartbeatIcon },
     ],
   },
   {
@@ -233,6 +234,13 @@ function ChartIcon() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 3v18h18" />
       <path d="M7 14l4-4 3 3 5-7" />
+    </svg>
+  );
+}
+function HeartbeatIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12h4l2-6 4 12 2-6h6" />
     </svg>
   );
 }

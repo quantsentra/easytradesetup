@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import Script from "next/script";
+import { readConsent } from "@/lib/consent-server";
 
 // Microsoft Clarity loader — heatmaps, session recordings, funnels.
 // Server component so the per-request CSP nonce (set in middleware.ts)
@@ -10,11 +11,16 @@ import Script from "next/script";
 // and synchronously mutates <head>, which caused a React hydration
 // mismatch (#418) on the live site.
 //
-// Renders nothing if NEXT_PUBLIC_CLARITY_ID is unset — keeps preview /
-// local builds clean of third-party traffic.
+// Renders nothing if:
+//   - NEXT_PUBLIC_CLARITY_ID is unset (preview / local stays clean), or
+//   - the visitor has not granted "all" cookie consent. GDPR / DPDPA-friendly
+//     default is no tracking until explicit opt-in.
 export default async function Clarity() {
   const id = process.env.NEXT_PUBLIC_CLARITY_ID;
   if (!id) return null;
+
+  const consent = await readConsent();
+  if (consent !== "all") return null;
 
   const nonce = (await headers()).get("x-nonce") || undefined;
 

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter_Tight, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import Clarity from "@/components/analytics/Clarity";
+import CookieConsent from "@/components/ui/CookieConsent";
 import "./globals.css";
 
 const interTight = Inter_Tight({
@@ -145,6 +146,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <Analytics />
         <Clarity />
+        <CookieConsent />
       </body>
     </html>
   );

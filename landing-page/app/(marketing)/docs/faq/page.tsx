@@ -39,7 +39,7 @@ const faqs = [
     items: [
       ["How do I receive the files?", "By email, within seconds of payment. The email contains the .pine file, trade-logic PDF, and risk calculator link."],
       ["Do I need to enter card details every month?", "No. It's a one-time payment. No recurring charges, ever."],
-      ["Are taxes included in the price?", "Yes. India: ₹4,599 inclusive of GST. International: $49 inclusive of applicable taxes."],
+      ["Are there any extra charges at checkout?", "No. The displayed price is what you pay — ₹4,599 in India, $49 international. No taxes or fees added at checkout."],
       ["What if I have install or usage problems?", "Open a support ticket from your portal — portal.easytradesetup.com/portal/support. A human replies within 24h with a fix. The script is Pine v5 standard; if it does not render or behaves unexpectedly, we walk you through the resolution."],
       ["Is there a refund?", "All sales are final once portal access is unlocked — see returns policy. The product is a downloadable digital script; refunds turn it into a free trial. If the indicator genuinely cannot be made to work in your environment after a real support attempt, we refund in full. Trading-outcome dissatisfaction is not a refund situation."],
     ],
