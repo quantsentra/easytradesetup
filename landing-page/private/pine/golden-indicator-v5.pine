@@ -65,11 +65,19 @@ label_size_in = input.string("Normal", title="Label Size (raise on mobile)",
    options=["Small", "Normal", "Large", "Huge"],
    group="🎯 Setup Profile")
 
-label_color = input.color(color.black, title="Label Text Color",
+auto_theme_colors = input.bool(true, title="Auto-adapt to chart theme (light/dark)",
    group="🎯 Setup Profile",
-   tooltip="Set black for max readability on mobile / light themes")
+   tooltip="When ON, labels + Lifeline auto-pick black on light theme and white on dark theme. Turn OFF to use the manual colour pickers below.")
+
+label_color_manual = input.color(color.black, title="Label Text Color (manual)",
+   group="🎯 Setup Profile",
+   tooltip="Used only when 'Auto-adapt to chart theme' is OFF.")
 
 label_size = label_size_in == "Small" ? size.small : label_size_in == "Large" ? size.large : label_size_in == "Huge" ? size.huge : size.normal
+
+// Theme-resolved colour. chart.fg_color returns black on light theme,
+// white on dark theme — so the same script reads cleanly on both.
+label_color = auto_theme_colors ? chart.fg_color : label_color_manual
 
 //----------------
 // Lifeline — McGinley Dynamic (length 14)
@@ -77,9 +85,11 @@ label_size = label_size_in == "Small" ? size.small : label_size_in == "Large" ? 
 // this an EMA — the math is McGinley Dynamic. Renamed honestly.
 //----------------
 
-show_ema  = input.bool(true,    title="Show Lifeline (smart trend) *", group="Global Market")
-ema_color = input.color(#000000, title="Lifeline Color",                  group="Global Market")
-show_ema_eff = is_custom ? show_ema : is_beginner_or_up
+show_ema         = input.bool(true,    title="Show Lifeline (smart trend) *", group="Global Market")
+ema_color_manual = input.color(#000000, title="Lifeline Color (manual)",       group="Global Market", tooltip="Used only when 'Auto-adapt to chart theme' is OFF.")
+show_ema_eff     = is_custom ? show_ema : is_beginner_or_up
+// Theme-aware Lifeline colour. Dark theme → white line, light theme → black.
+ema_color        = auto_theme_colors ? chart.fg_color : ema_color_manual
 LIFELINE_LEN = 14
 src = close
 out = ta.ema(src, LIFELINE_LEN)
@@ -639,7 +649,9 @@ supply_outline_color = #ffffff
 demand_color         = #A6D7A7
 demand_outline_color = #ffffff
 poi_label_color      = #363a45
-swing_type_color     = #363a45
+// HH / LH / HL / LL swing labels float over chart bg — must adapt to
+// theme or they disappear on dark mode.
+swing_type_color     = auto_theme_colors ? chart.fg_color : #363a45
 
 f_array_add_pop(arr, new_value_to_add) =>
     array.unshift(arr, new_value_to_add)
