@@ -425,49 +425,38 @@ is_london_end   = show_session_london and in_session_london[1] and not in_sessio
 is_nyc_start    = show_session_nyc    and in_session_nyc    and not in_session_nyc[1]
 is_nyc_end      = show_session_nyc    and in_session_nyc[1]    and not in_session_nyc
 
-// Active-session UX v3 — clean chart, single floating watermark.
+// Session UX v4 — vertical boundary markers, no wallpaper, no
+// floating watermark.
 //
-// Earlier wallpaper bgcolor() paints historical bars permanently —
-// once Asia tinted a bar, that tint stayed even after Asia ended.
-// Result: 4 stacked colour regions through the day, overwhelming
-// price action. Drop the wallpaper entirely. The trader only needs
-// to know which session is RIGHT NOW.
+// Thin 1-bar bgcolor strips at each session's open + close. Single
+// bar wide = behaves like a vertical line on the chart. Plus a tiny
+// labeldown at the top of the pane on the session-open bar so the
+// trader knows which session that vertical mark belongs to.
 //
-// Priority on overlap: India → NYC → London → Asia.
+// User-controlled via a single toggle below. Default ON.
 
-active_name = show_session_india  and in_session_india  ? "Indian Market"
-             : show_session_nyc    and in_session_nyc    ? "NYC"
-             : show_session_london and in_session_london ? "London"
-             : show_session_asia   and in_session_asia   ? "Asia (Tokyo)"
-             : ""
+show_session_lines = input.bool(true, title="Show Session Boundary Lines",
+   group="🕐 Trading Sessions",
+   tooltip="Thin vertical markers at each session's open and close. Colour matches the session: India saffron / NYC purple / London gold / Asia cyan. Tiny label at the top of the pane on session open.")
 
-active_text_color = show_session_india  and in_session_india  ? #FF9933
-                  : show_session_nyc    and in_session_nyc    ? #7D5BB7
-                  : show_session_london and in_session_london ? #C49000
-                  : show_session_asia   and in_session_asia   ? #0FA9C9
-                  : color.gray
+// 1-bar bgcolor strips = vertical line look. Open = full opacity,
+// close = lighter so the eye reads "this is closing, not opening".
+bgcolor(show_session_lines and is_india_start  ? color.new(#FF9933, 30) : na, title="India Open Marker")
+bgcolor(show_session_lines and is_india_end    ? color.new(#FF9933, 65) : na, title="India Close Marker")
+bgcolor(show_session_lines and is_asia_start   ? color.new(#0FA9C9, 30) : na, title="Asia Open Marker")
+bgcolor(show_session_lines and is_asia_end     ? color.new(#0FA9C9, 65) : na, title="Asia Close Marker")
+bgcolor(show_session_lines and is_london_start ? color.new(#C49000, 30) : na, title="London Open Marker")
+bgcolor(show_session_lines and is_london_end   ? color.new(#C49000, 65) : na, title="London Close Marker")
+bgcolor(show_session_lines and is_nyc_start    ? color.new(#7D5BB7, 30) : na, title="NYC Open Marker")
+bgcolor(show_session_lines and is_nyc_end      ? color.new(#7D5BB7, 65) : na, title="NYC Close Marker")
 
-// Floating watermark at top of chart pane. Tracks current bar.
-// Theme-adaptive bg (chart.bg_color) keeps the label readable on
-// both light + dark themes without a hard-coded white box.
-var label active_session_lbl = na
-if active_name != ""
-    sess_lbl_y = high + ta.atr(20) * 1.0
-    if na(active_session_lbl)
-        active_session_lbl := label.new(bar_index, sess_lbl_y, active_name,
-           color=color.new(chart.bg_color, 30),
-           textcolor=active_text_color,
-           style=label.style_label_center,
-           size=size.normal)
-    else
-        label.set_xy(active_session_lbl, bar_index, sess_lbl_y)
-        label.set_text(active_session_lbl, active_name)
-        label.set_textcolor(active_session_lbl, active_text_color)
-        label.set_color(active_session_lbl, color.new(chart.bg_color, 30))
-else
-    if not na(active_session_lbl)
-        label.delete(active_session_lbl)
-        active_session_lbl := na
+// Tiny label at top of pane on the open bar — names the session
+// behind the vertical mark. Pinned via location.top so it always
+// shows above price regardless of zoom / range.
+plotshape(show_session_lines and is_india_start,  title="India Open Label",  style=shape.labeldown, location=location.top, color=color.new(#FF9933, 20), textcolor=#FF9933, text="India",  size=size.tiny)
+plotshape(show_session_lines and is_asia_start,   title="Asia Open Label",   style=shape.labeldown, location=location.top, color=color.new(#0FA9C9, 20), textcolor=#0FA9C9, text="Asia",   size=size.tiny)
+plotshape(show_session_lines and is_london_start, title="London Open Label", style=shape.labeldown, location=location.top, color=color.new(#C49000, 20), textcolor=#C49000, text="London", size=size.tiny)
+plotshape(show_session_lines and is_nyc_start,    title="NYC Open Label",    style=shape.labeldown, location=location.top, color=color.new(#7D5BB7, 20), textcolor=#7D5BB7, text="NYC",    size=size.tiny)
 
 //----------------
 // 100% Buyers / Sellers Marubozu detection
