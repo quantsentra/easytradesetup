@@ -165,6 +165,10 @@ var line s3Line    = na
 var line s4Line    = na
 
 var linefill cprBandFill = na
+// "Magnetic Zone" tag — TC, Pivot, BC together form the central magnetic
+// zone where price tends to oscillate. Centered text label refreshed at
+// session start so traders see the tag without hovering any line.
+var label cprMagneticLbl = na
 
 if isNewDay and show_pivots
     storedPivot := pivot_calc
@@ -193,6 +197,8 @@ if isNewDay and show_pivots
         line.delete(s4Line)
     if not na(cprBandFill)
         linefill.delete(cprBandFill)
+    if not na(cprMagneticLbl)
+        label.delete(cprMagneticLbl)
 
     pivotLine := line.new(bar_index, storedPivot, bar_index + 100, storedPivot, width=2, color=color.purple)
     bcLine    := line.new(bar_index, storedBC,    bar_index + 100, storedBC,    width=2, color=color.purple)
@@ -208,6 +214,16 @@ if isNewDay and show_pivots
 
     cprBandFill := linefill.new(tcLine, bcLine, color.new(cpr_band_color, 70))
 
+    // Magnetic-zone tag — sits between TC and BC at the centre of the
+    // session's bar window. Transparent background so the band shows
+    // through; muted purple text matches the pivot lines.
+    cprMagneticLbl := label.new(bar_index + 50, math.avg(storedTC, storedBC), "Magnetic Zone",
+       xloc=xloc.bar_index,
+       color=#ffffff00,
+       textcolor=color.new(color.purple, 30),
+       style=label.style_label_center,
+       size=size.small)
+
 if not na(pivotLine) and show_pivots
     line.set_xy2(pivotLine, bar_index + 100, storedPivot)
     line.set_xy2(bcLine,    bar_index + 100, storedBC)
@@ -220,6 +236,8 @@ if not na(pivotLine) and show_pivots
     line.set_xy2(s2Line,    bar_index + 100, storedS2)
     line.set_xy2(s3Line,    bar_index + 100, storedS3)
     line.set_xy2(s4Line,    bar_index + 100, storedS4)
+    if not na(cprMagneticLbl)
+        label.set_xy(cprMagneticLbl, bar_index + 50, math.avg(storedTC, storedBC))
 
 //----------------
 // Open Range Breakout (Indian session)
