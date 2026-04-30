@@ -46,8 +46,8 @@ indicator("Golden Indicator v5"
 
 setup_profile = input.string("Pro", title="🎯 Setup Profile",
    options=["Beginner", "Pro", "Expert", "Custom"],
-   group="🎯 Setup Profile",
-   tooltip="Beginner — Lifeline + Trap Alerts (Yellow) + Buy/Sell Signals\nPro     — Beginner + Power Move Zones (CD) + King EMA + Buyer/Seller Zones\nExpert  — Pro + Daily Magnetic Pivot Range\nCustom  — switch each feature on/off individually below")
+   group="👋 Start Here",
+   tooltip="Pick this once. The settings groups below are optional — only used if you want to fine-tune.\n\nBeginner — Lifeline + Trap Alerts (Yellow) + Buy/Sell Signals + blue/black candles\nPro     — Beginner + Power Move Zones (CD) + King EMA + Big Buyer/Seller Zones + Sessions + MTF\nExpert  — Pro + Daily Magnetic Zone (CPR)\nCustom  — switch each feature on/off individually in the groups below")
 
 is_beginner_or_up = setup_profile == "Beginner" or setup_profile == "Pro" or setup_profile == "Expert"
 is_pro_or_up      = setup_profile == "Pro"      or setup_profile == "Expert"
@@ -63,14 +63,14 @@ is_custom         = setup_profile == "Custom"
 
 label_size_in = input.string("Normal", title="Label Size (raise on mobile)",
    options=["Small", "Normal", "Large", "Huge"],
-   group="🎯 Setup Profile")
+   group="👋 Start Here")
 
 auto_theme_colors = input.bool(true, title="Auto-adapt to chart theme (light/dark)",
-   group="🎯 Setup Profile",
+   group="👋 Start Here",
    tooltip="When ON, labels + Lifeline auto-pick black on light theme and white on dark theme. Turn OFF to use the manual colour pickers below.")
 
 label_color_manual = input.color(color.black, title="Label Text Color (manual)",
-   group="🎯 Setup Profile",
+   group="🛠 Manual Overrides",
    tooltip="Used only when 'Auto-adapt to chart theme' is OFF.")
 
 label_size = label_size_in == "Small" ? size.small : label_size_in == "Large" ? size.large : label_size_in == "Huge" ? size.huge : size.normal
@@ -80,7 +80,7 @@ label_size = label_size_in == "Small" ? size.small : label_size_in == "Large" ? 
 label_color = auto_theme_colors ? chart.fg_color : label_color_manual
 
 show_legend = input.bool(true, title="Show Candle Color Legend",
-   group="🎯 Setup Profile",
+   group="👋 Start Here",
    tooltip="Fixed legend in the bottom-right explaining what blue / black / yellow candles mean.")
 
 //----------------
@@ -89,8 +89,8 @@ show_legend = input.bool(true, title="Show Candle Color Legend",
 // this an EMA — the math is McGinley Dynamic. Renamed honestly.
 //----------------
 
-show_ema         = input.bool(true,    title="Show Lifeline (smart trend) *", group="Global Market")
-ema_color_manual = input.color(#000000, title="Lifeline Color (manual)",       group="Global Market", tooltip="Used only when 'Auto-adapt to chart theme' is OFF.")
+show_ema         = input.bool(true,    title="Show Lifeline (smart trend) *", group="🎨 Candles & Trends")
+ema_color_manual = input.color(#000000, title="Lifeline Color (manual)",       group="🛠 Manual Overrides", tooltip="Used only when 'Auto-adapt to chart theme' is OFF.")
 show_ema_eff     = is_custom ? show_ema : is_beginner_or_up
 // Theme-aware Lifeline colour. Dark theme → white line, light theme → black.
 ema_color        = auto_theme_colors ? chart.fg_color : ema_color_manual
@@ -106,7 +106,7 @@ plot(show_ema_eff ? lifeline : na, title="Lifeline", color=ema_color, linewidth=
 // EMA 200 — long-trend filter
 //----------------
 
-show_ema200 = input.bool(false, title="Show King EMA (200-period) *", group="Global Market")
+show_ema200 = input.bool(false, title="Show King EMA (200-period) *", group="🎨 Candles & Trends")
 show_ema200_eff = is_custom ? show_ema200 : is_pro_or_up
 out200 = ta.ema(close, 200)
 // #3D5AFA — softer electric blue. Pure #0901f7 was 100% saturation =
@@ -121,7 +121,7 @@ plot(show_ema200_eff ? out200 : na, title="King EMA (200)", color=#3D5AFA, linew
 // is where downside exhausts (huge buying expected).
 //----------------
 
-showADR = input(true, title="Show Power Move Zones (CD) *", group="Global Market")
+showADR = input(true, title="Show Power Move Zones (CD) *", group="📊 Price Zones")
 show_adr_eff = is_custom ? showADR : is_pro_or_up
 
 OPEN     = request.security(syminfo.tickerid, 'D', open, lookahead=barmerge.lookahead_on)
@@ -205,8 +205,8 @@ if not na(adrHigh10Line) and show_adr_eff
 // marks the central no-trade band.
 //----------------
 
-show_pivots    = input(true, title="Show Daily Magnetic Zone (CPR) *", group="Global Market")
-cpr_band_color = input.color(color.rgb(255, 192, 203), title="Magnetic Zone Fill Color", group="Global Market")
+show_pivots    = input(true, title="Show Daily Magnetic Zone (CPR) *", group="📊 Price Zones")
+cpr_band_color = input.color(color.rgb(255, 192, 203), title="Magnetic Zone Fill Color", group="📊 Price Zones")
 show_pivots_eff = is_custom ? show_pivots : is_expert_or_up
 
 isNewDay = ta.change(time('D'))
@@ -562,7 +562,7 @@ C_MarubozuBlackBearish = C_BlackBody and C_LongBody and C_UpShadow <= C_ShadowPe
 // Blue / Black momentum + Marubozu candle colours — Beginner-tier+. The
 // candle-colour legend (legend table) explains what each colour means;
 // gating this to Beginner+ keeps the simplest tier visually meaningful.
-show_momentum  = input.bool(true, title="Show Momentum Candles *", group="Global Market")
+show_momentum  = input.bool(true, title="Show Momentum Candles *", group="🎨 Candles & Trends")
 show_momentum_eff = is_custom ? show_momentum : is_beginner_or_up
 BODY_THRESHOLD = 0.70
 
@@ -580,7 +580,7 @@ is_bearish_momentum = body_size / true_range >= BODY_THRESHOLD and close < open
 // micro level. Signals a potential trap / reversal context.
 //----------------
 
-show_yellow_candle = input.bool(true, title="Show Trap Alerts (Yellow Candle) *", group="Global Market")
+show_yellow_candle = input.bool(true, title="Show Trap Alerts (Yellow Candle) *", group="🎨 Candles & Trends")
 show_yellow_eff    = is_custom ? show_yellow_candle : is_beginner_or_up
 
 var bool RedCandle   = false
@@ -663,7 +663,7 @@ backpaint  = true
 // "green = buy / red = sell" mental model the rest of the chart uses).
 upCss = color.new(#22A06B, 0)
 dnCss = color.new(#D94545, 0)
-showTrend = input(false, 'Show Buy/Sell Signals (trend break)', group="Global Market")
+showTrend = input(false, 'Show Buy/Sell Signals (trend break)', group="🎨 Candles & Trends")
 showTrend_eff = is_custom ? showTrend : is_beginner_or_up
 showExt   = true
 
@@ -710,17 +710,17 @@ alertcondition(dnos > dnos[1], 'Downward Breakout', 'Price broke the up-trendlin
 
 // MTF previous high/low lines — gated to Pro+ tier so Beginner stays
 // minimal. Custom mode: per-timeframe toggles take effect directly.
-show_pdhl_in = input(true,    'Daily',   inline='daily',   group='Highs & Lows MTF')
-pdhl_style   = input.string('----', '',  inline='daily',   group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
-pdhl_css     = input(#2157f3, '',        inline='daily',   group='Highs & Lows MTF')
+show_pdhl_in = input(true,    'Daily',   inline='daily',   group='📅 Higher Timeframe Levels')
+pdhl_style   = input.string('----', '',  inline='daily',   group='📅 Higher Timeframe Levels', options=['⎯⎯⎯','----','····'])
+pdhl_css     = input(#2157f3, '',        inline='daily',   group='📅 Higher Timeframe Levels')
 
-show_pwhl_in = input(true,    'Weekly',  inline='weekly',  group='Highs & Lows MTF')
-pwhl_style   = input.string('----', '',  inline='weekly',  group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
-pwhl_css     = input(#2157f3, '',        inline='weekly',  group='Highs & Lows MTF')
+show_pwhl_in = input(true,    'Weekly',  inline='weekly',  group='📅 Higher Timeframe Levels')
+pwhl_style   = input.string('----', '',  inline='weekly',  group='📅 Higher Timeframe Levels', options=['⎯⎯⎯','----','····'])
+pwhl_css     = input(#2157f3, '',        inline='weekly',  group='📅 Higher Timeframe Levels')
 
-show_pmhl_in = input(true,    'Monthly', inline='monthly', group='Highs & Lows MTF')
-pmhl_style   = input.string('----', '',  inline='monthly', group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
-pmhl_css     = input(#2157f3, '',        inline='monthly', group='Highs & Lows MTF')
+show_pmhl_in = input(true,    'Monthly', inline='monthly', group='📅 Higher Timeframe Levels')
+pmhl_style   = input.string('----', '',  inline='monthly', group='📅 Higher Timeframe Levels', options=['⎯⎯⎯','----','····'])
+pmhl_css     = input(#2157f3, '',        inline='monthly', group='📅 Higher Timeframe Levels')
 
 show_pdhl = (is_custom ? show_pdhl_in : is_pro_or_up) and show_pdhl_in
 show_pwhl = (is_custom ? show_pwhl_in : is_pro_or_up) and show_pwhl_in
@@ -770,7 +770,7 @@ if show_pmhl
 // Big Buyer / Big Seller Zones (Grandpa Automated Supply / Demand)
 //----------------
 
-show_grandpa = input.bool(true, title="Show Big Buyer / Big Seller Zones *", group="Global Market")
+show_grandpa = input.bool(true, title="Show Big Buyer / Big Seller Zones *", group="🎨 Candles & Trends")
 show_grandpa_eff = is_custom ? show_grandpa : is_pro_or_up
 
 swing_length              = 8
