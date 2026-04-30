@@ -404,17 +404,10 @@ show_session_asia   = (is_custom ? show_session_asia_in   : is_pro_or_up) and sh
 show_session_london = (is_custom ? show_session_london_in : is_pro_or_up) and show_session_london_in
 show_session_nyc    = (is_custom ? show_session_nyc_in    : is_pro_or_up) and show_session_nyc_in
 
-// Session marker colours — used for the start/end vertical strips and
-// for the top label text. Higher opacity than the old full-background
-// highlight (no point being subtle on a single-bar mark).
-// Saffron — recognisable Indian palette
-sess_india_color  = input.color(color.new(#FF9933, 60), title="Indian Color",  group="🕐 Trading Sessions")
-// Cyan — cool morning Tokyo
-sess_asia_color   = input.color(color.new(#4DD0E1, 60), title="Asia Color",   group="🕐 Trading Sessions")
-// Light yellow — London fog / dawn
-sess_london_color = input.color(color.new(#FFEB3B, 60), title="London Color", group="🕐 Trading Sessions")
-// Soft purple — Wall Street power
-sess_nyc_color    = input.color(color.new(#B39DDB, 60), title="NYC Color",    group="🕐 Trading Sessions")
+// Session text colours are hardcoded into the active_text_color
+// resolver below. No user-facing colour pickers — fewer inputs to
+// scroll past. India saffron / NYC purple / London gold / Asia cyan
+// match the marketing palette already used for the brand strip.
 
 in_session_india  = not na(time(timeframe.period, "0915-1530:1234567", "Asia/Kolkata"))
 in_session_asia   = not na(time(timeframe.period, "0900-1500:1234567", "Asia/Tokyo"))
@@ -432,24 +425,16 @@ is_london_end   = show_session_london and in_session_london[1] and not in_sessio
 is_nyc_start    = show_session_nyc    and in_session_nyc    and not in_session_nyc[1]
 is_nyc_end      = show_session_nyc    and in_session_nyc[1]    and not in_session_nyc
 
-// Active-session resolver — only ONE session paints at a time.
-// Old session's wallpaper auto-disappears the moment its bars exit
-// the time window (no manual delete needed — bgcolor() reads na).
+// Active-session UX v3 — clean chart, single floating watermark.
 //
-// Priority on overlap (Asia ⇄ London 07-08 GMT, London ⇄ NYC 13-16 GMT):
-//   India → NYC → London → Asia
-// India trader sees India when active. Outside Indian hours, NYC wins
-// over London/Asia (most price-volume action for global traders).
+// Earlier wallpaper bgcolor() paints historical bars permanently —
+// once Asia tinted a bar, that tint stayed even after Asia ended.
+// Result: 4 stacked colour regions through the day, overwhelming
+// price action. Drop the wallpaper entirely. The trader only needs
+// to know which session is RIGHT NOW.
+//
+// Priority on overlap: India → NYC → London → Asia.
 
-active_color = show_session_india  and in_session_india  ? sess_india_color
-             : show_session_nyc    and in_session_nyc    ? sess_nyc_color
-             : show_session_london and in_session_london ? sess_london_color
-             : show_session_asia   and in_session_asia   ? sess_asia_color
-             : na
-
-// Watermark text matches the wallpaper colour so the trader never
-// has to guess which session is currently active. Solid (no transp)
-// so it stays legible against the soft background tint.
 active_name = show_session_india  and in_session_india  ? "Indian Market"
              : show_session_nyc    and in_session_nyc    ? "NYC"
              : show_session_london and in_session_london ? "London"
@@ -462,20 +447,15 @@ active_text_color = show_session_india  and in_session_india  ? #FF9933
                   : show_session_asia   and in_session_asia   ? #0FA9C9
                   : color.gray
 
-// Single bgcolor for the active session. Pure wallpaper, no
-// start/end strips, no brackets — clean.
-bgcolor(active_color, title="Active Session Wallpaper")
-
-// Floating session watermark — single label that follows the current
-// bar with the active session's name + matching colour. Auto-hides
-// (deleted) when no session is active. Refreshes name + colour when
-// session changes.
+// Floating watermark at top of chart pane. Tracks current bar.
+// Theme-adaptive bg (chart.bg_color) keeps the label readable on
+// both light + dark themes without a hard-coded white box.
 var label active_session_lbl = na
 if active_name != ""
     sess_lbl_y = high + ta.atr(20) * 1.0
     if na(active_session_lbl)
         active_session_lbl := label.new(bar_index, sess_lbl_y, active_name,
-           color=color.new(color.white, 0),
+           color=color.new(chart.bg_color, 30),
            textcolor=active_text_color,
            style=label.style_label_center,
            size=size.normal)
@@ -483,6 +463,7 @@ if active_name != ""
         label.set_xy(active_session_lbl, bar_index, sess_lbl_y)
         label.set_text(active_session_lbl, active_name)
         label.set_textcolor(active_session_lbl, active_text_color)
+        label.set_color(active_session_lbl, color.new(chart.bg_color, 30))
 else
     if not na(active_session_lbl)
         label.delete(active_session_lbl)
