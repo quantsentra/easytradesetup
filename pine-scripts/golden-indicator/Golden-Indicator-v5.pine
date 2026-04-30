@@ -95,7 +95,9 @@ plot(show_ema_eff ? lifeline : na, title="Lifeline", color=ema_color, linewidth=
 show_ema200 = input.bool(false, title="Show King EMA (200-period) *", group="Global Market")
 show_ema200_eff = is_custom ? show_ema200 : is_pro_or_up
 out200 = ta.ema(close, 200)
-plot(show_ema200_eff ? out200 : na, title="EMA 200", color=#0901f7, linewidth=3)
+// #3D5AFA — softer electric blue. Pure #0901f7 was 100% saturation =
+// reads as alarm rather than reference layer.
+plot(show_ema200_eff ? out200 : na, title="King EMA (200)", color=#3D5AFA, linewidth=3)
 
 //----------------
 // Market Trend (smoothed Heikin-Ashi)
@@ -184,8 +186,12 @@ if adr_isNewDay and show_adr_eff
     adrHigh5Line  := line.new(bar_index, storedAdrHigh5,  bar_index + 100, storedAdrHigh5,  color=color.red,   width=1, style=line.style_dotted)
     adrLow5Line   := line.new(bar_index, storedAdrLow5,   bar_index + 100, storedAdrLow5,   color=color.green, width=1, style=line.style_dotted)
 
-    adrTopFill := linefill.new(adrHigh10Line, adrHigh5Line, color.new(color.maroon, 88))
-    adrBotFill := linefill.new(adrLow10Line,  adrLow5Line,  color.new(color.lime,   88))
+    // Cleaner red/green hue family for the Power Move bands. Maroon read
+    // as "old blood" + lime was too saturated — both pulled the eye away
+    // from price action. Reds and greens at 90% transparency keep the
+    // bands as quiet context.
+    adrTopFill := linefill.new(adrHigh10Line, adrHigh5Line, color.new(color.red,   90))
+    adrBotFill := linefill.new(adrLow10Line,  adrLow5Line,  color.new(color.green, 90))
 
     adrTopLbl := label.new(bar_index + 50, math.avg(storedAdrHigh10, storedAdrHigh5), "Huge Selling Expected for the Day",
        xloc=xloc.bar_index, color=#ffffff00, textcolor=label_color, style=label.style_label_center, size=label_size)
@@ -454,7 +460,7 @@ downVolume = array.sum(downVolumeArray)
 ectopicBar = (RedCandle   and math.abs(upVolume   * 1.5) < math.abs(downVolume)) or
              (GreenCandle and math.abs(downVolume * 1.5) < math.abs(upVolume))
 
-plotshape(show_yellow_eff and ectopicBar, title='Volume Divergence', style=shape.flag, text='!', color=color.new(color.red, 20), textcolor=color.new(color.black, 20), location=location.abovebar)
+plotshape(show_yellow_eff and ectopicBar, title='Trap Alert', style=shape.flag, text='!', color=color.new(#FFC107, 0), textcolor=color.new(color.black, 0), location=location.abovebar)
 alertcondition(ectopicBar, title="Volume Divergence", message="Watch the Market — yellow careful candle")
 
 RedCandle   := false
@@ -471,9 +477,14 @@ GreenCandle := false
 // less harshly against TradingView's default backdrop.
 //----------------
 
-BULL_BAR = #5e7eff   // light periwinkle blue (was color.blue)
-BEAR_BAR = #2c2c2c   // very dark gray (was color.black)
-WARN_BAR = color.yellow
+// Psychology-tuned palette:
+//   BULL_BAR — light periwinkle blue, calm + trustworthy (not loud)
+//   BEAR_BAR — very dark gray, serious not panicked
+//   WARN_BAR — amber-gold, reads as "premium warning" instead of the
+//              candy-yellow that screams cheap-alert
+BULL_BAR = #5e7eff
+BEAR_BAR = #2c2c2c
+WARN_BAR = #FFC107
 
 var color final_bar_color = na
 final_bar_color := show_yellow_eff and ectopicBar    ? WARN_BAR
@@ -493,8 +504,11 @@ mult       = 1.0
 calcMethod = 'Atr'
 backpaint  = true
 
-upCss = color.new(#00897b, 0)
-dnCss = color.new(#ff5252, 0)
+// Trend break up/down — semantic green/red aligned with rest of script
+// (#00897b teal + #ff5252 coral were aesthetically nice but broke the
+// "green = buy / red = sell" mental model the rest of the chart uses).
+upCss = color.new(#22A06B, 0)
+dnCss = color.new(#D94545, 0)
 showTrend = input(false, 'Show Buy/Sell Signals (trend break)', group="Global Market")
 showTrend_eff = is_custom ? showTrend : is_beginner_or_up
 showExt   = true
