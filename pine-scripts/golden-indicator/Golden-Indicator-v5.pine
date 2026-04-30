@@ -423,9 +423,12 @@ show_ob      = true
 ob_showlast  = 4
 ob_filter    = 'Atr'
 
-ibull_ob_css = color.new(#3179f5, 200)
+// Upstream used Pine v4 8-digit hex (#3179f533 — alpha 0x33 ≈ 80% transp).
+// Pine v5 color.new() uses 0-100 transp scale; 80 reproduces the same
+// near-transparent blue tint.
+ibull_ob_css = color.new(#3179f5, 80)
 ibear_ob_css = color.new(#cfcfcf, 20)
-bull_ob_css  = color.new(#3179f5, 200)
+bull_ob_css  = color.new(#3179f5, 80)
 bear_ob_css  = color.new(#cfcfcf, 20)
 
 show_eq      = true
@@ -546,15 +549,24 @@ phl(h, l, tf, css) =>
 
 var trend  = 0
 var itrend = 0
-var top_y = 0., var top_x = 0
-var btm_y = 0., var btm_x = 0
-var itop_y = 0., var itop_x = 0
-var ibtm_y = 0., var ibtm_x = 0
-var trail_up = high, var trail_dn = low
-var trail_up_x = 0,  var trail_dn_x = 0
-var top_cross  = true, var btm_cross  = true
-var itop_cross = true, var ibtm_cross = true
-var txt_top = '', var txt_btm = ''
+var float top_y  = 0.
+var int   top_x  = 0
+var float btm_y  = 0.
+var int   btm_x  = 0
+var float itop_y = 0.
+var int   itop_x = 0
+var float ibtm_y = 0.
+var int   ibtm_x = 0
+var float trail_up   = high
+var float trail_dn   = low
+var int   trail_up_x = 0
+var int   trail_dn_x = 0
+var bool  top_cross   = true
+var bool  btm_cross   = true
+var bool  itop_cross  = true
+var bool  ibtm_cross  = true
+var string txt_top = ''
+var string txt_btm = ''
 
 bull_choch_alert = false
 bull_bos_alert   = false
