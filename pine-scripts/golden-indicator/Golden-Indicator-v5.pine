@@ -58,10 +58,12 @@ showADR = input(true, title="Show CD Zone *", group="Global Market")
 OPEN     = request.security(syminfo.tickerid, 'D', open, lookahead=barmerge.lookahead_on)
 dayrange = high - low
 
-[r1, r2, r3, r4, r5, r6, r7, r8, r9, r10] = request.security(syminfo.tickerid, "D",
-   [dayrange[1], dayrange[2], dayrange[3], dayrange[4], dayrange[5],
-    dayrange[6], dayrange[7], dayrange[8], dayrange[9], dayrange[10]],
-   lookahead = barmerge.lookahead_on)
+// Pine v5 rejects multi-line tuple expressions inside request.security().
+// Wrapping the array literal in a function call satisfies the single-line
+// expression rule while still collapsing the 10 individual reads into one
+// network call (request.security() bills per call, not per element).
+adrTuple() => [dayrange[1], dayrange[2], dayrange[3], dayrange[4], dayrange[5], dayrange[6], dayrange[7], dayrange[8], dayrange[9], dayrange[10]]
+[r1, r2, r3, r4, r5, r6, r7, r8, r9, r10] = request.security(syminfo.tickerid, "D", adrTuple(), lookahead=barmerge.lookahead_on)
 
 adr_10 = (r1 + r2 + r3 + r4 + r5 + r6 + r7 + r8 + r9 + r10) / 10
 adr_5  = (r1 + r2 + r3 + r4 + r5) / 5
@@ -85,8 +87,9 @@ cpr_band_color = input.color(color.rgb(255, 192, 203), title="CPR Band Color (TC
 
 isNewDay = ta.change(time('D'))
 
-[prevHigh, prevLow, prevClose] = request.security(syminfo.tickerid, "D",
-   [high[1], low[1], close[1]], lookahead=barmerge.lookahead_on)
+// Same single-line tuple-via-function pattern (see ADR section above).
+prevHLC() => [high[1], low[1], close[1]]
+[prevHigh, prevLow, prevClose] = request.security(syminfo.tickerid, "D", prevHLC(), lookahead=barmerge.lookahead_on)
 
 pivot_calc = (prevHigh + prevLow + prevClose) / 3
 bc_calc    = (prevHigh + prevLow) / 2
