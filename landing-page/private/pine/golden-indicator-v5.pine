@@ -451,10 +451,10 @@ active_color = show_session_india  and in_session_india  ? sess_india_color
 // has to guess which session is currently active. Solid (no transp)
 // so it stays legible against the soft background tint.
 active_name = show_session_india  and in_session_india  ? "Indian Market"
-            : show_session_nyc    and in_session_nyc    ? "NYC"
-            : show_session_london and in_session_london ? "London"
-            : show_session_asia   and in_session_asia   ? "Asia (Tokyo)"
-            : ""
+             : show_session_nyc    and in_session_nyc    ? "NYC"
+             : show_session_london and in_session_london ? "London"
+             : show_session_asia   and in_session_asia   ? "Asia (Tokyo)"
+             : ""
 
 active_text_color = show_session_india  and in_session_india  ? #FF9933
                   : show_session_nyc    and in_session_nyc    ? #7D5BB7
