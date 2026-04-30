@@ -445,11 +445,16 @@ bgcolor(is_nyc_start    or is_nyc_end    ? sess_nyc_color    : na, title="NYC Se
 // the session progresses. Pine v5's line.style_arrow_both gives true
 // double-arrow rendering.
 //
-// Vertical placement: each session sits at a slightly different multiple
-// above the session high so multiple enabled sessions don't overlap.
+// Vertical placement is ATR-relative (was percentage-of-price). The
+// percentage version pushed London + NYC ~2-3% above price, frequently
+// off the visible chart top on liquid symbols. ATR multiples keep all
+// 4 stacked tightly above price regardless of price magnitude — works
+// equally well on Gold ($4600), NIFTY (24000), BTC (70000), forex (1.1).
+
+f_sess_atr() => ta.atr(20)
 
 f_session_top(idx) =>
-    high * (1.005 + 0.008 * idx)
+    high + f_sess_atr() * (0.8 + 0.5 * idx)
 
 // India bracket
 var int   india_start_bar = na
