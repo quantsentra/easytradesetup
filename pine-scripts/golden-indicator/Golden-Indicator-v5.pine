@@ -393,24 +393,56 @@ show_session_asia   = input.bool(false, title="Highlight Asia (Tokyo)",   group=
 show_session_london = input.bool(false, title="Highlight London",         group="🕐 Trading Sessions")
 show_session_nyc    = input.bool(false, title="Highlight NYC",            group="🕐 Trading Sessions")
 
+// Session marker colours — used for the start/end vertical strips and
+// for the top label text. Higher opacity than the old full-background
+// highlight (no point being subtle on a single-bar mark).
 // Saffron — recognisable Indian palette
-sess_india_color  = input.color(color.new(#FF9933, 92), title="Indian Color",  group="🕐 Trading Sessions")
+sess_india_color  = input.color(color.new(#FF9933, 60), title="Indian Color",  group="🕐 Trading Sessions")
 // Cyan — cool morning Tokyo
-sess_asia_color   = input.color(color.new(#4DD0E1, 92), title="Asia Color",   group="🕐 Trading Sessions")
+sess_asia_color   = input.color(color.new(#4DD0E1, 60), title="Asia Color",   group="🕐 Trading Sessions")
 // Light yellow — London fog / dawn
-sess_london_color = input.color(color.new(#FFEB3B, 92), title="London Color", group="🕐 Trading Sessions")
+sess_london_color = input.color(color.new(#FFEB3B, 60), title="London Color", group="🕐 Trading Sessions")
 // Soft purple — Wall Street power
-sess_nyc_color    = input.color(color.new(#B39DDB, 92), title="NYC Color",    group="🕐 Trading Sessions")
+sess_nyc_color    = input.color(color.new(#B39DDB, 60), title="NYC Color",    group="🕐 Trading Sessions")
 
 in_session_india  = not na(time(timeframe.period, "0915-1530:1234567", "Asia/Kolkata"))
 in_session_asia   = not na(time(timeframe.period, "0900-1500:1234567", "Asia/Tokyo"))
 in_session_london = not na(time(timeframe.period, "0800-1630:1234567", "Europe/London"))
 in_session_nyc    = not na(time(timeframe.period, "0930-1600:1234567", "America/New_York"))
 
-bgcolor(show_session_india  and in_session_india  ? sess_india_color  : na, title="Indian Session")
-bgcolor(show_session_asia   and in_session_asia   ? sess_asia_color   : na, title="Asia Session")
-bgcolor(show_session_london and in_session_london ? sess_london_color : na, title="London Session")
-bgcolor(show_session_nyc    and in_session_nyc    ? sess_nyc_color    : na, title="NYC Session")
+// Boundary detection — first bar inside session = start, first bar
+// outside after being in session = end. Each fires once per session.
+is_india_start  = show_session_india  and in_session_india  and not in_session_india[1]
+is_india_end    = show_session_india  and in_session_india[1]  and not in_session_india
+is_asia_start   = show_session_asia   and in_session_asia   and not in_session_asia[1]
+is_asia_end     = show_session_asia   and in_session_asia[1]   and not in_session_asia
+is_london_start = show_session_london and in_session_london and not in_session_london[1]
+is_london_end   = show_session_london and in_session_london[1] and not in_session_london
+is_nyc_start    = show_session_nyc    and in_session_nyc    and not in_session_nyc[1]
+is_nyc_end      = show_session_nyc    and in_session_nyc[1]    and not in_session_nyc
+
+// Vertical strips — only the start + end bars get coloured. Single bar
+// each = clean visual marker, no full-day wallpaper that buries price.
+bgcolor(is_india_start  or is_india_end  ? sess_india_color  : na, title="Indian Session Marker")
+bgcolor(is_asia_start   or is_asia_end   ? sess_asia_color   : na, title="Asia Session Marker")
+bgcolor(is_london_start or is_london_end ? sess_london_color : na, title="London Session Marker")
+bgcolor(is_nyc_start    or is_nyc_end    ? sess_nyc_color    : na, title="NYC Session Marker")
+
+// Top-of-chart session label — fires on the start bar only. location.top
+// pins it to the upper edge of the chart pane regardless of price range,
+// shape.labeldown points the arrow toward the bar so traders can trace
+// which bar opened the session.
+plotshape(is_india_start,  title="India Session Label",  style=shape.labeldown, location=location.top, color=color.new(#FF9933, 30), textcolor=color.white, text="Indian Market",  size=size.small)
+plotshape(is_asia_start,   title="Asia Session Label",   style=shape.labeldown, location=location.top, color=color.new(#4DD0E1, 30), textcolor=color.black, text="Asia",           size=size.small)
+plotshape(is_london_start, title="London Session Label", style=shape.labeldown, location=location.top, color=color.new(#FFEB3B, 30), textcolor=color.black, text="London",         size=size.small)
+plotshape(is_nyc_start,    title="NYC Session Label",    style=shape.labeldown, location=location.top, color=color.new(#B39DDB, 30), textcolor=color.black, text="NYC",            size=size.small)
+
+// End markers — small "End" plotshape so traders know the session is
+// closing. Lower visual weight than the start label.
+plotshape(is_india_end,  title="India Session End",  style=shape.xcross, location=location.top, color=color.new(#FF9933, 30), size=size.tiny)
+plotshape(is_asia_end,   title="Asia Session End",   style=shape.xcross, location=location.top, color=color.new(#4DD0E1, 30), size=size.tiny)
+plotshape(is_london_end, title="London Session End", style=shape.xcross, location=location.top, color=color.new(#FFEB3B, 30), size=size.tiny)
+plotshape(is_nyc_end,    title="NYC Session End",    style=shape.xcross, location=location.top, color=color.new(#B39DDB, 30), size=size.tiny)
 
 //----------------
 // 100% Buyers / Sellers Marubozu detection
