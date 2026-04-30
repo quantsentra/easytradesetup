@@ -254,6 +254,24 @@ var linefill cprBandFill = na
 // session start so traders see the tag without hovering any line.
 var label cprMagneticLbl = na
 
+// Price-value tags pinned to the right tip of each pivot line. Lets
+// traders read the exact target without hovering — same number TV shows
+// on the price axis, but inline so it survives axis-clutter.
+var label pivotPriceLbl = na
+var label bcPriceLbl    = na
+var label tcPriceLbl    = na
+var label r1PriceLbl    = na
+var label r2PriceLbl    = na
+var label r3PriceLbl    = na
+var label r4PriceLbl    = na
+var label s1PriceLbl    = na
+var label s2PriceLbl    = na
+var label s3PriceLbl    = na
+var label s4PriceLbl    = na
+
+// Tiny helper to format a price using the symbol's mintick precision.
+fmtPrice(p) => str.tostring(p, format.mintick)
+
 if isNewDay and show_pivots_eff
     storedPivot := pivot_calc
     storedBC    := bc_calc
@@ -283,6 +301,18 @@ if isNewDay and show_pivots_eff
         linefill.delete(cprBandFill)
     if not na(cprMagneticLbl)
         label.delete(cprMagneticLbl)
+    if not na(pivotPriceLbl)
+        label.delete(pivotPriceLbl)
+        label.delete(bcPriceLbl)
+        label.delete(tcPriceLbl)
+        label.delete(r1PriceLbl)
+        label.delete(r2PriceLbl)
+        label.delete(r3PriceLbl)
+        label.delete(r4PriceLbl)
+        label.delete(s1PriceLbl)
+        label.delete(s2PriceLbl)
+        label.delete(s3PriceLbl)
+        label.delete(s4PriceLbl)
 
     pivotLine := line.new(bar_index, storedPivot, bar_index + 100, storedPivot, width=2, color=color.purple)
     bcLine    := line.new(bar_index, storedBC,    bar_index + 100, storedBC,    width=2, color=color.purple)
@@ -308,6 +338,20 @@ if isNewDay and show_pivots_eff
        style=label.style_label_center,
        size=label_size)
 
+    // Price-tag style: triangle points at the line, text reads to the
+    // right. Tiny size so 11 tags don't crowd the right edge.
+    pivotPriceLbl := label.new(bar_index + 100, storedPivot, fmtPrice(storedPivot), xloc=xloc.bar_index, color=#ffffff00, textcolor=color.purple, style=label.style_label_left, size=size.small)
+    bcPriceLbl    := label.new(bar_index + 100, storedBC,    fmtPrice(storedBC),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.purple, style=label.style_label_left, size=size.small)
+    tcPriceLbl    := label.new(bar_index + 100, storedTC,    fmtPrice(storedTC),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.purple, style=label.style_label_left, size=size.small)
+    r1PriceLbl    := label.new(bar_index + 100, storedR1,    fmtPrice(storedR1),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.red,    style=label.style_label_left, size=size.small)
+    r2PriceLbl    := label.new(bar_index + 100, storedR2,    fmtPrice(storedR2),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.red,    style=label.style_label_left, size=size.small)
+    r3PriceLbl    := label.new(bar_index + 100, storedR3,    fmtPrice(storedR3),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.red,    style=label.style_label_left, size=size.small)
+    r4PriceLbl    := label.new(bar_index + 100, storedR4,    fmtPrice(storedR4),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.red,    style=label.style_label_left, size=size.small)
+    s1PriceLbl    := label.new(bar_index + 100, storedS1,    fmtPrice(storedS1),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.green,  style=label.style_label_left, size=size.small)
+    s2PriceLbl    := label.new(bar_index + 100, storedS2,    fmtPrice(storedS2),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.green,  style=label.style_label_left, size=size.small)
+    s3PriceLbl    := label.new(bar_index + 100, storedS3,    fmtPrice(storedS3),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.green,  style=label.style_label_left, size=size.small)
+    s4PriceLbl    := label.new(bar_index + 100, storedS4,    fmtPrice(storedS4),    xloc=xloc.bar_index, color=#ffffff00, textcolor=color.green,  style=label.style_label_left, size=size.small)
+
 if not na(pivotLine) and show_pivots_eff
     line.set_xy2(pivotLine, bar_index + 100, storedPivot)
     line.set_xy2(bcLine,    bar_index + 100, storedBC)
@@ -322,6 +366,18 @@ if not na(pivotLine) and show_pivots_eff
     line.set_xy2(s4Line,    bar_index + 100, storedS4)
     if not na(cprMagneticLbl)
         label.set_xy(cprMagneticLbl, bar_index + 50, math.avg(storedTC, storedBC))
+    if not na(pivotPriceLbl)
+        label.set_x(pivotPriceLbl, bar_index + 100)
+        label.set_x(bcPriceLbl,    bar_index + 100)
+        label.set_x(tcPriceLbl,    bar_index + 100)
+        label.set_x(r1PriceLbl,    bar_index + 100)
+        label.set_x(r2PriceLbl,    bar_index + 100)
+        label.set_x(r3PriceLbl,    bar_index + 100)
+        label.set_x(r4PriceLbl,    bar_index + 100)
+        label.set_x(s1PriceLbl,    bar_index + 100)
+        label.set_x(s2PriceLbl,    bar_index + 100)
+        label.set_x(s3PriceLbl,    bar_index + 100)
+        label.set_x(s4PriceLbl,    bar_index + 100)
 
 //----------------
 // Trading Sessions — pick the markets you trade and the script highlights
