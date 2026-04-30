@@ -1,11 +1,11 @@
 // This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
-// © SANSETO Capital
+// © EasyTradeSetup
 //
 // Golden Indicator v5 — release tag.
 // Pine Script language version: v5 (`//@version=5`).
 //
 // Changelog from v6 -> v5 release tag:
-//   * Title rebranded "SANSETO Trade Master" -> "Golden Indicator v5"
+//   * Title rebranded legacy product title rebranded to "Golden Indicator v5"
 //   * Lifeline section comment honest about being McGinley Dynamic, not EMA
 //   * ADR daily-range reads bundled into single request.security tuple call
 //     (previously 10 separate calls -> ~10x faster section)
