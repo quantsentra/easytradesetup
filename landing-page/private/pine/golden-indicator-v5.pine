@@ -456,88 +456,94 @@ f_sess_atr() => ta.atr(20)
 f_session_top(idx) =>
     high + f_sess_atr() * (0.8 + 0.5 * idx)
 
+// Brackets use xloc=xloc.bar_time (timestamps) instead of xloc.bar_index.
+// Pine v5 rejects bar_index args >5000 bars from current — RE10026. On
+// charts with deep history (5min NIFTY, intraday Gold, etc) the first
+// session start can land before that 5000-bar lookback window once the
+// script reaches bar 5001+. Time values have no such limit.
+
 // India bracket
-var int   india_start_bar = na
-var float india_top_y     = na
-var line  india_bracket   = na
-var label india_lbl       = na
+var int   india_start_time = na
+var float india_top_y      = na
+var line  india_bracket    = na
+var label india_lbl        = na
 if is_india_start
-    india_start_bar := bar_index
-    india_top_y     := f_session_top(0)
+    india_start_time := time
+    india_top_y      := f_session_top(0)
     if not na(india_bracket)
         line.delete(india_bracket)
     if not na(india_lbl)
         label.delete(india_lbl)
-    india_bracket := line.new(bar_index, india_top_y, bar_index, india_top_y, color=#FF9933, width=2, style=line.style_arrow_both)
-    india_lbl     := label.new(bar_index, india_top_y, "Indian Market", color=color.new(color.white, 0), textcolor=#FF9933, style=label.style_label_center, size=size.small)
+    india_bracket := line.new(time, india_top_y, time, india_top_y, xloc=xloc.bar_time, color=#FF9933, width=2, style=line.style_arrow_both)
+    india_lbl     := label.new(time, india_top_y, "Indian Market", xloc=xloc.bar_time, color=color.new(color.white, 0), textcolor=#FF9933, style=label.style_label_center, size=size.small)
 if in_session_india and not na(india_bracket)
     new_top = math.max(india_top_y, f_session_top(0))
-    line.set_xy1(india_bracket, india_start_bar, new_top)
-    line.set_xy2(india_bracket, bar_index,       new_top)
-    label.set_xy(india_lbl, int((india_start_bar + bar_index) / 2), new_top)
+    line.set_xy1(india_bracket, india_start_time, new_top)
+    line.set_xy2(india_bracket, time,             new_top)
+    label.set_xy(india_lbl, int((india_start_time + time) / 2), new_top)
     india_top_y := new_top
 
 // Asia bracket
-var int   asia_start_bar = na
-var float asia_top_y     = na
-var line  asia_bracket   = na
-var label asia_lbl       = na
+var int   asia_start_time = na
+var float asia_top_y      = na
+var line  asia_bracket    = na
+var label asia_lbl        = na
 if is_asia_start
-    asia_start_bar := bar_index
-    asia_top_y     := f_session_top(1)
+    asia_start_time := time
+    asia_top_y      := f_session_top(1)
     if not na(asia_bracket)
         line.delete(asia_bracket)
     if not na(asia_lbl)
         label.delete(asia_lbl)
-    asia_bracket := line.new(bar_index, asia_top_y, bar_index, asia_top_y, color=#0FA9C9, width=2, style=line.style_arrow_both)
-    asia_lbl     := label.new(bar_index, asia_top_y, "Asia (Tokyo)", color=color.new(color.white, 0), textcolor=#0FA9C9, style=label.style_label_center, size=size.small)
+    asia_bracket := line.new(time, asia_top_y, time, asia_top_y, xloc=xloc.bar_time, color=#0FA9C9, width=2, style=line.style_arrow_both)
+    asia_lbl     := label.new(time, asia_top_y, "Asia (Tokyo)", xloc=xloc.bar_time, color=color.new(color.white, 0), textcolor=#0FA9C9, style=label.style_label_center, size=size.small)
 if in_session_asia and not na(asia_bracket)
     new_top_a = math.max(asia_top_y, f_session_top(1))
-    line.set_xy1(asia_bracket, asia_start_bar, new_top_a)
-    line.set_xy2(asia_bracket, bar_index,      new_top_a)
-    label.set_xy(asia_lbl, int((asia_start_bar + bar_index) / 2), new_top_a)
+    line.set_xy1(asia_bracket, asia_start_time, new_top_a)
+    line.set_xy2(asia_bracket, time,            new_top_a)
+    label.set_xy(asia_lbl, int((asia_start_time + time) / 2), new_top_a)
     asia_top_y := new_top_a
 
 // London bracket
-var int   london_start_bar = na
-var float london_top_y     = na
-var line  london_bracket   = na
-var label london_lbl       = na
+var int   london_start_time = na
+var float london_top_y      = na
+var line  london_bracket    = na
+var label london_lbl        = na
 if is_london_start
-    london_start_bar := bar_index
-    london_top_y     := f_session_top(2)
+    london_start_time := time
+    london_top_y      := f_session_top(2)
     if not na(london_bracket)
         line.delete(london_bracket)
     if not na(london_lbl)
         label.delete(london_lbl)
-    london_bracket := line.new(bar_index, london_top_y, bar_index, london_top_y, color=#C49000, width=2, style=line.style_arrow_both)
-    london_lbl     := label.new(bar_index, london_top_y, "London", color=color.new(color.white, 0), textcolor=#C49000, style=label.style_label_center, size=size.small)
+    london_bracket := line.new(time, london_top_y, time, london_top_y, xloc=xloc.bar_time, color=#C49000, width=2, style=line.style_arrow_both)
+    london_lbl     := label.new(time, london_top_y, "London", xloc=xloc.bar_time, color=color.new(color.white, 0), textcolor=#C49000, style=label.style_label_center, size=size.small)
 if in_session_london and not na(london_bracket)
     new_top_l = math.max(london_top_y, f_session_top(2))
-    line.set_xy1(london_bracket, london_start_bar, new_top_l)
-    line.set_xy2(london_bracket, bar_index,        new_top_l)
-    label.set_xy(london_lbl, int((london_start_bar + bar_index) / 2), new_top_l)
+    line.set_xy1(london_bracket, london_start_time, new_top_l)
+    line.set_xy2(london_bracket, time,              new_top_l)
+    label.set_xy(london_lbl, int((london_start_time + time) / 2), new_top_l)
     london_top_y := new_top_l
 
 // NYC bracket
-var int   nyc_start_bar = na
-var float nyc_top_y     = na
-var line  nyc_bracket   = na
-var label nyc_lbl       = na
+var int   nyc_start_time = na
+var float nyc_top_y      = na
+var line  nyc_bracket    = na
+var label nyc_lbl        = na
 if is_nyc_start
-    nyc_start_bar := bar_index
-    nyc_top_y     := f_session_top(3)
+    nyc_start_time := time
+    nyc_top_y      := f_session_top(3)
     if not na(nyc_bracket)
         line.delete(nyc_bracket)
     if not na(nyc_lbl)
         label.delete(nyc_lbl)
-    nyc_bracket := line.new(bar_index, nyc_top_y, bar_index, nyc_top_y, color=#7D5BB7, width=2, style=line.style_arrow_both)
-    nyc_lbl     := label.new(bar_index, nyc_top_y, "NYC", color=color.new(color.white, 0), textcolor=#7D5BB7, style=label.style_label_center, size=size.small)
+    nyc_bracket := line.new(time, nyc_top_y, time, nyc_top_y, xloc=xloc.bar_time, color=#7D5BB7, width=2, style=line.style_arrow_both)
+    nyc_lbl     := label.new(time, nyc_top_y, "NYC", xloc=xloc.bar_time, color=color.new(color.white, 0), textcolor=#7D5BB7, style=label.style_label_center, size=size.small)
 if in_session_nyc and not na(nyc_bracket)
     new_top_n = math.max(nyc_top_y, f_session_top(3))
-    line.set_xy1(nyc_bracket, nyc_start_bar, new_top_n)
-    line.set_xy2(nyc_bracket, bar_index,     new_top_n)
-    label.set_xy(nyc_lbl, int((nyc_start_bar + bar_index) / 2), new_top_n)
+    line.set_xy1(nyc_bracket, nyc_start_time, new_top_n)
+    line.set_xy2(nyc_bracket, time,           new_top_n)
+    label.set_xy(nyc_lbl, int((nyc_start_time + time) / 2), new_top_n)
     nyc_top_y := new_top_n
 
 //----------------

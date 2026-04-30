@@ -50,6 +50,8 @@ const faqs = [
       ["Does it repaint?", "The script uses bar-close confirmations. Live bars can shift while forming — this is normal Pine Script behavior. For signal fidelity, trigger alerts on bar close only."],
       ["What Pine Script version?", "v5 — the current supported version on TradingView."],
       ["Will you release updates?", "Yes. Every update is delivered free to existing customers. The version number bumps each time."],
+      ["I see a runtime error RE10026 on a long-history chart — how do I fix it?", "RE10026 means TradingView's 5000-bar lookback window was exceeded by an older drawing. Three fixes that work: (1) Update to the latest Golden Indicator v5 from /portal/downloads — newer versions use time-based positioning that avoids the limit. (2) Click the indicator title → 'X' to remove → re-add to chart for a fresh evaluation. (3) Switch the chart to a higher timeframe (e.g. 5min instead of 1min) so fewer historical bars are loaded. The most common trigger is keeping a 1-minute chart open for many days."],
+      ["Pine compile error 'transp argument value should be between 0 and 100' — what to do?", "Old Pine v4 used 8-digit hex like #RRGGBBAA. Pine v5 uses color.new(<color>, <transp 0-100>). Make sure you have the latest source from /portal/downloads — the released file uses Pine v5 syntax everywhere."],
     ],
   },
   {
