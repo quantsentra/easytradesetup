@@ -37,28 +37,65 @@ indicator("Golden Indicator v5"
   , max_bars_back = 5000)
 
 //----------------
+// Setup Profile — one-click tiers
+// Pine cannot detect device or hide inputs dynamically, but a single
+// dropdown can drive every show_X flag downstream. Selecting a tier
+// turns its bundle on; "Custom" hands control back to the per-feature
+// toggles the rest of the script defines.
+//----------------
+
+setup_profile = input.string("Pro", title="🎯 Setup Profile",
+   options=["Beginner", "Pro", "Expert", "Custom"],
+   group="🎯 Setup Profile",
+   tooltip="Beginner — Lifeline + Trap Alerts (Yellow) + Buy/Sell Signals\nPro     — Beginner + Power Move Zones (CD) + King EMA + Buyer/Seller Zones\nExpert  — Pro + Daily Magnetic Pivot Range\nCustom  — switch each feature on/off individually below")
+
+is_beginner_or_up = setup_profile == "Beginner" or setup_profile == "Pro" or setup_profile == "Expert"
+is_pro_or_up      = setup_profile == "Pro"      or setup_profile == "Expert"
+is_expert_or_up   = setup_profile == "Expert"
+is_custom         = setup_profile == "Custom"
+
+//----------------
+// Display — label size (mobile-friendly when set Large/Huge)
+// Pine has no device detection. Pick a size that reads on your screen:
+//   Small/Normal — desktop
+//   Large/Huge   — mobile / shared screenshots
+//----------------
+
+label_size_in = input.string("Normal", title="Label Size (raise on mobile)",
+   options=["Small", "Normal", "Large", "Huge"],
+   group="🎯 Setup Profile")
+
+label_color = input.color(color.black, title="Label Text Color",
+   group="🎯 Setup Profile",
+   tooltip="Set black for max readability on mobile / light themes")
+
+label_size = label_size_in == "Small" ? size.small : label_size_in == "Large" ? size.large : label_size_in == "Huge" ? size.huge : size.normal
+
+//----------------
 // Lifeline — McGinley Dynamic (length 14)
 // Smoother + more responsive than EMA on chop. Earlier comments labelled
 // this an EMA — the math is McGinley Dynamic. Renamed honestly.
 //----------------
 
-show_ema  = input.bool(true,    title="Show Lifeline *", group="Global Market")
-ema_color = input.color(#000000, title="Lifeline Color", group="Global Market")
+show_ema  = input.bool(true,    title="Show Lifeline (smart trend) *", group="Global Market")
+ema_color = input.color(#000000, title="Lifeline Color",                  group="Global Market")
+show_ema_eff = is_custom ? show_ema : is_beginner_or_up
 LIFELINE_LEN = 14
 src = close
 out = ta.ema(src, LIFELINE_LEN)
 var float lifeline = na
 lifeline := na(lifeline[1]) ? out
    : lifeline[1] + (src - lifeline[1]) / (LIFELINE_LEN * math.pow(src/lifeline[1], 4))
-plot(show_ema ? lifeline : na, title="Lifeline", color=ema_color, linewidth=2)
+plot(show_ema_eff ? lifeline : na, title="Lifeline", color=ema_color, linewidth=2)
 
 //----------------
 // EMA 200 — long-trend filter
 //----------------
 
-show_ema200 = input.bool(false, title="Show King of EMA *", group="Global Market")
+show_ema200 = input.bool(false, title="Show King EMA (200-period) *", group="Global Market")
+show_ema200_eff = is_custom ? show_ema200 : is_pro_or_up
 out200 = ta.ema(close, 200)
-plot(show_ema200 ? out200 : na, title="EMA 200", color=#0901f7, linewidth=3)
+plot(show_ema200_eff ? out200 : na, title="EMA 200", color=#0901f7, linewidth=3)
 
 //----------------
 // Market Trend (smoothed Heikin-Ashi)
@@ -87,13 +124,16 @@ mt_col = o2 > c2 ? color.red : color.lime
 plotcandle(show_market_trend ? o2 : na, show_market_trend ? h2 : na, show_market_trend ? l2 : na, show_market_trend ? c2 : na, color=show_market_trend ? mt_col : na)
 
 //----------------
-// ADR (Average Daily Range) Bands
-// 10 separate request.security() calls collapsed to 1 via tuple-via-function.
-// Pine v5 forbids multi-line tuple literals inside request.security — the
-// function-wrap pattern is the canonical way around it.
+// Power Move Zones (a.k.a. CD Zone — Average Daily Range bands)
+// Locked at session start with line.new() so each day's zones extend
+// across the session instead of dotted-circle marks. Top zone is where
+// price tends to exhaust upside (huge selling expected); bottom zone
+// is where downside exhausts (huge buying expected).
 //----------------
 
-showADR = input(true, title="Show CD Zone *", group="Global Market")
+showADR = input(true, title="Show Power Move Zones (CD) *", group="Global Market")
+show_adr_eff = is_custom ? showADR : is_pro_or_up
+
 OPEN     = request.security(syminfo.tickerid, 'D', open, lookahead=barmerge.lookahead_on)
 dayrange = high - low
 
@@ -103,13 +143,63 @@ adrTuple() => [dayrange[1], dayrange[2], dayrange[3], dayrange[4], dayrange[5], 
 adr_10 = (r1 + r2 + r3 + r4 + r5 + r6 + r7 + r8 + r9 + r10) / 10
 adr_5  = (r1 + r2 + r3 + r4 + r5) / 5
 
-adrhigh10 = plot(showADR ? (OPEN + (adr_10 / 2)) : na, title="ADR High10", style=plot.style_circles, color=color.red,   linewidth=1)
-adrlow10  = plot(showADR ? (OPEN - (adr_10 / 2)) : na, title="ADR Low10",  style=plot.style_circles, color=color.green, linewidth=1)
-adrhigh5  = plot(showADR ? (OPEN + (adr_5  / 2)) : na, title="ADR High5",  style=plot.style_circles, color=color.red,   linewidth=1)
-adrlow5   = plot(showADR ? (OPEN - (adr_5  / 2)) : na, title="ADR Low5",   style=plot.style_circles, color=color.green, linewidth=1)
+adr_isNewDay = ta.change(time('D'))
 
-fill(adrlow10,  adrlow5,  color=color.new(color.lime,   90))
-fill(adrhigh10, adrhigh5, color=color.new(color.maroon, 90))
+var float storedAdrHigh10 = na
+var float storedAdrLow10  = na
+var float storedAdrHigh5  = na
+var float storedAdrLow5   = na
+
+var line  adrHigh10Line = na
+var line  adrLow10Line  = na
+var line  adrHigh5Line  = na
+var line  adrLow5Line   = na
+
+var linefill adrTopFill = na
+var linefill adrBotFill = na
+
+var label adrTopLbl = na
+var label adrBotLbl = na
+
+if adr_isNewDay and show_adr_eff
+    storedAdrHigh10 := OPEN + (adr_10 / 2)
+    storedAdrLow10  := OPEN - (adr_10 / 2)
+    storedAdrHigh5  := OPEN + (adr_5  / 2)
+    storedAdrLow5   := OPEN - (adr_5  / 2)
+
+    if not na(adrHigh10Line)
+        line.delete(adrHigh10Line)
+        line.delete(adrLow10Line)
+        line.delete(adrHigh5Line)
+        line.delete(adrLow5Line)
+    if not na(adrTopFill)
+        linefill.delete(adrTopFill)
+        linefill.delete(adrBotFill)
+    if not na(adrTopLbl)
+        label.delete(adrTopLbl)
+        label.delete(adrBotLbl)
+
+    adrHigh10Line := line.new(bar_index, storedAdrHigh10, bar_index + 100, storedAdrHigh10, color=color.red,   width=1, style=line.style_dotted)
+    adrLow10Line  := line.new(bar_index, storedAdrLow10,  bar_index + 100, storedAdrLow10,  color=color.green, width=1, style=line.style_dotted)
+    adrHigh5Line  := line.new(bar_index, storedAdrHigh5,  bar_index + 100, storedAdrHigh5,  color=color.red,   width=1, style=line.style_dotted)
+    adrLow5Line   := line.new(bar_index, storedAdrLow5,   bar_index + 100, storedAdrLow5,   color=color.green, width=1, style=line.style_dotted)
+
+    adrTopFill := linefill.new(adrHigh10Line, adrHigh5Line, color.new(color.maroon, 88))
+    adrBotFill := linefill.new(adrLow10Line,  adrLow5Line,  color.new(color.lime,   88))
+
+    adrTopLbl := label.new(bar_index + 50, math.avg(storedAdrHigh10, storedAdrHigh5), "Huge Selling Expected for the Day",
+       xloc=xloc.bar_index, color=#ffffff00, textcolor=label_color, style=label.style_label_center, size=label_size)
+    adrBotLbl := label.new(bar_index + 50, math.avg(storedAdrLow10,  storedAdrLow5),  "Huge Buying Expected for the Day",
+       xloc=xloc.bar_index, color=#ffffff00, textcolor=label_color, style=label.style_label_center, size=label_size)
+
+if not na(adrHigh10Line) and show_adr_eff
+    line.set_xy2(adrHigh10Line, bar_index + 100, storedAdrHigh10)
+    line.set_xy2(adrLow10Line,  bar_index + 100, storedAdrLow10)
+    line.set_xy2(adrHigh5Line,  bar_index + 100, storedAdrHigh5)
+    line.set_xy2(adrLow5Line,   bar_index + 100, storedAdrLow5)
+    if not na(adrTopLbl)
+        label.set_xy(adrTopLbl, bar_index + 50, math.avg(storedAdrHigh10, storedAdrHigh5))
+        label.set_xy(adrBotLbl, bar_index + 50, math.avg(storedAdrLow10,  storedAdrLow5))
 
 //----------------
 // Central Pivot Range (CPR) — locked at session start, light-pink TC↔BC band
@@ -118,8 +208,9 @@ fill(adrhigh10, adrhigh5, color=color.new(color.maroon, 90))
 // marks the central no-trade band.
 //----------------
 
-show_pivots    = input(true, title="Show Daily Pivot Range *", group="Global Market")
-cpr_band_color = input.color(color.rgb(255, 192, 203), title="CPR Band Color (TC-BC fill)", group="Global Market")
+show_pivots    = input(true, title="Show Daily Magnetic Zone (CPR) *", group="Global Market")
+cpr_band_color = input.color(color.rgb(255, 192, 203), title="Magnetic Zone Fill Color", group="Global Market")
+show_pivots_eff = is_custom ? show_pivots : is_expert_or_up
 
 isNewDay = ta.change(time('D'))
 
@@ -170,7 +261,7 @@ var linefill cprBandFill = na
 // session start so traders see the tag without hovering any line.
 var label cprMagneticLbl = na
 
-if isNewDay and show_pivots
+if isNewDay and show_pivots_eff
     storedPivot := pivot_calc
     storedBC    := bc_calc
     storedTC    := tc_calc
@@ -220,11 +311,11 @@ if isNewDay and show_pivots
     cprMagneticLbl := label.new(bar_index + 50, math.avg(storedTC, storedBC), "Magnetic Zone",
        xloc=xloc.bar_index,
        color=#ffffff00,
-       textcolor=color.new(color.purple, 30),
+       textcolor=label_color,
        style=label.style_label_center,
-       size=size.small)
+       size=label_size)
 
-if not na(pivotLine) and show_pivots
+if not na(pivotLine) and show_pivots_eff
     line.set_xy2(pivotLine, bar_index + 100, storedPivot)
     line.set_xy2(bcLine,    bar_index + 100, storedBC)
     line.set_xy2(tcLine,    bar_index + 100, storedTC)
@@ -329,7 +420,8 @@ is_bearish_momentum = body_size / true_range >= BODY_THRESHOLD and close < open
 // micro level. Signals a potential trap / reversal context.
 //----------------
 
-show_yellow_candle = input.bool(true, title="Show Volume Divergence (Yellow) *", group="Global Market")
+show_yellow_candle = input.bool(true, title="Show Trap Alerts (Yellow Candle) *", group="Global Market")
+show_yellow_eff    = is_custom ? show_yellow_candle : is_beginner_or_up
 
 var bool RedCandle   = false
 var bool GreenCandle = false
@@ -362,7 +454,7 @@ downVolume = array.sum(downVolumeArray)
 ectopicBar = (RedCandle   and math.abs(upVolume   * 1.5) < math.abs(downVolume)) or
              (GreenCandle and math.abs(downVolume * 1.5) < math.abs(upVolume))
 
-plotshape(show_yellow_candle and ectopicBar, title='Volume Divergence', style=shape.flag, text='!', color=color.new(color.red, 20), textcolor=color.new(color.black, 20), location=location.abovebar)
+plotshape(show_yellow_eff and ectopicBar, title='Volume Divergence', style=shape.flag, text='!', color=color.new(color.red, 20), textcolor=color.new(color.black, 20), location=location.abovebar)
 alertcondition(ectopicBar, title="Volume Divergence", message="Watch the Market — yellow careful candle")
 
 RedCandle   := false
@@ -384,7 +476,7 @@ BEAR_BAR = #2c2c2c   // very dark gray (was color.black)
 WARN_BAR = color.yellow
 
 var color final_bar_color = na
-final_bar_color := show_yellow_candle and ectopicBar    ? WARN_BAR
+final_bar_color := show_yellow_eff and ectopicBar    ? WARN_BAR
                  : show_momentum and is_bullish_momentum ? BULL_BAR
                  : show_momentum and is_bearish_momentum ? BEAR_BAR
                  : C_MarubozuWhiteBullish                ? BULL_BAR
@@ -403,7 +495,8 @@ backpaint  = true
 
 upCss = color.new(#00897b, 0)
 dnCss = color.new(#ff5252, 0)
-showTrend = input(false, 'Show Trend Lines', group="Global Market")
+showTrend = input(false, 'Show Buy/Sell Signals (trend break)', group="Global Market")
+showTrend_eff = is_custom ? showTrend : is_beginner_or_up
 showExt   = true
 
 var upper    = 0.
@@ -437,11 +530,11 @@ dnos := pl ? 0 : close < lower + slope_pl * length ? 1 : dnos
 var line uptl = line.new(na, na, na, na, color=upCss, style=line.style_dashed, extend=extend.right)
 var line dntl = line.new(na, na, na, na, color=dnCss, style=line.style_dashed, extend=extend.right)
 
-if showTrend and ph
+if showTrend_eff and ph
     line.set_xy1(uptl, n - offset,     backpaint ? ph         : upper - slope_ph * length)
     line.set_xy2(uptl, n - offset + 1, backpaint ? ph - slope : upper - slope_ph * (length + 1))
 
-if showTrend and pl
+if showTrend_eff and pl
     line.set_xy1(dntl, n - offset,     backpaint ? pl         : lower + slope_pl * length)
     line.set_xy2(dntl, n - offset + 1, backpaint ? pl + slope : lower + slope_pl * (length + 1))
 
@@ -450,8 +543,8 @@ if showExt and ph
 if showExt and pl
     dntl.set_extend(extend.right)
 
-plot(showTrend and (backpaint ? upper : upper - slope_ph * length) ? (backpaint ? upper : upper - slope_ph * length) : na, 'Upper', color=ph ? na : upCss, offset=-offset)
-plot(showTrend and (backpaint ? lower : lower + slope_pl * length) ? (backpaint ? lower : lower + slope_pl * length) : na, 'Lower', color=pl ? na : dnCss, offset=-offset)
+plot(showTrend_eff and (backpaint ? upper : upper - slope_ph * length) ? (backpaint ? upper : upper - slope_ph * length) : na, 'Upper', color=ph ? na : upCss, offset=-offset)
+plot(showTrend_eff and (backpaint ? lower : lower + slope_pl * length) ? (backpaint ? lower : lower + slope_pl * length) : na, 'Lower', color=pl ? na : dnCss, offset=-offset)
 
 plotshape(upos > upos[1] ? low  : na, "Upper Break", shape.labelup,   location.absolute, upCss, text="B", textcolor=color.white, size=size.tiny)
 plotshape(dnos > dnos[1] ? high : na, "Lower Break", shape.labeldown, location.absolute, dnCss, text="S", textcolor=color.white, size=size.tiny)
@@ -516,8 +609,11 @@ if show_pmhl
     phl(pmh, pml, 'M', pmhl_css, pmhl_style)
 
 //----------------
-// Grandpa Automated Supply / Demand
+// Big Buyer / Big Seller Zones (Grandpa Automated Supply / Demand)
 //----------------
+
+show_grandpa = input.bool(true, title="Show Big Buyer / Big Seller Zones *", group="Global Market")
+show_grandpa_eff = is_custom ? show_grandpa : is_pro_or_up
 
 swing_length              = 8
 history_of_demand_to_keep = 20
@@ -651,24 +747,25 @@ var current_demand_poi = array.new_box(history_of_demand_to_keep, na)
 var supply_bos = array.new_box(5, na)
 var demand_bos = array.new_box(5, na)
 
-if not na(swing_high)
-    f_array_add_pop(swing_high_values, swing_high)
-    f_array_add_pop(swing_high_bns, bar_index[swing_length])
-    if show_price_action_labels
-        f_sh_sl_labels(swing_high_values, 1)
-    f_supply_demand(swing_high_values, swing_high_bns, current_supply_box, current_supply_poi, 1, atr_grandpa)
-else if not na(swing_low)
-    f_array_add_pop(swing_low_values, swing_low)
-    f_array_add_pop(swing_low_bns, bar_index[swing_length])
-    if show_price_action_labels
-        f_sh_sl_labels(swing_low_values, -1)
-    f_supply_demand(swing_low_values, swing_low_bns, current_demand_box, current_demand_poi, -1, atr_grandpa)
+if show_grandpa_eff
+    if not na(swing_high)
+        f_array_add_pop(swing_high_values, swing_high)
+        f_array_add_pop(swing_high_bns, bar_index[swing_length])
+        if show_price_action_labels
+            f_sh_sl_labels(swing_high_values, 1)
+        f_supply_demand(swing_high_values, swing_high_bns, current_supply_box, current_supply_poi, 1, atr_grandpa)
+    else if not na(swing_low)
+        f_array_add_pop(swing_low_values, swing_low)
+        f_array_add_pop(swing_low_bns, bar_index[swing_length])
+        if show_price_action_labels
+            f_sh_sl_labels(swing_low_values, -1)
+        f_supply_demand(swing_low_values, swing_low_bns, current_demand_box, current_demand_poi, -1, atr_grandpa)
 
-f_sd_to_bos(current_supply_box, supply_bos, current_supply_poi,  1)
-f_sd_to_bos(current_demand_box, demand_bos, current_demand_poi, -1)
+    f_sd_to_bos(current_supply_box, supply_bos, current_supply_poi,  1)
+    f_sd_to_bos(current_demand_box, demand_bos, current_demand_poi, -1)
 
-f_extend_box_endpoint(current_supply_box)
-f_extend_box_endpoint(current_demand_box)
+    f_extend_box_endpoint(current_supply_box)
+    f_extend_box_endpoint(current_demand_box)
 
 // =============================================================================
 // END OF v5 SCRIPT
