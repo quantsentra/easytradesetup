@@ -110,32 +110,6 @@ out200 = ta.ema(close, 200)
 plot(show_ema200_eff ? out200 : na, title="King EMA (200)", color=#3D5AFA, linewidth=3)
 
 //----------------
-// Market Trend (smoothed Heikin-Ashi)
-//----------------
-
-show_market_trend = input.bool(false, title="Show Market Trend*", group="Global Market")
-HAlen = 10
-o1 = ta.ema(open,  HAlen)
-c1 = ta.ema(close, HAlen)
-ha1 = ta.ema(high, HAlen)
-la1 = ta.ema(low,  HAlen)
-
-haclose = (o1 + ha1 + la1 + c1) / 4
-var float haopen = na
-haopen := na(haopen[1]) ? (o1 + c1) / 2 : (haopen[1] + haclose[1]) / 2
-hahigh = math.max(ha1, math.max(haopen, haclose))
-halow  = math.min(la1, math.min(haopen, haclose))
-
-HAlen2 = 10
-o2 = ta.ema(haopen,  HAlen2)
-c2 = ta.ema(haclose, HAlen2)
-h2 = ta.ema(hahigh,  HAlen2)
-l2 = ta.ema(halow,   HAlen2)
-
-mt_col = o2 > c2 ? color.red : color.lime
-plotcandle(show_market_trend ? o2 : na, show_market_trend ? h2 : na, show_market_trend ? l2 : na, show_market_trend ? c2 : na, color=show_market_trend ? mt_col : na)
-
-//----------------
 // Power Move Zones (a.k.a. CD Zone — Average Daily Range bands)
 // Locked at session start with line.new() so each day's zones extend
 // across the session instead of dotted-circle marks. Top zone is where
@@ -203,10 +177,13 @@ if adr_isNewDay and show_adr_eff
     adrTopFill := linefill.new(adrHigh10Line, adrHigh5Line, color.new(color.red,   90))
     adrBotFill := linefill.new(adrLow10Line,  adrLow5Line,  color.new(color.green, 90))
 
+    // CD Zone labels intentionally use size.small — they're context, not
+    // primary signals. Magnetic Zone keeps the user-controlled label_size
+    // so traders can scale that one for mobile.
     adrTopLbl := label.new(bar_index + 50, math.avg(storedAdrHigh10, storedAdrHigh5), "Huge Selling Expected for the Day",
-       xloc=xloc.bar_index, color=#ffffff00, textcolor=label_color, style=label.style_label_center, size=label_size)
+       xloc=xloc.bar_index, color=#ffffff00, textcolor=label_color, style=label.style_label_center, size=size.small)
     adrBotLbl := label.new(bar_index + 50, math.avg(storedAdrLow10,  storedAdrLow5),  "Huge Buying Expected for the Day",
-       xloc=xloc.bar_index, color=#ffffff00, textcolor=label_color, style=label.style_label_center, size=label_size)
+       xloc=xloc.bar_index, color=#ffffff00, textcolor=label_color, style=label.style_label_center, size=size.small)
 
 if not na(adrHigh10Line) and show_adr_eff
     line.set_xy2(adrHigh10Line, bar_index + 100, storedAdrHigh10)
@@ -347,53 +324,37 @@ if not na(pivotLine) and show_pivots_eff
         label.set_xy(cprMagneticLbl, bar_index + 50, math.avg(storedTC, storedBC))
 
 //----------------
-// Open Range Breakout (Indian session)
+// Trading Sessions — pick the markets you trade and the script highlights
+// the active hours with a soft background tint. Lets traders see at a
+// glance which session created which move.
+//
+// Times are bound to each market's home exchange timezone, so they stay
+// correct regardless of the chart's symbol or the user's local TZ.
 //----------------
 
-ORB15min     = input.session("0930-0945", title="ORB - 15min", group="Indian Market")
-showORBLines = input(true, title="Show ORB", group="Indian Market")
-INPUT_MAX    = 5
+show_session_india  = input.bool(true,  title="Highlight Indian (NSE)",   group="🕐 Trading Sessions")
+show_session_asia   = input.bool(false, title="Highlight Asia (Tokyo)",   group="🕐 Trading Sessions")
+show_session_london = input.bool(false, title="Highlight London",         group="🕐 Trading Sessions")
+show_session_nyc    = input.bool(false, title="Highlight NYC",            group="🕐 Trading Sessions")
 
-opentime  = time(timeframe.period, ORB15min + ":1234567")
-closetime = time(timeframe.period, ORB15min + ":1234567")
-hide = timeframe.isintraday and timeframe.multiplier <= INPUT_MAX
+// Saffron — recognisable Indian palette
+sess_india_color  = input.color(color.new(#FF9933, 92), title="Indian Color",  group="🕐 Trading Sessions")
+// Cyan — cool morning Tokyo
+sess_asia_color   = input.color(color.new(#4DD0E1, 92), title="Asia Color",   group="🕐 Trading Sessions")
+// Light yellow — London fog / dawn
+sess_london_color = input.color(color.new(#FFEB3B, 92), title="London Color", group="🕐 Trading Sessions")
+// Soft purple — Wall Street power
+sess_nyc_color    = input.color(color.new(#B39DDB, 92), title="NYC Color",    group="🕐 Trading Sessions")
 
-in_sessionopen  = not na(opentime)
-in_sessionclose = not na(closetime)
-is_open  = in_sessionopen  and not in_sessionopen[1]
-is_close = in_sessionclose and not in_sessionclose[1]
+in_session_india  = not na(time(timeframe.period, "0915-1530:1234567", "Asia/Kolkata"))
+in_session_asia   = not na(time(timeframe.period, "0900-1500:1234567", "Asia/Tokyo"))
+in_session_london = not na(time(timeframe.period, "0800-1630:1234567", "Europe/London"))
+in_session_nyc    = not na(time(timeframe.period, "0930-1600:1234567", "America/New_York"))
 
-var float orb_high = na
-var float orb_low  = na
-var float crb_high = na
-var float crb_low  = na
-
-if is_open
-    orb_high := high
-    orb_low  := low
-else
-    orb_high := orb_high[1]
-    orb_low  := orb_low[1]
-
-if high > orb_high and in_sessionopen
-    orb_high := high
-if low < orb_low and in_sessionopen
-    orb_low := low
-
-plot(showORBLines ? (hide ? orb_high : na) : na, style=plot.style_line, color=orb_high[1] != orb_high ? na : color.new(color.red,   0), title="ORB High", linewidth=2)
-plot(showORBLines ? (hide ? orb_low  : na) : na, style=plot.style_line, color=orb_low[1]  != orb_low  ? na : color.new(color.green, 0), title="ORB Low",  linewidth=2)
-
-if is_close
-    crb_high := high
-    crb_low  := low
-else
-    crb_high := crb_high[1]
-    crb_low  := crb_low[1]
-
-if high > crb_high and in_sessionclose
-    crb_high := high
-if low < crb_low and in_sessionclose
-    crb_low := low
+bgcolor(show_session_india  and in_session_india  ? sess_india_color  : na, title="Indian Session")
+bgcolor(show_session_asia   and in_session_asia   ? sess_asia_color   : na, title="Asia Session")
+bgcolor(show_session_london and in_session_london ? sess_london_color : na, title="London Session")
+bgcolor(show_session_nyc    and in_session_nyc    ? sess_nyc_color    : na, title="NYC Session")
 
 //----------------
 // 100% Buyers / Sellers Marubozu detection
@@ -551,27 +512,11 @@ var dnos = 0
 upos := ph ? 0 : close > upper - slope_ph * length ? 1 : upos
 dnos := pl ? 0 : close < lower + slope_pl * length ? 1 : dnos
 
-var line uptl = line.new(na, na, na, na, color=upCss, style=line.style_dashed, extend=extend.right)
-var line dntl = line.new(na, na, na, na, color=dnCss, style=line.style_dashed, extend=extend.right)
-
-if showTrend_eff and ph
-    line.set_xy1(uptl, n - offset,     backpaint ? ph         : upper - slope_ph * length)
-    line.set_xy2(uptl, n - offset + 1, backpaint ? ph - slope : upper - slope_ph * (length + 1))
-
-if showTrend_eff and pl
-    line.set_xy1(dntl, n - offset,     backpaint ? pl         : lower + slope_pl * length)
-    line.set_xy2(dntl, n - offset + 1, backpaint ? pl + slope : lower + slope_pl * (length + 1))
-
-if showExt and ph
-    uptl.set_extend(extend.right)
-if showExt and pl
-    dntl.set_extend(extend.right)
-
-plot(showTrend_eff and (backpaint ? upper : upper - slope_ph * length) ? (backpaint ? upper : upper - slope_ph * length) : na, 'Upper', color=ph ? na : upCss, offset=-offset)
-plot(showTrend_eff and (backpaint ? lower : lower + slope_pl * length) ? (backpaint ? lower : lower + slope_pl * length) : na, 'Lower', color=pl ? na : dnCss, offset=-offset)
-
-plotshape(upos > upos[1] ? low  : na, "Upper Break", shape.labelup,   location.absolute, upCss, text="B", textcolor=color.white, size=size.tiny)
-plotshape(dnos > dnos[1] ? high : na, "Lower Break", shape.labeldown, location.absolute, dnCss, text="S", textcolor=color.white, size=size.tiny)
+// Trend lines themselves were too noisy on the chart — kept only the B / S
+// signal labels. Detection logic still runs (uses upper/lower internally),
+// just the diagonal trend-line plots are gone.
+plotshape(showTrend_eff and upos > upos[1] ? low  : na, "Buy Signal",  shape.labelup,   location.absolute, upCss, text="B", textcolor=color.white, size=size.tiny)
+plotshape(showTrend_eff and dnos > dnos[1] ? high : na, "Sell Signal", shape.labeldown, location.absolute, dnCss, text="S", textcolor=color.white, size=size.tiny)
 
 alertcondition(upos > upos[1], 'Upward Breakout',   'Price broke the down-trendline upward')
 alertcondition(dnos > dnos[1], 'Downward Breakout', 'Price broke the up-trendline downward')
