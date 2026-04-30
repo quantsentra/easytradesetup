@@ -392,10 +392,17 @@ if not na(pivotLine) and show_pivots_eff
 // correct regardless of the chart's symbol or the user's local TZ.
 //----------------
 
-show_session_india  = input.bool(true,  title="Highlight Indian (NSE)",   group="🕐 Trading Sessions")
-show_session_asia   = input.bool(false, title="Highlight Asia (Tokyo)",   group="🕐 Trading Sessions")
-show_session_london = input.bool(false, title="Highlight London",         group="🕐 Trading Sessions")
-show_session_nyc    = input.bool(false, title="Highlight NYC",            group="🕐 Trading Sessions")
+// Sessions are Pro-tier+. Beginner tier stays minimal (Lifeline +
+// Trap Alerts + Buy/Sell + candle colours + legend only).
+show_session_india_in  = input.bool(true,  title="Highlight Indian (NSE)",   group="🕐 Trading Sessions")
+show_session_asia_in   = input.bool(false, title="Highlight Asia (Tokyo)",   group="🕐 Trading Sessions")
+show_session_london_in = input.bool(false, title="Highlight London",         group="🕐 Trading Sessions")
+show_session_nyc_in    = input.bool(false, title="Highlight NYC",            group="🕐 Trading Sessions")
+
+show_session_india  = (is_custom ? show_session_india_in  : is_pro_or_up) and show_session_india_in
+show_session_asia   = (is_custom ? show_session_asia_in   : is_pro_or_up) and show_session_asia_in
+show_session_london = (is_custom ? show_session_london_in : is_pro_or_up) and show_session_london_in
+show_session_nyc    = (is_custom ? show_session_nyc_in    : is_pro_or_up) and show_session_nyc_in
 
 // Session marker colours — used for the start/end vertical strips and
 // for the top label text. Higher opacity than the old full-background
@@ -425,28 +432,108 @@ is_london_end   = show_session_london and in_session_london[1] and not in_sessio
 is_nyc_start    = show_session_nyc    and in_session_nyc    and not in_session_nyc[1]
 is_nyc_end      = show_session_nyc    and in_session_nyc[1]    and not in_session_nyc
 
-// Vertical strips — only the start + end bars get coloured. Single bar
-// each = clean visual marker, no full-day wallpaper that buries price.
+// Vertical strips at session start + end. Single bar each = clean
+// boundary marker without burying price.
 bgcolor(is_india_start  or is_india_end  ? sess_india_color  : na, title="Indian Session Marker")
 bgcolor(is_asia_start   or is_asia_end   ? sess_asia_color   : na, title="Asia Session Marker")
 bgcolor(is_london_start or is_london_end ? sess_london_color : na, title="London Session Marker")
 bgcolor(is_nyc_start    or is_nyc_end    ? sess_nyc_color    : na, title="NYC Session Marker")
 
-// Top-of-chart session label — fires on the start bar only. location.top
-// pins it to the upper edge of the chart pane regardless of price range,
-// shape.labeldown points the arrow toward the bar so traders can trace
-// which bar opened the session.
-plotshape(is_india_start,  title="India Session Label",  style=shape.labeldown, location=location.top, color=color.new(#FF9933, 30), textcolor=color.white, text="Indian Market",  size=size.small)
-plotshape(is_asia_start,   title="Asia Session Label",   style=shape.labeldown, location=location.top, color=color.new(#4DD0E1, 30), textcolor=color.black, text="Asia",           size=size.small)
-plotshape(is_london_start, title="London Session Label", style=shape.labeldown, location=location.top, color=color.new(#FFEB3B, 30), textcolor=color.black, text="London",         size=size.small)
-plotshape(is_nyc_start,    title="NYC Session Label",    style=shape.labeldown, location=location.top, color=color.new(#B39DDB, 30), textcolor=color.black, text="NYC",            size=size.small)
+// Session brackets — horizontal arrow line spanning start → end with
+// the session name centered between the arrowheads. Created on session
+// start, extended on each in-session bar so the bracket grows live as
+// the session progresses. Pine v5's line.style_arrow_both gives true
+// double-arrow rendering.
+//
+// Vertical placement: each session sits at a slightly different multiple
+// above the session high so multiple enabled sessions don't overlap.
 
-// End markers — small "End" plotshape so traders know the session is
-// closing. Lower visual weight than the start label.
-plotshape(is_india_end,  title="India Session End",  style=shape.xcross, location=location.top, color=color.new(#FF9933, 30), size=size.tiny)
-plotshape(is_asia_end,   title="Asia Session End",   style=shape.xcross, location=location.top, color=color.new(#4DD0E1, 30), size=size.tiny)
-plotshape(is_london_end, title="London Session End", style=shape.xcross, location=location.top, color=color.new(#FFEB3B, 30), size=size.tiny)
-plotshape(is_nyc_end,    title="NYC Session End",    style=shape.xcross, location=location.top, color=color.new(#B39DDB, 30), size=size.tiny)
+f_session_top(idx) =>
+    high * (1.005 + 0.008 * idx)
+
+// India bracket
+var int   india_start_bar = na
+var float india_top_y     = na
+var line  india_bracket   = na
+var label india_lbl       = na
+if is_india_start
+    india_start_bar := bar_index
+    india_top_y     := f_session_top(0)
+    if not na(india_bracket)
+        line.delete(india_bracket)
+    if not na(india_lbl)
+        label.delete(india_lbl)
+    india_bracket := line.new(bar_index, india_top_y, bar_index, india_top_y, color=#FF9933, width=2, style=line.style_arrow_both)
+    india_lbl     := label.new(bar_index, india_top_y, "Indian Market", color=color.new(color.white, 0), textcolor=#FF9933, style=label.style_label_center, size=size.small)
+if in_session_india and not na(india_bracket)
+    new_top = math.max(india_top_y, f_session_top(0))
+    line.set_xy1(india_bracket, india_start_bar, new_top)
+    line.set_xy2(india_bracket, bar_index,       new_top)
+    label.set_xy(india_lbl, int((india_start_bar + bar_index) / 2), new_top)
+    india_top_y := new_top
+
+// Asia bracket
+var int   asia_start_bar = na
+var float asia_top_y     = na
+var line  asia_bracket   = na
+var label asia_lbl       = na
+if is_asia_start
+    asia_start_bar := bar_index
+    asia_top_y     := f_session_top(1)
+    if not na(asia_bracket)
+        line.delete(asia_bracket)
+    if not na(asia_lbl)
+        label.delete(asia_lbl)
+    asia_bracket := line.new(bar_index, asia_top_y, bar_index, asia_top_y, color=#0FA9C9, width=2, style=line.style_arrow_both)
+    asia_lbl     := label.new(bar_index, asia_top_y, "Asia (Tokyo)", color=color.new(color.white, 0), textcolor=#0FA9C9, style=label.style_label_center, size=size.small)
+if in_session_asia and not na(asia_bracket)
+    new_top_a = math.max(asia_top_y, f_session_top(1))
+    line.set_xy1(asia_bracket, asia_start_bar, new_top_a)
+    line.set_xy2(asia_bracket, bar_index,      new_top_a)
+    label.set_xy(asia_lbl, int((asia_start_bar + bar_index) / 2), new_top_a)
+    asia_top_y := new_top_a
+
+// London bracket
+var int   london_start_bar = na
+var float london_top_y     = na
+var line  london_bracket   = na
+var label london_lbl       = na
+if is_london_start
+    london_start_bar := bar_index
+    london_top_y     := f_session_top(2)
+    if not na(london_bracket)
+        line.delete(london_bracket)
+    if not na(london_lbl)
+        label.delete(london_lbl)
+    london_bracket := line.new(bar_index, london_top_y, bar_index, london_top_y, color=#C49000, width=2, style=line.style_arrow_both)
+    london_lbl     := label.new(bar_index, london_top_y, "London", color=color.new(color.white, 0), textcolor=#C49000, style=label.style_label_center, size=size.small)
+if in_session_london and not na(london_bracket)
+    new_top_l = math.max(london_top_y, f_session_top(2))
+    line.set_xy1(london_bracket, london_start_bar, new_top_l)
+    line.set_xy2(london_bracket, bar_index,        new_top_l)
+    label.set_xy(london_lbl, int((london_start_bar + bar_index) / 2), new_top_l)
+    london_top_y := new_top_l
+
+// NYC bracket
+var int   nyc_start_bar = na
+var float nyc_top_y     = na
+var line  nyc_bracket   = na
+var label nyc_lbl       = na
+if is_nyc_start
+    nyc_start_bar := bar_index
+    nyc_top_y     := f_session_top(3)
+    if not na(nyc_bracket)
+        line.delete(nyc_bracket)
+    if not na(nyc_lbl)
+        label.delete(nyc_lbl)
+    nyc_bracket := line.new(bar_index, nyc_top_y, bar_index, nyc_top_y, color=#7D5BB7, width=2, style=line.style_arrow_both)
+    nyc_lbl     := label.new(bar_index, nyc_top_y, "NYC", color=color.new(color.white, 0), textcolor=#7D5BB7, style=label.style_label_center, size=size.small)
+if in_session_nyc and not na(nyc_bracket)
+    new_top_n = math.max(nyc_top_y, f_session_top(3))
+    line.set_xy1(nyc_bracket, nyc_start_bar, new_top_n)
+    line.set_xy2(nyc_bracket, bar_index,     new_top_n)
+    label.set_xy(nyc_lbl, int((nyc_start_bar + bar_index) / 2), new_top_n)
+    nyc_top_y := new_top_n
 
 //----------------
 // 100% Buyers / Sellers Marubozu detection
@@ -472,7 +559,11 @@ C_MarubozuBlackBearish = C_BlackBody and C_LongBody and C_UpShadow <= C_ShadowPe
 // (colour applied below in the unified barcolor() resolver)
 //----------------
 
+// Blue / Black momentum + Marubozu candle colours — Beginner-tier+. The
+// candle-colour legend (legend table) explains what each colour means;
+// gating this to Beginner+ keeps the simplest tier visually meaningful.
 show_momentum  = input.bool(true, title="Show Momentum Candles *", group="Global Market")
+show_momentum_eff = is_custom ? show_momentum : is_beginner_or_up
 BODY_THRESHOLD = 0.70
 
 body_size  = math.abs(close - open)
@@ -551,8 +642,8 @@ WARN_BAR = #FFC107
 
 var color final_bar_color = na
 final_bar_color := show_yellow_eff and ectopicBar    ? WARN_BAR
-                 : show_momentum and is_bullish_momentum ? BULL_BAR
-                 : show_momentum and is_bearish_momentum ? BEAR_BAR
+                 : show_momentum_eff and is_bullish_momentum ? BULL_BAR
+                 : show_momentum_eff and is_bearish_momentum ? BEAR_BAR
                  : C_MarubozuWhiteBullish                ? BULL_BAR
                  : C_MarubozuBlackBearish                ? BEAR_BAR
                  : na
@@ -617,17 +708,23 @@ alertcondition(dnos > dnos[1], 'Downward Breakout', 'Price broke the up-trendlin
 // Highs & Lows MTF — Daily / Weekly / Monthly previous extremes
 //----------------
 
-show_pdhl  = input(true,    'Daily',   inline='daily',   group='Highs & Lows MTF')
-pdhl_style = input.string('----', '',  inline='daily',   group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
-pdhl_css   = input(#2157f3, '',        inline='daily',   group='Highs & Lows MTF')
+// MTF previous high/low lines — gated to Pro+ tier so Beginner stays
+// minimal. Custom mode: per-timeframe toggles take effect directly.
+show_pdhl_in = input(true,    'Daily',   inline='daily',   group='Highs & Lows MTF')
+pdhl_style   = input.string('----', '',  inline='daily',   group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
+pdhl_css     = input(#2157f3, '',        inline='daily',   group='Highs & Lows MTF')
 
-show_pwhl  = input(true,    'Weekly',  inline='weekly',  group='Highs & Lows MTF')
-pwhl_style = input.string('----', '',  inline='weekly',  group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
-pwhl_css   = input(#2157f3, '',        inline='weekly',  group='Highs & Lows MTF')
+show_pwhl_in = input(true,    'Weekly',  inline='weekly',  group='Highs & Lows MTF')
+pwhl_style   = input.string('----', '',  inline='weekly',  group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
+pwhl_css     = input(#2157f3, '',        inline='weekly',  group='Highs & Lows MTF')
 
-show_pmhl  = input(true,    'Monthly', inline='monthly', group='Highs & Lows MTF')
-pmhl_style = input.string('----', '',  inline='monthly', group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
-pmhl_css   = input(#2157f3, '',        inline='monthly', group='Highs & Lows MTF')
+show_pmhl_in = input(true,    'Monthly', inline='monthly', group='Highs & Lows MTF')
+pmhl_style   = input.string('----', '',  inline='monthly', group='Highs & Lows MTF', options=['⎯⎯⎯','----','····'])
+pmhl_css     = input(#2157f3, '',        inline='monthly', group='Highs & Lows MTF')
+
+show_pdhl = (is_custom ? show_pdhl_in : is_pro_or_up) and show_pdhl_in
+show_pwhl = (is_custom ? show_pwhl_in : is_pro_or_up) and show_pwhl_in
+show_pmhl = (is_custom ? show_pmhl_in : is_pro_or_up) and show_pmhl_in
 
 color TRANSP_CSS = #ffffff00
 
