@@ -26,6 +26,13 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Vercel function bundles must include the gated Pine source so the
+  // /api/portal/pine/[version] route can read it at runtime. Files in
+  // /private are deliberately not in /public (so they aren't auto-served)
+  // — outputFileTracingIncludes pulls them into the deployed bundle.
+  outputFileTracingIncludes: {
+    "/api/portal/pine/[version]": ["./private/pine/**/*"],
+  },
   // Image optimization: prefer AVIF (best compression) then WebP, fall back
   // to PNG/JPEG. Cache optimized variants for a year — chart screenshots
   // change rarely, and content-hashed URLs invalidate naturally on new builds.
