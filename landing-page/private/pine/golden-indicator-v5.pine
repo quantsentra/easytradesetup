@@ -432,119 +432,61 @@ is_london_end   = show_session_london and in_session_london[1] and not in_sessio
 is_nyc_start    = show_session_nyc    and in_session_nyc    and not in_session_nyc[1]
 is_nyc_end      = show_session_nyc    and in_session_nyc[1]    and not in_session_nyc
 
-// Vertical strips at session start + end. Single bar each = clean
-// boundary marker without burying price.
-bgcolor(is_india_start  or is_india_end  ? sess_india_color  : na, title="Indian Session Marker")
-bgcolor(is_asia_start   or is_asia_end   ? sess_asia_color   : na, title="Asia Session Marker")
-bgcolor(is_london_start or is_london_end ? sess_london_color : na, title="London Session Marker")
-bgcolor(is_nyc_start    or is_nyc_end    ? sess_nyc_color    : na, title="NYC Session Marker")
-
-// Session brackets — horizontal arrow line spanning start → end with
-// the session name centered between the arrowheads. Created on session
-// start, extended on each in-session bar so the bracket grows live as
-// the session progresses. Pine v5's line.style_arrow_both gives true
-// double-arrow rendering.
+// Active-session resolver — only ONE session paints at a time.
+// Old session's wallpaper auto-disappears the moment its bars exit
+// the time window (no manual delete needed — bgcolor() reads na).
 //
-// Vertical placement is ATR-relative (was percentage-of-price). The
-// percentage version pushed London + NYC ~2-3% above price, frequently
-// off the visible chart top on liquid symbols. ATR multiples keep all
-// 4 stacked tightly above price regardless of price magnitude — works
-// equally well on Gold ($4600), NIFTY (24000), BTC (70000), forex (1.1).
+// Priority on overlap (Asia ⇄ London 07-08 GMT, London ⇄ NYC 13-16 GMT):
+//   India → NYC → London → Asia
+// India trader sees India when active. Outside Indian hours, NYC wins
+// over London/Asia (most price-volume action for global traders).
 
-f_sess_atr() => ta.atr(20)
+active_color = show_session_india  and in_session_india  ? sess_india_color
+             : show_session_nyc    and in_session_nyc    ? sess_nyc_color
+             : show_session_london and in_session_london ? sess_london_color
+             : show_session_asia   and in_session_asia   ? sess_asia_color
+             : na
 
-f_session_top(idx) =>
-    high + f_sess_atr() * (0.8 + 0.5 * idx)
+// Watermark text matches the wallpaper colour so the trader never
+// has to guess which session is currently active. Solid (no transp)
+// so it stays legible against the soft background tint.
+active_name = show_session_india  and in_session_india  ? "Indian Market"
+            : show_session_nyc    and in_session_nyc    ? "NYC"
+            : show_session_london and in_session_london ? "London"
+            : show_session_asia   and in_session_asia   ? "Asia (Tokyo)"
+            : ""
 
-// Brackets use xloc=xloc.bar_time (timestamps) instead of xloc.bar_index.
-// Pine v5 rejects bar_index args >5000 bars from current — RE10026. On
-// charts with deep history (5min NIFTY, intraday Gold, etc) the first
-// session start can land before that 5000-bar lookback window once the
-// script reaches bar 5001+. Time values have no such limit.
+active_text_color = show_session_india  and in_session_india  ? #FF9933
+                  : show_session_nyc    and in_session_nyc    ? #7D5BB7
+                  : show_session_london and in_session_london ? #C49000
+                  : show_session_asia   and in_session_asia   ? #0FA9C9
+                  : color.gray
 
-// India bracket
-var int   india_start_time = na
-var float india_top_y      = na
-var line  india_bracket    = na
-var label india_lbl        = na
-if is_india_start
-    india_start_time := time
-    india_top_y      := f_session_top(0)
-    if not na(india_bracket)
-        line.delete(india_bracket)
-    if not na(india_lbl)
-        label.delete(india_lbl)
-    india_bracket := line.new(time, india_top_y, time, india_top_y, xloc=xloc.bar_time, color=#FF9933, width=2, style=line.style_arrow_both)
-    india_lbl     := label.new(time, india_top_y, "Indian Market", xloc=xloc.bar_time, color=color.new(color.white, 0), textcolor=#FF9933, style=label.style_label_center, size=size.small)
-if in_session_india and not na(india_bracket)
-    new_top = math.max(india_top_y, f_session_top(0))
-    line.set_xy1(india_bracket, india_start_time, new_top)
-    line.set_xy2(india_bracket, time,             new_top)
-    label.set_xy(india_lbl, int((india_start_time + time) / 2), new_top)
-    india_top_y := new_top
+// Single bgcolor for the active session. Pure wallpaper, no
+// start/end strips, no brackets — clean.
+bgcolor(active_color, title="Active Session Wallpaper")
 
-// Asia bracket
-var int   asia_start_time = na
-var float asia_top_y      = na
-var line  asia_bracket    = na
-var label asia_lbl        = na
-if is_asia_start
-    asia_start_time := time
-    asia_top_y      := f_session_top(1)
-    if not na(asia_bracket)
-        line.delete(asia_bracket)
-    if not na(asia_lbl)
-        label.delete(asia_lbl)
-    asia_bracket := line.new(time, asia_top_y, time, asia_top_y, xloc=xloc.bar_time, color=#0FA9C9, width=2, style=line.style_arrow_both)
-    asia_lbl     := label.new(time, asia_top_y, "Asia (Tokyo)", xloc=xloc.bar_time, color=color.new(color.white, 0), textcolor=#0FA9C9, style=label.style_label_center, size=size.small)
-if in_session_asia and not na(asia_bracket)
-    new_top_a = math.max(asia_top_y, f_session_top(1))
-    line.set_xy1(asia_bracket, asia_start_time, new_top_a)
-    line.set_xy2(asia_bracket, time,            new_top_a)
-    label.set_xy(asia_lbl, int((asia_start_time + time) / 2), new_top_a)
-    asia_top_y := new_top_a
-
-// London bracket
-var int   london_start_time = na
-var float london_top_y      = na
-var line  london_bracket    = na
-var label london_lbl        = na
-if is_london_start
-    london_start_time := time
-    london_top_y      := f_session_top(2)
-    if not na(london_bracket)
-        line.delete(london_bracket)
-    if not na(london_lbl)
-        label.delete(london_lbl)
-    london_bracket := line.new(time, london_top_y, time, london_top_y, xloc=xloc.bar_time, color=#C49000, width=2, style=line.style_arrow_both)
-    london_lbl     := label.new(time, london_top_y, "London", xloc=xloc.bar_time, color=color.new(color.white, 0), textcolor=#C49000, style=label.style_label_center, size=size.small)
-if in_session_london and not na(london_bracket)
-    new_top_l = math.max(london_top_y, f_session_top(2))
-    line.set_xy1(london_bracket, london_start_time, new_top_l)
-    line.set_xy2(london_bracket, time,              new_top_l)
-    label.set_xy(london_lbl, int((london_start_time + time) / 2), new_top_l)
-    london_top_y := new_top_l
-
-// NYC bracket
-var int   nyc_start_time = na
-var float nyc_top_y      = na
-var line  nyc_bracket    = na
-var label nyc_lbl        = na
-if is_nyc_start
-    nyc_start_time := time
-    nyc_top_y      := f_session_top(3)
-    if not na(nyc_bracket)
-        line.delete(nyc_bracket)
-    if not na(nyc_lbl)
-        label.delete(nyc_lbl)
-    nyc_bracket := line.new(time, nyc_top_y, time, nyc_top_y, xloc=xloc.bar_time, color=#7D5BB7, width=2, style=line.style_arrow_both)
-    nyc_lbl     := label.new(time, nyc_top_y, "NYC", xloc=xloc.bar_time, color=color.new(color.white, 0), textcolor=#7D5BB7, style=label.style_label_center, size=size.small)
-if in_session_nyc and not na(nyc_bracket)
-    new_top_n = math.max(nyc_top_y, f_session_top(3))
-    line.set_xy1(nyc_bracket, nyc_start_time, new_top_n)
-    line.set_xy2(nyc_bracket, time,           new_top_n)
-    label.set_xy(nyc_lbl, int((nyc_start_time + time) / 2), new_top_n)
-    nyc_top_y := new_top_n
+// Floating session watermark — single label that follows the current
+// bar with the active session's name + matching colour. Auto-hides
+// (deleted) when no session is active. Refreshes name + colour when
+// session changes.
+var label active_session_lbl = na
+if active_name != ""
+    sess_lbl_y = high + ta.atr(20) * 1.0
+    if na(active_session_lbl)
+        active_session_lbl := label.new(bar_index, sess_lbl_y, active_name,
+           color=color.new(color.white, 0),
+           textcolor=active_text_color,
+           style=label.style_label_center,
+           size=size.normal)
+    else
+        label.set_xy(active_session_lbl, bar_index, sess_lbl_y)
+        label.set_text(active_session_lbl, active_name)
+        label.set_textcolor(active_session_lbl, active_text_color)
+else
+    if not na(active_session_lbl)
+        label.delete(active_session_lbl)
+        active_session_lbl := na
 
 //----------------
 // 100% Buyers / Sellers Marubozu detection
