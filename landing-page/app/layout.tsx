@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s · EasyTradeSetup",
   },
   description:
-    "Non-repainting TradingView Pine v5 indicator — structure, regime, levels, supply/demand on any chart. $49 / ₹4,599 one-time, lifetime updates, 67% off retail.",
+    "Golden Indicator: non-repainting TradingView Pine v5 — structure, regime, levels, supply/demand on any chart. $49 / ₹4,599 one-time, lifetime updates.",
   keywords: [
     // Product / category
     "TradingView Pine v5 indicator",
