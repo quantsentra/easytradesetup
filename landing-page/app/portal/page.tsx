@@ -122,6 +122,38 @@ export default async function PortalDashboard() {
         </div>
       </section>
 
+      {/* ============ START HERE — required reading for new buyers ============ */}
+      {active && (
+        <section
+          className="mt-6 rounded-xl p-5 sm:p-6"
+          style={{
+            background: "linear-gradient(135deg, rgba(43,123,255,0.10), rgba(34,211,238,0.06))",
+            border: "1px solid rgba(34,211,238,0.30)",
+          }}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="min-w-0">
+              <span className="tz-chip tz-chip-cyan">
+                <span className="tz-chip-dot" style={{ background: "var(--tz-cyan)" }} />
+                Start here · required
+              </span>
+              <h2 className="mt-2 text-[18px] sm:text-[20px] font-semibold" style={{ color: "var(--tz-ink)" }}>
+                Indicator basics — what every line, zone, and candle on your chart means
+              </h2>
+              <p className="mt-1 text-[13.5px]" style={{ color: "var(--tz-ink-dim)" }}>
+                Eight-minute read. Trade setups in this portal assume you know this. Skip it and the rest won&apos;t click.
+              </p>
+            </div>
+            <Link
+              href="/portal/docs/indicator-basics"
+              className="tz-btn tz-btn-primary flex-none"
+            >
+              Read the basics →
+            </Link>
+          </div>
+        </section>
+      )}
+
       {/* ============ KPI BENTO ============ */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-6">
         <Kpi label="License" value={active ? "Active" : "None"}
@@ -132,7 +164,7 @@ export default async function PortalDashboard() {
           accent={newNotesSince > 0 ? "cyan" : undefined} />
         <Kpi label="Sessions" value={String(activity.visitCount)}
           delta={isReturning ? "Returning trader" : "First session"} />
-        <Kpi label="Indicator" value="Golden v2.4"
+        <Kpi label="Indicator" value="Golden v5"
           delta="Pine v5 · TradingView" accent="gold" />
       </div>
 

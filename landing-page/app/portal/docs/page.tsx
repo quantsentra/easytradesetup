@@ -14,8 +14,8 @@ type DocEntry = {
 
 const groups: { title: string; sub: string; tone: "blue" | "cyan" | "gold"; items: DocEntry[] }[] = [
   {
-    title: "Getting started",
-    sub: "Wire up the indicator. Learn what each layer means.",
+    title: "Start here — required reading",
+    sub: "Read these in order. Trade setups assume you already know what each indicator layer is telling you.",
     tone: "blue",
     items: [
       {
@@ -25,6 +25,14 @@ const groups: { title: string; sub: string; tone: "blue" | "cyan" | "gold"; item
         difficulty: "Foundations",
         markets: ["Universal"],
         estMinutes: 3,
+      },
+      {
+        slug: "indicator-basics",
+        title: "Indicator basics — read this before any trade setup",
+        blurb: "What every line, zone, candle colour and signal on your chart means. The one read that makes everything else click.",
+        difficulty: "Foundations",
+        markets: ["Universal"],
+        estMinutes: 8,
       },
       {
         slug: "regime-filter",
