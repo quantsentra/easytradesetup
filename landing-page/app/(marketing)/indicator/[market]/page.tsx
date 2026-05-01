@@ -100,7 +100,7 @@ const MARKETS: Record<MarketKey, Market> = {
     },
     whyParas: [
       "BANKNIFTY isn't NIFTY with bigger candles. It's a different beast: weekly expiry, 4 large stock weights, US bank-flow correlation in the morning. Indicators that work on NIFTY get mauled here unless they handle the volatility differently.",
-      "Golden Indicator classifies the day type before plotting anything. Range day vs trend day vs expiry day each gets a different setup playbook in the bundled Trade Logic PDF. The risk calculator sizes BANKNIFTY positions in lots, not points — so you don't blow up on a 200-point reversal.",
+      "Golden Indicator classifies the day type before plotting anything. Range day vs trend day vs expiry day each gets a different setup playbook inside your portal — alongside the interactive course that walks through every signal and zone the script plots. The risk calculator sizes BANKNIFTY positions in lots, not points — so you don't blow up on a 200-point reversal.",
     ],
   },
   spx: {

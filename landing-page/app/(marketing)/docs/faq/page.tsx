@@ -26,8 +26,9 @@ const faqs = [
   {
     cat: "Product",
     items: [
+      ["Will I be left to figure it out alone after I buy?", "No. The bundle includes an interactive indicator course inside your portal — eleven mobile-friendly lessons covering every line, zone, color, and signal on your chart, plus a knowledge quiz at the end. Progress saves locally. You finish the course, take the quiz, then trade with confidence. Built in. No upsell."],
       ["Is this a signal service?", "No. Golden Indicator is a TradingView chart tool that helps you read regime, momentum, levels, and volume on one pane. You decide when to trade."],
-      ["Why pay when free Pine scripts exist on TradingView?", "Free scripts are usually single-purpose — one moving average, one oscillator, one pattern. Golden Indicator fuses regime, structure, levels, and volume into one decision layer, plus ships the Trade Logic PDF and risk calculator that tie it all together. You're paying for the system, not just the code."],
+      ["Why pay when free Pine scripts exist on TradingView?", "Free scripts are usually single-purpose — one moving average, one oscillator, one pattern. Golden Indicator fuses regime, structure, levels, and volume into one decision layer, plus ships an interactive 11-lesson indicator course, a knowledge quiz, and the risk calculator — all inside your portal. You're paying for the full system, not just the code."],
       ["I already use MA + RSI + volume. Why add this?", "Then you already know the pain of switching between panes. Golden Indicator replaces that stack with one decision layer — regime-aware, session-aware, volatility-aware. Most users drop 3-5 indicators within a week of installing it."],
       ["Can I modify the Pine Script?", "Yes. The script is delivered as open source. Modify it for personal use. Redistribution or resale is not permitted."],
       ["Which markets does it work on?", "Symbol-agnostic. NSE F&O (NIFTY, BANKNIFTY), US equities (SPX, NASDAQ, NYSE), commodities (Gold, Crude, Silver), major forex pairs, and major crypto pairs (BTC, ETH). Any symbol available on TradingView."],
@@ -37,7 +38,7 @@ const faqs = [
   {
     cat: "Purchase & delivery",
     items: [
-      ["How do I receive the files?", "By email, within seconds of payment. The email contains the .pine file, trade-logic PDF, and risk calculator link."],
+      ["How do I receive everything?", "By email, within seconds of payment. The email contains your portal sign-in link — every component (the .pine source, the interactive course, the knowledge quiz, the risk calculator, daily market notes) lives inside your portal account."],
       ["Do I need to enter card details every month?", "No. It's a one-time payment. No recurring charges, ever."],
       ["Are there any extra charges at checkout?", "No. The displayed price is what you pay — ₹4,599 in India, $49 international. No taxes or fees added at checkout."],
       ["What if I have install or usage problems?", "Open a support ticket from your portal — portal.easytradesetup.com/portal/support. A human replies within 24h with a fix. The script is Pine v5 standard; if it does not render or behaves unexpectedly, we walk you through the resolution."],

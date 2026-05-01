@@ -425,8 +425,8 @@ ${args.hostedInvoiceUrl ? `<a href="${args.hostedInvoiceUrl}" style="display:inl
 <table role="presentation" cellpadding="0" cellspacing="0"><tr>
 <td style="width:32px;vertical-align:top;"><div style="width:24px;height:24px;border-radius:999px;background:#2B7BFF;color:#ffffff;font:700 12px Arial,sans-serif;text-align:center;line-height:24px;">3</div></td>
 <td style="padding-left:8px;">
-<div style="font:600 14px -apple-system,'Inter',Arial,sans-serif;color:#15181a;">Read the Trade Logic PDF</div>
-<div style="font-size:13.5px;color:rgba(21,24,26,0.72);line-height:1.55;margin-top:2px;">~50 pages · 8 setups. Don't skip — the indicator is a decision layer, the PDF is how to use it.</div>
+<div style="font:600 14px -apple-system,'Inter',Arial,sans-serif;color:#15181a;">Take the Indicator Course + Quiz</div>
+<div style="font-size:13.5px;color:rgba(21,24,26,0.72);line-height:1.55;margin-top:2px;">11 interactive lessons · knowledge quiz · mobile-friendly. Don't skip — every line, zone, and color on your chart is explained, then tested. Inside your portal under <strong>Docs &rarr; Indicator basics</strong>.</div>
 </td></tr></table>
 </td></tr>
 
@@ -467,7 +467,8 @@ ${invoiceText}
 NEXT STEPS — 15 minutes
 1) Open the portal (link above) — you'll land signed in.
 2) Install on TradingView: ${docsUrl}
-3) Read the Trade Logic PDF — ~50 pages, 8 setups.
+3) Take the Indicator Course + Quiz inside the portal — 11 lessons,
+   ~30 minutes, every signal explained then tested.
 4) Trade your way. Educational tool — not a profit machine. Follow
    the playbook, manage risk, results compound over months not days.
 

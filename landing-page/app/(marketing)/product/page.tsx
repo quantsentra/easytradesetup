@@ -6,13 +6,15 @@ import Price from "@/components/ui/Price";
 import { ProductJsonLd, SoftwareApplicationJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = {
-  title: "Golden Indicator — TradingView Pine v5 for any market",
+  title: "Golden Indicator + Course — TradingView Pine v5 for any market",
   description:
-    "Golden Indicator fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL), and supply / demand into one non-repainting Pine v5 script. NIFTY, SPX, XAU, BTC.",
+    "Golden Indicator fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL), and supply / demand into one non-repainting Pine v5 script. Plus an interactive 11-lesson course + knowledge quiz inside your portal. NIFTY, SPX, XAU, BTC.",
   keywords: [
     "TradingView Pine v5 indicator",
+    "TradingView indicator with course",
     "no repaint indicator",
     "market structure indicator",
+    "indicator with quiz",
     "NIFTY 50 indicator",
     "BANKNIFTY indicator",
     "price action indicator",
@@ -20,8 +22,8 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "/product" },
   openGraph: {
-    title: "Golden Indicator — one pane, every market",
-    description: "Structure, regime, levels, supply / demand — fused on one chart.",
+    title: "Golden Indicator + Course — one pane, every market",
+    description: "Indicator + interactive course + knowledge quiz. Structure, regime, levels, supply / demand — fused on one chart, taught in your portal.",
     url: "https://www.easytradesetup.com/product",
     type: "website",
   },
@@ -41,8 +43,12 @@ const promises = [
     body: "Pay once. Keep the script forever. Lifetime updates included. No feature tiers, no renewal traps.",
   },
   {
-    title: "Delivered sealed",
-    body: "Pine file, Trade Logic PDF, risk calculator, and daily market notes — by email within seconds.",
+    title: "You're not left alone",
+    body: "Interactive 11-lesson course + knowledge quiz inside your portal. Master every line, zone, color, and signal before you risk capital. Mobile-friendly.",
+  },
+  {
+    title: "Delivered to your portal",
+    body: "Indicator source, course, quiz, risk calculator, and daily market notes — all live in your portal. Sign-in link emailed within seconds of payment.",
   },
 ];
 
@@ -52,7 +58,8 @@ const specs: Array<[string, string]> = [
   ["Symbols",    "NSE · US · Forex · Crypto · Commodities"],
   ["Timeframes", "1m → 1W"],
   ["Alerts",     "Built-in alertcondition()"],
-  ["Delivery",   "Email · .pine + PDF"],
+  ["Education",  "11-lesson course + quiz"],
+  ["Delivery",   "Portal access · emailed instantly"],
 ];
 
 export default function ProductPage() {
@@ -105,7 +112,7 @@ export default function ProductPage() {
               Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
             </Link>
             <Link href="/sample" className="btn btn-outline btn-lg">
-              Read a free chapter
+              See a free setup
             </Link>
           </div>
           <p className="mt-4 text-nano font-mono uppercase tracking-widest text-ink-40">

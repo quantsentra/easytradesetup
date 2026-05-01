@@ -83,7 +83,7 @@ export default function PricingPage() {
                 Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
               </Link>
               <Link href="/sample" className="btn btn-outline btn-lg">
-                Read free chapter
+                See a free setup
               </Link>
             </div>
             <p className="mt-5 text-nano font-mono uppercase tracking-widest text-ink-40">

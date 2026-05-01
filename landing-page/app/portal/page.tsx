@@ -232,11 +232,11 @@ export default async function PortalDashboard() {
             locked={!active}
           />
           <ActionCard
-            title="Trade Logic PDF"
-            sub="50+ pages · 8 setups"
-            href={active ? "/portal/downloads" : "/checkout"}
-            cta={active ? "Open" : "Buy"}
-            icon="📕"
+            title="Indicator Course + Quiz"
+            sub="11 lessons · knowledge quiz"
+            href={active ? "/portal/docs/indicator-basics" : "/checkout"}
+            cta={active ? "Start" : "Buy"}
+            icon="🎓"
             tone="gold"
             locked={!active}
           />

@@ -279,7 +279,7 @@ export default function ComparePage() {
               Buy · <Price variant="amount" /> <span className="arrow" aria-hidden>→</span>
             </Link>
             <Link href="/sample" className="btn btn-outline btn-lg">
-              Read free chapter first
+              See a free setup first
             </Link>
           </div>
           <p className="mt-4 text-nano font-mono uppercase tracking-widest text-ink-40 text-center">

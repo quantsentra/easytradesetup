@@ -33,7 +33,7 @@ export const homeFaqs: Array<[string, string]> = [
   ],
   [
     "Will this guarantee profits?",
-    "No. Nothing guarantees trading profits. Golden Indicator is a decision-support tool — clean regime read, key levels, momentum confirmation. Used with the Trade Logic PDF and disciplined risk management, results compound over months. Not a profit machine. You decide every trade.",
+    "No. Nothing guarantees trading profits. Golden Indicator is a decision-support tool — clean regime read, key levels, momentum confirmation. Used with the interactive course, the knowledge quiz, and disciplined risk management, results compound over months. Not a profit machine. You decide every trade.",
   ],
 ];
 

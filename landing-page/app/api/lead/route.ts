@@ -288,7 +288,7 @@ Your spot is locked. We'll send the secure payment link the moment checkout open
               <tr>
                 <td style="background-color:#2B7BFF;background-image:linear-gradient(135deg,#2B7BFF 0%,#22D3EE 100%);border-radius:10px">
                   <a href="https://www.easytradesetup.com/sample" style="display:inline-block;padding:14px 24px;color:#ffffff;text-decoration:none;font-weight:600;font-size:14px;letter-spacing:-0.005em;border-radius:10px">
-                    Read a free chapter →
+                    See a free trade setup →
                   </a>
                 </td>
               </tr>
@@ -304,8 +304,8 @@ Your spot is locked. We'll send the secure payment link the moment checkout open
             <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
               <tr>
                 <td style="padding:8px 0;border-top:1px solid #efede4">
-                  <a href="https://www.easytradesetup.com/sample" style="color:#1e5fb8;text-decoration:none;font-size:14px;font-weight:500">→ Read a free chapter</a>
-                  <span style="color:rgba(21,24,26,0.52);font-size:13px"> from the Trade Logic PDF</span>
+                  <a href="https://www.easytradesetup.com/sample" style="color:#1e5fb8;text-decoration:none;font-size:14px;font-weight:500">→ See a free trade setup</a>
+                  <span style="color:rgba(21,24,26,0.52);font-size:13px"> — same format as the portal setups</span>
                 </td>
               </tr>
               <tr>
@@ -352,7 +352,7 @@ function welcomeText(offerLabel: string): string {
     `We've saved your email. Stripe checkout is live now (USD + INR cards) and UPI via Razorpay is landing soon. Buy whenever — the launch price of ${offerLabel} stays put. 67% off retail, always.`,
     "",
     "While you wait:",
-    "  • Read a free chapter:  https://www.easytradesetup.com/sample",
+    "  • See a free trade setup:  https://www.easytradesetup.com/sample",
     "  • See how it compares:  https://www.easytradesetup.com/compare",
     "  • Install guide:        https://www.easytradesetup.com/docs/install",
     "",

@@ -90,7 +90,8 @@ export default async function ThankYouPage({
 
         {!isStripe && (
           <p className="mt-6 text-body-lg text-ink-60 leading-relaxed">
-            Your Pine Script, Trade Logic PDF, and risk calculator link are on the way — arrival in under 60 seconds.
+            Your portal sign-in link is on the way — arrival in under 60 seconds. Inside you'll find the
+            indicator source, the interactive course, the knowledge quiz, and the risk calculator.
             If nothing lands, check spam, then email us.
           </p>
         )}

@@ -169,11 +169,12 @@ export default function ExitIntent() {
           Before you go
         </div>
         <h2 id="exit-intent-title" className="mt-3 h-tile">
-          Take a sample of the playbook with you.
+          Take a free trade setup with you.
         </h2>
         <p className="mt-3 text-caption text-ink-60 leading-relaxed">
-          Drop your email and we&apos;ll send a free 3-page sample from the Trade Logic PDF —
-          structure, entry rules, invalidation. No spam. No follow-ups until launch.
+          Drop your email and we&apos;ll send a free trade setup preview — same format as the
+          setups inside your portal after purchase. Structure, entry rules, invalidation. No
+          spam. No follow-ups until launch.
         </p>
 
         {status === "success" ? (

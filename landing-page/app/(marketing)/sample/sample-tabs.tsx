@@ -129,8 +129,10 @@ export default function SampleTabs({
         <div className="mt-10 sm:mt-12 card-white p-6 sm:p-8 md:p-10 text-center">
           <h2 className="h-card">Like the format?</h2>
           <p className="mt-2 text-body text-muted">
-            This is one of 8 full setups inside the Trade Logic PDF shipped with
-            Golden Indicator — across NIFTY, BANKNIFTY, SPX, NAS, XAU, BTC.
+            This is one preview of multiple full setups inside your portal — alongside the
+            interactive 11-lesson course and knowledge quiz that walk you through every
+            signal, line, zone, and color the indicator plots. NIFTY, BANKNIFTY, SPX, NAS,
+            XAU, BTC.
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
             <Link

@@ -21,10 +21,10 @@ export default function ReturnsPage() {
           <Prose>
             <h2>All sales are final</h2>
             <p>
-              Golden Indicator is a one-time digital download — Pine Script source plus the
-              bundled materials (Trade Logic PDF, Risk Calculator, Chart Gallery, Daily Notes
-              email list, lifetime updates). Once your portal access is unlocked and the
-              materials are delivered, the sale is final.
+              Golden Indicator is a one-time digital purchase — Pine Script source plus the
+              bundled materials (Interactive Course + Quiz, Risk Calculator, Chart Gallery,
+              Daily Notes email list, lifetime updates). Once your portal access is unlocked
+              and the materials are delivered, the sale is final.
             </p>
 
             <h2>Why no refunds</h2>
