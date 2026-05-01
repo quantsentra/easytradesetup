@@ -88,7 +88,7 @@ function Eyebrow() {
     >
       <span className="pulse-dot" aria-hidden />
       <span className="font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-acid">
-        v2.4 · {OFFER_LABEL} live
+        v5 · {OFFER_LABEL} live
       </span>
     </div>
   );

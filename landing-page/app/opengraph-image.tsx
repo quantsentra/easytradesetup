@@ -3,7 +3,7 @@ import { OFFER_USD, OFFER_INR, RETAIL_USD, RETAIL_INR } from "@/lib/pricing";
 
 export const runtime = "edge";
 export const alt =
-  "EasyTradeSetup — Golden Indicator · One TradingView Pine v5 indicator for every market";
+  "EasyTradeSetup — Golden Indicator + interactive course + knowledge quiz · One TradingView Pine v5 for every market";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -102,7 +102,7 @@ export default async function OG() {
             textTransform: "uppercase",
           }}
         >
-          Pine v5 · No repaint
+          Pine v5 · Course included
         </div>
 
         {/* Headline — single line each, no gradient (poor contrast at thumb) */}
@@ -200,7 +200,7 @@ export default async function OG() {
             letterSpacing: 0.5,
           }}
         >
-          One-time payment · Lifetime access · 67% off retail
+          Indicator + Course + Quiz · Lifetime access · 67% off retail
         </div>
       </div>
     ),
