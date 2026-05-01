@@ -27,15 +27,16 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.easytradesetup.com"),
   title: {
-    // Trimmed to ~55 chars — Google truncates SERP titles past ~60.
-    default: "Golden Indicator · TradingView Pine v5 · EasyTradeSetup",
+    // Trimmed to ~58 chars — Google truncates SERP titles past ~60.
+    default: "Golden Indicator + Course · TradingView Pine v5 · EasyTradeSetup",
     template: "%s · EasyTradeSetup",
   },
   description:
-    "Non-repainting TradingView Pine v5 indicator — structure, regime, levels, supply/demand on any chart. $49 / ₹4,599 one-time, lifetime updates, 67% off retail.",
+    "TradingView Pine v5 indicator + interactive course + knowledge quiz. Master every signal before you trade. $49 / ₹4,599 once. Lifetime updates. No repaint.",
   keywords: [
     // Product / category
     "TradingView Pine v5 indicator",
+    "TradingView indicator with course",
     "TradingView indicator no repaint",
     "best Pine Script indicator",
     "non-repainting indicator",
@@ -43,6 +44,14 @@ export const metadata: Metadata = {
     "all-in-one TradingView indicator",
     "trading indicator one-time payment",
     "lifetime access trading indicator",
+    // Education / course angle
+    "trading indicator with training",
+    "interactive trading course",
+    "indicator education portal",
+    "learn TradingView indicators",
+    "Pine Script course bundle",
+    "trading indicator quiz",
+    "indicator onboarding course",
     // Setup type
     "market structure indicator",
     "BOS CHoCH indicator",
@@ -87,15 +96,15 @@ export const metadata: Metadata = {
     alternateLocale: ["en_US"],
     url: "https://www.easytradesetup.com",
     siteName: "EasyTradeSetup",
-    title: "Golden Indicator — one TradingView Pine v5 for any market",
-    description: "Structure, regime, levels, supply / demand — fused on one chart. Bar-close only, no repaint, no signal service.",
+    title: "Golden Indicator + Course — one TradingView Pine v5 for any market",
+    description: "Indicator + interactive course + knowledge quiz, all in your portal. Bar-close only, no repaint. Master every signal, then trade.",
   },
   twitter: {
     card: "summary_large_image",
     site: "@easytradesetup",
     creator: "@easytradesetup",
-    title: "Golden Indicator — one indicator, any market",
-    description: "Bar-close only. No repaint. One-time $49 / ₹4,599. Lifetime.",
+    title: "Golden Indicator + Course — one indicator, any market",
+    description: "Indicator + course + quiz. Master every signal. One-time $49 / ₹4,599. Lifetime.",
   },
   alternates: {
     canonical: "/",

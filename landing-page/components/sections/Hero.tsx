@@ -41,6 +41,11 @@ export default async function Hero() {
               Bar-close logic. No signal service. You decide every trade.
             </p>
 
+            <p className="mt-3 max-w-[520px] text-[14px] leading-[1.55] text-ink-60">
+              <span className="text-cyan font-semibold">+ Interactive course &amp; quiz</span>{" "}
+              <span className="text-ink-40">— learn every signal, line, zone, and color before you trade. Built into your portal.</span>
+            </p>
+
             <div className="mt-6 lg:mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <Link href="/checkout" className="btn btn-primary btn-lg w-full sm:w-auto justify-center">
                 <span className="sm:hidden">Buy Golden Indicator</span>

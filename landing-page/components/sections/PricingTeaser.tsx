@@ -4,11 +4,11 @@ import PaymentLogos from "@/components/ui/PaymentLogos";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 const included = [
+  "Interactive course + quiz inside the portal",
   "Works across TradingView symbols and timeframes",
   "Bar-close logic — no repaint, no flicker",
   "Equities, F&O, forex, crypto, commodities",
   "Lifetime updates — no subscription, ever",
-  "Trade Logic PDF + risk calculator included",
   "Pine v5 — runs on the free TradingView plan",
 ];
 

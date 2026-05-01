@@ -82,7 +82,7 @@ export function ProductJsonLd() {
     name: "Golden Indicator",
     brand: { "@type": "Brand", name: "EasyTradeSetup" },
     description:
-      "TradingView Pine Script v5 indicator for global markets. Fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one non-repainting engine. Works on NIFTY, BANKNIFTY, SPX, NASDAQ, XAU, Silver, Crude, forex, and crypto.",
+      "TradingView Pine Script v5 indicator for global markets. Fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one non-repainting engine. Works on NIFTY, BANKNIFTY, SPX, NASDAQ, XAU, Silver, Crude, forex, and crypto. Bundle includes an interactive eleven-lesson indicator course and knowledge quiz inside the customer portal — every signal, line, zone, and color explained before the customer risks capital.",
     category: "Software / Trading Tools",
     url: `${SITE_URL}/product`,
     image: [
@@ -140,8 +140,8 @@ export function SoftwareApplicationJsonLd() {
     url: `${SITE_URL}/product`,
     image: `${SITE_URL}/opengraph-image`,
     description:
-      "Non-repainting TradingView Pine Script v5 indicator. Fuses market structure (BOS / CHoCH / HH-HL), trend regime, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one bar-close engine. Works on NIFTY, BANKNIFTY, SPX 500, NASDAQ 100, XAU / Gold, Silver, Crude, forex, and crypto. One-time payment, lifetime updates.",
-    softwareVersion: "2.4",
+      "Non-repainting TradingView Pine Script v5 indicator with an interactive eleven-lesson course and knowledge quiz built into the customer portal. Fuses market structure (BOS / CHoCH / HH-HL), trend regime, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one bar-close engine. Works on NIFTY, BANKNIFTY, SPX 500, NASDAQ 100, XAU / Gold, Silver, Crude, forex, and crypto. One-time payment, lifetime updates.",
+    softwareVersion: "5.0",
     fileFormat: "Pine Script v5",
     creator: { "@id": `${SITE_URL}#org` },
     offers: [
@@ -161,6 +161,7 @@ export function SoftwareApplicationJsonLd() {
       },
     ],
     featureList: [
+      "Interactive eleven-lesson indicator course with knowledge quiz",
       "Bar-close logic — no repaint",
       "Market structure (BOS, CHoCH, higher highs / lower lows)",
       "Trend regime classification",

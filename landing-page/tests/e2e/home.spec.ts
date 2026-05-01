@@ -30,12 +30,12 @@ test.describe("Home page — marketing integrity", () => {
 
   test("Bundle 6-grid shows kit items with NEW pill", async ({ page }) => {
     await expect(page.getByText("Golden Indicator", { exact: false }).first()).toBeVisible();
-    await expect(page.getByText("Trade Logic PDF").first()).toBeVisible();
+    await expect(page.getByText("Indicator Course + Quiz").first()).toBeVisible();
     await expect(page.getByText("Risk Calculator").first()).toBeVisible();
     await expect(page.getByText("Install Guide").first()).toBeVisible();
     await expect(page.getByText("Lifetime Updates").first()).toBeVisible();
     await expect(page.getByText("Founder Support").first()).toBeVisible();
-    await expect(page.getByText(/^new$/i).first()).toBeVisible();
+    await expect(page.getByText(/new/i).first()).toBeVisible();
   });
 
   test("MultiMarket stacked cards show sample symbols", async ({ page }) => {

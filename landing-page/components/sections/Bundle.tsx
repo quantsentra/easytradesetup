@@ -24,14 +24,14 @@ const items: Item[] = [
   },
   {
     n: "02",
-    name: "Trade Logic PDF",
-    tag: "included",
-    tagLabel: "50+ pages",
-    desc: "A practical trading playbook — entries, exits, invalidation, risk, and trade planning. Rules you can read once and apply the next morning.",
+    name: "Indicator Course + Quiz",
+    tag: "new",
+    tagLabel: "Interactive · NEW",
+    desc: "Don't just install it — understand it. 11 mobile-friendly lessons cover every line, zone, color, and signal. Take the quiz, prove mastery, then trade with confidence. Built into your portal. No extra cost.",
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-        <path d="M5 4h12a2 2 0 0 1 2 2v14l-4-2-4 2-4-2-4 2V6a2 2 0 0 1 2-2Z" />
-        <path d="M9 9h7M9 13h5" />
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+        <path d="M6 12v5c3 3 9 3 12 0v-5" />
       </svg>
     ),
   },
@@ -102,9 +102,10 @@ export default function Bundle() {
           }
           lede={
             <>
-              The indicator, the playbook, the risk tool, the setup guide, lifetime updates,
-              and founder-direct support — bundled for one payment. No upsells, no feature
-              tiers, no hunting across twelve scripts for the one piece that actually works.
+              The indicator, an interactive course with a knowledge quiz, the risk tool, the
+              install guide, lifetime updates, and founder-direct support — bundled for one
+              payment. You're not just buying a script; you're learning to read every signal
+              before you trade.
             </>
           }
         />
@@ -151,11 +152,11 @@ export default function Bundle() {
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-6 text-[13px] text-ink-60">
           <span className="inline-flex items-center gap-2">
-            <span className="text-acid">✓</span>Lifetime updates included
+            <span className="text-acid">✓</span>Course + quiz inside the portal
           </span>
           <Dot />
           <span className="inline-flex items-center gap-2">
-            <span className="text-acid">✓</span>Delivered by email
+            <span className="text-acid">✓</span>Lifetime updates included
           </span>
           <Dot />
           <span className="inline-flex items-center gap-2">

@@ -4,8 +4,12 @@ import Link from "next/link";
 // avoids drift between visible FAQ list and the rich-result schema.
 export const homeFaqs: Array<[string, string]> = [
   [
+    "Will I be left to figure it out alone after I buy?",
+    "No. The bundle includes an interactive indicator course inside your portal — eleven mobile-friendly lessons covering every line, zone, color, and signal on your chart, plus a knowledge quiz at the end. Progress saves locally. You finish the course, take the quiz, then trade with confidence. Built in. No upsell.",
+  ],
+  [
     "Why pay when free Pine scripts exist on TradingView?",
-    "Free scripts are single-purpose — one MA, one oscillator, one pattern. Golden Indicator fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one non-repainting engine. Plus the Trade Logic PDF and risk calculator. You're buying a system, not a plot.",
+    "Free scripts are single-purpose — one MA, one oscillator, one pattern. Golden Indicator fuses market structure (BOS / CHoCH / HH-HL), regime bias, key levels (PDH / PDL / PWH / PWL), and supply / demand zones into one non-repainting engine. Plus an interactive course + quiz, the risk calculator, and lifetime updates. You're buying a system, not a plot.",
   ],
   [
     "Does it repaint? What about mid-bar signals?",
