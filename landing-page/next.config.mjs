@@ -1,5 +1,11 @@
 import { withSentryConfig } from "@sentry/nextjs";
 import { withBotId } from "botid/next/config";
+import withBundleAnalyzer from "@next/bundle-analyzer";
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+  openAnalyzer: false,
+});
 
 /** @type {import('next').NextConfig} */
 
@@ -68,7 +74,9 @@ const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN || process.env.SENTRY_DSN;
 // Wrap with Vercel BotID — adds bot-detection to protected routes.
 // Routes listed here get an automatic challenge layer; checkBotId()
 // in the route handler reads the verdict.
-const wrappedConfig = withBotId(nextConfig);
+// Bundle analyzer wraps innermost so its hooks fire before BotID/Sentry
+// add their own webpack passes.
+const wrappedConfig = withBotId(bundleAnalyzer(nextConfig));
 
 export default dsn
   ? // @ts-ignore — Sentry's wrapper expects NextConfig but BotID's wrapper

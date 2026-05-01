@@ -28,6 +28,7 @@
     "stripe": "^22.1.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.4",
     "@playwright/test": "^1.49.1",
     "@types/node": "^22",
     "@types/react": "^19",
