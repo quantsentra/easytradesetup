@@ -2,12 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Prose from "@/components/ui/Prose";
+import IndicatorBasicsCourse from "@/components/portal/IndicatorBasicsCourse";
 
 type Doc = {
   title: string;
   eyebrow: string;
   lede: string;
   body: React.ReactNode;
+  noProse?: boolean;
 };
 
 const DOCS: Record<string, Doc> = {
@@ -42,142 +44,9 @@ const DOCS: Record<string, Doc> = {
   "indicator-basics": {
     title: "Indicator basics — read this before any trade setup",
     eyebrow: "Start here · required",
-    lede: "Every line, zone, candle colour and signal on your chart, in plain trader language. Eight-minute read. Trade setups in the rest of this portal assume you already know what each layer is saying.",
-    body: (
-      <>
-        <h2>What Golden Indicator does for you</h2>
-        <p>
-          The job of this indicator is to keep your chart honest. It plots only the four
-          things every disciplined trader checks before clicking buy or sell — trend, key
-          levels, momentum, and traps. Nothing repaints. Nothing flashes alerts at you.
-          You decide every trade.
-        </p>
-
-        <h2>The four things you actually look at</h2>
-
-        <h3>1. Candle colour — what each bar is telling you</h3>
-        <ul>
-          <li><strong>Blue candle (light periwinkle)</strong> — aggressive buying. The body covers most of the bar's true range and closed up. Buyers stepped in with conviction. Treat it as confirmation that bias is up.</li>
-          <li><strong>Black candle (dark gray)</strong> — aggressive selling. Mirror of blue. Sellers in control on this bar.</li>
-          <li><strong>Yellow candle</strong> — careful candle. Volume context contradicts the body direction (red candle printed but micro-bars showed strong up volume, or vice versa). It's a trap warning. <strong>Tighten your stop and slow down — the market may be about to reverse.</strong></li>
-          <li><strong>No tint (default green/red)</strong> — ordinary bar. No special signal. Read context from the rest of the indicator.</li>
-        </ul>
-
-        <h3>2. The Lifeline (smart trend)</h3>
-        <p>
-          A single line that traces the dominant intraday trend. Mathematically a McGinley
-          Dynamic — smoother and more responsive than a regular EMA. Use it as a one-glance
-          bias filter:
-        </p>
-        <ul>
-          <li>Price riding above the Lifeline = up bias dominant. Look for buys, fade the sells.</li>
-          <li>Price below the Lifeline = down bias dominant. Look for sells, fade the buys.</li>
-          <li>Price chopping across the Lifeline = no clean bias. Stand aside or trade range setups.</li>
-        </ul>
-
-        <h3>3. Daily Magnetic Zone (CPR — central pivot range)</h3>
-        <p>
-          Three purple lines locked at session start with a soft-pink fill between the
-          top central (TC) and bottom central (BC). Inside the band reads "Magnetic Zone"
-          because price gravitates here on range days.
-        </p>
-        <ul>
-          <li>Wide band → range day expected. Trade reversals at the edges of the band.</li>
-          <li>Narrow band (TC and BC close together) → trend day setup. Breakouts above TC or below BC tend to continue.</li>
-          <li>R1-R4 in red above, S1-S4 in green below. Inline price tags on the right edge — you don't need to hover to read the level.</li>
-        </ul>
-
-        <h3>4. Power Move Zones (CD — Average Daily Range)</h3>
-        <p>
-          Two coloured bands above and below the day's open, locked at session start.
-          Marked "Huge Selling Expected" (top, red) and "Huge Buying Expected" (bottom,
-          green). They mark the historical 5-day and 10-day ADR boundaries.
-        </p>
-        <ul>
-          <li>Price reaching the top band = day's upside is statistically exhausted. Be careful taking new longs here.</li>
-          <li>Price reaching the bottom band = same logic on the downside. New shorts get poor RR; reversal trades start to make sense.</li>
-          <li>The band is context, not a signal. Combine with regime + candle colour before acting.</li>
-        </ul>
-
-        <h2>Two signal types</h2>
-
-        <h3>Buy / Sell signals — the B and S labels</h3>
-        <p>
-          Trend-line break detector. When price breaks above a recent down-trendline,
-          a small green "B" label drops at the breakout. Below an up-trendline,
-          a red "S" label appears. Bar-close confirmed only — no mid-bar repaints.
-        </p>
-        <ul>
-          <li>Use the label as an alert, not an order. Confirm with regime + Lifeline before entering.</li>
-          <li>Best signals: B in clear up-regime, near a Magnetic Zone or Big Buyer level. S mirror-image.</li>
-          <li>Filter: skip B/S signals during the Yellow careful-candle bar — that bar is warning of a trap.</li>
-        </ul>
-
-        <h3>Trap Alerts — the yellow flag with "!"</h3>
-        <p>
-          A yellow "!" flag above a candle = volume divergence. The body went one way
-          but the dominant micro-volume went the other. This is the indicator's most
-          important warning signal. Three responses are valid:
-        </p>
-        <ul>
-          <li><strong>If you're already in a trade</strong> — tighten stop to break-even or trail it. The market may flip.</li>
-          <li><strong>If you're about to enter</strong> — wait one more bar. If the next bar prints opposite to the candle the flag fired on, bias is shifting.</li>
-          <li><strong>If you're flat</strong> — note the price level. Reversal trades from this point have higher hit rates than continuations.</li>
-        </ul>
-
-        <h2>Big Buyer / Big Seller Zones</h2>
-        <p>
-          Soft pink and soft green boxes that appear on the chart at recent swing highs
-          and lows. These are automatically detected supply / demand zones. Resistance
-          (pink) is where the market last sold off from. Support (green) is where it
-          last rallied from.
-        </p>
-        <p>
-          When price returns to one of these zones, it usually reacts. Look for B / S
-          signals or yellow trap candles AT a Big Buyer or Big Seller zone — those
-          confluence trades are the cleanest setups in the playbook.
-        </p>
-
-        <h2>Higher timeframe levels — PDH / PDL / PWH / PWL / PMH / PML</h2>
-        <p>
-          Dashed blue lines at the previous day's high (PDH), low (PDL), previous week's
-          high and low (PWH / PWL), and previous month's high and low (PMH / PML). These
-          are the levels every desk on the planet has marked. Price reacts at them
-          because that's where the orders are clustered.
-        </p>
-
-        <h2>Reading it all together — the 30-second decision tree</h2>
-        <ol>
-          <li><strong>Where is price relative to the Lifeline?</strong> Up bias or down bias.</li>
-          <li><strong>Is it inside, above, or below the Magnetic Zone?</strong> Range or trend day signal.</li>
-          <li><strong>Is it near a Big Buyer / Big Seller / PDH / PDL?</strong> Are the orders nearby?</li>
-          <li><strong>What colour is the most recent candle?</strong> Aggressive flow or warning.</li>
-          <li><strong>Has a B / S signal fired? A yellow flag?</strong> Confirmation or wait.</li>
-        </ol>
-        <p>
-          Three or more aligned = high-quality setup. Two aligned = decent. One alone =
-          stand aside. The trade setups in the rest of the portal walk through this
-          exact decision tree on real chart screenshots.
-        </p>
-
-        <h2>Recommended Setup Profile to start</h2>
-        <p>
-          In the indicator settings, the very first dropdown is{" "}
-          <strong>🎯 Setup Profile</strong>. Pick <strong>Beginner</strong> for your first
-          two weeks. It shows only Lifeline, candle colours, Buy/Sell signals, and the
-          legend table. Once those are second-nature, switch to <strong>Pro</strong> to
-          unlock zones and higher-timeframe levels. Don't enable everything on day one —
-          you'll drown in lines.
-        </p>
-
-        <h3>What to do next</h3>
-        <ul>
-          <li>Add the indicator to a chart you actually trade (NIFTY, SPX, BTC, XAU).</li>
-          <li>Watch one full session without taking trades. Just read the chart.</li>
-          <li>Then read the trade setup pages — they'll make sense now.</li>
-        </ul>
-      </>
-    ),
+    lede: "Eleven short cards + a 3-question quick check. Tap each card open, mark when you've got it, take the quiz. Trade setups in the rest of this portal assume you've cleared this.",
+    body: <IndicatorBasicsCourse />,
+    noProse: true,
   },
 
   "regime-filter": {
@@ -481,8 +350,8 @@ export default async function PortalDocPage({
         </div>
       </div>
 
-      <div className="tz-card" style={{ padding: "32px 40px" }}>
-        <Prose>{doc.body}</Prose>
+      <div className="tz-card" style={{ padding: doc.noProse ? "20px" : "32px 40px" }}>
+        {doc.noProse ? doc.body : <Prose>{doc.body}</Prose>}
       </div>
 
       <div className="mt-10 pt-6 flex items-center justify-between"
