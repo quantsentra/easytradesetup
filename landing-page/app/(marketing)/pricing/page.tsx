@@ -7,21 +7,24 @@ import { ProductJsonLd, PageBreadcrumbs } from "@/components/seo/JsonLd";
 import { OFFER_LABEL, OFFER_TAGLINE } from "@/lib/pricing";
 
 export const metadata: Metadata = {
-  title: "Pricing — one-time, lifetime, no subscription",
+  title: "Pricing — indicator + course + quiz, one-time, lifetime",
   description:
-    "Golden Indicator launch price: $49 / ₹4,599 (retail $149 / ₹13,999) — 67% off, always. One-time payment, lifetime updates, no recurring fees. Support tickets, 24h human reply.",
+    "Golden Indicator + interactive course + knowledge quiz: $49 / ₹4,599 (retail $149 / ₹13,999) — 67% off, always. One-time payment, lifetime updates, no recurring fees. Master every signal before you trade.",
   keywords: [
     "TradingView indicator price",
     "Pine Script one-time payment",
     "no subscription trading indicator",
     "Golden Indicator pricing",
+    "trading indicator with course",
+    "indicator with quiz included",
+    "Pine Script course bundle price",
   ],
   alternates: { canonical: "/pricing" },
 };
 
 const included = [
   { title: "Golden Indicator · Pine v5", desc: "Open source. Inspect and modify for personal use." },
-  { title: "Trade Logic PDF", desc: "50-page playbook — entry rules, exits, risk framework." },
+  { title: "Indicator Course + Quiz", desc: "11 interactive lessons + knowledge quiz inside the portal. Mobile-friendly. Master every signal before you trade." },
   { title: "Risk Calculator", desc: "Position sizing and R-multiple tracker." },
   { title: "Daily Market Notes", desc: "Pre-market bias — NIFTY, SPX, Gold, BTC." },
   { title: "Lifetime Updates", desc: "Every future revision of the script, free." },
@@ -43,7 +46,7 @@ export default function PricingPage() {
       <PageHeader
         eyebrow="Pricing"
         title={<>One price. <span className="grad-text-2">Forever.</span></>}
-        lede="No tiers. No upsells. No subscription that silently drains your account. Buy once, own forever."
+        lede="Indicator + interactive course + knowledge quiz. No tiers, no upsells, no subscription. Buy once, own forever — and learn every signal before you trade."
       />
 
       <section className="above-bg">
