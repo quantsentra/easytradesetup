@@ -99,20 +99,27 @@ function ChartFigure({
         />
         <span
           aria-hidden
-          className="absolute top-2 right-2 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-nano font-mono uppercase tracking-widest text-ink backdrop-blur-sm"
+          className="absolute top-3 right-3 inline-flex items-center gap-2 pl-2.5 pr-3 py-2 rounded-full text-[12px] font-medium tracking-tight text-ink shadow-lg transition-all duration-200 group-hover:bg-[rgba(5,7,15,0.92)] group-hover:border-cyan group-hover:translate-y-[-1px]"
           style={{
-            background: "rgba(5, 7, 15, 0.72)",
-            border: "1px solid rgba(255,255,255,0.14)",
+            background: "rgba(5, 7, 15, 0.78)",
+            border: "1px solid rgba(34, 211, 238, 0.35)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
           }}
         >
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M15 3h6v6" />
-            <path d="M9 21H3v-6" />
-            <path d="M21 3l-7 7" />
-            <path d="M3 21l7-7" />
-          </svg>
+          <span
+            className="inline-flex items-center justify-center w-5 h-5 rounded-full"
+            style={{ background: "rgba(34, 211, 238, 0.18)" }}
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgb(34, 211, 238)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="11" cy="11" r="7" />
+              <path d="M21 21l-4.3-4.3" />
+              <path d="M11 8v6" />
+              <path d="M8 11h6" />
+            </svg>
+          </span>
           <span className="hidden sm:inline">View full size</span>
-          <span className="sm:hidden">Tap to zoom</span>
+          <span className="sm:hidden">Zoom</span>
         </span>
       </a>
       <figcaption className="px-5 py-4 text-caption text-ink-60 leading-relaxed border-t border-rule">
