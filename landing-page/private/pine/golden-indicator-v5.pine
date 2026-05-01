@@ -394,7 +394,8 @@ if not na(pivotLine) and show_pivots_eff
 
 // Sessions are Pro-tier+. Beginner tier stays minimal (Lifeline +
 // Trap Alerts + Buy/Sell + candle colours + legend only).
-show_session_india_in  = input.bool(true,  title="Highlight Indian (NSE)",   group="🕐 Trading Sessions")
+// All sessions default OFF — trader picks the one(s) they care about.
+show_session_india_in  = input.bool(false, title="Highlight Indian (NSE)",   group="🕐 Trading Sessions")
 show_session_asia_in   = input.bool(false, title="Highlight Asia (Tokyo)",   group="🕐 Trading Sessions")
 show_session_london_in = input.bool(false, title="Highlight London",         group="🕐 Trading Sessions")
 show_session_nyc_in    = input.bool(false, title="Highlight NYC",            group="🕐 Trading Sessions")
