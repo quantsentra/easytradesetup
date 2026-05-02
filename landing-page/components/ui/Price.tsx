@@ -1,11 +1,15 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { USD_SET, INR_SET, format, type PriceSet } from "@/lib/pricing";
-import { CURRENCY_COOKIE } from "@/lib/currency";
+import { CURRENCY_COOKIE, resolveCurrency } from "@/lib/currency";
 
 // Server-rendered currency-aware price. Reads the ets_ccy cookie that
-// middleware writes on every request (geo-derived on first visit;
-// overridable via ?ccy= or the TopNav switcher). The HTML is correct on
-// first paint — no flash, no SEO mismatch, no broken share-card previews.
+// middleware writes on every request — but on the FIRST visit the cookie
+// only lands on the response, so the same render still sees no cookie.
+// To stay in sync with middleware's resolution + the client-side
+// PriceClient component, we fall back to x-vercel-ip-country exactly the
+// way middleware + lib/geo.ts do. Without this fallback, a first-visit
+// India user saw INR in the OfferBanner (client-rendered after hydration)
+// and USD in the Hero CTA (server-rendered with no cookie yet).
 //
 // Client components that already need "use client" for other reasons
 // (StickyBuyBar, OfferBanner) should import <PriceClient /> instead.
@@ -20,7 +24,11 @@ type Variant =
 
 export default async function Price({ variant = "amount" }: { variant?: Variant }) {
   const store = await cookies();
-  const ccy = store.get(CURRENCY_COOKIE)?.value;
+  const h = await headers();
+  const ccy = resolveCurrency({
+    cookie: store.get(CURRENCY_COOKIE)?.value,
+    ipCountry: h.get("x-vercel-ip-country"),
+  });
   const set: PriceSet = ccy === "inr" ? INR_SET : USD_SET;
   const offer = format(set, set.offer);
   const retail = format(set, set.retail);
