@@ -209,6 +209,12 @@ export async function middleware(req: NextRequest) {
   const logicalPath =
     plan.kind === "rewrite" ? new URL(plan.to, req.url).pathname : plan.externalPath;
 
+  // The brand-kit iframe assets (admin-only) need a permissive CSP so
+  // the React-on-CDN + Babel-standalone pattern in brand-kit.html runs.
+  // Skip strict CSP injection for this path — the route handler sets
+  // its own iframe-scoped policy.
+  const isBrandKitAsset = logicalPath.startsWith("/api/admin/brand-kit/");
+
   // Generate per-request nonce. Server components read this from
   // `headers().get("x-nonce")` to apply to inline scripts.
   const nonce = crypto.randomUUID().replace(/-/g, "");
@@ -218,7 +224,9 @@ export async function middleware(req: NextRequest) {
   // components, so they can read it via headers().
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-nonce", nonce);
-  requestHeaders.set("Content-Security-Policy", csp);
+  if (!isBrandKitAsset) {
+    requestHeaders.set("Content-Security-Policy", csp);
+  }
 
   // Build the response we'll eventually return. Cookie mutations from
   // Supabase auth attach here regardless of rewrite vs next.
@@ -230,7 +238,11 @@ export async function middleware(req: NextRequest) {
       : NextResponse.next({ request: { headers: requestHeaders } });
 
   // Echo CSP on the response so the browser actually enforces it.
-  res.headers.set("Content-Security-Policy", csp);
+  // Brand-kit asset path is exempt — its route handler sets a relaxed
+  // iframe-scoped CSP and would otherwise be overridden here.
+  if (!isBrandKitAsset) {
+    res.headers.set("Content-Security-Policy", csp);
+  }
 
   // Currency cookie — geo-aware default, ?ccy= manual override.
   // Re-resolved every request so the cookie self-heals if it goes stale,

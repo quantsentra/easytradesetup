@@ -105,8 +105,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         </div>
       </header>
 
-      {/* MAIN — sidebar (lg+) + content */}
-      <div className="container-wide flex-1 w-full py-6 sm:py-8">
+      {/* MAIN — sidebar (lg+) + content. Wider container than marketing
+          pages so admin tables / iframes / charts can breathe on big
+          monitors. Capped at 1600px so 27"+ screens don't get sparse. */}
+      <div className="flex-1 w-full py-6 sm:py-8 mx-auto px-5 sm:px-6 md:px-8" style={{ maxWidth: 1600 }}>
         <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-6 lg:gap-8">
           <aside className="hidden lg:block lg:sticky lg:top-[84px] lg:self-start">
             <nav className="tz-sidenav">

@@ -52,6 +52,25 @@ const nextConfig = {
         source: "/:path*",
         headers: securityHeaders,
       },
+      // Brand-kit iframe assets (admin-only). The HTML uses inline
+      // <script type="text/babel"> for client-side JSX which the strict
+      // global CSP + X-Frame-Options:DENY would block. Override here
+      // with the same security headers EXCEPT X-Frame-Options (allow
+      // SAMEORIGIN so /admin/brand-kit can iframe it) and CORP
+      // (relaxed to same-origin since this is exclusively self-iframed).
+      {
+        source: "/api/admin/brand-kit/:path*",
+        headers: [
+          { key: "X-Content-Type-Options",       value: "nosniff" },
+          { key: "X-Frame-Options",              value: "SAMEORIGIN" },
+          { key: "Strict-Transport-Security",    value: "max-age=31536000; includeSubDomains; preload" },
+          { key: "Referrer-Policy",              value: "no-referrer" },
+          { key: "Permissions-Policy",           value: "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()" },
+          { key: "Cross-Origin-Opener-Policy",   value: "same-origin" },
+          { key: "Cross-Origin-Resource-Policy", value: "same-origin" },
+          { key: "Cache-Control",                value: "private, no-store" },
+        ],
+      },
     ];
   },
   // /resources was a sales-page-disguised-as-docs hub. Customer-only items
