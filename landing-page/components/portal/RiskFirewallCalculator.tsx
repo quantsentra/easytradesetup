@@ -12,6 +12,8 @@ type Prefs = {
   direction: Direction;
   account: string;
   riskPct: string;
+  mode: CalcMode;
+  positionSize: string;
 };
 
 // ---- Market specs --------------------------------------------------------
@@ -49,12 +51,18 @@ const MARKET_KEYS: MarketKey[] = ["xauusd", "btcusdt", "forex", "indices", "nift
 
 type Direction = "buy" | "sell";
 
+// "risk" -> user types risk %, position size derives.
+// "size" -> user types position size (or lots), risk % derives.
+type CalcMode = "risk" | "size";
+
 // ---- Pure calculation logic ---------------------------------------------
 // Lifted out of the component so it stays reusable + unit-testable later.
 
 type CalcInput = {
   account: number;
   riskPct: number;
+  positionSize: number; // only used when mode === 'size'
+  mode: CalcMode;
   market: MarketKey;
   direction: Direction;
   entry: number;
@@ -70,6 +78,7 @@ type CalcResult = {
   lots?: number;
   reward: number;
   rr: number;
+  effectiveRiskPct: number;
   safetyScore: number;
   status: "safe" | "standard" | "aggressive" | "danger";
   warnings: string[];
@@ -86,8 +95,14 @@ function calc(input: CalcInput): CalcResult {
   if (!Number.isFinite(input.account) || input.account <= 0) {
     errors.push("Account balance must be a positive number.");
   }
-  if (!Number.isFinite(input.riskPct) || input.riskPct <= 0) {
-    errors.push("Risk percentage must be a positive number.");
+  if (input.mode === "risk") {
+    if (!Number.isFinite(input.riskPct) || input.riskPct <= 0) {
+      errors.push("Risk percentage must be a positive number.");
+    }
+  } else {
+    if (!Number.isFinite(input.positionSize) || input.positionSize <= 0) {
+      errors.push("Position size must be a positive number.");
+    }
   }
   if (!Number.isFinite(input.entry) || input.entry <= 0) {
     errors.push("Entry price must be a positive number.");
@@ -120,18 +135,31 @@ function calc(input: CalcInput): CalcResult {
 
   if (errors.length > 0) return { ok: false, errors };
 
-  const riskAmount = input.account * (input.riskPct / 100);
   const slDistance = Math.abs(input.entry - input.stop);
 
   if (slDistance === 0) {
     return { ok: false, errors: ["Stop loss cannot equal entry price."] };
   }
 
+  // Two-way binding between risk % and position size.
+  //   mode === 'risk' (default): user picks risk %, position size derives.
+  //   mode === 'size'          : user picks position size, risk % derives.
   // Per-unit P/L for the markets we support is just the price distance —
-  // i.e. 1 unit moves $1 per $1 of price for spot markets, 1 NIFTY qty
-  // moves ₹1 per ₹1 of price for cash equity. For futures lot-sizing we
+  // 1 unit moves $1 per $1 of price for spot markets, 1 NIFTY qty moves
+  // ₹1 per ₹1 of price for cash equity. For futures lot-sizing we
   // compute lot count separately.
-  const positionSize = riskAmount / slDistance;
+  let riskAmount: number;
+  let positionSize: number;
+  let effectiveRiskPct: number;
+  if (input.mode === "size") {
+    positionSize = input.positionSize;
+    riskAmount = positionSize * slDistance;
+    effectiveRiskPct = (riskAmount / input.account) * 100;
+  } else {
+    riskAmount = input.account * (input.riskPct / 100);
+    positionSize = riskAmount / slDistance;
+    effectiveRiskPct = input.riskPct;
+  }
   const reward = Math.abs(input.target - input.entry) * positionSize;
   const rr = reward / riskAmount;
 
@@ -142,9 +170,11 @@ function calc(input: CalcInput): CalcResult {
   }
 
   // ---- Safety scoring ----
+  // Use the EFFECTIVE risk %, which is either what the user typed (mode
+  // = 'risk') or what their chosen position size implies (mode = 'size').
   let safetyScore = 100;
-  if (input.riskPct > 2) safetyScore -= 20;
-  if (input.riskPct > 3) safetyScore -= 30;
+  if (effectiveRiskPct > 2) safetyScore -= 20;
+  if (effectiveRiskPct > 3) safetyScore -= 30;
   if (rr < 2) safetyScore -= 25;
   // Position-leverage heuristic: if implied notional > 50× equity, flag.
   const notional = positionSize * input.entry;
@@ -153,20 +183,20 @@ function calc(input: CalcInput): CalcResult {
 
   // ---- Risk tier label ----
   let status: "safe" | "standard" | "aggressive" | "danger";
-  if (input.riskPct <= 0.5) status = "safe";
-  else if (input.riskPct <= 1) status = "standard";
-  else if (input.riskPct <= 2) status = "aggressive";
+  if (effectiveRiskPct <= 0.5) status = "safe";
+  else if (effectiveRiskPct <= 1) status = "standard";
+  else if (effectiveRiskPct <= 2) status = "aggressive";
   else status = "danger";
 
   // ---- Warnings ----
-  if (input.riskPct > 2 && input.riskPct <= 3) {
+  if (effectiveRiskPct > 2 && effectiveRiskPct <= 3) {
     warnings.push(
-      `Risk per trade is ${input.riskPct}% — above the 2% aggressive ceiling. Reduce to 1% (standard) for sustainable compounding.`,
+      `Risk per trade is ${effectiveRiskPct.toFixed(2)}% — above the 2% aggressive ceiling. Reduce to 1% (standard) for sustainable compounding.`,
     );
   }
-  if (input.riskPct > 3) {
+  if (effectiveRiskPct > 3) {
     warnings.push(
-      `Danger zone: ${input.riskPct}% risk per trade. Three losses in a row drains 9%+ of your account. Cap risk at 2% maximum.`,
+      `Danger zone: ${effectiveRiskPct.toFixed(2)}% risk per trade. Three losses in a row drains 9%+ of your account. Cap risk at 2% maximum.`,
     );
   }
   if (rr < 2 && rr >= 1) {
@@ -193,6 +223,7 @@ function calc(input: CalcInput): CalcResult {
     lots,
     reward,
     rr,
+    effectiveRiskPct,
     safetyScore,
     status,
     warnings,
@@ -229,6 +260,8 @@ export default function RiskFirewallCalculator() {
   const [direction, setDirection] = useState<Direction>("buy");
   const [accountInput, setAccountInput] = useState("100000");
   const [riskPctInput, setRiskPctInput] = useState("1");
+  const [mode, setMode] = useState<CalcMode>("risk");
+  const [positionSizeInput, setPositionSizeInput] = useState("");
   const [entryInput, setEntryInput] = useState("4310.00");
   const [stopInput, setStopInput] = useState("4300.00");
   const [targetInput, setTargetInput] = useState("4340.00");
@@ -253,6 +286,8 @@ export default function RiskFirewallCalculator() {
         }
         if (typeof p.account === "string") setAccountInput(p.account);
         if (typeof p.riskPct === "string") setRiskPctInput(p.riskPct);
+        if (p.mode === "risk" || p.mode === "size") setMode(p.mode);
+        if (typeof p.positionSize === "string") setPositionSizeInput(p.positionSize);
         setPrefsLoaded(true);
       }
     } catch {
@@ -270,24 +305,28 @@ export default function RiskFirewallCalculator() {
         direction,
         account: accountInput,
         riskPct: riskPctInput,
+        mode,
+        positionSize: positionSizeInput,
       };
       localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
     } catch {
       /* ignored — quota / private mode */
     }
-  }, [hydrated, market, direction, accountInput, riskPctInput]);
+  }, [hydrated, market, direction, accountInput, riskPctInput, mode, positionSizeInput]);
 
   const result = useMemo<CalcResult>(() => {
     return calc({
       account: parseFloat(accountInput),
       riskPct: parseFloat(riskPctInput),
+      positionSize: parseFloat(positionSizeInput),
+      mode,
       market,
       direction,
       entry: parseFloat(entryInput),
       stop: parseFloat(stopInput),
       target: parseFloat(targetInput),
     });
-  }, [accountInput, riskPctInput, market, direction, entryInput, stopInput, targetInput]);
+  }, [accountInput, riskPctInput, positionSizeInput, mode, market, direction, entryInput, stopInput, targetInput]);
 
   const spec = MARKETS[market];
   const ccy = spec.ccy;
@@ -296,14 +335,30 @@ export default function RiskFirewallCalculator() {
   const onReset = () => {
     setAccountInput("");
     setRiskPctInput("");
+    setPositionSizeInput("");
     setEntryInput("");
     setStopInput("");
     setTargetInput("");
+    setMode("risk");
     try {
       localStorage.removeItem(PREFS_KEY);
     } catch {
       /* ignored */
     }
+  };
+
+  // ---- Mode switcher — when switching to 'size', prefill the size
+  // input from the currently-derived value so the user can tune it
+  // instead of starting from blank. ----
+  const switchMode = (newMode: CalcMode) => {
+    if (newMode === mode) return;
+    if (newMode === "size" && result.ok && !positionSizeInput) {
+      setPositionSizeInput(result.positionSize.toFixed(2));
+    }
+    if (newMode === "risk" && result.ok && !riskPctInput) {
+      setRiskPctInput(result.effectiveRiskPct.toFixed(2));
+    }
+    setMode(newMode);
   };
 
   return (
@@ -358,7 +413,8 @@ export default function RiskFirewallCalculator() {
         </div>
 
         {/* Step 02 — once market is set, account currency label + risk
-            tier strip are correct. */}
+            tier strip are correct. Mode toggle lets the user calculate
+            FROM risk % (default) OR FROM a chosen position size. */}
         <div className="tz-rc-input-card">
           <h2 className="tz-rc-section-title">
             <span className="tz-rc-section-num">02</span>
@@ -381,22 +437,69 @@ export default function RiskFirewallCalculator() {
             />
           </Field>
 
-          <Field
-            label="Risk per trade (%)"
-            hint="0.5% safe · 1% standard · 2% aggressive · 3%+ danger"
-          >
-            <input
-              type="number"
-              inputMode="decimal"
-              className="tz-rc-input"
-              value={riskPctInput}
-              onChange={(e) => setRiskPctInput(e.target.value)}
-              placeholder="1"
-              min="0"
-              step="0.1"
-            />
-            <RiskTierStrip value={parseFloat(riskPctInput)} />
+          {/* Mode toggle — segmented control */}
+          <Field label="Calculate from">
+            <div className="tz-rc-toggle">
+              <button
+                type="button"
+                className={`tz-rc-toggle-btn ${mode === "risk" ? "is-active tz-rc-toggle-buy" : ""}`}
+                onClick={() => switchMode("risk")}
+                aria-pressed={mode === "risk"}
+              >
+                Risk %
+              </button>
+              <button
+                type="button"
+                className={`tz-rc-toggle-btn ${mode === "size" ? "is-active tz-rc-toggle-buy" : ""}`}
+                onClick={() => switchMode("size")}
+                aria-pressed={mode === "size"}
+              >
+                Position size
+              </button>
+            </div>
           </Field>
+
+          {mode === "risk" ? (
+            <Field
+              label="Risk per trade (%)"
+              hint="0.5% safe · 1% standard · 2% aggressive · 3%+ danger"
+            >
+              <input
+                type="number"
+                inputMode="decimal"
+                className="tz-rc-input"
+                value={riskPctInput}
+                onChange={(e) => setRiskPctInput(e.target.value)}
+                placeholder="1"
+                min="0"
+                step="0.1"
+              />
+              <RiskTierStrip value={parseFloat(riskPctInput)} />
+            </Field>
+          ) : (
+            <Field
+              label={`Position size (${spec.unit})`}
+              hint={
+                spec.lotSize
+                  ? `1 lot = ${spec.lotSize} ${spec.unit}. Type qty or set a clean lot multiple.`
+                  : "Pick the size you want to trade. Risk % will be derived."
+              }
+            >
+              <input
+                type="number"
+                inputMode="decimal"
+                className="tz-rc-input"
+                value={positionSizeInput}
+                onChange={(e) => setPositionSizeInput(e.target.value)}
+                placeholder={spec.lotSize ? String(spec.lotSize) : "1.00"}
+                min="0"
+                step="any"
+              />
+              <RiskTierStrip
+                value={result.ok ? result.effectiveRiskPct : NaN}
+              />
+            </Field>
+          )}
         </div>
 
         <div className="tz-rc-input-card">
@@ -492,7 +595,7 @@ export default function RiskFirewallCalculator() {
               label="Risk amount"
               value={fmtMoney(result.riskAmount, ccy)}
               accent="blue"
-              sub={`${riskPctInput}% of account`}
+              sub={`${result.effectiveRiskPct.toFixed(2)}% of account${mode === "size" ? " · derived" : ""}`}
             />
             <ResultTile
               label="Stop-loss distance"
@@ -504,7 +607,7 @@ export default function RiskFirewallCalculator() {
               label="Position size"
               value={fmtNumber(result.positionSize, 2)}
               accent="cyan"
-              sub={spec.unit}
+              sub={`${spec.unit}${mode === "risk" ? " · derived" : " · your pick"}`}
             />
             {result.lots !== undefined && (
               <ResultTile
