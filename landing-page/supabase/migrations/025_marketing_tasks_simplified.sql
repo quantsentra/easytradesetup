@@ -9,18 +9,16 @@
 --
 -- Tier scheme tightened to M0-M4. Re-running this file is idempotent.
 
--- 1. Tighten tier constraint to M0-M4 (M5 dropped).
+-- 1. Wipe prior seed FIRST. Required before tightening the tier
+--    constraint — any leftover M5 rows would violate the new check.
+--    If you'd already ticked tasks under 024, jot them down before
+--    running this file (slugs are rewritten to match new framing).
+delete from marketing_tasks;
+
+-- 2. Tighten tier constraint to M0-M4 (M5 dropped).
 alter table marketing_tasks drop constraint if exists marketing_tasks_tier_check;
 alter table marketing_tasks add constraint marketing_tasks_tier_check
   check (tier in ('M0','M1','M2','M3','M4'));
-
--- 2. Wipe prior seed so the new task set is the source of truth.
---    Toggle state for tasks that survive (by slug) is preserved by
---    re-inserting with on conflict do nothing AFTER the delete pass —
---    but since we rewrite slugs to match the new framing, a clean
---    delete is correct. If you'd already ticked tasks under 024, jot
---    them down before running this file.
-delete from marketing_tasks;
 
 insert into marketing_tasks (slug, tier, position, title, detail, link) values
 
