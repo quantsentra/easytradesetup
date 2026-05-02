@@ -192,20 +192,40 @@ function SetupCard({ s }: { s: Setup }) {
       </h2>
 
       {s.image && (
-        <figure className="mt-6 sm:mt-8 setup-figure">
-          <div className="relative aspect-[3/2] sm:aspect-[16/10] rounded-xl overflow-hidden bg-bg-3 border border-rule">
-            <Image
-              src={s.image.src}
-              alt={s.image.alt}
-              fill
-              sizes="(min-width: 1024px) 900px, 100vw"
-              className="object-contain"
-              priority
-            />
+        <figure className="setup-figure mt-6 sm:mt-8">
+          <div className="setup-figure-frame">
+            <div className="setup-figure-stage">
+              <Image
+                src={s.image.src}
+                alt={s.image.alt}
+                fill
+                sizes="(min-width: 1024px) 900px, 100vw"
+                className="setup-figure-img"
+                priority
+              />
+              <span className="setup-figure-tag" aria-hidden>
+                <span className="setup-figure-tag-dot" />
+                Live · Golden Indicator
+              </span>
+            </div>
           </div>
-          <figcaption className="mt-2 text-nano font-mono uppercase tracking-widest text-muted-faint">
-            Annotated chart · Golden Indicator · {s.symbol.split(" · ")[0]}
-          </figcaption>
+          <div className="setup-figure-legend" aria-label="Chart annotations">
+            <span className="setup-chip setup-chip-line">
+              <span className="setup-chip-mark setup-chip-mark-line" />
+              Lifeline
+            </span>
+            <span className="setup-chip setup-chip-buy">
+              <span className="setup-chip-mark setup-chip-mark-buy">B</span>
+              Buy signal
+            </span>
+            <span className="setup-chip setup-chip-target">
+              <span className="setup-chip-mark setup-chip-mark-target">▲</span>
+              Target zone
+            </span>
+            <span className="setup-chip setup-chip-meta">
+              {s.symbol.split(" · ")[0]} · TradingView
+            </span>
+          </div>
         </figure>
       )}
 
