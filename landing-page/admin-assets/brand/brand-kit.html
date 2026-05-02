@@ -1,0 +1,2096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EasyTradeSetup — Brand Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #05070F;
+    --s1: #0E1530;
+    --s2: #0a1224;
+    --blue: #2B7BFF;
+    --cyan: #22D3EE;
+    --gold: #F0C05A;
+    --violet: #8B5CF6;
+    --lime: #8FCC2A;
+    --amber: #FFB341;
+    --green: #22C55E;
+    --red: #FF4D4F;
+    --ink: rgba(255,255,255,0.92);
+    --ink60: rgba(255,255,255,0.60);
+    --ink40: rgba(255,255,255,0.40);
+    --ink10: rgba(255,255,255,0.10);
+    --ink06: rgba(255,255,255,0.06);
+    --grad: linear-gradient(135deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%);
+    --grad-mark: linear-gradient(135deg, #2B7BFF, #22D3EE);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter Tight', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --sidebar: 220px;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  html, body { height: 100%; background: var(--bg); color: var(--ink); font-family: var(--font-body); }
+  #root { height: 100%; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--ink10); border-radius: 4px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--green); color: #000; font-family: var(--font-mono); font-size: 13px;
+    font-weight: 500; padding: 8px 20px; border-radius: 40px; z-index: 9999;
+    opacity: 0; transition: all 0.25s ease; pointer-events: none; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast">Copied!</div>
+
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+
+// ─── Tokens ───────────────────────────────────────────────────────────────────
+const TOKENS = {
+  colors: {
+    bg: [
+      { name: 'Page BG', hex: '#05070F', role: 'Full-bleed page, banners, ad creatives' },
+      { name: 'Surface 1', hex: '#0E1530', role: 'Cards, panels, second layer' },
+      { name: 'Surface 2', hex: '#0a1224', role: 'Tertiary depth (rare)' },
+    ],
+    accents: [
+      { name: 'Electric Blue', hex: '#2B7BFF', role: 'Primary brand. Buttons, links, accents.' },
+      { name: 'Cyan', hex: '#22D3EE', role: 'Secondary accent. Pairs with blue in gradients.' },
+      { name: 'Brand Gold', hex: '#F0C05A', role: 'CTAs, price badges, "Free" tags.' },
+      { name: 'Violet', hex: '#8B5CF6', role: 'Tertiary — use sparingly, never alone.' },
+      { name: 'Acid Lime', hex: '#8FCC2A', role: '"Live", "Free", signal-active states only.' },
+      { name: 'Amber', hex: '#FFB341', role: 'Warnings, "Inaugural offer" eyebrow text.' },
+    ],
+    semantic: [
+      { name: 'Up / Win', hex: '#22C55E', role: 'Bullish, profit, positive signals' },
+      { name: 'Down / Loss', hex: '#FF4D4F', role: 'Bearish, drawdown, negative signals' },
+    ],
+    ink: [
+      { name: 'Ink', hex: 'rgba(255,255,255,0.92)', role: 'Primary white text' },
+      { name: 'Ink-60', hex: 'rgba(255,255,255,0.60)', role: 'Subheadings, secondary text' },
+      { name: 'Ink-40', hex: 'rgba(255,255,255,0.40)', role: 'Captions, tertiary text' },
+    ]
+  },
+  type: [
+    { name: 'Space Grotesk', role: 'Display / Headlines', weights: '500 / 600 / 700', usage: 'H1, H2, big numbers, banner headlines', sample: 'One indicator. Lifetime.', size: '40px', weight: 700 },
+    { name: 'Inter Tight', role: 'Body / UI', weights: '400 / 500 / 600 / 700', usage: 'Paragraphs, buttons, nav, UI labels', sample: 'Educational. You decide every trade.', size: '18px', weight: 400 },
+    { name: 'JetBrains Mono', role: 'Mono / Data', weights: '400 / 500 / 700', usage: 'Prices, ticker symbols, code, eyebrow labels', sample: 'EASYTRADESETUP · PINE V5', size: '14px', weight: 500 },
+  ]
+};
+
+const SOCIAL_ASSETS = [
+  { id: 'yt-banner', label: 'YouTube Banner', w: 2560, h: 1440, safe: '1546×423' },
+  { id: 'yt-profile', label: 'YouTube Profile', w: 800, h: 800 },
+  { id: 'yt-endscreen', label: 'End Screen', w: 1920, h: 1080 },
+  { id: 'ig-profile', label: 'IG Profile', w: 1024, h: 1024 },
+  { id: 'ig-carousel', label: 'IG Carousel', w: 1080, h: 1350 },
+  { id: 'ig-reel', label: 'IG Reel Cover', w: 1080, h: 1920 },
+  { id: 'ig-story', label: 'IG Story', w: 1080, h: 1920 },
+  { id: 'wordmark-h', label: 'Wordmark H', w: 1200, h: 300 },
+  { id: 'wordmark-s', label: 'Wordmark Stacked', w: 600, h: 600 },
+  { id: 'email-sig', label: 'Email Signature', w: 600, h: 150 },
+];
+
+// ─── Utilities ─────────────────────────────────────────────────────────────────
+function showToast(msg = 'Copied!') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function copyHex(hex) {
+  navigator.clipboard.writeText(hex).catch(() => {});
+  showToast(`Copied ${hex}`);
+}
+
+// ─── Brand Mark SVG ────────────────────────────────────────────────────────────
+function BrandMark({ size = 48 }) {
+  const id = `bm-${size}`;
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#2B7BFF"/>
+          <stop offset="1" stopColor="#22D3EE"/>
+        </linearGradient>
+      </defs>
+      <circle cx="24" cy="24" r="24" fill={`url(#${id})`}/>
+      <polyline points="13,24 21,32 35,16" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  );
+}
+
+// ─── GradientText ──────────────────────────────────────────────────────────────
+function GradText({ children, style = {} }) {
+  return (
+    <span style={{
+      background: 'linear-gradient(135deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)',
+      WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text', ...style
+    }}>{children}</span>
+  );
+}
+
+// ─── Layout Shell ─────────────────────────────────────────────────────────────
+const NAV_ITEMS = [
+  { id: 'overview', label: 'Overview', icon: '◈' },
+  { id: 'colors', label: 'Colors', icon: '◉' },
+  { id: 'typography', label: 'Typography', icon: 'Aa' },
+  { id: 'logo', label: 'Logo & Mark', icon: '◎' },
+  { id: 'gradient', label: 'Gradient', icon: '◐' },
+  { id: 'social', label: 'Social Assets', icon: '⊞' },
+  { id: 'templates', label: 'Templates', icon: '▤' },
+  { id: 'ytshorts', label: 'YouTube Shorts', icon: '▶' },
+  { id: 'igreels', label: 'Instagram Reels', icon: '◑' },
+  { id: 'voice', label: 'Voice & Copy', icon: '✦' },
+  { id: 'checklist', label: 'Checklist', icon: '✓' },
+];
+
+function Sidebar({ active, setActive, collapsed }) {
+  return (
+    <nav style={{
+      width: collapsed ? 56 : 220, minWidth: collapsed ? 56 : 220,
+      background: '#070B1A', borderRight: '1px solid rgba(255,255,255,0.06)',
+      display: 'flex', flexDirection: 'column', padding: '24px 0', transition: 'width 0.2s',
+      overflow: 'hidden', zIndex: 10, position: 'relative', flexShrink: 0,
+    }}>
+      {/* Logo */}
+      <div style={{ padding: collapsed ? '0 0 24px 8px' : '0 20px 28px', display: 'flex', alignItems: 'center', gap: 10 }}>
+        <BrandMark size={32}/>
+        {!collapsed && (
+          <div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, color: 'rgba(255,255,255,0.92)', lineHeight: 1.2 }}>EasyTradeSetup</div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', marginTop: 2 }}>BRAND KIT</div>
+          </div>
+        )}
+      </div>
+
+      <div style={{ height: 1, background: 'rgba(255,255,255,0.06)', margin: '0 16px 16px' }}/>
+
+      {NAV_ITEMS.map(item => (
+        <button key={item.id} onClick={() => setActive(item.id)} style={{
+          display: 'flex', alignItems: 'center', gap: 10,
+          padding: collapsed ? '10px 0' : '10px 20px',
+          justifyContent: collapsed ? 'center' : 'flex-start',
+          background: active === item.id ? 'rgba(43,123,255,0.12)' : 'transparent',
+          borderLeft: active === item.id ? '2px solid #2B7BFF' : '2px solid transparent',
+          border: 'none', borderLeft: active === item.id ? '2px solid #2B7BFF' : '2px solid transparent',
+          cursor: 'pointer', color: active === item.id ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.45)',
+          fontFamily: 'Inter Tight', fontSize: 13, fontWeight: active === item.id ? 600 : 400,
+          transition: 'all 0.15s', width: '100%', textAlign: 'left',
+          borderRadius: 0,
+        }}>
+          <span style={{ fontSize: 14, flexShrink: 0, width: 18, textAlign: 'center', fontFamily: 'monospace' }}>{item.icon}</span>
+          {!collapsed && <span>{item.label}</span>}
+        </button>
+      ))}
+
+      <div style={{ flex: 1 }}/>
+      <div style={{ padding: collapsed ? '0' : '16px 20px', textAlign: collapsed ? 'center' : 'left' }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.25)', letterSpacing: '0.1em' }}>
+          {collapsed ? 'v1' : 'v1.0 · May 2026'}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+// ─── Color Swatch ──────────────────────────────────────────────────────────────
+function Swatch({ name, hex, role, size = 'md' }) {
+  const isRgba = hex.startsWith('rgba');
+  const displayBg = isRgba ? `linear-gradient(135deg, #ffffff22, #ffffff44)` : hex;
+
+  return (
+    <div
+      onClick={() => copyHex(hex)}
+      title={`Click to copy ${hex}`}
+      style={{
+        cursor: 'pointer', border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 10, overflow: 'hidden', transition: 'transform 0.15s, border-color 0.15s',
+        background: '#0E1530',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(43,123,255,0.4)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.transform = 'none'; }}
+    >
+      <div style={{
+        height: size === 'lg' ? 80 : 56,
+        background: isRgba ? '#1a1a2e' : hex,
+        position: 'relative',
+      }}>
+        {isRgba && (
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: hex,
+            backdropFilter: 'blur(0)',
+          }}/>
+        )}
+        <div style={{
+          position: 'absolute', top: 6, right: 6,
+          background: 'rgba(0,0,0,0.4)', borderRadius: 4,
+          padding: '2px 6px', fontFamily: 'JetBrains Mono', fontSize: 9,
+          color: 'rgba(255,255,255,0.7)', letterSpacing: '0.05em'
+        }}>COPY</div>
+      </div>
+      <div style={{ padding: '10px 12px' }}>
+        <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, color: 'rgba(255,255,255,0.92)', marginBottom: 2 }}>{name}</div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'rgba(255,255,255,0.5)', marginBottom: 4 }}>{hex}</div>
+        {role && <div style={{ fontFamily: 'Inter Tight', fontSize: 11, color: 'rgba(255,255,255,0.35)', lineHeight: 1.4 }}>{role}</div>}
+      </div>
+    </div>
+  );
+}
+
+// ─── Section Header ────────────────────────────────────────────────────────────
+function SectionHeader({ eyebrow, title, subtitle }) {
+  return (
+    <div style={{ marginBottom: 36 }}>
+      {eyebrow && (
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, fontWeight: 500, letterSpacing: '0.16em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 8 }}>
+          {eyebrow}
+        </div>
+      )}
+      <h2 style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 28, color: 'rgba(255,255,255,0.92)', marginBottom: subtitle ? 10 : 0 }}>
+        {title}
+      </h2>
+      {subtitle && <p style={{ fontFamily: 'Inter Tight', fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.6, maxWidth: 600 }}>{subtitle}</p>}
+    </div>
+  );
+}
+
+// ─── Card wrapper ──────────────────────────────────────────────────────────────
+function Card({ children, style = {} }) {
+  return (
+    <div style={{
+      background: '#0E1530', border: '1px solid rgba(255,255,255,0.07)',
+      borderRadius: 12, padding: 24, ...style
+    }}>{children}</div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: OVERVIEW
+// ═══════════════════════════════════════════════════════════════════════════════
+function OverviewSection() {
+  return (
+    <div>
+      {/* Hero */}
+      <div style={{
+        background: 'linear-gradient(135deg, #0E1530 0%, #05070F 100%)',
+        border: '1px solid rgba(255,255,255,0.07)', borderRadius: 16,
+        padding: '60px 48px', marginBottom: 32, position: 'relative', overflow: 'hidden',
+      }}>
+        {/* Glow */}
+        <div style={{
+          position: 'absolute', top: -80, left: -80, width: 400, height: 400,
+          background: 'radial-gradient(circle, rgba(43,123,255,0.15) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}/>
+        <div style={{
+          position: 'absolute', bottom: -60, right: -60, width: 300, height: 300,
+          background: 'radial-gradient(circle, rgba(34,211,238,0.08) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}/>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 24 }}>
+          <BrandMark size={56}/>
+          <div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.16em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 4 }}>Brand Kit · v1.0</div>
+            <h1 style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 36, lineHeight: 1.1, color: 'rgba(255,255,255,0.92)' }}>
+              <GradText>EasyTradeSetup</GradText>
+            </h1>
+          </div>
+        </div>
+
+        <p style={{ fontFamily: 'Inter Tight', fontSize: 16, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, maxWidth: 540, marginBottom: 28 }}>
+          Single source of truth for every off-platform surface — YouTube, Instagram, Linktree, ad creatives, slide decks, PDF covers.
+        </p>
+
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          {[
+            { label: 'Tagline', val: 'One indicator. Lifetime.' },
+            { label: 'Domain', val: 'easytradesetup.com' },
+            { label: 'Platform', val: 'TradingView Pine v5' },
+          ].map(({ label, val }) => (
+            <div key={label} style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 8, padding: '8px 16px' }}>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>{label}: </span>
+              <span style={{ fontFamily: 'Inter Tight', fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>{val}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Quick stats grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 16, marginBottom: 32 }}>
+        {[
+          { num: '6', label: 'Brand Colors' },
+          { num: '3', label: 'Typefaces' },
+          { num: '10', label: 'Social Assets' },
+          { num: '1', label: 'Signature Gradient' },
+        ].map(({ num, label }) => (
+          <Card key={label} style={{ textAlign: 'center', padding: '20px 16px' }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: 32, color: '#2B7BFF', marginBottom: 4 }}>{num}</div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: 13, color: 'rgba(255,255,255,0.5)' }}>{label}</div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Handles */}
+      <Card>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Names & Handles</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+          {[
+            { surface: 'YouTube', val: '@easytradesetups' },
+            { surface: 'Instagram', val: '@easytradesetup' },
+            { surface: 'GitHub', val: 'quantsentra/easytradesetup' },
+            { surface: 'Email', val: 'welcome@easytradesetup.com' },
+            { surface: 'Domain', val: 'easytradesetup.com' },
+            { surface: 'Tagline', val: 'One indicator. Lifetime.' },
+          ].map(({ surface, val }) => (
+            <div key={surface} onClick={() => copyHex(val)} style={{
+              display: 'flex', flexDirection: 'column', gap: 2, cursor: 'pointer',
+              padding: '10px 12px', borderRadius: 8, background: 'rgba(255,255,255,0.03)',
+              border: '1px solid rgba(255,255,255,0.06)', transition: 'border-color 0.15s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(43,123,255,0.3)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'}
+            >
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>{surface}</span>
+              <span style={{ fontFamily: 'Inter Tight', fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.8)' }}>{val}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: COLORS
+// ═══════════════════════════════════════════════════════════════════════════════
+function ColorsSection() {
+  return (
+    <div>
+      <SectionHeader eyebrow="01 — Color System" title="Color Palette" subtitle="Click any swatch to copy its hex value. Dark mode is the canonical surface for all EasyTradeSetup assets." />
+
+      {[
+        { label: 'Backgrounds', items: TOKENS.colors.bg },
+        { label: 'Brand Accents', items: TOKENS.colors.accents },
+        { label: 'Trading Semantic', items: TOKENS.colors.semantic },
+        { label: 'Ink / Text', items: TOKENS.colors.ink },
+      ].map(({ label, items }) => (
+        <div key={label} style={{ marginBottom: 36 }}>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 14 }}>{label}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 14 }}>
+            {items.map(c => <Swatch key={c.name} {...c} />)}
+          </div>
+        </div>
+      ))}
+
+      {/* Signature Gradient */}
+      <div style={{ marginBottom: 36 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 14 }}>Signature Gradient</div>
+        <Card style={{ overflow: 'hidden', padding: 0 }}>
+          <div style={{ height: 80, background: 'linear-gradient(135deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)' }}/>
+          <div style={{ padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+            <div>
+              <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 14, marginBottom: 4 }}>Signature Gradient</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>linear-gradient(135deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)</div>
+            </div>
+            <button onClick={() => copyHex('linear-gradient(135deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)')} style={{
+              background: 'rgba(43,123,255,0.15)', border: '1px solid rgba(43,123,255,0.3)',
+              color: '#2B7BFF', fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.1em',
+              padding: '7px 16px', borderRadius: 6, cursor: 'pointer', textTransform: 'uppercase',
+            }}>Copy CSS</button>
+          </div>
+        </Card>
+      </div>
+
+      {/* Usage rules */}
+      <Card>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Usage Rules</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          {[
+            { rule: 'Lead with Electric Blue', note: '#2B7BFF — primary CTA, links, active states' },
+            { rule: 'Gold for high-value CTAs', note: '"Buy Now", price badges, "Free" tags only' },
+            { rule: 'One gradient per asset', note: 'Never compete signature gradient with itself' },
+            { rule: 'Lime for live signals only', note: 'Never use #8FCC2A in body text or headings' },
+          ].map(({ rule, note }) => (
+            <div key={rule} style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, marginBottom: 4, color: 'rgba(255,255,255,0.85)' }}>{rule}</div>
+              <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5 }}>{note}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: TYPOGRAPHY
+// ═══════════════════════════════════════════════════════════════════════════════
+function TypographySection() {
+  const [scale, setScale] = React.useState(1.0);
+
+  return (
+    <div>
+      <SectionHeader eyebrow="02 — Typography" title="Type System" subtitle="Three Google Fonts, free and already loaded on easytradesetup.com." />
+
+      {/* Font cards */}
+      {TOKENS.type.map((t, i) => (
+        <Card key={t.name} style={{ marginBottom: 20 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
+            <div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 6 }}>{t.role} · {t.weights}</div>
+              <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 16 }}>{t.name}</div>
+            </div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.45)', lineHeight: 1.5, maxWidth: 220, textAlign: 'right' }}>{t.usage}</div>
+          </div>
+          <div style={{ borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: 20 }}>
+            <div style={{
+              fontFamily: `'${t.name}'`, fontWeight: t.weight,
+              fontSize: `calc(${t.size} * ${scale})`,
+              color: 'rgba(255,255,255,0.92)', letterSpacing: t.role === 'Mono / Data' ? '0.1em' : t.size === '40px' ? '-0.02em' : '0',
+              lineHeight: 1.3,
+              textTransform: t.role === 'Mono / Data' ? 'uppercase' : 'none',
+            }}>{t.sample}</div>
+          </div>
+        </Card>
+      ))}
+
+      {/* Scale slider */}
+      <Card style={{ marginBottom: 28 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <span style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 14 }}>Preview Scale</span>
+          <span style={{ fontFamily: 'JetBrains Mono', fontSize: 12, color: '#2B7BFF' }}>{scale.toFixed(1)}×</span>
+        </div>
+        <input type="range" min="0.5" max="2.5" step="0.1" value={scale} onChange={e => setScale(parseFloat(e.target.value))}
+          style={{ width: '100%', accentColor: '#2B7BFF', cursor: 'pointer' }}/>
+      </Card>
+
+      {/* Type scale table */}
+      <Card>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Type Scale Reference</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {[
+            { role: 'Hero Headline', spec: 'Space Grotesk 700 · 72–96px · ls -0.02em', sample: 'One indicator. Lifetime.', fs: 32, ff: 'Space Grotesk', fw: 700, ls: '-0.02em' },
+            { role: 'Sub-headline', spec: 'Inter Tight 500 · 24–32px', sample: 'Indicator + Course + Quiz · TradingView Pine v5', fs: 22, ff: 'Inter Tight', fw: 500, ls: '0' },
+            { role: 'Eyebrow Label', spec: 'JetBrains Mono 500 · 12–14px · ls 0.16em · ALL CAPS', sample: 'EASYTRADESETUP · PINE V5', fs: 12, ff: 'JetBrains Mono', fw: 500, ls: '0.16em', upper: true },
+            { role: 'Price / Number', spec: 'JetBrains Mono 700 · 32–48px', sample: '$1,299', fs: 28, ff: 'JetBrains Mono', fw: 700, ls: '0' },
+            { role: 'Body Copy', spec: 'Inter Tight 400 · 15–17px · lh 1.55', sample: 'Educational. You decide every trade.', fs: 15, ff: 'Inter Tight', fw: 400, ls: '0' },
+            { role: 'Button / UI', spec: 'Inter Tight 600 · 14px', sample: 'Get Lifetime Access', fs: 14, ff: 'Inter Tight', fw: 600, ls: '0.01em' },
+          ].map(({ role, spec, sample, fs, ff, fw, ls, upper }, i) => (
+            <div key={role} style={{
+              display: 'grid', gridTemplateColumns: '180px 1fr', gap: 20, alignItems: 'center',
+              padding: '14px 0', borderBottom: i < 5 ? '1px solid rgba(255,255,255,0.05)' : 'none',
+            }}>
+              <div>
+                <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 12, color: 'rgba(255,255,255,0.8)', marginBottom: 3 }}>{role}</div>
+                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.35)', lineHeight: 1.5 }}>{spec}</div>
+              </div>
+              <div style={{ fontFamily: `'${ff}'`, fontWeight: fw, fontSize: fs, letterSpacing: ls, textTransform: upper ? 'uppercase' : 'none', color: 'rgba(255,255,255,0.85)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sample}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: LOGO & MARK
+// ═══════════════════════════════════════════════════════════════════════════════
+function LogoSection() {
+  const [bg, setBg] = React.useState('dark');
+
+  const bgs = {
+    dark: '#05070F',
+    surface: '#0E1530',
+    light: '#F0F4FF',
+    white: '#FFFFFF',
+  };
+
+  return (
+    <div>
+      <SectionHeader eyebrow="03 — Logo & Mark" title="Brand Mark" subtitle="Gradient circle + white checkmark. The canonical logo of EasyTradeSetup." />
+
+      {/* Background toggle */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
+        {Object.entries({ 'Dark BG': 'dark', 'Surface': 'surface', 'Light BG': 'light', 'White': 'white' }).map(([label, key]) => (
+          <button key={key} onClick={() => setBg(key)} style={{
+            padding: '6px 14px', borderRadius: 6, border: '1px solid',
+            borderColor: bg === key ? '#2B7BFF' : 'rgba(255,255,255,0.12)',
+            background: bg === key ? 'rgba(43,123,255,0.12)' : 'transparent',
+            color: bg === key ? '#2B7BFF' : 'rgba(255,255,255,0.55)',
+            fontFamily: 'Inter Tight', fontSize: 12, fontWeight: 500, cursor: 'pointer',
+          }}>{label}</button>
+        ))}
+      </div>
+
+      {/* Logo showcase */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16, marginBottom: 28 }}>
+        {[
+          { label: 'Mark only', size: 80, showWordmark: false },
+          { label: 'Wordmark horizontal', size: 44, showWordmark: true, horizontal: true },
+          { label: 'Mark large', size: 120, showWordmark: false },
+          { label: 'Mark + stack', size: 48, showWordmark: true, stacked: true },
+        ].map(({ label, size, showWordmark, horizontal, stacked }) => (
+          <Card key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20, background: bgs[bg], border: '1px solid rgba(255,255,255,0.08)', padding: '32px 20px' }}>
+            <div style={{ display: 'flex', flexDirection: stacked ? 'column' : 'row', alignItems: 'center', gap: stacked ? 10 : 12 }}>
+              <BrandMark size={size}/>
+              {showWordmark && (
+                <div style={{ textAlign: stacked ? 'center' : 'left' }}>
+                  <div style={{
+                    fontFamily: 'Space Grotesk', fontWeight: 700,
+                    fontSize: stacked ? 16 : horizontal ? 22 : 18,
+                    color: (bg === 'light' || bg === 'white') ? '#05070F' : 'rgba(255,255,255,0.92)',
+                    lineHeight: 1.1, letterSpacing: '-0.01em',
+                  }}>EasyTradeSetup</div>
+                  {stacked && <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.16em', color: (bg === 'light' || bg === 'white') ? '#444' : 'rgba(255,255,255,0.4)', marginTop: 4, textTransform: 'uppercase' }}>One indicator. Lifetime.</div>}
+                </div>
+              )}
+            </div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: (bg === 'light' || bg === 'white') ? '#777' : 'rgba(255,255,255,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Clear space & spec */}
+      <Card style={{ marginBottom: 20 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Spec & Clear Space</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, marginBottom: 8, color: 'rgba(255,255,255,0.85)' }}>Brand Mark</div>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {['Circle with #2B7BFF → #22D3EE gradient', 'White checkmark, 3px stroke, round caps', '25% clear space on all sides', 'Never crop or distort the mark'].map(t => (
+                <li key={t} style={{ display: 'flex', gap: 8, fontFamily: 'Inter Tight', fontSize: 13, color: 'rgba(255,255,255,0.6)', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#22D3EE', flexShrink: 0, marginTop: 2 }}>·</span>{t}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, marginBottom: 8, color: 'rgba(255,255,255,0.85)' }}>Wordmark</div>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {['Space Grotesk 700, 22px in context', 'Mark 44×44 box on left side', 'White on dark / #05070F on light', 'Never use "ETS" abbreviation'].map(t => (
+                <li key={t} style={{ display: 'flex', gap: 8, fontFamily: 'Inter Tight', fontSize: 13, color: 'rgba(255,255,255,0.6)', alignItems: 'flex-start' }}>
+                  <span style={{ color: '#22D3EE', flexShrink: 0, marginTop: 2 }}>·</span>{t}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </Card>
+
+      {/* DON'T do */}
+      <Card style={{ border: '1px solid rgba(255,77,79,0.2)' }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: '#FF4D4F', textTransform: 'uppercase', marginBottom: 14 }}>✕ Never Do This</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12 }}>
+          {['Stretch or skew the mark', 'Recolor to any other gradient', 'Use "ETS" abbreviation', 'Add drop shadows or stroke effects', 'Place on a busy background without padding', 'Rotate or flip the checkmark'].map(rule => (
+            <div key={rule} style={{ display: 'flex', gap: 8, fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.55)', alignItems: 'flex-start' }}>
+              <span style={{ color: '#FF4D4F', flexShrink: 0 }}>✕</span>{rule}
+            </div>
+          ))}
+        </div>
+      </Card>
+      <LogoDownloads/>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: GRADIENT
+// ═══════════════════════════════════════════════════════════════════════════════
+function GradientSection() {
+  const [angle, setAngle] = React.useState(135);
+
+  return (
+    <div>
+      <SectionHeader eyebrow="04 — Signature Gradient" title="The Gradient System" subtitle="One signature gradient per asset. Never compete with itself." />
+
+      {/* Live gradient preview */}
+      <Card style={{ marginBottom: 24, padding: 0, overflow: 'hidden' }}>
+        <div style={{
+          height: 160, background: `linear-gradient(${angle}deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)`,
+          transition: 'background 0.2s',
+        }}/>
+        <div style={{ padding: '16px 20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, flexWrap: 'wrap', gap: 8 }}>
+            <span style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 14 }}>Angle: {angle}°</span>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.5)' }}>
+              linear-gradient({angle}deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)
+            </span>
+          </div>
+          <input type="range" min="0" max="360" step="5" value={angle} onChange={e => setAngle(parseInt(e.target.value))} style={{ width: '100%', accentColor: '#2B7BFF', cursor: 'pointer' }}/>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, gap: 8, flexWrap: 'wrap' }}>
+            <button onClick={() => setAngle(135)} style={{ background: 'rgba(43,123,255,0.1)', border: '1px solid rgba(43,123,255,0.3)', color: '#2B7BFF', fontFamily: 'JetBrains Mono', fontSize: 10, padding: '5px 12px', borderRadius: 5, cursor: 'pointer', letterSpacing: '0.08em' }}>RESET 135°</button>
+            <button onClick={() => copyHex(`linear-gradient(${angle}deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)`)} style={{ background: 'rgba(43,123,255,0.1)', border: '1px solid rgba(43,123,255,0.3)', color: '#2B7BFF', fontFamily: 'JetBrains Mono', fontSize: 10, padding: '5px 12px', borderRadius: 5, cursor: 'pointer', letterSpacing: '0.08em' }}>COPY CSS</button>
+          </div>
+        </div>
+      </Card>
+
+      {/* Usage examples */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14, marginBottom: 28 }}>
+        {[
+          { label: 'Hero text accent', content: <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 28, background: 'linear-gradient(135deg, #2B7BFF, #22D3EE 60%, #F0C05A)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>Lifetime Access</span> },
+          { label: 'Brand mark fill', content: <BrandMark size={64}/> },
+          { label: 'CTA border glow', content: <button style={{ background: 'transparent', border: '1.5px solid #2B7BFF', borderRadius: 8, padding: '10px 20px', fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 14, color: 'rgba(255,255,255,0.9)', cursor: 'pointer', boxShadow: '0 0 20px rgba(43,123,255,0.3)' }}>Get Access</button> },
+          { label: 'OG image stripe', content: <div style={{ width: '100%', height: 8, background: 'linear-gradient(90deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)', borderRadius: 4 }}/> },
+        ].map(({ label, content }) => (
+          <Card key={label} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, minHeight: 100 }}>
+            {content}
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', textAlign: 'center' }}>{label}</div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: SOCIAL ASSETS
+// ═══════════════════════════════════════════════════════════════════════════════
+function SocialSection() {
+  const [selected, setSelected] = React.useState('yt-banner');
+  const [previewMode, setPreviewMode] = React.useState('desktop');
+
+  const specs = {
+    'yt-banner': { label: 'YouTube Banner', w: 2560, h: 1440, safe: '1546×423 px (safe area)', format: 'PNG / JPG, max 6 MB', file: 'youtube-banner.png' },
+    'yt-profile': { label: 'YouTube Profile Pic', w: 800, h: 800, format: 'PNG (transparent) or JPG', note: 'Serves at 98×98 max', file: 'yt-profile.png' },
+    'yt-endscreen': { label: 'YouTube End Screen', w: 1920, h: 1080, format: 'PNG', note: 'Last 20s overlay', file: 'yt-endscreen.png' },
+    'ig-profile': { label: 'Instagram Profile', w: 1024, h: 1024, format: 'PNG', note: 'IG crops to circle; renders at 110×110', file: 'ig-profile.png' },
+    'ig-carousel': { label: 'IG Carousel Slide', w: 1080, h: 1350, format: 'PNG / JPG', note: 'Slide 1 = hook, last = CTA', file: 'ig-carousel-template.png' },
+    'ig-reel': { label: 'IG Reel Cover', w: 1080, h: 1920, format: 'PNG / JPG', note: 'Safe zone: middle 1080×1350', file: 'ig-reel-cover.png' },
+    'ig-story': { label: 'Instagram Story', w: 1080, h: 1920, format: 'PNG / JPG', note: 'Same as reel cover', file: 'ig-story-template.png' },
+    'wordmark-h': { label: 'Wordmark Horizontal', w: 1200, h: 300, format: 'PNG (transparent)', note: 'Email signature, slide footer', file: 'wordmark-horizontal.png' },
+    'wordmark-s': { label: 'Wordmark Stacked', w: 600, h: 600, format: 'PNG (transparent)', note: 'IG profile pic fallback', file: 'wordmark-stacked.png' },
+    'email-sig': { label: 'Email Signature', w: 600, h: 150, format: 'PNG', file: 'email-signature.png' },
+  };
+
+  const spec = specs[selected];
+
+  return (
+    <div>
+      <SectionHeader eyebrow="05 — Social Assets" title="Asset Specs" subtitle="All specs and file paths for every social surface. Click a platform to preview its template." />
+
+      <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+        {/* Sidebar tabs */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 180, flexShrink: 0 }}>
+          {[
+            { id: 'yt-banner', label: 'YT Banner', dim: '2560×1440' },
+            { id: 'yt-profile', label: 'YT Profile', dim: '800×800' },
+            { id: 'yt-endscreen', label: 'YT End Screen', dim: '1920×1080' },
+            { id: 'ig-profile', label: 'IG Profile', dim: '1024×1024' },
+            { id: 'ig-carousel', label: 'IG Carousel', dim: '1080×1350' },
+            { id: 'ig-reel', label: 'IG Reel', dim: '1080×1920' },
+            { id: 'ig-story', label: 'IG Story', dim: '1080×1920' },
+            { id: 'wordmark-h', label: 'Wordmark H', dim: '1200×300' },
+            { id: 'wordmark-s', label: 'Wordmark Stack', dim: '600×600' },
+            { id: 'email-sig', label: 'Email Sig', dim: '600×150' },
+          ].map(item => (
+            <button key={item.id} onClick={() => setSelected(item.id)} style={{
+              display: 'flex', flexDirection: 'column', padding: '10px 14px', borderRadius: 8,
+              border: '1px solid', textAlign: 'left',
+              borderColor: selected === item.id ? '#2B7BFF' : 'rgba(255,255,255,0.06)',
+              background: selected === item.id ? 'rgba(43,123,255,0.1)' : 'rgba(255,255,255,0.02)',
+              cursor: 'pointer',
+            }}>
+              <span style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 12, color: selected === item.id ? '#2B7BFF' : 'rgba(255,255,255,0.75)' }}>{item.label}</span>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.35)', marginTop: 2 }}>{item.dim}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Main preview area */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <Card style={{ marginBottom: 16 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, flexWrap: 'wrap', gap: 8 }}>
+              <div>
+                <h3 style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 18, marginBottom: 4 }}>{spec.label}</h3>
+                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.4)' }}>{spec.w} × {spec.h} px</div>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <span style={{ padding: '4px 10px', background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.2)', borderRadius: 5, fontFamily: 'JetBrains Mono', fontSize: 10, color: '#22D3EE' }}>{spec.format}</span>
+                {spec.note && <span style={{ padding: '4px 10px', background: 'rgba(255,179,65,0.1)', border: '1px solid rgba(255,179,65,0.2)', borderRadius: 5, fontFamily: 'JetBrains Mono', fontSize: 10, color: '#FFB341' }}>{spec.note}</span>}
+              </div>
+            </div>
+
+            {/* Template visual */}
+            <AssetPreview id={selected}/>
+
+            {spec.safe && (
+              <div style={{ marginTop: 12, padding: '8px 12px', background: 'rgba(43,123,255,0.08)', borderRadius: 6, fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>
+                <span style={{ color: '#2B7BFF', fontWeight: 600 }}>Safe area: </span>{spec.safe}
+              </div>
+            )}
+          </Card>
+
+          {/* File path */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#070B1A', borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)' }}
+            onClick={() => copyHex(`landing-page/public/brand/${spec.file}`)}
+            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#070B1A', borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }}
+          >
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2B7BFF' }}>📁</span>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.55)', flex: 1 }}>landing-page/public/brand/{spec.file}</span>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em' }}>COPY PATH</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Asset preview renders a scaled-down template for each asset
+function AssetPreview({ id }) {
+  const containerRef = React.useRef(null);
+
+  const templates = {
+    'yt-banner': <YTBannerTemplate/>,
+    'yt-profile': <ProfileTemplate />,
+    'yt-endscreen': <YTEndScreenTemplate/>,
+    'ig-profile': <IGProfileTemplate/>,
+    'ig-carousel': <IGCarouselTemplate/>,
+    'ig-reel': <IGReelTemplate/>,
+    'ig-story': <IGReelTemplate story/>,
+    'wordmark-h': <WordmarkHTemplate/>,
+    'wordmark-s': <WordmarkSTemplate/>,
+    'email-sig': <EmailSigTemplate/>,
+  };
+
+  return (
+    <div style={{ background: '#070B1A', borderRadius: 8, overflow: 'hidden', padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 200 }}>
+      {templates[id] || <div style={{ color: 'rgba(255,255,255,0.3)', fontFamily: 'Inter Tight', fontSize: 14 }}>No preview available</div>}
+    </div>
+  );
+}
+
+// Mini template previews (scaled down)
+function YTBannerTemplate() {
+  return (
+    <div style={{ width: '100%', maxWidth: 500, aspectRatio: '2560/1440', background: 'linear-gradient(135deg, #05070F 0%, #0E1530 100%)', borderRadius: 6, overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(43,123,255,0.18) 0%, transparent 70%)' }}/>
+      {/* Faint candlesticks left */}
+      <div style={{ position: 'absolute', left: '4%', top: '20%', opacity: 0.25 }}>
+        {[30, 45, 25, 55, 40, 60, 35].map((h, i) => (
+          <div key={i} style={{ display: 'inline-block', width: 6, height: h, background: i % 2 === 0 ? '#2B7BFF' : '#22D3EE', marginRight: 3, borderRadius: 1 }}/>
+        ))}
+      </div>
+      {/* Safe area box */}
+      <div style={{ border: '1px dashed rgba(43,123,255,0.4)', borderRadius: 4, padding: '10px 24px', textAlign: 'center', zIndex: 1 }}>
+        <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: '2.5vw', color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em', whiteSpace: 'nowrap' }}>EasyTradeSetup</div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.9vw', color: '#22D3EE', marginTop: 2, whiteSpace: 'nowrap' }}>Indicator + Course + Quiz · TradingView Pine v5</div>
+      </div>
+      {/* Brand mark right */}
+      <div style={{ position: 'absolute', right: '5%', top: '50%', transform: 'translateY(-50%)' }}>
+        <BrandMark size={36}/>
+      </div>
+      {/* URL bottom right */}
+      <div style={{ position: 'absolute', bottom: '8%', right: '4%', fontFamily: 'JetBrains Mono', fontSize: '0.7vw', color: 'rgba(255,255,255,0.5)' }}>easytradesetup.com</div>
+    </div>
+  );
+}
+
+function ProfileTemplate() {
+  return (
+    <div style={{ width: 120, height: 120, borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#05070F', border: '2px solid rgba(43,123,255,0.2)' }}>
+      <BrandMark size={90}/>
+    </div>
+  );
+}
+
+function YTEndScreenTemplate() {
+  return (
+    <div style={{ width: '100%', maxWidth: 480, aspectRatio: '1920/1080', background: 'linear-gradient(135deg, #05070F, #0E1530)', borderRadius: 6, overflow: 'hidden', position: 'relative', display: 'flex' }}>
+      {/* Left: Subscribe */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, borderRight: '1px solid rgba(255,255,255,0.06)', padding: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+          <BrandMark size={20}/>
+          <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 8, color: 'rgba(255,255,255,0.9)' }}>EasyTradeSetup</span>
+        </div>
+        <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 7, color: 'rgba(255,255,255,0.8)', textAlign: 'center', lineHeight: 1.3 }}>Subscribe for setup walkthroughs</div>
+        <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(43,123,255,0.15)', border: '1px dashed rgba(43,123,255,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10 }}>▶</div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(255,255,255,0.4)' }}>↓ Subscribe below</div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(255,255,255,0.35)', marginTop: 4 }}>easytradesetup.com</div>
+      </div>
+      {/* Right: Video cards */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, padding: 12 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', marginBottom: 2 }}>↑ WATCH NEXT</div>
+        {[0,1].map(i => (
+          <div key={i} style={{ width: '100%', aspectRatio: '16/9', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(43,123,255,0.25)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.08em' }}>VIDEO SLOT {i + 1}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function IGProfileTemplate() {
+  return (
+    <div style={{ width: 120, height: 120, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+      <div style={{ width: 100, height: 100, borderRadius: '50%', overflow: 'hidden', background: '#05070F', border: '3px solid rgba(43,123,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <BrandMark size={75}/>
+      </div>
+    </div>
+  );
+}
+
+function IGCarouselTemplate() {
+  return (
+    <div style={{ width: 160, maxWidth: '100%', aspectRatio: '1080/1350', background: '#05070F', borderRadius: 8, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 40%, rgba(14,21,48,0.9) 0%, #05070F 80%)' }}/>
+      {/* Top bar */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '8px 10px', position: 'relative', zIndex: 1 }}>
+        <BrandMark size={14}/>
+        <span style={{ fontFamily: 'Space Grotesk', fontWeight: 600, fontSize: 7, color: 'rgba(255,255,255,0.85)' }}>EasyTradeSetup</span>
+        <div style={{ marginLeft: 'auto', width: 20, height: 3, background: 'linear-gradient(90deg, #2B7BFF, #22D3EE, #F0C05A)', borderRadius: 2, opacity: 0.5 }}/>
+      </div>
+      {/* Hook */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 10px', position: 'relative', zIndex: 1 }}>
+        <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, color: 'rgba(255,255,255,0.9)', textAlign: 'center', lineHeight: 1.2, marginBottom: 6 }}>[ HOOK GOES HERE ]</div>
+        <div style={{ fontFamily: 'Inter Tight', fontSize: 7, color: 'rgba(255,255,255,0.5)', textAlign: 'center', lineHeight: 1.4 }}>Supporting context and value statement</div>
+      </div>
+      {/* Bottom */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 10px', position: 'relative', zIndex: 1 }}>
+        <span style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em' }}>SWIPE →</span>
+        <div style={{ display: 'flex', gap: 2 }}>
+          {[0,1,2,3,4].map(i => <div key={i} style={{ width: i === 0 ? 8 : 4, height: 4, borderRadius: 2, background: i === 0 ? '#2B7BFF' : 'rgba(255,255,255,0.25)' }}/>)}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IGReelTemplate({ story }) {
+  return (
+    <div style={{ width: 100, maxWidth: '100%', aspectRatio: '1080/1920', background: '#05070F', borderRadius: 8, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 30%, rgba(14,21,48,0.7) 0%, #05070F 70%)' }}/>
+      {/* Top */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '10px 8px', position: 'relative', zIndex: 1 }}>
+        <BrandMark size={12}/>
+        <span style={{ fontFamily: 'Space Grotesk', fontWeight: 600, fontSize: 5.5, color: 'rgba(255,255,255,0.85)' }}>EasyTradeSetup</span>
+      </div>
+      {/* Big text */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1, padding: '0 8px' }}>
+        <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 20, color: '#2B7BFF', letterSpacing: '-0.02em', lineHeight: 1, textAlign: 'center', textTransform: 'uppercase' }}>LIFE</div>
+        <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 20, color: '#22D3EE', letterSpacing: '-0.02em', lineHeight: 1, textAlign: 'center', textTransform: 'uppercase' }}>LINE</div>
+      </div>
+      {/* Bottom */}
+      <div style={{ padding: '8px', position: 'relative', zIndex: 1 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 4.5, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.1em', textTransform: 'uppercase', textAlign: 'center' }}>FREE INDICATOR WALKTHROUGH</div>
+      </div>
+    </div>
+  );
+}
+
+function WordmarkHTemplate() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', background: '#05070F', borderRadius: 8 }}>
+      <BrandMark size={44}/>
+      <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 22, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.01em' }}>EasyTradeSetup</div>
+    </div>
+  );
+}
+
+function WordmarkSTemplate() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, padding: '20px', background: '#05070F', borderRadius: 8 }}>
+      <BrandMark size={60}/>
+      <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 18, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.01em', textAlign: 'center' }}>EasyTradeSetup</div>
+      <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>One indicator. Lifetime.</div>
+    </div>
+  );
+}
+
+function EmailSigTemplate() {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '12px 20px', background: '#0E1530', borderRadius: 8, border: '1px solid rgba(43,123,255,0.15)', minWidth: 300 }}>
+      <BrandMark size={40}/>
+      <div>
+        <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 15, color: 'rgba(255,255,255,0.92)', marginBottom: 2 }}>EasyTradeSetup</div>
+        <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.55)', marginBottom: 4 }}>One indicator. Lifetime. · Indicator + Course + Quiz</div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2B7BFF' }}>easytradesetup.com</div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: TEMPLATES
+// ═══════════════════════════════════════════════════════════════════════════════
+function TemplatesSection() {
+  const [tab, setTab] = React.useState('yt');
+
+  return (
+    <div>
+      <SectionHeader eyebrow="06 — Templates" title="Designed Templates" subtitle="Full-fidelity previews of every canonical asset. These match the AI generation prompts in the brand kit." />
+
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
+        {[
+          { id: 'yt', label: 'YouTube' },
+          { id: 'ig', label: 'Instagram' },
+          { id: 'wordmark', label: 'Wordmarks' },
+          { id: 'email', label: 'Email / PDF' },
+        ].map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)} style={{
+            padding: '7px 18px', borderRadius: 6, border: '1px solid',
+            borderColor: tab === t.id ? '#2B7BFF' : 'rgba(255,255,255,0.12)',
+            background: tab === t.id ? 'rgba(43,123,255,0.12)' : 'transparent',
+            color: tab === t.id ? '#2B7BFF' : 'rgba(255,255,255,0.55)',
+            fontFamily: 'Inter Tight', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+          }}>{t.label}</button>
+        ))}
+      </div>
+
+      {tab === 'yt' && <YTTemplatesTab/>}
+      {tab === 'ig' && <IGTemplatesTab/>}
+      {tab === 'wordmark' && <WordmarkTab/>}
+      {tab === 'email' && <EmailPDFTab/>}
+    </div>
+  );
+}
+
+function YTTemplatesTab() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* Banner */}
+      <div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>YouTube Banner · 2560×1440</div>
+        <div style={{ width: '100%', aspectRatio: '2560/1440', background: 'linear-gradient(160deg, #05070F 0%, #0E1530 60%, #05070F 100%)', borderRadius: 10, overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Radial glow */}
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(43,123,255,0.15) 0%, transparent 65%)' }}/>
+          {/* Candlestick decoration left */}
+          <div style={{ position: 'absolute', left: '4%', top: 0, bottom: 0, display: 'flex', alignItems: 'center', opacity: 0.2 }}>
+            {[35,55,28,70,45,60,30,80,42,65].map((h, i) => (
+              <div key={i} style={{ width: '1.2%', maxWidth: 10, height: `${h}%`, background: i % 2 === 0 ? '#2B7BFF' : '#22D3EE', marginRight: '0.5%', borderRadius: 2 }}/>
+            ))}
+          </div>
+          {/* Safe area */}
+          <div style={{ border: '1px dashed rgba(43,123,255,0.3)', borderRadius: 6, padding: '3% 5%', textAlign: 'center', zIndex: 1, maxWidth: '62%' }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: '1.2vw', letterSpacing: '0.14em', color: '#22D3EE', textTransform: 'uppercase', marginBottom: '1%', opacity: 0.7 }}>One indicator. Lifetime.</div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: '4vw', color: 'rgba(255,255,255,0.95)', letterSpacing: '-0.02em', lineHeight: 1 }}>EasyTradeSetup</div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: '1.1vw', color: 'rgba(255,255,255,0.65)', marginTop: '2%', letterSpacing: '0.02em' }}>Indicator + Course + Quiz · TradingView Pine v5</div>
+          </div>
+          {/* Mark right */}
+          <div style={{ position: 'absolute', right: '5%', top: '50%', transform: 'translateY(-50%)' }}>
+            <BrandMark size={60}/>
+          </div>
+          {/* URL */}
+          <div style={{ position: 'absolute', bottom: '8%', right: '3%', fontFamily: 'JetBrains Mono', fontSize: '0.8vw', color: 'rgba(255,255,255,0.4)', letterSpacing: '0.08em' }}>easytradesetup.com</div>
+          {/* Gradient stripe */}
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '3%', background: 'linear-gradient(90deg, transparent, #2B7BFF, #22D3EE, #F0C05A, transparent)', opacity: 0.5 }}/>
+        </div>
+      </div>
+
+      {/* Profile + End screen side by side */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 16 }}>
+        <div>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>YT Profile · 800×800</div>
+          <div style={{ aspectRatio: '1/1', background: '#05070F', borderRadius: 10, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <BrandMark size={120}/>
+          </div>
+        </div>
+        <div>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>End Screen · 1920×1080</div>
+          <div style={{ aspectRatio: '16/9', background: 'linear-gradient(135deg, #05070F, #0E1530)', borderRadius: 10, overflow: 'hidden', position: 'relative', display: 'flex', border: '1px solid rgba(255,255,255,0.07)' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, borderRight: '1px solid rgba(255,255,255,0.06)', padding: 16 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}><BrandMark size={24}/><span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 10, color: 'rgba(255,255,255,0.9)' }}>EasyTradeSetup</span></div>
+              <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 9, color: 'rgba(255,255,255,0.8)', textAlign: 'center', lineHeight: 1.4 }}>Subscribe for setup walkthroughs</div>
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(43,123,255,0.12)', border: '1.5px dashed rgba(43,123,255,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, color: 'rgba(255,255,255,0.6)' }}>▶</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 7, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.08em' }}>easytradesetup.com</div>
+            </div>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, padding: 16 }}>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 7, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 4 }}>↑ WATCH NEXT</div>
+              {[0,1].map(i => <div key={i} style={{ width: '85%', aspectRatio: '16/9', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(43,123,255,0.2)', borderRadius: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ fontFamily: 'JetBrains Mono', fontSize: 6, color: 'rgba(255,255,255,0.2)' }}>VIDEO SLOT {i+1}</span></div>)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function IGTemplatesTab() {
+  return (
+    <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', alignItems: 'flex-start' }}>
+      {/* Carousel */}
+      <div style={{ flex: '0 0 auto' }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>IG Carousel · 1080×1350</div>
+        <div style={{ width: 240, aspectRatio: '1080/1350', background: '#05070F', borderRadius: 12, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 35%, #0E1530 0%, #05070F 75%)' }}/>
+          {/* Top: brand */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '12px 14px', position: 'relative', zIndex: 1 }}>
+            <BrandMark size={20}/>
+            <span style={{ fontFamily: 'Space Grotesk', fontWeight: 600, fontSize: 11, color: 'rgba(255,255,255,0.85)' }}>EasyTradeSetup</span>
+            <div style={{ marginLeft: 'auto', width: 32, height: 4, background: 'linear-gradient(90deg, #2B7BFF, #22D3EE, #F0C05A)', borderRadius: 2, opacity: 0.35 }}/>
+          </div>
+          {/* Hook area */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '0 16px', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 22, color: 'rgba(255,255,255,0.92)', textAlign: 'center', lineHeight: 1.2, marginBottom: 10 }}>[ HOOK GOES HERE ]</div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: 11, color: 'rgba(255,255,255,0.5)', textAlign: 'center', lineHeight: 1.55 }}>Supporting value statement that expands on the hook above.</div>
+          </div>
+          {/* Bottom */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', position: 'relative', zIndex: 1 }}>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 7, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Swipe →</span>
+            <div style={{ display: 'flex', gap: 3 }}>
+              {[0,1,2,3,4].map(i => <div key={i} style={{ width: i === 0 ? 12 : 5, height: 5, borderRadius: 2.5, background: i === 0 ? '#2B7BFF' : 'rgba(255,255,255,0.2)' }}/>)}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Profile */}
+      <div style={{ flex: '0 0 auto' }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>IG Profile · 1024×1024</div>
+        <div style={{ width: 160, height: 160, background: '#05070F', borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          <div style={{ width: 110, height: 110, borderRadius: '50%', overflow: 'hidden', background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 30px rgba(43,123,255,0.3)' }}>
+            <BrandMark size={110}/>
+          </div>
+          <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 9, color: 'rgba(255,255,255,0.85)', letterSpacing: '-0.01em' }}>EasyTradeSetup</div>
+        </div>
+      </div>
+
+      {/* Reel / Story */}
+      <div style={{ flex: '0 0 auto' }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>IG Reel / Story · 1080×1920</div>
+        <div style={{ width: 130, aspectRatio: '9/16', background: '#05070F', borderRadius: 12, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 25%, rgba(14,21,48,0.8) 0%, #05070F 65%)' }}/>
+          {/* Faint candles bg */}
+          <div style={{ position: 'absolute', bottom: '20%', left: 0, right: 0, display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 2, opacity: 0.12 }}>
+            {[20,35,15,45,30,50,22,40,28,55].map((h, i) => <div key={i} style={{ width: 5, height: h, background: i % 2 === 0 ? '#2B7BFF' : '#22D3EE', borderRadius: 1 }}/>)}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '10px 10px 6px', position: 'relative', zIndex: 1 }}>
+            <BrandMark size={14}/>
+            <span style={{ fontFamily: 'Space Grotesk', fontWeight: 600, fontSize: 7, color: 'rgba(255,255,255,0.85)' }}>EasyTradeSetup</span>
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 30, color: '#2B7BFF', letterSpacing: '-0.03em', lineHeight: 0.9, textTransform: 'uppercase' }}>LIFE</div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 30, color: '#22D3EE', letterSpacing: '-0.03em', lineHeight: 0.9, textTransform: 'uppercase' }}>LINE</div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 30, color: '#F0C05A', letterSpacing: '-0.03em', lineHeight: 0.9, textTransform: 'uppercase' }}>RULES</div>
+          </div>
+          <div style={{ padding: '8px 10px', position: 'relative', zIndex: 1 }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase', textAlign: 'center', lineHeight: 1.5 }}>FREE INDICATOR WALKTHROUGH</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function WordmarkTab() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>Horizontal Wordmark · 1200×300</div>
+        <div style={{ background: '#05070F', borderRadius: 10, padding: '24px 32px', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(255,255,255,0.06)' }}>
+          <BrandMark size={56}/>
+          <div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 32, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em', lineHeight: 1 }}>EasyTradeSetup</div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 12, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 5 }}>One indicator. Lifetime.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>Stacked Wordmark · 600×600</div>
+        <div style={{ background: '#05070F', borderRadius: 10, padding: '32px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, border: '1px solid rgba(255,255,255,0.06)', maxWidth: 280 }}>
+          <BrandMark size={80}/>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 24, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.01em', lineHeight: 1.1 }}>EasyTradeSetup</div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.14em', textTransform: 'uppercase', marginTop: 6 }}>One indicator. Lifetime.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EmailPDFTab() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+      {/* Email signature */}
+      <div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>Email Signature · 600×150</div>
+        <div style={{ background: '#0E1530', borderRadius: 10, padding: '20px 24px', display: 'flex', alignItems: 'center', gap: 16, border: '1px solid rgba(43,123,255,0.15)', maxWidth: 500 }}>
+          <BrandMark size={48}/>
+          <div style={{ borderLeft: '2px solid rgba(43,123,255,0.3)', paddingLeft: 16 }}>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 18, color: 'rgba(255,255,255,0.92)', marginBottom: 2 }}>EasyTradeSetup</div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: 13, color: 'rgba(255,255,255,0.55)', marginBottom: 2 }}>One indicator. Lifetime.</div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>Indicator + Course + Quiz · TradingView Pine v5</div>
+            <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: '#2B7BFF' }}>easytradesetup.com</span>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>welcome@easytradesetup.com</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* PDF cover */}
+      <div>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>PDF Cover · A4 Portrait</div>
+        <div style={{ width: 220, aspectRatio: '210/297', background: '#05070F', borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
+          {/* Gradient stripe top */}
+          <div style={{ height: 5, background: 'linear-gradient(90deg, #2B7BFF, #22D3EE, #F0C05A)', flexShrink: 0 }}/>
+          {/* Glow */}
+          <div style={{ position: 'absolute', top: 20, left: -40, width: 200, height: 200, background: 'radial-gradient(circle, rgba(43,123,255,0.12) 0%, transparent 70%)' }}/>
+          <div style={{ padding: '20px 18px', position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 }}>
+              <BrandMark size={24}/>
+              <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 10, color: 'rgba(255,255,255,0.85)' }}>EasyTradeSetup</span>
+            </div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 7, color: '#22D3EE', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 8, opacity: 0.8 }}>Strategy Guide</div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 16, color: 'rgba(255,255,255,0.95)', lineHeight: 1.2, marginBottom: 10 }}>Lifeline Setup Guide</div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: 8, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>Learn the indicator. Configure your entries. Build your edge on TradingView.</div>
+          </div>
+          <div style={{ flex: 1 }}/>
+          <div style={{ padding: '16px 18px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 6, color: 'rgba(255,255,255,0.35)' }}>Educational. You decide every trade.</span>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 6, color: 'rgba(255,255,255,0.35)' }}>easytradesetup.com</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: VOICE & COPY
+// ═══════════════════════════════════════════════════════════════════════════════
+function VoiceSection() {
+  return (
+    <div>
+      <SectionHeader eyebrow="07 — Voice & Copy" title="Writing Guidelines" subtitle="The EasyTradeSetup voice is founder-first, chart-driven, and legally grounded." />
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24 }}>
+        <Card style={{ border: '1px solid rgba(34,197,94,0.15)' }}>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: '#22C55E', textTransform: 'uppercase', marginBottom: 14 }}>✓ Always</div>
+          {[
+            ['Founder-first', '"I built…", "I lost on…", "I spent two years…"'],
+            ['Show the chart', 'Talk numbers. Trader voice. Real setups.'],
+            ['Hindi-friendly phrases', '"no signal calls", "lifetime, no subscription"'],
+            ['Legal disclaimer', '"Educational. You decide every trade." on every commercial surface.'],
+          ].map(([t, d]) => (
+            <div key={t} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 3 }}>{t}</div>
+              <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{d}</div>
+            </div>
+          ))}
+        </Card>
+
+        <Card style={{ border: '1px solid rgba(255,77,79,0.15)' }}>
+          <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: '#FF4D4F', textTransform: 'uppercase', marginBottom: 14 }}>✕ Never</div>
+          {[
+            ['"Guaranteed returns"', 'Illegal under SEBI. Off-brand globally.'],
+            ['"100% accurate" / "Win every trade"', 'Never make performance promises.'],
+            ['"Game-changer" / "Revolutionary"', 'Generic-marketer slop.'],
+            ['"ETS" abbreviation', 'Removed site-wide. Skip on all surfaces.'],
+            ['Fake testimonials or P&L', 'Never manufacture social proof.'],
+            ['Emoji in body copy', 'One in eyebrow/hook max. Never pepper.'],
+          ].map(([t, d]) => (
+            <div key={t} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+              <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 3 }}>{t}</div>
+              <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{d}</div>
+            </div>
+          ))}
+        </Card>
+      </div>
+
+      {/* Copywriting examples */}
+      <Card>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Sample Copy Patterns</div>
+        {[
+          { label: 'Hero CTA', copy: 'Get Lifetime Access →', font: 'Inter Tight', fw: 700, size: 18 },
+          { label: 'Price badge', copy: '₹4,999 one-time', font: 'JetBrains Mono', fw: 700, size: 20, color: '#F0C05A' },
+          { label: 'Eyebrow label', copy: 'EASYTRADESETUP · TRADINGVIEW PINE V5', font: 'JetBrains Mono', fw: 500, size: 12, color: 'rgba(255,255,255,0.45)', ls: '0.16em', upper: true },
+          { label: 'Disclaimer', copy: 'Educational. You decide every trade.', font: 'Inter Tight', fw: 400, size: 13, color: 'rgba(255,255,255,0.4)' },
+          { label: '"Live" signal badge', copy: '● LIVE', font: 'JetBrains Mono', fw: 700, size: 12, color: '#8FCC2A', ls: '0.12em' },
+        ].map(({ label, copy, font, fw, size, color, ls, upper }) => (
+          <div key={label} onClick={() => copyHex(copy)} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.04)', cursor: 'pointer' }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(43,123,255,0.04)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.1em', width: 100, flexShrink: 0 }}>{label}</div>
+            <div style={{ fontFamily: `'${font}'`, fontWeight: fw, fontSize: size, color: color || 'rgba(255,255,255,0.92)', letterSpacing: ls || '0', textTransform: upper ? 'uppercase' : 'none' }}>{copy}</div>
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: CHECKLIST
+// ═══════════════════════════════════════════════════════════════════════════════
+function ChecklistSection() {
+  const items = [
+    'Background = #05070F (or matches site bg)',
+    'Brand mark uses #2B7BFF → #22D3EE gradient + white checkmark',
+    'Headline font = Space Grotesk Bold',
+    'Body font = Inter Tight',
+    'Eyebrow / data = JetBrains Mono uppercase, letter-spacing 0.16em',
+    'No "ETS" abbreviation anywhere',
+    'No fake testimonials, no fake numbers',
+    'Disclaimer "Educational. You decide every trade." on commercial surfaces',
+    'URL bottom-right: easytradesetup.com in mono, 60% white opacity',
+    'Saved to landing-page/public/brand/ with canonical filename',
+  ];
+
+  const [checked, setChecked] = React.useState(() => items.map(() => false));
+  const allDone = checked.every(Boolean);
+  const count = checked.filter(Boolean).length;
+
+  return (
+    <div>
+      <SectionHeader eyebrow="08 — Pre-publish Checklist" title="Asset Quality Checklist" subtitle="Run through this before publishing any new asset to any surface." />
+
+      {/* Progress */}
+      <Card style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <span style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 14 }}>{count}/{items.length} complete</span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button onClick={() => setChecked(items.map(() => true))} style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#22C55E', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer', letterSpacing: '0.08em' }}>CHECK ALL</button>
+            <button onClick={() => setChecked(items.map(() => false))} style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'rgba(255,255,255,0.4)', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer', letterSpacing: '0.08em' }}>RESET</button>
+          </div>
+        </div>
+        <div style={{ height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 3, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${(count / items.length) * 100}%`, background: allDone ? '#22C55E' : 'linear-gradient(90deg, #2B7BFF, #22D3EE)', borderRadius: 3, transition: 'width 0.3s ease' }}/>
+        </div>
+      </Card>
+
+      <Card>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {items.map((item, i) => (
+            <div key={i} onClick={() => setChecked(prev => prev.map((v, j) => j === i ? !v : v))} style={{
+              display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px', borderRadius: 8,
+              background: checked[i] ? 'rgba(34,197,94,0.05)' : 'rgba(255,255,255,0.02)',
+              cursor: 'pointer', transition: 'background 0.15s',
+              border: '1px solid', borderColor: checked[i] ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.04)',
+            }}
+              onMouseEnter={e => { if (!checked[i]) e.currentTarget.style.borderColor = 'rgba(43,123,255,0.2)'; }}
+              onMouseLeave={e => e.currentTarget.style.borderColor = checked[i] ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.04)'}
+            >
+              <div style={{
+                width: 20, height: 20, borderRadius: 5, flexShrink: 0,
+                border: '1.5px solid', borderColor: checked[i] ? '#22C55E' : 'rgba(255,255,255,0.2)',
+                background: checked[i] ? '#22C55E' : 'transparent',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.15s',
+              }}>
+                {checked[i] && <span style={{ color: '#000', fontSize: 11, fontWeight: 700, lineHeight: 1 }}>✓</span>}
+              </div>
+              <span style={{ fontFamily: 'Inter Tight', fontSize: 14, color: checked[i] ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.82)', textDecoration: checked[i] ? 'line-through' : 'none', transition: 'color 0.15s' }}>{item}</span>
+            </div>
+          ))}
+        </div>
+        {allDone && (
+          <div style={{ marginTop: 16, padding: '12px 16px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 18 }}>✓</span>
+            <span style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 14, color: '#22C55E' }}>All checks passed. Asset is ready to publish.</span>
+          </div>
+        )}
+      </Card>
+    </div>
+  );
+}
+
+// ─── Download Utility ─────────────────────────────────────────────────────────
+function downloadSVG(svgEl, filename) {
+  const serializer = new XMLSerializer();
+  const svgStr = serializer.serializeToString(svgEl);
+  const blob = new Blob([svgStr], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  URL.revokeObjectURL(url);
+  showToast('SVG downloaded!');
+}
+
+function downloadCanvasAsPNG(drawFn, w, h, filename) {
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  drawFn(ctx, w, h);
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+    showToast('PNG downloaded!');
+  });
+}
+
+function drawBrandMarkCanvas(ctx, w, h) {
+  const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.45;
+  const grad = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+  grad.addColorStop(0, '#2B7BFF');
+  grad.addColorStop(1, '#22D3EE');
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = grad;
+  ctx.fill();
+  // Checkmark
+  const s = r * 0.55;
+  ctx.beginPath();
+  ctx.moveTo(cx - s * 0.55, cy);
+  ctx.lineTo(cx - s * 0.05, cy + s * 0.5);
+  ctx.lineTo(cx + s * 0.65, cy - s * 0.5);
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = r * 0.14;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.stroke();
+}
+
+function drawWordmarkH(ctx, w, h) {
+  ctx.fillStyle = '#05070F';
+  ctx.fillRect(0, 0, w, h);
+  drawBrandMarkCanvas(ctx, h * 0.7, h, );
+  // shift mark left
+  const markSize = h * 0.62;
+  const markX = h * 0.19, markY = (h - markSize) / 2;
+  const grad = ctx.createLinearGradient(markX, markY, markX + markSize, markY + markSize);
+  grad.addColorStop(0, '#2B7BFF'); grad.addColorStop(1, '#22D3EE');
+  ctx.beginPath();
+  ctx.arc(markX + markSize / 2, markY + markSize / 2, markSize / 2, 0, Math.PI * 2);
+  ctx.fillStyle = grad; ctx.fill();
+  const r = markSize / 2, cx2 = markX + markSize / 2, cy2 = markY + markSize / 2;
+  ctx.beginPath();
+  ctx.moveTo(cx2 - r * 0.55, cy2); ctx.lineTo(cx2 - r * 0.05, cy2 + r * 0.5); ctx.lineTo(cx2 + r * 0.65, cy2 - r * 0.5);
+  ctx.strokeStyle = 'white'; ctx.lineWidth = r * 0.14; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.font = `700 ${h * 0.28}px "Space Grotesk", sans-serif`;
+  ctx.textBaseline = 'middle';
+  ctx.fillText('EasyTradeSetup', markX + markSize + h * 0.08, h / 2);
+}
+
+// ─── Download Button Component ─────────────────────────────────────────────────
+function DlBtn({ label, onClick, style = {} }) {
+  const [hov, setHov] = React.useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 6,
+        padding: '7px 14px', borderRadius: 7, cursor: 'pointer',
+        background: hov ? 'rgba(43,123,255,0.18)' : 'rgba(43,123,255,0.08)',
+        border: '1px solid rgba(43,123,255,0.35)',
+        color: '#2B7BFF', fontFamily: 'JetBrains Mono', fontSize: 10,
+        letterSpacing: '0.08em', textTransform: 'uppercase', transition: 'all 0.15s',
+        ...style
+      }}
+    >
+      <span style={{ fontSize: 12 }}>↓</span>{label}
+    </button>
+  );
+}
+
+// ─── Logo Downloads Section (injected into LogoSection) ───────────────────────
+function LogoDownloads() {
+  const assets = [
+    {
+      label: 'Brand Mark SVG', sub: '48×48 · vector',
+      onDl: () => {
+        const svg = `<svg width="200" height="200" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="g" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse"><stop stop-color="#2B7BFF"/><stop offset="1" stop-color="#22D3EE"/></linearGradient></defs><circle cx="24" cy="24" r="24" fill="url(#g)"/><polyline points="13,24 21,32 35,16" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+        const blob = new Blob([svg], { type: 'image/svg+xml' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'ets-brand-mark.svg'; a.click(); URL.revokeObjectURL(url);
+        showToast('SVG downloaded!');
+      }
+    },
+    {
+      label: 'Brand Mark PNG 800', sub: '800×800 · transparent',
+      onDl: () => downloadCanvasAsPNG((ctx, w, h) => {
+        ctx.clearRect(0, 0, w, h);
+        drawBrandMarkCanvas(ctx, w, h);
+      }, 800, 800, 'ets-brand-mark-800.png')
+    },
+    {
+      label: 'Brand Mark PNG 200', sub: '200×200 · transparent',
+      onDl: () => downloadCanvasAsPNG((ctx, w, h) => {
+        ctx.clearRect(0, 0, w, h);
+        drawBrandMarkCanvas(ctx, w, h);
+      }, 200, 200, 'ets-brand-mark-200.png')
+    },
+    {
+      label: 'Wordmark Horizontal', sub: '1200×300 · dark bg',
+      onDl: () => downloadCanvasAsPNG(drawWordmarkH, 1200, 300, 'ets-wordmark-horizontal.png')
+    },
+    {
+      label: 'Wordmark Stacked', sub: '600×600 · dark bg',
+      onDl: () => downloadCanvasAsPNG((ctx, w, h) => {
+        ctx.fillStyle = '#05070F'; ctx.fillRect(0, 0, w, h);
+        const markSize = w * 0.45;
+        const mx = (w - markSize) / 2, my = h * 0.12;
+        const grad = ctx.createLinearGradient(mx, my, mx + markSize, my + markSize);
+        grad.addColorStop(0, '#2B7BFF'); grad.addColorStop(1, '#22D3EE');
+        ctx.beginPath(); ctx.arc(mx + markSize / 2, my + markSize / 2, markSize / 2, 0, Math.PI * 2);
+        ctx.fillStyle = grad; ctx.fill();
+        const r = markSize / 2, cx2 = mx + markSize / 2, cy2 = my + markSize / 2;
+        ctx.beginPath(); ctx.moveTo(cx2 - r * 0.55, cy2); ctx.lineTo(cx2 - r * 0.05, cy2 + r * 0.5); ctx.lineTo(cx2 + r * 0.65, cy2 - r * 0.5);
+        ctx.strokeStyle = 'white'; ctx.lineWidth = r * 0.14; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.font = `700 ${w * 0.085}px sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+        ctx.fillText('EasyTradeSetup', w / 2, my + markSize + h * 0.06);
+        ctx.font = `500 ${w * 0.04}px monospace`; ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fillText('ONE INDICATOR. LIFETIME.', w / 2, my + markSize + h * 0.18);
+      }, 600, 600, 'ets-wordmark-stacked.png')
+    },
+    {
+      label: 'Profile Pic PNG', sub: '800×800 · circle on dark',
+      onDl: () => downloadCanvasAsPNG((ctx, w, h) => {
+        ctx.fillStyle = '#05070F'; ctx.fillRect(0, 0, w, h);
+        drawBrandMarkCanvas(ctx, w, h);
+      }, 800, 800, 'ets-profile-pic.png')
+    },
+  ];
+
+  return (
+    <div style={{ marginTop: 24 }}>
+      <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 14 }}>Download Assets</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10 }}>
+        {assets.map(({ label, sub, onDl }) => (
+          <div key={label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8, gap: 10 }}>
+            <div>
+              <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, color: 'rgba(255,255,255,0.85)' }}>{label}</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.35)', marginTop: 2, letterSpacing: '0.06em' }}>{sub}</div>
+            </div>
+            <DlBtn label="DL" onClick={onDl}/>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: YOUTUBE SHORTS
+// ═══════════════════════════════════════════════════════════════════════════════
+function YTShortsSection() {
+  const [previewSlide, setPreviewSlide] = React.useState(0);
+
+  const slides = [
+    {
+      label: 'Hook Frame (0–2s)',
+      desc: 'Viewer decides in the first 2 seconds. Bold single statement, brand mark top-left, nothing else.',
+      el: (
+        <div style={{ width: 140, aspectRatio: '9/16', background: '#05070F', borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 30%, rgba(14,21,48,0.9) 0%, #05070F 70%)' }}/>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '10px 10px 0', position: 'relative', zIndex: 1 }}>
+            <BrandMark size={14}/>
+            <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 6, color: 'rgba(255,255,255,0.85)' }}>EasyTradeSetup</span>
+          </div>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1, padding: '0 10px' }}>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 18, color: 'rgba(255,255,255,0.95)', textAlign: 'center', lineHeight: 1.1, marginBottom: 6 }}>Why I stopped using 5 indicators</div>
+            <div style={{ width: 32, height: 3, background: 'linear-gradient(90deg, #2B7BFF, #22D3EE)', borderRadius: 2 }}/>
+          </div>
+          <div style={{ padding: '6px 10px', position: 'relative', zIndex: 1, fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.1em', textAlign: 'center' }}>EDUCATIONAL · YOU DECIDE EVERY TRADE</div>
+        </div>
+      )
+    },
+    {
+      label: 'Chart Frame',
+      desc: 'Show the chart. Real setup. Minimal UI overlay — eyebrow label top, ticker + timeframe in mono.',
+      el: (
+        <div style={{ width: 140, aspectRatio: '9/16', background: '#05070F', borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
+          {/* Faux chart */}
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg viewBox="0 0 140 250" style={{ width: '100%', height: '100%', opacity: 0.18 }}>
+              <polyline points="0,180 20,160 35,170 50,130 70,145 85,100 100,115 115,80 140,90" stroke="#2B7BFF" strokeWidth="2" fill="none"/>
+              <polyline points="0,200 20,185 35,190 50,160 70,170 85,130 100,140 115,105 140,115" stroke="#22D3EE" strokeWidth="1.5" fill="none" strokeDasharray="4,2"/>
+            </svg>
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 10px 0', position: 'relative', zIndex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}><BrandMark size={12}/><span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 5.5, color: 'rgba(255,255,255,0.85)' }}>EasyTradeSetup</span></div>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: '#8FCC2A', letterSpacing: '0.1em' }}>● LIVE</span>
+          </div>
+          <div style={{ position: 'absolute', bottom: 30, left: 10, right: 10, zIndex: 1 }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 6, color: '#22D3EE', letterSpacing: '0.1em', marginBottom: 3 }}>NIFTY · 15M</div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 11, color: 'rgba(255,255,255,0.92)', lineHeight: 1.2 }}>Lifeline entry at demand zone</div>
+          </div>
+          <div style={{ position: 'absolute', bottom: 8, left: 10, right: 10, fontFamily: 'JetBrains Mono', fontSize: 4.5, color: 'rgba(255,255,255,0.3)', zIndex: 1 }}>Educational. You decide every trade.</div>
+        </div>
+      )
+    },
+    {
+      label: 'CTA Frame (last 3s)',
+      desc: 'End with one clear action. No multi-CTA. Gold button color. Soft subscribe nudge.',
+      el: (
+        <div style={{ width: 140, aspectRatio: '9/16', background: '#05070F', borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 60%, rgba(14,21,48,0.95) 0%, #05070F 70%)' }}/>
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10, position: 'relative', zIndex: 1, padding: '10px' }}>
+            <BrandMark size={28}/>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 11, color: 'rgba(255,255,255,0.92)', textAlign: 'center', lineHeight: 1.3 }}>Get the indicator — lifetime, no subscription</div>
+            <div style={{ background: '#F0C05A', borderRadius: 6, padding: '6px 14px', fontFamily: 'Inter Tight', fontWeight: 700, fontSize: 8, color: '#05070F' }}>Get Lifetime Access →</div>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 5.5, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textAlign: 'center' }}>easytradesetup.com</div>
+          </div>
+        </div>
+      )
+    },
+  ];
+
+  return (
+    <div>
+      <SectionHeader eyebrow="09 — YouTube Shorts" title="YouTube Shorts Playbook" subtitle="9:16 vertical, 1080×1920 px. Under 60s. Focus: Shorts + Search traffic for EasyTradeSetup." />
+
+      {/* Key specs */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(170px, 1fr))', gap: 12, marginBottom: 28 }}>
+        {[
+          { label: 'Aspect Ratio', val: '9:16', note: '1080 × 1920 px' },
+          { label: 'Max Duration', val: '60s', note: 'Under 60s stays in Shorts feed' },
+          { label: 'File Format', val: 'MP4 / MOV', note: 'H.264, AAC audio' },
+          { label: 'Max File Size', val: '256 MB', note: 'YouTube hard limit' },
+          { label: 'Frame Rate', val: '30–60fps', note: '60fps for chart animations' },
+          { label: 'Safe Zone', val: '1080×1420', note: 'Bottom 500px: UI overlay' },
+        ].map(({ label, val, note }) => (
+          <Card key={label} style={{ padding: '14px 16px' }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: 4 }}>{label}</div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 20, color: '#2B7BFF', marginBottom: 2 }}>{val}</div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{note}</div>
+          </Card>
+        ))}
+      </div>
+
+      {/* Safe zone diagram */}
+      <Card style={{ marginBottom: 24 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Safe Zone & UI Overlay Map</div>
+        <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          {/* Diagram */}
+          <div style={{ position: 'relative', width: 120, flexShrink: 0 }}>
+            <div style={{ width: 120, aspectRatio: '9/16', background: '#070B1A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, overflow: 'hidden', position: 'relative' }}>
+              {/* TOP UI zone */}
+              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '12%', background: 'rgba(255,77,79,0.12)', borderBottom: '1px dashed rgba(255,77,79,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4.5, color: 'rgba(255,77,79,0.8)', letterSpacing: '0.08em' }}>TOP UI (avoid)</span>
+              </div>
+              {/* SAFE zone */}
+              <div style={{ position: 'absolute', top: '12%', left: 0, right: 0, height: '62%', background: 'rgba(34,197,94,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 2 }}>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(34,197,94,0.7)', letterSpacing: '0.08em' }}>SAFE CONTENT</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4, color: 'rgba(34,197,94,0.5)' }}>1080 × 1420 px</span>
+              </div>
+              {/* BOTTOM UI zone */}
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '26%', background: 'rgba(255,179,65,0.1)', borderTop: '1px dashed rgba(255,179,65,0.4)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4.5, color: 'rgba(255,179,65,0.8)' }}>BOTTOM UI</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4, color: 'rgba(255,179,65,0.55)' }}>like/comment/share</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4, color: 'rgba(255,179,65,0.55)' }}>subscribe button</span>
+                <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4, color: 'rgba(255,179,65,0.55)' }}>caption text</span>
+              </div>
+            </div>
+          </div>
+          {/* Legend */}
+          <div style={{ flex: 1, minWidth: 200 }}>
+            {[
+              { color: '#FF4D4F', zone: 'Top 12% — Avoid', desc: 'YouTube injects the channel name, back button, and search icon here. Keep this area clear.' },
+              { color: '#22C55E', zone: 'Middle 62% — Safe Content', desc: 'All your primary visuals, text, chart overlays, and branding go here. This is guaranteed visible on all devices.' },
+              { color: '#FFB341', zone: 'Bottom 26% — UI Overlay', desc: "YouTube's like/comment/share buttons, subscribe chip, and caption text overlay this zone. Add a dark fade here so text still reads." },
+            ].map(({ color, zone, desc }) => (
+              <div key={zone} style={{ display: 'flex', gap: 10, marginBottom: 14, alignItems: 'flex-start' }}>
+                <div style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0, marginTop: 3 }}/>
+                <div>
+                  <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 2 }}>{zone}</div>
+                  <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.55 }}>{desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card>
+
+      {/* Frame breakdowns */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 14 }}>Short Structure · 3-Frame Rule</div>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+          {slides.map((s, i) => (
+            <button key={i} onClick={() => setPreviewSlide(i)} style={{
+              padding: '6px 14px', borderRadius: 6, border: '1px solid',
+              borderColor: previewSlide === i ? '#2B7BFF' : 'rgba(255,255,255,0.1)',
+              background: previewSlide === i ? 'rgba(43,123,255,0.12)' : 'transparent',
+              color: previewSlide === i ? '#2B7BFF' : 'rgba(255,255,255,0.5)',
+              fontFamily: 'Inter Tight', fontSize: 12, fontWeight: 500, cursor: 'pointer',
+            }}>{s.label}</button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          {slides[previewSlide].el}
+          <Card style={{ flex: 1, minWidth: 200 }}>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{slides[previewSlide].label}</div>
+            <div style={{ fontFamily: 'Inter Tight', fontSize: 14, color: 'rgba(255,255,255,0.6)', lineHeight: 1.6, marginBottom: 16 }}>{slides[previewSlide].desc}</div>
+            {previewSlide === 0 && (
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {['One sentence hook only — no context needed', 'Brand mark top-left, small (≤28px)', 'No subtitle or subtext in hook frame', 'Font: Space Grotesk 700, ≥64px (full canvas)', 'High contrast — white or Electric Blue only'].map(t => (
+                  <li key={t} style={{ display: 'flex', gap: 8, fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.6)' }}><span style={{ color: '#2B7BFF' }}>→</span>{t}</li>
+                ))}
+              </ul>
+            )}
+            {previewSlide === 1 && (
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {['Show real TradingView chart — no mockups', 'Eyebrow: TICKER · TIMEFRAME in JetBrains Mono', 'Lifeline overlay visible, not explained', 'Minimal text — the chart speaks', 'Disclaimer always at bottom in 40% opacity'].map(t => (
+                  <li key={t} style={{ display: 'flex', gap: 8, fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.6)' }}><span style={{ color: '#22D3EE' }}>→</span>{t}</li>
+                ))}
+              </ul>
+            )}
+            {previewSlide === 2 && (
+              <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {['One CTA only — never two buttons', 'Gold (#F0C05A) for the primary action', '"Lifetime, no subscription" — always say this', 'Brand mark centered, medium size', 'URL in mono, 40% opacity'].map(t => (
+                  <li key={t} style={{ display: 'flex', gap: 8, fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.6)' }}><span style={{ color: '#F0C05A' }}>→</span>{t}</li>
+                ))}
+              </ul>
+            )}
+          </Card>
+        </div>
+      </div>
+
+      {/* Title & description rules */}
+      <Card style={{ marginBottom: 20 }}>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Title & Description Baseline</div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          <div>
+            <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, marginBottom: 8, color: '#22D3EE' }}>Title Rules</div>
+            {['Keep under 60 characters', 'Start with the insight, not the brand name', 'No clickbait — trader voice only', 'Avoid "SECRET" / "HACK" / "TRICK"', 'Include ticker if chart-specific (e.g. "NIFTY 15M setup")'].map(t => (
+              <div key={t} style={{ display: 'flex', gap: 8, fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.6)', marginBottom: 5, alignItems: 'flex-start' }}><span style={{ color: '#22D3EE', flexShrink: 0 }}>·</span>{t}</div>
+            ))}
+          </div>
+          <div>
+            <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, marginBottom: 8, color: '#2B7BFF' }}>Description (first 3 lines visible)</div>
+            {['Line 1: restate the hook as a sentence', 'Line 2: "Educational. You decide every trade."', 'Line 3: easytradesetup.com', 'Hashtags: #TradingView #Nifty #EasyTradeSetup', 'Never promise returns in description'].map(t => (
+              <div key={t} style={{ display: 'flex', gap: 8, fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.6)', marginBottom: 5, alignItems: 'flex-start' }}><span style={{ color: '#2B7BFF', flexShrink: 0 }}>·</span>{t}</div>
+            ))}
+          </div>
+        </div>
+      </Card>
+
+      {/* Thumbnail rules */}
+      <Card>
+        <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Shorts Cover / Thumbnail</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+          {[
+            { title: 'Use the hook frame', desc: 'First frame = thumbnail. Design it as a still graphic with one bold text line.' },
+            { title: 'Text size ≥ 64px', desc: 'Renders at 120×213px in feed. Text must read at that size — go bigger than you think.' },
+            { title: 'No face required', desc: 'Chart + text works better for trading content than a talking-head freeze frame.' },
+            { title: 'Dark bg = more contrast', desc: '#05070F background stands out vs. competing light thumbnails in Shorts feed.' },
+          ].map(({ title, desc }) => (
+            <div key={title} style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8 }}>
+              <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 4 }}>{title}</div>
+              <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{desc}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SECTION: INSTAGRAM REELS
+// ═══════════════════════════════════════════════════════════════════════════════
+function IGReelsSection() {
+  const [activeTab, setActiveTab] = React.useState('specs');
+
+  return (
+    <div>
+      <SectionHeader eyebrow="10 — Instagram Reels" title="Instagram Reels Playbook" subtitle="9:16 vertical, 1080×1920 px. Primary discovery channel for EasyTradeSetup on Instagram." />
+
+      {/* Tab bar */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
+        {[
+          { id: 'specs', label: 'Specs & Safe Zones' },
+          { id: 'cover', label: 'Cover Design' },
+          { id: 'caption', label: 'Caption & Hashtags' },
+          { id: 'checklist', label: 'Reel Checklist' },
+        ].map(t => (
+          <button key={t.id} onClick={() => setActiveTab(t.id)} style={{
+            padding: '7px 18px', borderRadius: 6, border: '1px solid',
+            borderColor: activeTab === t.id ? '#22D3EE' : 'rgba(255,255,255,0.12)',
+            background: activeTab === t.id ? 'rgba(34,211,238,0.1)' : 'transparent',
+            color: activeTab === t.id ? '#22D3EE' : 'rgba(255,255,255,0.55)',
+            fontFamily: 'Inter Tight', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+          }}>{t.label}</button>
+        ))}
+      </div>
+
+      {activeTab === 'specs' && (
+        <div>
+          {/* Specs grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
+            {[
+              { label: 'Aspect Ratio', val: '9:16', note: '1080 × 1920 px' },
+              { label: 'Profile Preview', val: '1:1', note: '1080×1080 center crop' },
+              { label: 'Max Duration', val: '90s', note: 'Optimal: 15–30s' },
+              { label: 'File Format', val: 'MP4 / MOV', note: 'H.264, AAC stereo' },
+              { label: 'Max File Size', val: '1 GB', note: 'Keep under 250 MB' },
+              { label: 'Frame Rate', val: '23–60fps', note: '30fps standard' },
+            ].map(({ label, val, note }) => (
+              <Card key={label} style={{ padding: '14px 16px' }}>
+                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 9, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: 4 }}>{label}</div>
+                <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 20, color: '#22D3EE', marginBottom: 2 }}>{val}</div>
+                <div style={{ fontFamily: 'Inter Tight', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{note}</div>
+              </Card>
+            ))}
+          </div>
+
+          {/* Safe zone diagram — Reels specific */}
+          <Card style={{ marginBottom: 20 }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 16 }}>Instagram Reels UI Overlay Map</div>
+            <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+              {/* Diagram */}
+              <div style={{ width: 120, flexShrink: 0 }}>
+                <div style={{ width: 120, aspectRatio: '9/16', background: '#070B1A', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12, overflow: 'hidden', position: 'relative' }}>
+                  {/* Top notch/status */}
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '8%', background: 'rgba(255,77,79,0.1)', borderBottom: '1px dashed rgba(255,77,79,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4, color: 'rgba(255,77,79,0.7)' }}>STATUS BAR</span>
+                  </div>
+                  {/* Right side rail */}
+                  <div style={{ position: 'absolute', top: '30%', right: 0, width: '18%', bottom: '22%', background: 'rgba(255,179,65,0.08)', borderLeft: '1px dashed rgba(255,179,65,0.3)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                    {['♡', '💬', '↗', '⋯'].map((ic, i) => <span key={i} style={{ fontSize: 6, color: 'rgba(255,255,255,0.5)' }}>{ic}</span>)}
+                  </div>
+                  {/* Safe zone */}
+                  <div style={{ position: 'absolute', top: '8%', left: 0, right: '18%', bottom: '22%', background: 'rgba(34,197,94,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 1 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4.5, color: 'rgba(34,197,94,0.6)' }}>SAFE ZONE</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 3.5, color: 'rgba(34,197,94,0.4)' }}>~880 × 1480 px</span>
+                  </div>
+                  {/* Bottom metadata */}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '22%', background: 'rgba(43,123,255,0.08)', borderTop: '1px dashed rgba(43,123,255,0.3)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', padding: '0 5px', gap: 1 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 4, color: 'rgba(43,123,255,0.7)' }}>@handle · audio name</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: 3.5, color: 'rgba(43,123,255,0.5)' }}>caption (first 2 lines)</span>
+                  </div>
+                </div>
+              </div>
+              {/* Legend */}
+              <div style={{ flex: 1, minWidth: 200 }}>
+                {[
+                  { color: '#FF4D4F', zone: 'Top 8% — Status bar', desc: 'Time, battery, signal. Avoid placing any content here.' },
+                  { color: '#22C55E', zone: 'Left 82%, Middle 70% — Safe content', desc: 'Your main visual content. Charts, text overlays, brand mark. Always stays visible.' },
+                  { color: '#FFB341', zone: 'Right rail — Action buttons', desc: 'Instagram injects like, comment, share, audio disc. Keep 15% right margin clear.' },
+                  { color: '#2B7BFF', zone: 'Bottom 22% — Metadata', desc: '@handle, audio name, first 125 chars of caption. Add a gradient scrim here so it reads.' },
+                  { color: '#8B5CF6', zone: 'Profile grid crop', desc: 'IG crops your cover to 1:1 (square) for the profile grid. Design the center 1080×1080 to work as a standalone graphic.' },
+                ].map(({ color, zone, desc }) => (
+                  <div key={zone} style={{ display: 'flex', gap: 10, marginBottom: 12, alignItems: 'flex-start' }}>
+                    <div style={{ width: 10, height: 10, borderRadius: 2, background: color, flexShrink: 0, marginTop: 3 }}/>
+                    <div>
+                      <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 1 }}>{zone}</div>
+                      <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
+
+          {/* Comparison table */}
+          <Card>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 14 }}>YouTube Shorts vs Instagram Reels</div>
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Inter Tight', fontSize: 13 }}>
+                <thead>
+                  <tr>
+                    {['', 'YouTube Shorts', 'Instagram Reels'].map(h => (
+                      <th key={h} style={{ padding: '8px 14px', textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)', fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['Max Duration', '60 seconds', '90 seconds'],
+                    ['Aspect Ratio', '9:16 (1080×1920)', '9:16 (1080×1920)'],
+                    ['Profile Grid Crop', 'No profile grid', '1:1 center square'],
+                    ['Bottom UI Height', '~26% of frame', '~22% of frame'],
+                    ['Right Rail', 'None', '~18% right side'],
+                    ['Caption in video', 'Below video', 'Overlaid bottom-left'],
+                    ['Hashtag strategy', 'In description', 'In caption (max 30)'],
+                    ['Discovery', 'Search + Shorts shelf', 'Explore + Reels tab'],
+                    ['Thumbnail', '9:16 frame', '9:16 + 1:1 grid crop'],
+                    ['Audio strategy', 'Original preferred', 'Trending audio boosts reach'],
+                  ].map(([feat, yt, ig], i) => (
+                    <tr key={feat} style={{ background: i % 2 === 0 ? 'rgba(255,255,255,0.015)' : 'transparent' }}>
+                      <td style={{ padding: '9px 14px', fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>{feat}</td>
+                      <td style={{ padding: '9px 14px', color: '#FF4D4F', borderBottom: '1px solid rgba(255,255,255,0.04)', opacity: 0.85 }}>{yt}</td>
+                      <td style={{ padding: '9px 14px', color: '#22D3EE', borderBottom: '1px solid rgba(255,255,255,0.04)', opacity: 0.85 }}>{ig}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {activeTab === 'cover' && (
+        <div>
+          <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start', flexWrap: 'wrap', marginBottom: 24 }}>
+            {/* Cover preview */}
+            <div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>Reel Cover · 1080×1920</div>
+              <div style={{ width: 160, aspectRatio: '9/16', background: '#05070F', borderRadius: 12, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 25%, rgba(14,21,48,0.9) 0%, #05070F 65%)' }}/>
+                {/* Gradient stripe top */}
+                <div style={{ height: 3, background: 'linear-gradient(90deg, #2B7BFF, #22D3EE, #F0C05A)', flexShrink: 0, position: 'relative', zIndex: 2 }}/>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '8px 12px 0', position: 'relative', zIndex: 1 }}>
+                  <BrandMark size={16}/>
+                  <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 7, color: 'rgba(255,255,255,0.85)' }}>EasyTradeSetup</span>
+                </div>
+                {/* Big headline — safe zone center */}
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1, padding: '0 12px' }}>
+                  <div style={{ fontFamily: 'JetBrains Mono', fontSize: 7, color: '#F0C05A', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 6 }}>TRADING SETUP</div>
+                  <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 24, color: '#2B7BFF', lineHeight: 0.9, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>LIFE</div>
+                  <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 24, color: '#22D3EE', lineHeight: 0.9, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>LINE</div>
+                  <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 24, color: '#F0C05A', lineHeight: 0.9, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '-0.02em', marginBottom: 8 }}>RULES</div>
+                  <div style={{ width: 40, height: 2, background: 'linear-gradient(90deg, #2B7BFF, #22D3EE)', borderRadius: 1 }}/>
+                </div>
+                {/* Bottom scrim */}
+                <div style={{ height: '22%', background: 'linear-gradient(to top, rgba(5,7,15,0.95) 0%, transparent 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '0 12px 8px', position: 'relative', zIndex: 1 }}>
+                  <div style={{ fontFamily: 'JetBrains Mono', fontSize: 5, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>@easytradesetup</div>
+                  <div style={{ fontFamily: 'JetBrains Mono', fontSize: 4.5, color: 'rgba(255,255,255,0.3)', marginTop: 1 }}>Educational. You decide every trade.</div>
+                </div>
+              </div>
+            </div>
+            {/* Grid crop */}
+            <div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 10 }}>Profile Grid Crop · 1:1</div>
+              <div style={{ width: 160, height: 160, background: '#05070F', borderRadius: 10, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,179,65,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 8 }}>
+                <BrandMark size={60}/>
+                <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12, color: 'rgba(255,255,255,0.85)', textAlign: 'center' }}>LIFELINE RULES</div>
+                <div style={{ fontFamily: 'JetBrains Mono', fontSize: 7, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textAlign: 'center' }}>@EASYTRADESETUP</div>
+                <div style={{ position: 'absolute', inset: 0, border: '2px dashed rgba(255,179,65,0.3)', borderRadius: 10, pointerEvents: 'none' }}/>
+              </div>
+              <div style={{ fontFamily: 'Inter Tight', fontSize: 11, color: 'rgba(255,179,65,0.7)', marginTop: 6, maxWidth: 160, lineHeight: 1.4 }}>IG crops this center square for your profile grid. Design both views.</div>
+            </div>
+          </div>
+
+          <Card>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 14 }}>Cover Design Rules</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+              {[
+                { title: 'Use 1–3 words max', desc: 'The cover must read in a 110×110px thumbnail. One big word beats a full sentence.' },
+                { title: 'Brand mark top-left', desc: 'Small (max 28px in final), paired with @handle. Establishes ownership instantly.' },
+                { title: 'Gradient scrim bottom', desc: 'Dark to transparent, bottom 22%. Ensures IG metadata (handle, audio) stays readable.' },
+                { title: 'Gradient stripe top', desc: 'Signature gradient as a 4px strip at the very top. Subtle brand signature across all covers.' },
+                { title: 'Keep it vertical-first', desc: "Design for 9:16 full view first, then check the 1:1 grid crop doesn't look broken." },
+                { title: 'Static over animated', desc: 'The cover is always a static frame. Make it bold enough to stop the scroll on its own.' },
+              ].map(({ title, desc }) => (
+                <div key={title} style={{ padding: '12px 14px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 8 }}>
+                  <div style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 13, color: 'rgba(255,255,255,0.85)', marginBottom: 4 }}>{title}</div>
+                  <div style={{ fontFamily: 'Inter Tight', fontSize: 12, color: 'rgba(255,255,255,0.5)', lineHeight: 1.5 }}>{desc}</div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {activeTab === 'caption' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <Card>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 14 }}>Caption Template</div>
+            <div style={{ background: '#070B1A', borderRadius: 8, padding: '16px 20px', fontFamily: 'Inter Tight', fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.8, border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ color: '#22D3EE', fontWeight: 600 }}>[Hook restated as one sentence]</div>
+              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 12, marginBottom: 8 }}>e.g. "This one setup changed how I read every chart."</div>
+              <br/>
+              <div style={{ color: 'rgba(255,255,255,0.65)' }}>Full breakdown in the video. Setup built on TradingView Pine v5.</div>
+              <br/>
+              <div style={{ color: 'rgba(255,255,255,0.45)', fontFamily: 'JetBrains Mono', fontSize: 12 }}>Educational. You decide every trade.</div>
+              <br/>
+              <div style={{ color: '#2B7BFF', fontFamily: 'JetBrains Mono', fontSize: 12 }}>🔗 easytradesetup.com</div>
+              <br/>
+              <div style={{ color: 'rgba(255,255,255,0.4)', fontFamily: 'JetBrains Mono', fontSize: 11 }}>#TradingView #Nifty #BankNifty #EasyTradeSetup #TradingIndicator #StockMarket #PriceAction #SwingTrading #Lifeline</div>
+            </div>
+            <button onClick={() => copyHex(`[Hook restated as one sentence]\n\nFull breakdown in the video. Setup built on TradingView Pine v5.\n\nEducational. You decide every trade.\n\n🔗 easytradesetup.com\n\n#TradingView #Nifty #BankNifty #EasyTradeSetup #TradingIndicator #StockMarket #PriceAction #SwingTrading #Lifeline`)} style={{ marginTop: 12, background: 'rgba(34,211,238,0.1)', border: '1px solid rgba(34,211,238,0.2)', color: '#22D3EE', fontFamily: 'JetBrains Mono', fontSize: 10, padding: '7px 14px', borderRadius: 6, cursor: 'pointer', letterSpacing: '0.08em' }}>COPY TEMPLATE</button>
+          </Card>
+
+          <Card>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 11, letterSpacing: '0.14em', color: 'rgba(255,255,255,0.4)', textTransform: 'uppercase', marginBottom: 14 }}>Hashtag Strategy</div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+              {[
+                { tier: 'Brand (always)', tags: ['#EasyTradeSetup', '#EasyTradeSetups'], color: '#2B7BFF' },
+                { tier: 'Product (always)', tags: ['#TradingView', '#PineScript', '#Lifeline', '#TradingIndicator'], color: '#22D3EE' },
+                { tier: 'Reach (pick 2–4)', tags: ['#Nifty', '#BankNifty', '#StockMarket', '#PriceAction', '#SwingTrading', '#OptionsTrading', '#IntraDay'], color: '#F0C05A' },
+              ].map(({ tier, tags, color }) => (
+                <div key={tier}>
+                  <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, letterSpacing: '0.1em', color, textTransform: 'uppercase', marginBottom: 8 }}>{tier}</div>
+                  {tags.map(t => (
+                    <div key={t} onClick={() => copyHex(t)} style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.65)', marginBottom: 5, cursor: 'pointer', padding: '3px 6px', borderRadius: 4, transition: 'background 0.1s' }}
+                      onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+                      onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    >{t}</div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {activeTab === 'checklist' && (
+        <IGReelChecklist />
+      )}
+    </div>
+  );
+}
+
+function IGReelChecklist() {
+  const items = [
+    'Video is 9:16, 1080×1920 px',
+    'Duration is under 90s (ideally 15–30s)',
+    'Cover frame designed for 9:16 full view',
+    'Cover also works as 1:1 center square grid crop',
+    'Brand mark top-left, max 28px, on all frames',
+    'Gradient scrim on bottom 22% for metadata legibility',
+    'Gradient stripe top 4px on cover frame',
+    'No text in bottom 22% (overlapped by IG UI)',
+    'No text in right 18% (overlapped by action rail)',
+    'Hook is one sentence, max 7 words',
+    'Caption starts with hook restatement',
+    '"Educational. You decide every trade." in caption',
+    'easytradesetup.com in caption',
+    'Brand hashtags included (#EasyTradeSetup, #EasyTradeSetups)',
+    'No guaranteed returns or performance claims anywhere',
+    'Audio: either original or licensed track (not copyrighted)',
+  ];
+  const [checked, setChecked] = React.useState(() => items.map(() => false));
+  const count = checked.filter(Boolean).length;
+  const allDone = count === items.length;
+
+  return (
+    <div>
+      <Card style={{ marginBottom: 20 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <span style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 14 }}>{count}/{items.length} complete</span>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button onClick={() => setChecked(items.map(() => true))} style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#22C55E', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer' }}>CHECK ALL</button>
+            <button onClick={() => setChecked(items.map(() => false))} style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'rgba(255,255,255,0.4)', background: 'transparent', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 5, padding: '4px 10px', cursor: 'pointer' }}>RESET</button>
+          </div>
+        </div>
+        <div style={{ height: 6, background: 'rgba(255,255,255,0.06)', borderRadius: 3, overflow: 'hidden' }}>
+          <div style={{ height: '100%', width: `${(count / items.length) * 100}%`, background: allDone ? '#22C55E' : 'linear-gradient(90deg, #22D3EE, #2B7BFF)', borderRadius: 3, transition: 'width 0.3s ease' }}/>
+        </div>
+      </Card>
+      <Card>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          {items.map((item, i) => (
+            <div key={i} onClick={() => setChecked(prev => prev.map((v, j) => j === i ? !v : v))} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 14px', borderRadius: 8, background: checked[i] ? 'rgba(34,197,94,0.05)' : 'rgba(255,255,255,0.02)', cursor: 'pointer', transition: 'background 0.15s', border: '1px solid', borderColor: checked[i] ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.04)' }}>
+              <div style={{ width: 18, height: 18, borderRadius: 4, flexShrink: 0, border: '1.5px solid', borderColor: checked[i] ? '#22C55E' : 'rgba(255,255,255,0.2)', background: checked[i] ? '#22C55E' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}>
+                {checked[i] && <span style={{ color: '#000', fontSize: 10, fontWeight: 700 }}>✓</span>}
+              </div>
+              <span style={{ fontFamily: 'Inter Tight', fontSize: 13, color: checked[i] ? 'rgba(255,255,255,0.4)' : 'rgba(255,255,255,0.8)', textDecoration: checked[i] ? 'line-through' : 'none' }}>{item}</span>
+            </div>
+          ))}
+        </div>
+        {allDone && <div style={{ marginTop: 14, padding: '12px 16px', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', borderRadius: 8, display: 'flex', alignItems: 'center', gap: 10 }}><span>✓</span><span style={{ fontFamily: 'Inter Tight', fontWeight: 600, fontSize: 14, color: '#22C55E' }}>Reel is ready to publish.</span></div>}
+      </Card>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════════════════════════════════════
+const SECTION_MAP = {
+  overview: OverviewSection,
+  colors: ColorsSection,
+  typography: TypographySection,
+  logo: LogoSection,
+  gradient: GradientSection,
+  social: SocialSection,
+  templates: TemplatesSection,
+  ytshorts: YTShortsSection,
+  igreels: IGReelsSection,
+  voice: VoiceSection,
+  checklist: ChecklistSection,
+};
+
+function App() {
+  const [active, setActive] = React.useState('overview');
+  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
+
+  // Tweaks
+  const [tweaks, setTweak] = useTweaks(/*EDITMODE-BEGIN*/{
+    "accentColor": "#2B7BFF",
+    "compactMode": false
+  }/*EDITMODE-END*/);
+
+  const ActiveSection = SECTION_MAP[active] || OverviewSection;
+
+  // Mobile: close nav on section change
+  const handleSetActive = (id) => {
+    setActive(id);
+    setMobileNavOpen(false);
+  };
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+      <Sidebar active={active} setActive={handleSetActive} collapsed={sidebarCollapsed}/>
+
+      {/* Main content */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0 }}>
+        {/* Header */}
+        <div style={{
+          height: 52, borderBottom: '1px solid rgba(255,255,255,0.06)',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '0 24px', flexShrink: 0, background: '#05070F',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <button onClick={() => setSidebarCollapsed(v => !v)} style={{
+              background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)',
+              cursor: 'pointer', fontSize: 16, padding: '4px 6px', borderRadius: 5,
+              transition: 'color 0.15s',
+            }}
+              onMouseEnter={e => e.currentTarget.style.color = 'rgba(255,255,255,0.8)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
+            >☰</button>
+            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              {NAV_ITEMS.find(n => n.id === active)?.label || 'Brand Kit'}
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em' }}>easytradesetup.com</div>
+            <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }}/>
+            <div style={{ display: 'flex', gap: 4 }}>
+              {['#2B7BFF', '#22D3EE', '#F0C05A'].map(c => <div key={c} style={{ width: 10, height: 10, borderRadius: '50%', background: c }}/>)}
+            </div>
+          </div>
+        </div>
+
+        {/* Scrollable content */}
+        <div style={{ flex: 1, overflow: 'auto', padding: '32px 32px 60px' }}>
+          <ActiveSection/>
+        </div>
+      </div>
+
+      {/* Tweaks Panel */}
+      <TweaksPanel title="Display Options">
+        <TweakSection label="Appearance"/>
+        <TweakColor label="Accent Color" value={tweaks.accentColor} onChange={v => setTweak('accentColor', v)} />
+        <TweakToggle label="Compact Mode" value={tweaks.compactMode} onChange={v => setTweak('compactMode', v)} />
+        <TweakSection label="Navigation"/>
+        <TweakToggle label="Collapse Sidebar" value={sidebarCollapsed} onChange={v => setSidebarCollapsed(v)} />
+        <TweakSection label="Jump To"/>
+        {NAV_ITEMS.map(item => (
+          <TweakButton key={item.id} label={`→ ${item.label}`} onClick={() => setActive(item.id)} />
+        ))}
+      </TweaksPanel>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

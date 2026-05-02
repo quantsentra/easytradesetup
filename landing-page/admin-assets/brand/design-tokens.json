@@ -1,0 +1,238 @@
+{
+  "brand": {
+    "name": "EasyTradeSetup",
+    "tagline": "One indicator. Lifetime.",
+    "subTagline": "Indicator + Course + Quiz · TradingView Pine v5",
+    "domain": "easytradesetup.com",
+    "email": "welcome@easytradesetup.com"
+  },
+  "colors": {
+    "background": {
+      "pageBg":    { "value": "#05070F", "usage": "Full-bleed page, banners, ad creatives" },
+      "surface1":  { "value": "#0E1530", "usage": "Cards, panels, second layer" },
+      "surface2":  { "value": "#0a1224", "usage": "Tertiary depth (rare)" },
+      "navBg":     { "value": "#070B1A", "usage": "Sidebar, header, secondary chrome" }
+    },
+    "accents": {
+      "electricBlue": { "value": "#2B7BFF", "usage": "Primary brand. Buttons, links, active states. Lead this color." },
+      "cyan":         { "value": "#22D3EE", "usage": "Secondary accent. Pairs with blue in gradients." },
+      "brandGold":    { "value": "#F0C05A", "usage": "CTAs (Buy now), price badges, Free tags. High contrast vs navy." },
+      "violet":       { "value": "#8B5CF6", "usage": "Tertiary — use sparingly, never alone." },
+      "acidLime":     { "value": "#8FCC2A", "usage": "Live/Free/signal-active states only. Never body text." },
+      "amber":        { "value": "#FFB341", "usage": "Warnings, Inaugural offer eyebrow text." }
+    },
+    "semantic": {
+      "up":   { "value": "#22C55E", "usage": "Bullish, profit, positive signals, success states" },
+      "down": { "value": "#FF4D4F", "usage": "Bearish, drawdown, negative signals, error states" }
+    },
+    "ink": {
+      "primary":   { "value": "rgba(255,255,255,0.92)", "usage": "Primary white text on dark bg" },
+      "secondary": { "value": "rgba(255,255,255,0.60)", "usage": "Subheadings, secondary text" },
+      "tertiary":  { "value": "rgba(255,255,255,0.40)", "usage": "Captions, hints, tertiary text" },
+      "disabled":  { "value": "rgba(255,255,255,0.25)", "usage": "Disabled states, placeholders" },
+      "divider":   { "value": "rgba(255,255,255,0.06)", "usage": "Borders, dividers, subtle separators" },
+      "overlay":   { "value": "rgba(255,255,255,0.03)", "usage": "Hover backgrounds, subtle fills" }
+    },
+    "gradient": {
+      "signature": {
+        "value": "linear-gradient(135deg, #2B7BFF 0%, #22D3EE 60%, #F0C05A 100%)",
+        "usage": "Hero text accents, brand mark fill, OG image, YouTube banner headline. One per asset max."
+      },
+      "brandMark": {
+        "value": "linear-gradient(135deg, #2B7BFF, #22D3EE)",
+        "usage": "Brand mark circle fill only"
+      },
+      "radialGlow": {
+        "value": "radial-gradient(ellipse at 50% 50%, rgba(43,123,255,0.15) 0%, transparent 70%)",
+        "usage": "Hero section background glow"
+      },
+      "bottomScrim": {
+        "value": "linear-gradient(to top, rgba(5,7,15,0.95) 0%, transparent 100%)",
+        "usage": "Reel/Short bottom overlay to ensure caption legibility"
+      }
+    }
+  },
+  "typography": {
+    "fonts": {
+      "display": {
+        "family": "Space Grotesk",
+        "weights": [500, 600, 700],
+        "googleFonts": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700",
+        "usage": "H1, H2, big numbers, banner headlines"
+      },
+      "body": {
+        "family": "Inter Tight",
+        "weights": [400, 500, 600, 700],
+        "googleFonts": "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700",
+        "usage": "Paragraphs, buttons, nav, UI labels"
+      },
+      "mono": {
+        "family": "JetBrains Mono",
+        "weights": [400, 500, 700],
+        "googleFonts": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700",
+        "usage": "Prices, ticker symbols, code, eyebrow labels"
+      }
+    },
+    "scale": {
+      "heroHeadline": {
+        "fontFamily": "Space Grotesk",
+        "fontWeight": 700,
+        "fontSize": "72px–96px",
+        "letterSpacing": "-0.02em",
+        "lineHeight": 1.05,
+        "usage": "H1 hero headlines"
+      },
+      "subHeadline": {
+        "fontFamily": "Inter Tight",
+        "fontWeight": 500,
+        "fontSize": "24px–32px",
+        "letterSpacing": "0",
+        "lineHeight": 1.3,
+        "usage": "H2 sub-headlines"
+      },
+      "eyebrow": {
+        "fontFamily": "JetBrains Mono",
+        "fontWeight": 500,
+        "fontSize": "12px–14px",
+        "letterSpacing": "0.16em",
+        "textTransform": "uppercase",
+        "usage": "Section labels, eyebrow text above headlines"
+      },
+      "price": {
+        "fontFamily": "JetBrains Mono",
+        "fontWeight": 700,
+        "fontSize": "32px–48px",
+        "letterSpacing": "0",
+        "usage": "Prices, big numbers, ticker values"
+      },
+      "body": {
+        "fontFamily": "Inter Tight",
+        "fontWeight": 400,
+        "fontSize": "15px–17px",
+        "lineHeight": 1.55,
+        "usage": "Body copy, paragraphs"
+      },
+      "button": {
+        "fontFamily": "Inter Tight",
+        "fontWeight": 600,
+        "fontSize": "14px",
+        "letterSpacing": "0.01em",
+        "usage": "Button labels, nav items"
+      },
+      "caption": {
+        "fontFamily": "Inter Tight",
+        "fontWeight": 400,
+        "fontSize": "12px–13px",
+        "color": "rgba(255,255,255,0.45)",
+        "usage": "Captions, footnotes, helper text"
+      }
+    }
+  },
+  "spacing": {
+    "xs":  "4px",
+    "sm":  "8px",
+    "md":  "12px",
+    "lg":  "16px",
+    "xl":  "24px",
+    "2xl": "32px",
+    "3xl": "48px",
+    "4xl": "64px"
+  },
+  "borderRadius": {
+    "sm":   "6px",
+    "md":   "8px",
+    "lg":   "12px",
+    "xl":   "16px",
+    "pill": "40px",
+    "full": "9999px"
+  },
+  "shadows": {
+    "card":  "0 1px 3px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)",
+    "glow":  "0 0 20px rgba(43,123,255,0.3)",
+    "glowCyan": "0 0 30px rgba(34,211,238,0.2)"
+  },
+  "brandMark": {
+    "svgViewBox": "0 0 48 48",
+    "circle": { "cx": 24, "cy": 24, "r": 24, "fill": "gradient:brandMark" },
+    "checkmark": {
+      "points": "13,24 21,32 35,16",
+      "stroke": "white",
+      "strokeWidth": 3.5,
+      "strokeLinecap": "round",
+      "strokeLinejoin": "round"
+    },
+    "clearSpace": "25% on all sides",
+    "variants": {
+      "markOnly": "circle + checkmark, no text",
+      "wordmarkHorizontal": "mark (44×44) + 'EasyTradeSetup' Space Grotesk 700 22px, on same row",
+      "wordmarkStacked": "mark centered, text below, tagline in mono"
+    }
+  },
+  "socialSpecs": {
+    "youtubeBanner":    { "width": 2560, "height": 1440, "safeArea": "1546×423 centered", "format": "PNG/JPG", "maxSize": "6MB" },
+    "youtubeProfile":   { "width": 800,  "height": 800,  "format": "PNG", "note": "Serves at 98×98 max" },
+    "youtubeEndscreen": { "width": 1920, "height": 1080, "format": "PNG", "note": "Last 20s overlay" },
+    "youtubeShorts":    { "width": 1080, "height": 1920, "format": "MP4/MOV", "maxDuration": "60s", "fps": "30–60" },
+    "igProfile":        { "width": 1024, "height": 1024, "format": "PNG", "note": "Cropped to circle, renders at 110×110" },
+    "igCarousel":       { "width": 1080, "height": 1350, "format": "PNG/JPG", "note": "4:5 portrait, up to 10 slides" },
+    "igReel":           { "width": 1080, "height": 1920, "format": "MP4/MOV", "maxDuration": "90s", "gridCrop": "center 1080×1080" },
+    "igStory":          { "width": 1080, "height": 1920, "format": "PNG/MP4", "note": "Same as reel cover" },
+    "wordmarkH":        { "width": 1200, "height": 300,  "format": "PNG transparent" },
+    "wordmarkStacked":  { "width": 600,  "height": 600,  "format": "PNG transparent" },
+    "emailSignature":   { "width": 600,  "height": 150,  "format": "PNG" }
+  },
+  "safeZones": {
+    "youtubeShorts": {
+      "topAvoid":    { "height": "12%", "reason": "YouTube injects channel name, back button, search" },
+      "safeContent": { "top": "12%", "height": "62%", "reason": "Primary content zone" },
+      "bottomUI":    { "height": "26%", "reason": "Like/comment/share, subscribe button, caption text" }
+    },
+    "instagramReels": {
+      "topStatusBar": { "height": "8%",  "reason": "Device status bar" },
+      "rightRail":    { "width": "18%",  "reason": "Like, comment, share, audio disc buttons" },
+      "safeContent":  { "top": "8%", "right": "18%", "bottom": "22%", "reason": "Main visible area" },
+      "bottomMeta":   { "height": "22%", "reason": "@handle, audio name, caption preview" },
+      "gridCrop":     { "width": 1080, "height": 1080, "position": "center", "reason": "Profile grid crop" }
+    }
+  },
+  "copy": {
+    "legal": "Educational. You decide every trade.",
+    "url": "easytradesetup.com",
+    "urlMono": "easytradesetup.com (JetBrains Mono, rgba(255,255,255,0.60))",
+    "never": [
+      "ETS (abbreviation)",
+      "Guaranteed returns",
+      "100% accurate",
+      "Win every trade",
+      "Game-changer",
+      "Revolutionary",
+      "Secret formula",
+      "Fake testimonials or P&L"
+    ],
+    "always": [
+      "Founder-first voice: I built…, I lost on…",
+      "Show the chart, talk numbers",
+      "lifetime, no subscription",
+      "Educational. You decide every trade. (on all commercial surfaces)"
+    ],
+    "hashtags": {
+      "brand":   ["#EasyTradeSetup", "#EasyTradeSetups"],
+      "product": ["#TradingView", "#PineScript", "#Lifeline", "#TradingIndicator"],
+      "reach":   ["#Nifty", "#BankNifty", "#StockMarket", "#PriceAction", "#SwingTrading", "#OptionsTrading", "#IntraDay"]
+    }
+  },
+  "files": {
+    "outputDir": "landing-page/public/brand/",
+    "assets": {
+      "youtubeBanner":    "youtube-banner.png",
+      "youtubeProfile":   "yt-profile.png",
+      "youtubeEndscreen": "yt-endscreen.png",
+      "igProfile":        "ig-profile.png",
+      "igCarousel":       "ig-carousel-template.png",
+      "igReel":           "ig-reel-cover.png",
+      "igStory":          "ig-story-template.png",
+      "wordmarkH":        "wordmark-horizontal.png",
+      "wordmarkStacked":  "wordmark-stacked.png"
+    }
+  }
+}
