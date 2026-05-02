@@ -6,10 +6,23 @@ import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import AccountMenu from "@/components/auth/AccountMenu";
 
-const navItems = [
+type NavItem = {
+  href: string;
+  label: string;
+  external?: boolean;
+  badge?: string;
+};
+
+const navItems: NavItem[] = [
   { href: "/product",   label: "Features" },
   { href: "/sample",    label: "Free sample" },
   { href: "/pricing",   label: "Pricing" },
+  {
+    href: "https://portal.easytradesetup.com/portal/risk-calculator",
+    label: "Risk Calculator",
+    external: true,
+    badge: "Free",
+  },
 ];
 
 function isActive(pathname: string | null, href: string): boolean {
@@ -71,14 +84,34 @@ export default function TopNav() {
         <nav aria-label="Primary" className="hidden lg:flex items-center gap-1 flex-1 justify-center">
           {navItems.map((item) => {
             const active = isActive(pathname, item.href);
+            const cls = `nav-link ${active ? "nav-link-active" : ""} ${item.badge ? "nav-link-with-badge" : ""}`;
+            const inner = (
+              <>
+                {item.label}
+                {item.badge && (
+                  <span className="nav-link-badge" aria-hidden>{item.badge}</span>
+                )}
+              </>
+            );
+            if (item.external) {
+              return (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className={cls}
+                >
+                  {inner}
+                </a>
+              );
+            }
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`nav-link ${active ? "nav-link-active" : ""}`}
+                className={cls}
               >
-                {item.label}
+                {inner}
               </Link>
             );
           })}
@@ -132,23 +165,44 @@ export default function TopNav() {
           <div className="container-x py-4 flex flex-col">
             {navItems.map((item) => {
               const active = isActive(pathname, item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  aria-current={active ? "page" : undefined}
-                  className={`nav-link-mobile hairline-b ${active ? "nav-link-mobile-active" : ""}`}
-                >
+              const cls = `nav-link-mobile hairline-b ${active ? "nav-link-mobile-active" : ""}`;
+              const inner = (
+                <>
                   <span className="flex items-center gap-3">
                     {active && <span className="nav-dot" aria-hidden />}
                     <span>{item.label}</span>
+                    {item.badge && (
+                      <span className="nav-link-badge" aria-hidden>{item.badge}</span>
+                    )}
                   </span>
                   {active && (
                     <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-acid">
                       current
                     </span>
                   )}
+                </>
+              );
+              if (item.external) {
+                return (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className={cls}
+                  >
+                    {inner}
+                  </a>
+                );
+              }
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className={cls}
+                >
+                  {inner}
                 </Link>
               );
             })}
