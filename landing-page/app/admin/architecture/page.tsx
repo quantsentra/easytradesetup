@@ -24,9 +24,9 @@ const overviewChart = `graph TB
         mw["middleware.ts<br/>host-aware routing + auth gate"]
         mkt["/(marketing)/*<br/>14 public + 6 SEO"]
         auth_g["/(auth)/sign-in<br/>/(auth)/sign-up"]
-        portal_r["/portal/*<br/>9 routes"]
-        admin_r["/admin/*<br/>5 routes"]
-        api_r["/api/*<br/>10 endpoints"]
+        portal_r["/portal/*<br/>10 routes"]
+        admin_r["/admin/*<br/>19 routes"]
+        api_r["/api/*<br/>23 endpoints"]
         mw --> mkt
         mw --> auth_g
         mw --> portal_r

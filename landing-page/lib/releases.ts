@@ -26,6 +26,28 @@ export type Release = {
 
 export const RELEASES: Release[] = [
   {
+    date: "2026-05-02",
+    phase: "Marketing motion + admin tooling",
+    title: "Stable build — admin tooling, marketing checklist, brand kit, GA4",
+    tag: "v1.1-stable-2026-05-02",
+    commit: "098deff",
+    items: [
+      { tone: "milestone", text: "MILESTONE: site stable. Marketing motion ready. AI-first solo workflow. VAPT pass clean (zero medium+ findings)." },
+      { tone: "ship", text: "Brand kit at /admin/brand-kit — interactive HTML reference iframed from admin-only API route. Path-traversal-safe; iframe-scoped relaxed CSP only on this route. Source assets live outside public/." },
+      { tone: "ship", text: "Marketing checklist 025+026 — M0-M4 tier scheme. YouTube + Instagram only. AI-drafted weekly batches via Meta Business Suite. Drops paid acquisition, daily cadence, A/B pricing, affiliate program." },
+      { tone: "ship", text: "Risk Calculator — bidirectional 'Calculate from' (risk % or position size), market-first ordering, persistent prefs in localStorage." },
+      { tone: "ship", text: "GA4 wired via @next/third-parties. Conditional on NEXT_PUBLIC_GA_MEASUREMENT_ID. CSP allowlist updated for analytics + Ads linker collectors." },
+      { tone: "ship", text: "BRAND_KIT.md at repo root — colors, fonts, asset specs, AI image-gen prompts. Single source of truth for off-platform creative." },
+      { tone: "ship", text: "Admin layout widened 1200px → 1600px. Big-monitor breathing room for tables, charts, iframes." },
+      { tone: "ship", text: "Sitemap submitted to Google Search Console + Bing Webmaster Tools. Cron-job.org uptime probe wired with Bearer auth." },
+      { tone: "fix", text: "ETS abbreviation removed site-wide — JSON-LD alternateName + OG image badge swapped to canonical BrandMark checkmark." },
+      { tone: "fix", text: "Portal subdomain marketing paths (/checkout, /pricing, /sample, …) now 301 to www host instead of 404ing through the /portal/* rewrite." },
+      { tone: "fix", text: "First-visit currency mismatch (Hero USD vs Banner INR) — server <Price /> now uses resolveCurrency() with cookie + IP fallback." },
+      { tone: "ops", text: "Public-folder security audit — moved internal brand-kit assets out of public/ into admin-assets/. Verified no .env / .git / secrets leaked." },
+      { tone: "ops", text: "VAPT pass — TLS 1.3 enforced (1.0/1.1 rejected), HSTS preload, CSP nonce-based + strict-dynamic, BotID actively challenging, all admin / portal routes gated, Stripe webhook signature + idempotency tracking. Zero medium+ findings." },
+    ],
+  },
+  {
     date: "2026-04-29",
     phase: "Pre-indicator launch",
     title: "Site complete — ready to ship indicator + strategy build",
