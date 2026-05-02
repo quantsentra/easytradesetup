@@ -3,26 +3,32 @@
 // the HTML but not this companion module, so React was crashing on
 // 5 undefined components at line 2078.
 //
+// IMPORTANT: each <script type="text/babel"> block is eval'd in its
+// own scope by Babel-standalone, so plain `function Foo(){}`
+// declarations are NOT visible to the main inline script. We attach
+// each component to `window` so the bare identifiers in the main
+// app's JSX resolve to these stubs.
+//
 // All components return null so the kit renders without the tweaks
-// side panel. If/when the design team ships the real file, drop it
-// in beside this stub and the original implementation takes over.
+// side panel. Drop in the real design-team file later — same name,
+// same dir — and it will overwrite these stubs.
 
-function TweaksPanel({ title, children }) {
+window.TweaksPanel = function TweaksPanel({ title, children }) {
   return null;
-}
+};
 
-function TweakSection({ label }) {
+window.TweakSection = function TweakSection({ label }) {
   return null;
-}
+};
 
-function TweakColor({ label, value, onChange }) {
+window.TweakColor = function TweakColor({ label, value, onChange }) {
   return null;
-}
+};
 
-function TweakToggle({ label, value, onChange }) {
+window.TweakToggle = function TweakToggle({ label, value, onChange }) {
   return null;
-}
+};
 
-function TweakButton({ label, onClick }) {
+window.TweakButton = function TweakButton({ label, onClick }) {
   return null;
-}
+};
