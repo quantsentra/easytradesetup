@@ -35,7 +35,7 @@ export default async function PortalDashboard() {
               {newNotesSince > 0 && (
                 <span className="tz-chip tz-chip-cyan">
                   <span className="tz-chip-dot" style={{ background: "var(--tz-cyan)" }} />
-                  {newNotesSince} new note{newNotesSince === 1 ? "" : "s"}
+                  {newNotesSince} new update{newNotesSince === 1 ? "" : "s"}
                 </span>
               )}
             </div>
@@ -49,13 +49,13 @@ export default async function PortalDashboard() {
                 isReturning && activity.previousLastSeen ? (
                   newNotesSince > 0 ? (
                     <>
-                      <strong>{newNotesSince} new market note{newNotesSince === 1 ? "" : "s"}</strong>{" "}
+                      <strong>{newNotesSince} new update{newNotesSince === 1 ? "" : "s"}</strong>{" "}
                       since your last visit on{" "}
                       {new Date(activity.previousLastSeen).toISOString().slice(0, 10)}.
                     </>
                   ) : (
                     <>
-                      You&apos;re caught up. No new notes since{" "}
+                      You&apos;re caught up. No new updates since{" "}
                       {new Date(activity.previousLastSeen).toISOString().slice(0, 10)}.
                     </>
                   )
@@ -71,10 +71,10 @@ export default async function PortalDashboard() {
               {active ? (
                 <>
                   <Link href="/portal/downloads" className="tz-btn tz-btn-primary">
-                    Download Pine v2.4 →
+                    Download Pine v5 →
                   </Link>
-                  <Link href="/portal/updates" className="tz-btn">
-                    Read latest notes
+                  <Link href="/portal/docs/founder-welcome" className="tz-btn">
+                    Read welcome note
                   </Link>
                 </>
               ) : (
@@ -122,7 +122,7 @@ export default async function PortalDashboard() {
         </div>
       </section>
 
-      {/* ============ START HERE — required reading for new buyers ============ */}
+      {/* ============ START HERE — founder welcome path for new buyers ============ */}
       {active && (
         <section
           className="mt-6 rounded-xl p-5 sm:p-6"
@@ -135,20 +135,20 @@ export default async function PortalDashboard() {
             <div className="min-w-0">
               <span className="tz-chip tz-chip-cyan">
                 <span className="tz-chip-dot" style={{ background: "var(--tz-cyan)" }} />
-                Start here · required
+                Start here · founder note
               </span>
               <h2 className="mt-2 text-[18px] sm:text-[20px] font-semibold" style={{ color: "var(--tz-ink)" }}>
-                Indicator basics — what every line, zone, and candle on your chart means
+                The 6-step path to follow before your first real trade
               </h2>
               <p className="mt-1 text-[13.5px]" style={{ color: "var(--tz-ink-dim)" }}>
-                Eight-minute read. Trade setups in this portal assume you know this. Skip it and the rest won&apos;t click.
+                Four-minute read. The sequence Thomas wants every customer to follow — install, learn, demo, then trade small. Read it once, internalise the path.
               </p>
             </div>
             <Link
-              href="/portal/docs/indicator-basics"
+              href="/portal/docs/founder-welcome"
               className="tz-btn tz-btn-primary flex-none"
             >
-              Read the basics →
+              Read welcome →
             </Link>
           </div>
         </section>
@@ -159,7 +159,7 @@ export default async function PortalDashboard() {
         <Kpi label="License" value={active ? "Active" : "None"}
           delta={active ? "Lifetime · one payment" : "Buy to unlock"}
           accent={active ? "blue" : undefined} />
-        <Kpi label="New notes" value={String(newNotesSince)}
+        <Kpi label="New updates" value={String(newNotesSince)}
           delta={newNotesSince > 0 ? "Unread since last visit" : "All caught up"}
           accent={newNotesSince > 0 ? "cyan" : undefined} />
         <Kpi label="Sessions" value={String(activity.visitCount)}
@@ -173,16 +173,16 @@ export default async function PortalDashboard() {
         {/* Activity feed */}
         <section>
           <SectionHeader
-            title="Market notes feed"
-            sub={active ? "Pre-market bias, drops daily" : "Customer-only stream"}
-            link={active ? { href: "/portal/updates", label: "All notes →" } : undefined}
+            title="Updates &amp; founder notes"
+            sub={active ? "Indicator versions + occasional founder thoughts" : "Customer-only stream"}
+            link={active ? { href: "/portal/updates", label: "All updates →" } : undefined}
           />
 
           {!active ? (
             <LockedFeed />
           ) : latestUpdates.length === 0 ? (
             <div className="tz-card" style={{ color: "var(--tz-ink-mute)" }}>
-              No notes published yet. Check back tomorrow morning.
+              No updates published yet. Big releases and founder notes land here as they ship.
             </div>
           ) : (
             <div className="flex flex-col gap-2">
@@ -384,14 +384,14 @@ function LockedFeed() {
       <div className="relative">
         <span className="tz-chip">Customer-only</span>
         <h3 className="mt-3 font-display font-semibold text-[18px]" style={{ color: "var(--tz-ink)" }}>
-          Pre-market bias drops daily.
+          Updates &amp; founder notes.
         </h3>
         <p className="mt-2 text-[13.5px]" style={{ color: "var(--tz-ink-dim)" }}>
-          NIFTY · BANKNIFTY · SPX · XAU · BTC. One short note before the open. Bias, key levels,
-          a pullback plan. Buy to unlock the daily stream.
+          New indicator versions, fresh strategy pages, and occasional founder thoughts on how to
+          read the chart. No daily spam — only signal that changes how you trade. Buy to unlock.
         </p>
         <div className="mt-4 flex flex-col gap-2 opacity-50">
-          {["NIFTY — pre-market plan", "SPX bias · Asia hand-off", "BANKNIFTY · expiry tilt"].map((t) => (
+          {["Welcome from Thomas — your path", "Indicator v5 release notes", "New setup · Opening Range Breakout"].map((t) => (
             <div key={t} className="tz-feed-row" style={{ pointerEvents: "none" }}>
               <span className="tz-feed-dot" aria-hidden />
               <div className="min-w-0 flex-1">

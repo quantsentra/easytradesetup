@@ -169,7 +169,7 @@ export function SoftwareApplicationJsonLd() {
       "Supply and demand zones",
       "Pullback / continuation context",
       "Risk framework + position sizer",
-      "Daily pre-market notes",
+      "One-time founder welcome note + structured onboarding path",
     ],
   };
   return <Script data={data} id="ld-software" />;

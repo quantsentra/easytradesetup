@@ -26,7 +26,7 @@ const included = [
   { title: "Golden Indicator · Pine v5", desc: "Open source. Inspect and modify for personal use." },
   { title: "Indicator Course + Quiz", desc: "11 interactive lessons + knowledge quiz inside the portal. Mobile-friendly. Master every signal before you trade." },
   { title: "Risk Calculator", desc: "Position sizing and R-multiple tracker." },
-  { title: "Daily Market Notes", desc: "Pre-market bias — NIFTY, SPX, Gold, BTC." },
+  { title: "Founder welcome + path", desc: "One-time founder note in your portal — the 6-step sequence to follow before your first real trade. Install → learn → demo → trade small." },
   { title: "Lifetime Updates", desc: "Every future revision of the script, free." },
   { title: "Founder email support", desc: "Replies within 24 hours." },
 ];

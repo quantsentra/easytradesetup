@@ -35,14 +35,15 @@ export default async function UpdatesPage() {
       <>
         <div className="tz-topbar">
           <div>
-            <h1 className="tz-topbar-title">Market notes.</h1>
+            <h1 className="tz-topbar-title">Updates &amp; founder notes.</h1>
             <div className="tz-topbar-sub">Customer-only.</div>
           </div>
         </div>
         <div className="tz-card">
           <p className="text-[15px]" style={{ color: "var(--tz-ink-dim)" }}>
-            Daily pre-market notes — NIFTY, SPX, Gold, BTC — are published inside the portal for
-            active customers. Buy at the launch price to unlock.
+            Indicator versions, new strategy pages, and occasional founder notes — published inside
+            the portal for active customers. No daily-grind newsletter; only signal you'll actually
+            use. Buy at the launch price to unlock.
           </p>
           <div className="mt-5">
             <Link href="/checkout" className="tz-btn tz-btn-primary">
@@ -60,9 +61,10 @@ export default async function UpdatesPage() {
     <>
       <div className="tz-topbar">
         <div>
-          <h1 className="tz-topbar-title">Pre-market, daily.</h1>
+          <h1 className="tz-topbar-title">Updates &amp; founder notes.</h1>
           <div className="tz-topbar-sub">
-            Global bias + India session plan. Levels, gamma, session timing. Published before the open.
+            New indicator versions, fresh strategy pages, and occasional founder thoughts. No daily
+            spam — only signal that changes how you trade.
           </div>
         </div>
       </div>
@@ -70,7 +72,7 @@ export default async function UpdatesPage() {
       <div className="flex flex-col gap-3">
         {updates.length === 0 ? (
           <div className="tz-card" style={{ color: "var(--tz-ink-mute)", fontSize: 14 }}>
-            No notes yet. First daily drop lands on launch day.
+            No updates yet. Big releases and founder notes land here as they ship.
           </div>
         ) : (
           updates.map((u) => (

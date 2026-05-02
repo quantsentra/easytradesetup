@@ -38,7 +38,7 @@ const faqs = [
   {
     cat: "Purchase & delivery",
     items: [
-      ["How do I receive everything?", "By email, within seconds of payment. The email contains your portal sign-in link — every component (the .pine source, the interactive course, the knowledge quiz, the risk calculator, daily market notes) lives inside your portal account."],
+      ["How do I receive everything?", "By email, within seconds of payment. The email contains your portal sign-in link — every component (the .pine source, the interactive course, the knowledge quiz, the risk calculator, and a one-time founder welcome note) lives inside your portal account."],
       ["Do I need to enter card details every month?", "No. It's a one-time payment. No recurring charges, ever."],
       ["Are there any extra charges at checkout?", "No. The displayed price is what you pay — ₹4,599 in India, $49 international. No taxes or fees added at checkout."],
       ["What if I have install or usage problems?", "Open a support ticket from your portal — portal.easytradesetup.com/portal/support. A human replies within 24h with a fix. The script is Pine v5 standard; if it does not render or behaves unexpectedly, we walk you through the resolution."],

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Prose from "@/components/ui/Prose";
 import IndicatorBasicsCourse from "@/components/portal/IndicatorBasicsCourse";
+import FounderWelcome from "@/components/portal/FounderWelcome";
 
 type Doc = {
   title: string;
@@ -13,6 +14,13 @@ type Doc = {
 };
 
 const DOCS: Record<string, Doc> = {
+  "founder-welcome": {
+    title: "Welcome from Thomas — your path before the first trade",
+    eyebrow: "Start here · founder note",
+    lede: "A one-time read. The six-step sequence I want every customer to follow before risking real capital. No daily noise — read this once, internalise the path, then trade.",
+    body: <FounderWelcome />,
+    noProse: true,
+  },
   install: {
     title: "Install on TradingView",
     eyebrow: "Getting started",

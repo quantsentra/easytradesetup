@@ -19,6 +19,14 @@ const groups: { title: string; sub: string; tone: "blue" | "cyan" | "gold"; item
     tone: "blue",
     items: [
       {
+        slug: "founder-welcome",
+        title: "Welcome from Thomas — your path before the first trade",
+        blurb: "One-time read. The six-step sequence to follow before risking real capital. No daily noise.",
+        difficulty: "Foundations",
+        markets: ["Universal"],
+        estMinutes: 4,
+      },
+      {
         slug: "install",
         title: "Install on TradingView",
         blurb: "Paste the Pine v5 source, save as a script, add to chart. 3 minutes.",

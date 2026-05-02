@@ -23,7 +23,7 @@ export default function ReturnsPage() {
             <p>
               Golden Indicator is a one-time digital purchase — Pine Script source plus the
               bundled materials (Interactive Course + Quiz, Risk Calculator, Chart Gallery,
-              Daily Notes email list, lifetime updates). Once your portal access is unlocked
+              Founder welcome note, lifetime updates). Once your portal access is unlocked
               and the materials are delivered, the sale is final.
             </p>
 

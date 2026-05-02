@@ -48,7 +48,7 @@ const promises = [
   },
   {
     title: "Delivered to your portal",
-    body: "Indicator source, course, quiz, risk calculator, and daily market notes — all live in your portal. Sign-in link emailed within seconds of payment.",
+    body: "Indicator source, course, quiz, risk calculator, and a one-time founder welcome note — all live in your portal. Sign-in link emailed within seconds of payment.",
   },
 ];
 
