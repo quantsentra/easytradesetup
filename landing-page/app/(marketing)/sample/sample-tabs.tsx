@@ -126,24 +126,43 @@ export default function SampleTabs({
           <SetupCard s={active} />
         </div>
 
-        {/* Footer CTA — same across panels */}
-        <div className="mt-10 sm:mt-12 card-white p-6 sm:p-8 md:p-10 text-center">
-          <h2 className="h-card">Like the format?</h2>
-          <p className="mt-2 text-body text-muted">
-            This is one preview of multiple full setups inside your portal — alongside the
-            interactive 11-lesson course and knowledge quiz that walk you through every
-            signal, line, zone, and color the indicator plots. NIFTY, BANKNIFTY, SPX, NAS,
-            XAU, BTC.
+        {/* Footer CTA — strong "more inside" hook */}
+        <div className="sample-more-card mt-10 sm:mt-12">
+          <div className="sample-more-eyebrow">
+            <span className="sample-more-dot" aria-hidden />
+            What you've seen is 4 charts. What's inside is the full playbook.
+          </div>
+          <h2 className="sample-more-title">
+            This is the <span className="sample-more-highlight">tip</span> of the iceberg.
+          </h2>
+          <p className="sample-more-lede">
+            The Lifeline strategy you just read works across NIFTY, BANKNIFTY, US 30, XAU, BTC —
+            and that&apos;s <strong>one</strong> of multiple setups waiting inside your portal.
+            Buy signals, sell signals, range plays, expiry fades, regime filters, candle
+            psychology — you don&apos;t get to see them on this page. Only customers do.
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
-            <Link
-              href="/checkout"
-              className="inline-flex items-center justify-center rounded-lg bg-blue text-white px-6 py-3 text-body font-medium hover:brightness-110 transition-all"
-            >
-              Buy the full bundle
+
+          <ul className="sample-more-grid">
+            <li><span className="sample-more-num">11</span><span>Course lessons</span></li>
+            <li><span className="sample-more-num">+</span><span>Knowledge quiz</span></li>
+            <li><span className="sample-more-num">∞</span><span>Lifetime updates</span></li>
+            <li><span className="sample-more-num">1</span><span>Risk calculator</span></li>
+          </ul>
+
+          <p className="sample-more-tease">
+            <span className="sample-more-tease-icon" aria-hidden>🎁</span>
+            Inside the portal, more setups land every release. Buy once, get every future
+            strategy free for life. Surprise yourself.
+          </p>
+
+          <div className="sample-more-ctas">
+            <Link href="/checkout" className="sample-more-btn sample-more-btn-primary">
+              <span>Unlock the full playbook</span>
+              <span aria-hidden>→</span>
             </Link>
-            <Link href="/compare" className="link-apple chevron">
-              See how we compare
+            <Link href="/compare" className="sample-more-btn sample-more-btn-ghost">
+              <span>See how it compares</span>
+              <span aria-hidden>→</span>
             </Link>
           </div>
         </div>
@@ -357,8 +376,19 @@ function SetupCard({ s }: { s: Setup }) {
         </table>
       </div>
 
+      {/* Inline tease — "this is one of many" sticker */}
+      <div className="setup-more-tease no-print">
+        <span className="setup-more-tease-icon" aria-hidden>🎁</span>
+        <div>
+          <strong>One of many setups inside the portal.</strong>{" "}
+          <span className="setup-more-tease-sub">
+            What you&apos;re reading is a free taste — the full playbook unlocks at checkout.
+          </span>
+        </div>
+      </div>
+
       {/* Strong recommendation block — Golden Indicator only */}
-      <div className="mt-8 sm:mt-10 setup-rec">
+      <div className="mt-6 sm:mt-8 setup-rec">
         <div className="setup-rec-icon" aria-hidden>!</div>
         <div className="setup-rec-body">
           <div className="setup-rec-title">Strong recommendation — Golden Indicator only</div>

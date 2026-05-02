@@ -2415,6 +2415,209 @@
     }
   }
 
+  /* ============ Sample setup — inline tease + 'more inside' card ============ */
+
+  /* Inline tease just above the recommendation block — soft cyan chip
+     reminding the reader this is just one taste of many setups. */
+  .setup-more-tease {
+    display: flex; align-items: flex-start;
+    gap: 12px;
+    margin-top: 28px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: linear-gradient(135deg,
+      rgba(34, 211, 238, 0.10),
+      rgba(43, 123, 255, 0.06));
+    border: 1px solid rgba(34, 211, 238, 0.32);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--c-ink, #15181a);
+  }
+  .setup-more-tease strong { color: var(--c-ink, #15181a); font-weight: 700; }
+  .setup-more-tease-icon {
+    flex: none;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  .setup-more-tease-sub {
+    color: var(--c-ink-60, rgba(21, 24, 26, 0.62));
+  }
+
+  /* === 'More inside the portal' attractor card — replaces 'Like the format?' === */
+  .sample-more-card {
+    position: relative;
+    overflow: hidden;
+    padding: 36px 28px 32px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #0d1538 0%, #0a1224 60%, #050a1c 100%);
+    color: #ffffff;
+    text-align: center;
+    box-shadow:
+      0 30px 60px -25px rgba(43, 123, 255, 0.45),
+      0 12px 30px -10px rgba(0, 0, 0, 0.40);
+  }
+  .sample-more-card::before {
+    /* aurora glow accent */
+    content: "";
+    position: absolute;
+    inset: -40% -10% auto -10%;
+    height: 360px;
+    background: radial-gradient(60% 50% at 50% 0%,
+      rgba(34, 211, 238, 0.28) 0%,
+      rgba(43, 123, 255, 0.18) 35%,
+      transparent 70%);
+    pointer-events: none;
+  }
+  .sample-more-card > * { position: relative; z-index: 1; }
+
+  .sample-more-eyebrow {
+    display: inline-flex; align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(34, 211, 238, 0.12);
+    border: 1px solid rgba(34, 211, 238, 0.40);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: #22D3EE;
+  }
+  .sample-more-dot {
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: #22D3EE;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.85);
+    animation: sample-more-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes sample-more-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: 0.55; transform: scale(0.85); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sample-more-dot { animation: none; }
+  }
+
+  .sample-more-title {
+    margin-top: 18px;
+    font-family: var(--tz-display, system-ui, sans-serif);
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    color: #ffffff;
+  }
+  .sample-more-highlight {
+    background: linear-gradient(95deg, #22D3EE 0%, #F0C05A 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+  }
+  .sample-more-lede {
+    margin: 14px auto 0;
+    max-width: 620px;
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(237, 241, 250, 0.78);
+  }
+  .sample-more-lede strong { color: #ffffff; font-weight: 600; }
+
+  .sample-more-grid {
+    list-style: none;
+    margin: 22px auto 0;
+    padding: 0;
+    max-width: 600px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .sample-more-grid li {
+    display: flex; flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    font-size: 11.5px;
+    color: rgba(237, 241, 250, 0.72);
+    letter-spacing: 0.02em;
+  }
+  .sample-more-num {
+    font-family: var(--tz-display, system-ui, sans-serif);
+    font-size: 24px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #2B7BFF 0%, #22D3EE 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .sample-more-tease {
+    display: inline-flex; align-items: center;
+    gap: 8px;
+    margin: 18px auto 0;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(240, 192, 90, 0.10);
+    border: 1px dashed rgba(240, 192, 90, 0.50);
+    font-size: 13px;
+    font-weight: 500;
+    color: #F0C05A;
+  }
+  .sample-more-tease-icon { font-size: 16px; line-height: 1; }
+
+  .sample-more-ctas {
+    margin-top: 26px;
+    display: flex; flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+  .sample-more-btn {
+    display: inline-flex; align-items: center;
+    gap: 8px;
+    padding: 14px 22px;
+    border-radius: 12px;
+    font-size: 14px; font-weight: 600;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    transition: transform 160ms, box-shadow 160ms, border-color 160ms;
+  }
+  .sample-more-btn-primary {
+    background: linear-gradient(135deg, #2B7BFF 0%, #22D3EE 100%);
+    color: #ffffff;
+    box-shadow: 0 10px 26px rgba(43, 123, 255, 0.42);
+  }
+  .sample-more-btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 32px rgba(43, 123, 255, 0.50);
+  }
+  .sample-more-btn-ghost {
+    background: transparent;
+    color: rgba(237, 241, 250, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .sample-more-btn-ghost:hover {
+    border-color: rgba(34, 211, 238, 0.55);
+    color: #ffffff;
+  }
+
+  @media (max-width: 640px) {
+    .sample-more-card { padding: 28px 18px; border-radius: 18px; }
+    .sample-more-title { font-size: 26px; }
+    .sample-more-lede { font-size: 14px; }
+    .sample-more-grid { grid-template-columns: 1fr 1fr; }
+    .sample-more-btn { width: 100%; justify-content: center; }
+  }
+
+  /* Hide the new "more inside" attractor in print PDFs */
+  @media print {
+    .sample-more-card { display: none !important; }
+    .setup-more-tease { display: none !important; }
+  }
+
   /* ============ Sample setup — recommendation block + print to PDF ============ */
 
   .setup-rec {
