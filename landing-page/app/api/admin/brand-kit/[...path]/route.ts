@@ -28,6 +28,7 @@ const MIME: Record<string, string> = {
   ".webp": "image/webp",
   ".css":  "text/css; charset=utf-8",
   ".js":   "application/javascript; charset=utf-8",
+  ".jsx":  "text/jsx; charset=utf-8",
 };
 
 // Permissive CSP for the iframe document only. Allows the React-via-CDN
