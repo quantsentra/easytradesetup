@@ -77,14 +77,15 @@ export const SETUPS: Setup[] = [
     oneLiner: {
       before: "Once the New York session opens, when a Golden Indicator ",
       highlight: "Buy signal prints above the Lifeline",
-      mid: ",",
-      after: " enter on the next candle, place your stop below the signal candle or the Lifeline, target 1:2 RR — and trail the runner with the Lifeline as far as the move wants to go.",
+      mid: " and the next candle closes above that signal candle,",
+      after: " enter on the candle that follows the confirmation close, place your stop below the signal candle or the Lifeline, target 1:2 RR — and trail the runner with the Lifeline as far as the move wants to go.",
     },
     entries: [
       "Wait for the New York session to open. No pre-NY entries — overnight liquidity is thin and the Lifeline drift hasn't reset.",
       "Identify the black Lifeline plotted by the Golden Indicator. Price above = bullish bias. Price below = stand aside for longs.",
       "Wait for a Buy (B) signal to print above the Lifeline. Signal candle must close — no acting on intra-bar prints.",
-      "Enter on the open of the next candle after the signal closes. Do not chase inside the signal candle.",
+      "Confirmation: wait for the next candle to close ABOVE the Buy signal candle's high. No close-above = no trade. This filters out fake signals where price reverses straight back into the Lifeline.",
+      "Enter at the open of the candle that follows the confirmation close. Do not chase inside the signal or confirmation candle.",
     ],
     exits: [
       { k: "Stop loss", v: "Below the Buy signal candle low, OR the previous candle low, OR just below the Lifeline — whichever is structurally tightest without being noise. Pick before you enter. Never widen." },
