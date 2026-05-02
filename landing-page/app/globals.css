@@ -2172,9 +2172,11 @@
     gap: 12px;
   }
   .setup-figure-grid.is-single { grid-template-columns: 1fr; }
-  .setup-figure-grid.is-multi { grid-template-columns: 1fr; }
-  @media (min-width: 768px) {
-    .setup-figure-grid.is-multi { grid-template-columns: 1fr 1fr; gap: 14px; }
+  /* Multi-image: always stacked so charts stay legible at full width.
+     Side-by-side made each chart too small on the previous design. */
+  .setup-figure-grid.is-multi {
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   /* Caption tag — bottom-left of each chart, names the symbol when in
@@ -2356,6 +2358,15 @@
     background: #2DBE6D;
     color: #ffffff;
   }
+  .setup-chip-sell {
+    color: #8a1c1c;
+    background: rgba(255, 77, 79, 0.10);
+    border-color: rgba(255, 77, 79, 0.45);
+  }
+  .setup-chip-mark-sell {
+    background: #FF4D4F;
+    color: #ffffff;
+  }
   .setup-chip-target {
     color: #145fa6;
     background: rgba(43, 123, 255, 0.10);
@@ -2493,7 +2504,7 @@
     .setup-print-header {
       display: flex !important;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: center;
       padding: 0 0 10pt 0;
       margin: 0 0 16pt 0;
       border-bottom: 2pt solid #2B7BFF !important;
@@ -2509,28 +2520,41 @@
       height: 1.5pt;
       background: linear-gradient(90deg, #2B7BFF 0%, #22D3EE 50%, #F0C05A 100%);
     }
-    .setup-print-brand {
-      display: flex; flex-direction: column;
-      gap: 2pt;
+
+    /* Brand row — tick-mark logo + name + tagline */
+    .setup-print-brand-row {
+      display: flex !important;
+      align-items: center;
+      gap: 10pt;
     }
-    .setup-print-brand::before {
-      content: "ETS";
-      display: inline-block;
-      width: fit-content;
-      padding: 2pt 6pt;
-      margin-bottom: 4pt;
+    .setup-print-mark {
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 32pt;
+      height: 32pt;
+      border-radius: 999pt;
       background: linear-gradient(135deg, #2B7BFF 0%, #22D3EE 100%) !important;
-      color: #ffffff !important;
-      font-size: 11pt;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      border-radius: 3pt;
+      box-shadow: 0 2pt 6pt rgba(43, 123, 255, 0.30);
     }
+    .setup-print-mark svg { width: 18pt; height: 18pt; }
     .setup-print-brand {
-      font-size: 13pt;
-      font-weight: 700;
+      display: flex !important;
+      flex-direction: column;
+      gap: 1pt;
+    }
+    .setup-print-brand-name {
+      font-size: 14pt;
+      font-weight: 800;
       color: #15181a !important;
-      letter-spacing: -0.015em;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+    .setup-print-brand-sub {
+      font-size: 8.5pt;
+      font-weight: 600;
+      color: #6b7280 !important;
+      letter-spacing: 0.04em;
     }
     .setup-print-url {
       text-align: right;
@@ -2652,6 +2676,10 @@
     .setup-chip-buy {
       border-color: #2DBE6D !important;
       color: #14532d !important;
+    }
+    .setup-chip-sell {
+      border-color: #FF4D4F !important;
+      color: #8a1c1c !important;
     }
     .setup-chip-target {
       border-color: #2B7BFF !important;

@@ -23,7 +23,7 @@ export default function StickyBuyBar() {
   return (
     <div
       aria-hidden={!visible}
-      className={`lg:hidden fixed left-0 right-0 bottom-0 z-40 transition-transform duration-300 ${
+      className={`lg:hidden fixed left-0 right-0 bottom-0 z-40 transition-transform duration-300 print:hidden ${
         visible ? "translate-y-0" : "translate-y-full"
       }`}
       style={{

@@ -161,7 +161,26 @@ function SetupCard({ s }: { s: Setup }) {
     <article id={`setup-${s.id}`} className="setup-card card-apple p-6 sm:p-8 md:p-10 lg:p-14">
       {/* Print-only header — branding + URL for the PDF */}
       <div className="setup-print-header" aria-hidden>
-        <div className="setup-print-brand">EasyTradeSetup · Golden Indicator</div>
+        <div className="setup-print-brand-row">
+          <span className="setup-print-mark">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 13l4 4L19 7" />
+            </svg>
+          </span>
+          <span className="setup-print-brand">
+            <span className="setup-print-brand-name">EasyTradeSetup</span>
+            <span className="setup-print-brand-sub">Golden Indicator · Pine v5</span>
+          </span>
+        </div>
         <div className="setup-print-url">www.easytradesetup.com/sample</div>
       </div>
 
@@ -256,6 +275,10 @@ function SetupCard({ s }: { s: Setup }) {
             <span className="setup-chip setup-chip-buy">
               <span className="setup-chip-mark setup-chip-mark-buy">B</span>
               Buy signal
+            </span>
+            <span className="setup-chip setup-chip-sell">
+              <span className="setup-chip-mark setup-chip-mark-sell">S</span>
+              Sell signal
             </span>
             <span className="setup-chip setup-chip-target">
               <span className="setup-chip-mark setup-chip-mark-target">▲</span>
