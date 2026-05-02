@@ -22,8 +22,8 @@ type Task = {
 
 const TIER_META: Record<string, { label: string; color: string; rationale: string }> = {
   M0: { label: "Foundation",              color: "#d93b3b", rationale: "One-time wiring that gates the rest. Stripe live, email DKIM, uptime cron, Search Console, founder photo." },
-  M1: { label: "AI content factory",      color: "#2B7BFF", rationale: "Spend one weekend wiring the assembly line. Channels, schedulers, prompt library, first batch queued — then it runs itself." },
-  M2: { label: "Automated distribution",  color: "#22D3EE", rationale: "Weekly 30min batch tops up the queues. AI drafts, you edit, scheduler publishes. Low-touch, compounds." },
+  M1: { label: "AI content factory",      color: "#2B7BFF", rationale: "YouTube + Instagram only. One weekend: channels, Meta Business Suite, prompt library, first batch queued — then it runs itself." },
+  M2: { label: "Automated distribution",  color: "#22D3EE", rationale: "Weekly 30min IG batch + 1 YT short (repurposed reel). Monthly long-form YT. Low-touch, compounds. No X / LinkedIn / Reddit." },
   M3: { label: "SEO autopilot",           color: "#F0C05A", rationale: "Programmatic /indicator pages + AI blog + Resend nurture drips. Set up once, harvests organic traffic for years." },
   M4: { label: "Measure + iterate",       color: "#8B5CF6", rationale: "Lightweight check 1x/week on Clarity + Search Console. Double down on winners, no A/B until you have signal." },
 };
@@ -81,8 +81,8 @@ export default async function MarketingChecklistPage() {
             Migration pending
           </h2>
           <p className="text-[13.5px]" style={{ color: "var(--tz-ink-dim)" }}>
-            Run <code>025_marketing_tasks_simplified.sql</code> in Supabase SQL editor to seed this checklist.
-            Migration file lives at <code>landing-page/supabase/migrations/025_marketing_tasks_simplified.sql</code>.
+            Run <code>025_marketing_tasks_simplified.sql</code> then <code>026_marketing_tasks_yt_ig.sql</code> in Supabase SQL editor.
+            Migrations live at <code>landing-page/supabase/migrations/</code>.
           </p>
         </div>
       )}
@@ -189,7 +189,7 @@ export default async function MarketingChecklistPage() {
       })}
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)" }}>
-        Run 025_marketing_tasks_simplified.sql to seed · Toggle + notes persist in Supabase · Edit task copy via new migration only
+        Run 025 + 026 migrations to seed · Toggle + notes persist in Supabase · Edit task copy via new migration only
       </p>
     </>
   );
