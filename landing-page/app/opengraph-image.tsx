@@ -65,12 +65,20 @@ export default async function OG() {
               alignItems: "center",
               justifyContent: "center",
               color: "#fff",
-              fontSize: 22,
-              fontWeight: 800,
-              letterSpacing: -0.5,
             }}
           >
-            ETS
+            <svg
+              width={22}
+              height={22}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M5 13l4 4 10-11" />
+            </svg>
           </div>
           <span
             style={{

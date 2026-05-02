@@ -8,7 +8,7 @@ export function OrganizationJsonLd() {
     "@type": "Organization",
     "@id": `${SITE_URL}#org`,
     name: "EasyTradeSetup",
-    alternateName: ["Easy Trade Setup", "ETS"],
+    alternateName: ["Easy Trade Setup"],
     url: SITE_URL,
     logo: {
       "@type": "ImageObject",
@@ -44,7 +44,7 @@ export function WebSiteJsonLd() {
     "@type": "WebSite",
     "@id": `${SITE_URL}#website`,
     name: "EasyTradeSetup",
-    alternateName: ["Easy Trade Setup", "ETS"],
+    alternateName: ["Easy Trade Setup"],
     url: SITE_URL,
     description:
       "Golden Indicator — one TradingView Pine v5 script for any market. Market structure, regime, key levels, supply / demand.",
