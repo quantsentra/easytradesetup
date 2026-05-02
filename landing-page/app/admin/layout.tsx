@@ -32,13 +32,19 @@ const navSections: Array<{
   {
     title: "Content",
     items: [
-      { href: "/admin/updates", label: "Market notes", icon: NoteIcon },
+      { href: "/admin/updates", label: "Updates &amp; notes", icon: NoteIcon },
+    ],
+  },
+  {
+    title: "Growth",
+    items: [
+      { href: "/admin/marketing",   label: "Marketing checklist", icon: MegaphoneIcon },
+      { href: "/admin/analytics",   label: "Analytics",           icon: ChartIcon },
     ],
   },
   {
     title: "Insights",
     items: [
-      { href: "/admin/analytics",   label: "Analytics",   icon: ChartIcon },
       { href: "/admin/site-health", label: "Site health", icon: HeartbeatIcon },
       { href: "/admin/releases",    label: "Releases",    icon: TagIcon },
     ],
@@ -172,6 +178,13 @@ function NoteIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M5 4h11l3 3v13H5z" /><path d="M9 10h7M9 14h7M9 18h4" />
+    </svg>
+  );
+}
+function MegaphoneIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 11v2a4 4 0 004 4h2v3l4-3h7V8h-7L9 5H7a4 4 0 00-4 4v2z" />
     </svg>
   );
 }

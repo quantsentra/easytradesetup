@@ -2,6 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { toggleTask, setTaskNote } from "@/app/admin/checklist/actions";
+import { toggleMarketingTask, setMarketingTaskNote } from "@/app/admin/marketing/actions";
+
+type Kind = "mvp" | "marketing";
 
 type Props = {
   slug: string;
@@ -11,21 +14,26 @@ type Props = {
   initialNote: string | null;
   doneAt: string | null;
   doneBy: string | null;
+  link?: string | null;     // optional outbound link rendered next to title
+  kind?: Kind;              // which table to toggle against; defaults to mvp_tasks
 };
 
-export default function TaskCheckbox({ slug, title, detail, initialDone, initialNote, doneAt, doneBy }: Props) {
+export default function TaskCheckbox({ slug, title, detail, initialDone, initialNote, doneAt, doneBy, link, kind = "mvp" }: Props) {
   const [done, setDone] = useState(initialDone);
   const [note, setNote] = useState(initialNote || "");
   const [editingNote, setEditingNote] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
+  const dispatchToggle = kind === "marketing" ? toggleMarketingTask : toggleTask;
+  const dispatchNote = kind === "marketing" ? setMarketingTaskNote : setTaskNote;
+
   function onToggle() {
     const next = !done;
     setDone(next);
     setError(null);
     startTransition(async () => {
-      const r = await toggleTask(slug, next);
+      const r = await dispatchToggle(slug, next);
       if (!r.ok) {
         setDone(!next);
         setError(r.error || "Failed");
@@ -36,7 +44,7 @@ export default function TaskCheckbox({ slug, title, detail, initialDone, initial
   function onSaveNote() {
     setEditingNote(false);
     startTransition(async () => {
-      const r = await setTaskNote(slug, note);
+      const r = await dispatchNote(slug, note);
       if (!r.ok) setError(r.error || "Save failed");
     });
   }
@@ -63,8 +71,27 @@ export default function TaskCheckbox({ slug, title, detail, initialDone, initial
             color: done ? "var(--tz-ink-mute)" : "var(--tz-ink)",
             textDecoration: done ? "line-through" : "none",
             lineHeight: 1.4,
+            display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap",
           }}>
-            {title}
+            <span>{title}</span>
+            {link && (
+              <a
+                href={link}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  fontSize: 11,
+                  fontFamily: "var(--tz-mono)",
+                  color: "var(--tz-acid-dim)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  textDecoration: "none",
+                }}
+              >
+                ↗ open
+              </a>
+            )}
           </div>
           {detail && (
             <div className="text-[12.5px]" style={{

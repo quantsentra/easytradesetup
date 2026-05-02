@@ -48,18 +48,22 @@ export default async function DownloadsPage() {
           version_slug="v5"
         />
         <FileRow
-          name="Trade Logic PDF"
-          version="1st edition · 50 pages"
-          sizeHint=".pdf · ~3.2 MB"
-          storagePath="golden-indicator/trade-logic.pdf"
-        />
-        <FileRow
           name="Risk Calculator · template"
           version="XLSX + Google Sheets copy link"
           sizeHint=".xlsx · ~40 KB"
           storagePath="golden-indicator/risk-calculator.xlsx"
         />
       </div>
+
+      <p className="mt-6 text-[12.5px]" style={{ color: "var(--tz-ink-dim)", lineHeight: 1.55 }}>
+        Looking for the strategies?
+        {" "}
+        Setup playbooks now live as interactive pages under{" "}
+        <a href="/portal/docs" style={{ color: "var(--tz-cyan)", textDecoration: "underline" }}>
+          Strategies
+        </a>
+        {" "}— alongside the indicator course and knowledge quiz.
+      </p>
 
       <p className="mt-8 text-[10.5px] font-mono uppercase tracking-widest"
         style={{ color: "var(--tz-ink-mute)" }}>

@@ -338,7 +338,7 @@ const backlog: Array<{ tier: string; title: string; items: string[]; color: stri
     items: [
       "Vercel Hobby → Pro for crons + longer timeouts.",
       "Multi-admin via admins table inserts.",
-      "Trade Logic PDF standalone $9 SKU.",
+      "Razorpay UPI integration for India once Stripe-INR conversion plateaus.",
     ],
   },
 ];
