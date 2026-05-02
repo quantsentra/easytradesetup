@@ -191,41 +191,62 @@ function SetupCard({ s }: { s: Setup }) {
         {s.title}
       </h2>
 
-      {s.image && (
+      {s.images && s.images.length > 0 && (
         <figure className="setup-figure mt-6 sm:mt-8">
-          <div className="setup-figure-frame">
-            <a
-              href={s.image.src}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Open chart at full resolution in a new tab"
-              className="setup-figure-stage no-print-link"
-            >
-              <Image
-                src={s.image.src}
-                alt={s.image.alt}
-                fill
-                sizes="(min-width: 1024px) 900px, 100vw"
-                className="setup-figure-img"
-                priority
-              />
-              <span className="setup-figure-tag" aria-hidden>
-                <span className="setup-figure-tag-dot" />
-                Live · Golden Indicator
-              </span>
-              <span className="setup-figure-zoom no-print" aria-hidden>
-                <span className="setup-figure-zoom-icon">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="7" />
-                    <path d="M21 21l-4.3-4.3" />
-                    <path d="M11 8v6" />
-                    <path d="M8 11h6" />
-                  </svg>
-                </span>
-                <span className="hidden sm:inline">View full size</span>
-                <span className="sm:hidden">Zoom</span>
-              </span>
-            </a>
+          <div
+            className={
+              s.images.length === 1
+                ? "setup-figure-grid is-single"
+                : "setup-figure-grid is-multi"
+            }
+          >
+            {s.images.map((img, idx) => (
+              <div key={img.src} className="setup-figure-frame">
+                <a
+                  href={img.src}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${img.caption || "chart"} at full resolution in a new tab`}
+                  className="setup-figure-stage no-print-link"
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    fill
+                    sizes={
+                      s.images && s.images.length > 1
+                        ? "(min-width: 768px) 45vw, 100vw"
+                        : "(min-width: 1024px) 900px, 100vw"
+                    }
+                    className="setup-figure-img"
+                    priority={idx === 0}
+                  />
+                  {img.caption && (
+                    <span className="setup-figure-caption-tag" aria-hidden>
+                      {img.caption}
+                    </span>
+                  )}
+                  {idx === 0 && (
+                    <span className="setup-figure-tag" aria-hidden>
+                      <span className="setup-figure-tag-dot" />
+                      Live · Golden Indicator
+                    </span>
+                  )}
+                  <span className="setup-figure-zoom no-print" aria-hidden>
+                    <span className="setup-figure-zoom-icon">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="11" cy="11" r="7" />
+                        <path d="M21 21l-4.3-4.3" />
+                        <path d="M11 8v6" />
+                        <path d="M8 11h6" />
+                      </svg>
+                    </span>
+                    <span className="hidden sm:inline">View full size</span>
+                    <span className="sm:hidden">Zoom</span>
+                  </span>
+                </a>
+              </div>
+            ))}
           </div>
           <div className="setup-figure-legend" aria-label="Chart annotations">
             <span className="setup-chip setup-chip-line">

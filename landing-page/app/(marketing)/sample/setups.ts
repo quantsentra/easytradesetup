@@ -15,9 +15,10 @@ export type Setup = {
   invalidation: string;
   why: string;
   risk: Array<[string, string]>;
-  // Optional annotated chart screenshot. PNG or JPG under /public/sample/.
-  // Rendered above the intro for visual anchoring before the rules.
-  image?: { src: string; alt: string };
+  // Optional annotated chart screenshots. One = full-width frame.
+  // Two+ = side-by-side gallery (stacks on mobile). Each gets the same
+  // brand frame, zoom-to-full-size, and annotation legend.
+  images?: Array<{ src: string; alt: string; caption?: string }>;
 };
 
 export const SETUPS: Setup[] = [
@@ -25,39 +26,52 @@ export const SETUPS: Setup[] = [
     id: "india",
     label: "Indian Market",
     short: "India",
-    chapter: "Chapter 4 · Sample",
-    title: "Opening Range Breakout — NIFTY Futures",
-    symbol: "NIFTY · 5m / 15m · 9:15–15:15 IST",
+    chapter: "Free sample · NIFTY & BANKNIFTY",
+    title: "Lifeline Buy — NIFTY & BANKNIFTY",
+    symbol: "NIFTY / BANKNIFTY · 5m / 15m · 9:15 IST onward",
+    images: [
+      {
+        src: "/nifty-lifeline.png",
+        alt: "NIFTY 50 chart with the Golden Indicator's Lifeline plotted in black and a Buy signal printing above it during the Indian morning session",
+        caption: "NIFTY 50",
+      },
+      {
+        src: "/banknifty-lifeline.png",
+        alt: "BANKNIFTY chart with the Golden Indicator's Lifeline plotted in black and a Buy signal printing above it",
+        caption: "BANKNIFTY",
+      },
+    ],
     intro:
-      "A mechanical intraday setup for NSE Nifty futures. Works best during the first 90 minutes after the Indian market open (9:15–10:45 IST) when directional conviction is highest and expiry-gamma pressure is lowest.",
+      "Same Lifeline strategy, tuned for Indian markets. The black trailing line on your chart is the Lifeline — McGinley-derived, smooth in trend, fast on reversal. When a Buy signal prints above it after 9:15 IST and the next candle confirms with a close above the signal, you take the entry, define risk under the Lifeline, and let the trend run. NIFTY for clean intraday momentum, BANKNIFTY when volatility expands.",
     oneLiner: {
-      before: "When Nifty futures close a 5-minute bar ",
-      highlight: "outside",
-      mid: " the high or low of the first 15-minute range (9:15–9:30 IST), and the Golden Indicator's regime filter agrees,",
-      after: " we take the break with a range-width target and a stop at the opposite side of the range.",
+      before: "After the Indian market opens, when a Golden Indicator ",
+      highlight: "Buy signal prints above the Lifeline",
+      mid: " and the next candle closes above that signal candle,",
+      after: " enter on the candle that follows the confirmation close, place your stop below the signal candle or the Lifeline, target 1:2 RR — and trail the runner with the Lifeline as far as the move wants to go.",
     },
     entries: [
-      "Mark the high and low of the 9:15–9:30 IST bars. This is the “opening range” (OR).",
-      "Wait for a 5-minute close outside the OR — long above OR high, short below OR low.",
-      "Confirm regime: Golden Indicator must show the matching direction. No counter-regime entries.",
-      "Enter on the open of the next bar. Do not chase within the confirmation bar.",
+      "Wait for 9:15 IST. No pre-open entries — the Lifeline drift hasn't reset on the gap.",
+      "Identify the black Lifeline plotted by the Golden Indicator on your NIFTY / BANKNIFTY chart. Price above = bullish bias. Price below = stand aside for longs.",
+      "Wait for a Buy (B) signal to print above the Lifeline. Signal candle must close — no acting on intra-bar prints.",
+      "Confirmation: wait for the next candle to close ABOVE the Buy signal candle's high. No close-above = no trade. This filters out fake signals where price reverses straight back into the Lifeline.",
+      "Enter at the open of the candle that follows the confirmation close. Do not chase inside the signal or confirmation candle.",
     ],
     exits: [
-      { k: "Target", v: "Project the range width in the direction of the break. OR width = 40 pts → target 40 pts from entry." },
-      { k: "Stop", v: "Opposite side of the opening range. Never inside the range." },
-      { k: "Time stop", v: "Square off by 15:15 IST regardless of PnL. Intraday-only — overnight exposure invalidates the edge." },
-      { k: "Scale-out", v: "Take half at 0.7× range width, trail the remainder with a 1× ATR stop." },
+      { k: "Stop loss", v: "Below the Buy signal candle low, OR the previous candle low, OR just below the Lifeline — whichever is structurally tightest without being noise. Pick before you enter. Never widen." },
+      { k: "Target 1 · book half", v: "1:2 reward-to-risk. Book half. Move the remaining stop to cost (breakeven). The trade is now risk-free." },
+      { k: "Target 2 · let it run", v: "Unlimited. Trail the stop below each new Lifeline pivot. Let the runner extend as long as price respects the line. NIFTY trends often deliver 3–5R, BANKNIFTY can deliver more on volatile days." },
+      { k: "Hard exit", v: "Close below the Lifeline = trend over. Exit at market regardless of where the trade is. The line is the line in the sand." },
     ],
     invalidation:
-      "Re-entry back inside the opening range within two 5-minute bars after entry = false breakout. Exit flat immediately. Do not average. Do not flip. Record the outcome and stand aside until the next clean setup.",
+      "A close below the Lifeline before Target 1 = the trend has flipped. Exit immediately, take the full 1R loss, and stand aside. Do not average down. Do not flip short on impulse. The Lifeline broke — wait for a fresh setup with a fresh structure.",
     why:
-      "The first 15 minutes in Indian markets absorb overnight positioning and macro news flow. A clean break of that range on rising volume typically indicates one side's stops are being run — and the resulting move is often directional for the first 60–90 minutes before expiry-hedging and profit-taking dampen momentum. The Golden Indicator's regime filter removes the biggest killer: range-bound chop days where the break fails within the hour.",
+      "The first 60–90 minutes after Indian open absorb overnight positioning, US-close handover, and Asian-session continuation. The Lifeline filters that noise from real direction the way McGinley designed it — slow in trend, fast on reversal. NIFTY runs cleaner intraday momentum; BANKNIFTY expands harder on volatility days and weekly expiries. Same rules, both symbols. The edge isn't in the entry — it's in trusting the line and not bailing early.",
     risk: [
-      ["Risk per trade", "0.5% of account — hard cap"],
-      ["Max trades per day", "2 — one long attempt, one short attempt"],
-      ["Daily stop loss", "-1.5% — stop trading for the day"],
-      ["Reward/risk target", "≥ 1.5R on closed trades, net"],
-      ["Win rate expectation", "45–55% (edge is in the RR, not the hit rate)"],
+      ["Risk per trade", "2% of account — hard cap. Never bigger."],
+      ["3 losses in a row", "Stop trading for the day. Psychology breaks before the math does."],
+      ["3 wins in a row", "Stop trading for the day. Lock the day. Heat fades fast on the next trade."],
+      ["Reward/risk floor", "1:2 minimum at Target 1. No 1:1, no 1:1.5 — too thin for variance."],
+      ["Trail rule", "Above Lifeline → stay long. Lifeline broken → exit. No exceptions."],
     ],
   },
 
@@ -68,10 +82,12 @@ export const SETUPS: Setup[] = [
     chapter: "Free sample · US 30",
     title: "Lifeline Buy — US 30 (Dow Jones)",
     symbol: "US30 · 5m / 15m · NY session open",
-    image: {
-      src: "/us30-lifeline.png",
-      alt: "US 30 chart with the Golden Indicator's Lifeline plotted in black and a Buy signal printing above it during the New York session open",
-    },
+    images: [
+      {
+        src: "/us30-lifeline.png",
+        alt: "US 30 chart with the Golden Indicator's Lifeline plotted in black and a Buy signal printing above it during the New York session open",
+      },
+    ],
     intro:
       "Simple. Mechanical. High-discipline. Wait for the New York session to open. The black trailing line on your chart — the Lifeline — does the heavy lifting; it's a McGinley-derived momentum tracker that smooths chop yet flips fast on real reversals. When a Buy signal prints above the Lifeline, the path is laid out: enter the next candle, define your risk underneath, and let the trend run as far as the Lifeline holds.",
     oneLiner: {
