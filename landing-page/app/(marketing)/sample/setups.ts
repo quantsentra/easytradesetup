@@ -15,6 +15,9 @@ export type Setup = {
   invalidation: string;
   why: string;
   risk: Array<[string, string]>;
+  // Optional annotated chart screenshot. PNG or JPG under /public/sample/.
+  // Rendered above the intro for visual anchoring before the rules.
+  image?: { src: string; alt: string };
 };
 
 export const SETUPS: Setup[] = [
@@ -62,39 +65,43 @@ export const SETUPS: Setup[] = [
     id: "us",
     label: "US Market",
     short: "US",
-    chapter: "Chapter 6 · Sample",
-    title: "Morning Trend Pullback — S&P 500 Futures (ES)",
-    symbol: "ES · 15m · 9:30–16:00 ET",
+    chapter: "Free sample · US 30",
+    title: "Lifeline Buy — US 30 (Dow Jones)",
+    symbol: "US30 · 5m / 15m · NY session open",
+    image: {
+      src: "/us30-lifeline.png",
+      alt: "US 30 chart with the Golden Indicator's Lifeline plotted in black and a Buy signal printing above it during the New York session open",
+    },
     intro:
-      "A swing-style intraday continuation setup for ES futures (or SPY / SPX index). Targets the second leg of a clean NY-morning trend, after the first impulse fades into a controlled pullback. Avoids the FOMC / CPI / NFP windows where the setup gets steamrolled by news.",
+      "Simple. Mechanical. High-discipline. Wait for the New York session to open. The black trailing line on your chart — the Lifeline — does the heavy lifting; it's a McGinley-derived momentum tracker that smooths chop yet flips fast on real reversals. When a Buy signal prints above the Lifeline, the path is laid out: enter the next candle, define your risk underneath, and let the trend run as far as the Lifeline holds.",
     oneLiner: {
-      before: "After a clean NY-morning trend leg, wait for a ",
-      highlight: "50% pullback to the 20-EMA",
-      mid: " on the 15m chart and a same-direction regime read,",
-      after: " then enter on the first reversal bar back in the trend's direction.",
+      before: "Once the New York session opens, when a Golden Indicator ",
+      highlight: "Buy signal prints above the Lifeline",
+      mid: ",",
+      after: " enter on the next candle, place your stop below the signal candle or the Lifeline, target 1:2 RR — and trail the runner with the Lifeline as far as the move wants to go.",
     },
     entries: [
-      "Identify a clean trend leg in the first 90 minutes (9:30–11:00 ET) — at least 3 higher-highs / lower-lows.",
-      "Wait for a pullback to the 20-EMA reaching ~50% of the leg. No deeper, no shallower.",
-      "Confirm regime: Golden Indicator must agree with the trend direction.",
-      "Enter on the close of the first reversal bar (bullish engulf / pin in uptrend, mirror in downtrend).",
+      "Wait for the New York session to open. No pre-NY entries — overnight liquidity is thin and the Lifeline drift hasn't reset.",
+      "Identify the black Lifeline plotted by the Golden Indicator. Price above = bullish bias. Price below = stand aside for longs.",
+      "Wait for a Buy (B) signal to print above the Lifeline. Signal candle must close — no acting on intra-bar prints.",
+      "Enter on the open of the next candle after the signal closes. Do not chase inside the signal candle.",
     ],
     exits: [
-      { k: "Target", v: "Prior swing high (long) or swing low (short). Project 1× the impulse leg as a stretch target." },
-      { k: "Stop", v: "1 ATR below the pullback low (long) / above pullback high (short). Never inside the EMA cluster." },
-      { k: "Time stop", v: "Flat by 15:30 ET. Last 30 minutes are MOC-rebalance noise — outside the edge window." },
-      { k: "Scale-out", v: "Take half at the prior swing, trail remainder under each new HL / above each new LH." },
+      { k: "Stop loss", v: "Below the Buy signal candle low, OR the previous candle low, OR just below the Lifeline — whichever is structurally tightest without being noise. Pick before you enter. Never widen." },
+      { k: "Target 1 · book half", v: "1:2 reward-to-risk. Book half. Move the remaining stop to cost (breakeven). The trade is now risk-free." },
+      { k: "Target 2 · let it run", v: "Unlimited. Trail the stop below each new Lifeline pivot. Let the runner extend as long as price respects the line. Some days the runner does 5R, 8R, more — that's where the equity curve is built." },
+      { k: "Hard exit", v: "Close below the Lifeline = trend over. Exit at market regardless of where the trade is. The line is the line in the sand." },
     ],
     invalidation:
-      "Two consecutive 15m closes on the wrong side of the 20-EMA after entry = trend has flipped. Exit at market. Do not wait for the stop to fill. The setup is built on continuation; once continuation fails, edge evaporates.",
+      "A close below the Lifeline before Target 1 = the trend has flipped. Exit immediately, take the full 1R loss, and stand aside. Do not average down. Do not flip short on impulse. The Lifeline broke — wait for a fresh setup with a fresh structure.",
     why:
-      "US index futures show the strongest trend continuity inside the 9:30–11:30 ET window. Institutional rebalancing and ES → SPY arbitrage flow create compounding directional pressure during the first impulse, while the first pullback typically attracts late algo trend-followers buying the dip / shorting the bounce. The Golden Indicator's regime filter screens out range-day false breaks and keeps you out of FOMC / CPI chop where the setup gets shredded.",
+      "The New York session is when real US institutional flow hits the tape. The Lifeline filters retail-hour noise from genuine direction the way McGinley designed it — slow in trend, fast on reversal. A Buy signal printing above the Lifeline means structural bias and momentum agree. Entries above the line with stops below it produce asymmetric trades: risk one to make 2, 3, 5, even 8R when the trend extends. The edge isn't in the entry. It's in trusting the line and not bailing early.",
     risk: [
-      ["Risk per trade", "0.5% of account — hard cap"],
-      ["Max trades per day", "2 — one in each direction max"],
-      ["Daily stop loss", "-1.5% — stop trading for the day"],
-      ["Reward/risk target", "≥ 1.8R (US trends extend further than IN intraday)"],
-      ["Win rate expectation", "50–60% — pullback entries reward patience"],
+      ["Risk per trade", "2% of account — hard cap. Never bigger."],
+      ["3 losses in a row", "Stop trading for the day. Psychology breaks before the math does."],
+      ["3 wins in a row", "Stop trading for the day. Lock the day. Heat fades fast on the next trade."],
+      ["Reward/risk floor", "1:2 minimum at Target 1. No 1:1, no 1:1.5 — too thin for variance."],
+      ["Trail rule", "Above Lifeline → stay long. Lifeline broken → exit. No exceptions."],
     ],
   },
 

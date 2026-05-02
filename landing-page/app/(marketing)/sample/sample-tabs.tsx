@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { SETUPS, type Setup } from "./setups";
@@ -152,19 +153,63 @@ export default function SampleTabs({
 }
 
 function SetupCard({ s }: { s: Setup }) {
+  const handlePrint = () => {
+    if (typeof window !== "undefined") window.print();
+  };
+
   return (
-    <article className="card-apple p-6 sm:p-8 md:p-10 lg:p-14">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 sm:mb-8">
+    <article id={`setup-${s.id}`} className="setup-card card-apple p-6 sm:p-8 md:p-10 lg:p-14">
+      {/* Print-only header — branding + URL for the PDF */}
+      <div className="setup-print-header" aria-hidden>
+        <div className="setup-print-brand">EasyTradeSetup · Golden Indicator</div>
+        <div className="setup-print-url">www.easytradesetup.com/sample</div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 sm:mb-8 no-print-flex">
         <span className="text-micro font-semibold text-blue-link uppercase tracking-wider">
           {s.chapter}
         </span>
-        <span className="text-nano font-mono text-muted-faint">{s.symbol}</span>
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="text-nano font-mono text-muted-faint">{s.symbol}</span>
+          <button
+            type="button"
+            onClick={handlePrint}
+            className="no-print inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[12px] font-semibold text-blue-link border border-blue-link/30 hover:border-blue-link/60 hover:bg-blue-link/5 transition-colors"
+            aria-label="Download this setup as a PDF"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
+            </svg>
+            Download PDF
+          </button>
+        </div>
       </div>
 
       <h2 className="font-display font-semibold text-[26px] sm:text-[34px] md:text-[40px] leading-[1.1] tracking-tight text-ink">
         {s.title}
       </h2>
-      <p className="mt-4 text-body text-muted leading-relaxed">{s.intro}</p>
+
+      {s.image && (
+        <figure className="mt-6 sm:mt-8 setup-figure">
+          <div className="relative aspect-[3/2] sm:aspect-[16/10] rounded-xl overflow-hidden bg-bg-3 border border-rule">
+            <Image
+              src={s.image.src}
+              alt={s.image.alt}
+              fill
+              sizes="(min-width: 1024px) 900px, 100vw"
+              className="object-contain"
+              priority
+            />
+          </div>
+          <figcaption className="mt-2 text-nano font-mono uppercase tracking-widest text-muted-faint">
+            Annotated chart · Golden Indicator · {s.symbol.split(" · ")[0]}
+          </figcaption>
+        </figure>
+      )}
+
+      <p className="mt-4 sm:mt-6 text-body text-muted leading-relaxed">{s.intro}</p>
 
       <h3 className="mt-8 sm:mt-10 h-card">The setup in one sentence</h3>
       <p className="mt-2 text-body text-muted leading-relaxed">
@@ -230,10 +275,25 @@ function SetupCard({ s }: { s: Setup }) {
         </table>
       </div>
 
-      <div className="mt-8 sm:mt-10 hairline-t pt-6 sm:pt-8 text-nano text-muted-faint leading-relaxed">
+      {/* Strong recommendation block — Golden Indicator only */}
+      <div className="mt-8 sm:mt-10 setup-rec">
+        <div className="setup-rec-icon" aria-hidden>!</div>
+        <div className="setup-rec-body">
+          <div className="setup-rec-title">Strong recommendation — Golden Indicator only</div>
+          <p className="setup-rec-text">
+            Every setup on this page assumes you are using the <strong>Golden Indicator</strong> on
+            TradingView — its Lifeline, regime filter, and Buy/Sell signals are how each rule is
+            anchored. Run this setup with a different indicator stack and the rules no longer
+            apply. If you choose to deviate and lose capital, that loss is yours — these are
+            educational guides, not generic strategies.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6 sm:mt-8 hairline-t pt-6 sm:pt-8 text-nano text-muted-faint leading-relaxed">
         <strong className="text-ink">Educational content. Not investment advice.</strong>{" "}
-        No strategy wins every trade, and historical descriptions do not guarantee
-        future results. Trading involves substantial risk of loss. See the full{" "}
+        No strategy wins every trade, and historical descriptions do not guarantee future
+        results. Trading involves substantial risk of loss. See the full{" "}
         <Link href="/legal/disclaimer" className="link-apple">
           trading disclaimer
         </Link>

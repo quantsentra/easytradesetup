@@ -2162,4 +2162,136 @@
     .fw-closing { padding: 18px; }
     .fw-cta { width: 100%; justify-content: center; }
   }
+
+  /* ============ Sample setup — recommendation block + print to PDF ============ */
+
+  .setup-rec {
+    display: flex; gap: 14px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    border-radius: 12px;
+    background: linear-gradient(135deg,
+      rgba(240, 192, 90, 0.12),
+      rgba(240, 192, 90, 0.04));
+    border: 1px solid rgba(240, 192, 90, 0.40);
+  }
+  .setup-rec-icon {
+    flex: none;
+    width: 28px; height: 28px;
+    display: grid; place-items: center;
+    border-radius: 999px;
+    background: rgba(240, 192, 90, 0.20);
+    color: #B57F1A;
+    font-weight: 800;
+    font-size: 16px;
+    line-height: 1;
+  }
+  .setup-rec-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--c-ink, #15181a);
+    letter-spacing: -0.005em;
+  }
+  .setup-rec-text {
+    margin-top: 6px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--c-ink-60, rgba(21,24,26,0.62));
+  }
+  .setup-rec-text strong { color: var(--c-ink, #15181a); }
+
+  /* Print-only header — branding + url, hidden on screen */
+  .setup-print-header { display: none; }
+
+  /* Print stylesheet — strip everything except active SetupCard so the
+     browser save-as-PDF gives a clean strategy doc. */
+  @media print {
+    /* Hide site chrome and tab UI */
+    header, footer, nav,
+    .no-print, .no-print-flex,
+    [role="tablist"],
+    section.bg-surface > div > .card-white { display: none !important; }
+
+    /* Background — pure white for print */
+    body, html, .bg-surface, .above-bg, .card-apple {
+      background: #ffffff !important;
+      color: #000000 !important;
+    }
+
+    /* Setup card — full width, no shadows/borders, force colors readable */
+    .setup-card {
+      box-shadow: none !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      max-width: none !important;
+    }
+    .setup-card h2,
+    .setup-card h3,
+    .setup-card .h-card { color: #000 !important; }
+    .setup-card p,
+    .setup-card li,
+    .setup-card td,
+    .setup-card th { color: #1a1a1a !important; }
+
+    /* Show print-only header at top */
+    .setup-print-header {
+      display: flex !important;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      border-bottom: 2px solid #2B7BFF;
+      font-family: ui-sans-serif, system-ui, sans-serif;
+    }
+    .setup-print-brand {
+      font-size: 14px; font-weight: 700;
+      color: #2B7BFF !important;
+      letter-spacing: -0.01em;
+    }
+    .setup-print-url {
+      font-size: 11px;
+      color: #555 !important;
+      font-family: ui-monospace, monospace;
+    }
+
+    /* Page setup — A4-ish, modest margins */
+    @page {
+      size: A4;
+      margin: 18mm 16mm;
+    }
+
+    /* Tighter type for print density */
+    .setup-card .text-body { font-size: 11.5pt; line-height: 1.5; }
+    .setup-card h2 { font-size: 22pt; }
+    .setup-card h3, .setup-card .h-card { font-size: 13pt; margin-top: 14pt; }
+
+    /* Recommendation block — keep it visible, monochrome friendly */
+    .setup-rec {
+      background: #fff8e6 !important;
+      border: 1.5pt solid #B57F1A !important;
+      page-break-inside: avoid;
+    }
+    .setup-rec-icon {
+      background: #f0c05a !important;
+      color: #1a1a1a !important;
+    }
+
+    /* Risk table — keep crisp lines */
+    .setup-card table {
+      border-collapse: collapse !important;
+      width: 100% !important;
+    }
+    .setup-card table th,
+    .setup-card table td {
+      border-bottom: 0.5pt solid #d4d4d4 !important;
+      padding: 6pt 8pt !important;
+    }
+
+    /* Force figure to fit page width */
+    .setup-figure { page-break-inside: avoid; }
+
+    /* Avoid splitting key blocks across pages */
+    .setup-card ol, .setup-card ul, .setup-rec { page-break-inside: avoid; }
+  }
 }
