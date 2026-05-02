@@ -194,7 +194,13 @@ function SetupCard({ s }: { s: Setup }) {
       {s.image && (
         <figure className="setup-figure mt-6 sm:mt-8">
           <div className="setup-figure-frame">
-            <div className="setup-figure-stage">
+            <a
+              href={s.image.src}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open chart at full resolution in a new tab"
+              className="setup-figure-stage no-print-link"
+            >
               <Image
                 src={s.image.src}
                 alt={s.image.alt}
@@ -207,7 +213,19 @@ function SetupCard({ s }: { s: Setup }) {
                 <span className="setup-figure-tag-dot" />
                 Live · Golden Indicator
               </span>
-            </div>
+              <span className="setup-figure-zoom no-print" aria-hidden>
+                <span className="setup-figure-zoom-icon">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="7" />
+                    <path d="M21 21l-4.3-4.3" />
+                    <path d="M11 8v6" />
+                    <path d="M8 11h6" />
+                  </svg>
+                </span>
+                <span className="hidden sm:inline">View full size</span>
+                <span className="sm:hidden">Zoom</span>
+              </span>
+            </a>
           </div>
           <div className="setup-figure-legend" aria-label="Chart annotations">
             <span className="setup-chip setup-chip-line">

@@ -2203,6 +2203,50 @@
   }
   .setup-figure-img { object-fit: contain !important; }
 
+  /* Anchor wrapping the stage — make the whole canvas tappable */
+  .setup-figure-stage.no-print-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    cursor: zoom-in;
+  }
+  .setup-figure-stage.no-print-link .setup-figure-img {
+    transition: transform 320ms ease;
+  }
+  .setup-figure-stage.no-print-link:hover .setup-figure-img {
+    transform: scale(1.015);
+  }
+
+  /* Floating zoom pill, top-right corner of the chart */
+  .setup-figure-zoom {
+    position: absolute;
+    top: 12px; right: 12px;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px 6px 8px;
+    border-radius: 999px;
+    background: rgba(5, 7, 15, 0.78);
+    border: 1px solid rgba(34, 211, 238, 0.40);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: -0.005em;
+    pointer-events: none;
+    transition: border-color 200ms, transform 200ms, background 200ms;
+  }
+  .setup-figure-stage.no-print-link:hover .setup-figure-zoom {
+    border-color: rgba(34, 211, 238, 0.85);
+    background: rgba(5, 7, 15, 0.92);
+    transform: translateY(-1px);
+  }
+  .setup-figure-zoom-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px;
+    border-radius: 999px;
+    background: rgba(34, 211, 238, 0.20);
+    color: rgb(34, 211, 238);
+  }
+
   /* Floating "Live · Golden Indicator" tag, top-left of the chart */
   .setup-figure-tag {
     position: absolute;
@@ -2368,95 +2412,332 @@
   /* Print-only header — branding + url, hidden on screen */
   .setup-print-header { display: none; }
 
-  /* Print stylesheet — strip everything except active SetupCard so the
-     browser save-as-PDF gives a clean strategy doc. */
+  /* Print stylesheet — produce a branded, properly-aligned PDF
+     when the user hits the Download PDF button. */
   @media print {
-    /* Hide site chrome and tab UI */
+    /* Force brand colors to actually print (Chrome / Edge / Safari) */
+    * {
+      -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+
+    /* Hide site chrome + UI that doesn't belong in the PDF */
     header, footer, nav,
     .no-print, .no-print-flex,
     [role="tablist"],
-    section.bg-surface > div > .card-white { display: none !important; }
+    .grain, .pulse-dot,
+    section.bg-surface > div > .card-white,
+    section.bg-surface > div > .container-x > .mt-10,
+    section.bg-surface > div > .container-x > .mt-12 { display: none !important; }
 
-    /* Background — pure white for print */
-    body, html, .bg-surface, .above-bg, .card-apple {
+    /* Reset background — pure white sheet */
+    body, html, .bg-surface, .above-bg, .card-apple, section {
       background: #ffffff !important;
-      color: #000000 !important;
+      color: #15181a !important;
     }
 
-    /* Setup card — full width, no shadows/borders, force colors readable */
+    /* Container — use full page width */
+    .container-x, .container-wide {
+      max-width: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Setup card — clean canvas */
     .setup-card {
       box-shadow: none !important;
       border: none !important;
       padding: 0 !important;
       margin: 0 !important;
       max-width: none !important;
+      background: #ffffff !important;
     }
-    .setup-card h2,
-    .setup-card h3,
-    .setup-card .h-card { color: #000 !important; }
-    .setup-card p,
-    .setup-card li,
-    .setup-card td,
-    .setup-card th { color: #1a1a1a !important; }
 
-    /* Show print-only header at top */
+    /* === Branded print-only cover header ===
+       Two-row band at the top of page 1: brand mark on the left,
+       canonical URL + 'Strategy guide' label on the right. Cyan
+       gradient hairline beneath. */
     .setup-print-header {
       display: flex !important;
       justify-content: space-between;
-      align-items: center;
-      padding-bottom: 12px;
-      margin-bottom: 18px;
-      border-bottom: 2px solid #2B7BFF;
-      font-family: ui-sans-serif, system-ui, sans-serif;
+      align-items: flex-end;
+      padding: 0 0 10pt 0;
+      margin: 0 0 16pt 0;
+      border-bottom: 2pt solid #2B7BFF !important;
+      position: relative;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    .setup-print-header::after {
+      /* Cyan accent strip beneath the blue rule for brand depth */
+      content: "";
+      position: absolute;
+      left: 0; right: 0;
+      bottom: -5pt;
+      height: 1.5pt;
+      background: linear-gradient(90deg, #2B7BFF 0%, #22D3EE 50%, #F0C05A 100%);
     }
     .setup-print-brand {
-      font-size: 14px; font-weight: 700;
-      color: #2B7BFF !important;
-      letter-spacing: -0.01em;
+      display: flex; flex-direction: column;
+      gap: 2pt;
+    }
+    .setup-print-brand::before {
+      content: "ETS";
+      display: inline-block;
+      width: fit-content;
+      padding: 2pt 6pt;
+      margin-bottom: 4pt;
+      background: linear-gradient(135deg, #2B7BFF 0%, #22D3EE 100%) !important;
+      color: #ffffff !important;
+      font-size: 11pt;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      border-radius: 3pt;
+    }
+    .setup-print-brand {
+      font-size: 13pt;
+      font-weight: 700;
+      color: #15181a !important;
+      letter-spacing: -0.015em;
     }
     .setup-print-url {
-      font-size: 11px;
-      color: #555 !important;
-      font-family: ui-monospace, monospace;
+      text-align: right;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      font-size: 9pt;
+      color: #6b7280 !important;
+      letter-spacing: 0.04em;
+    }
+    .setup-print-url::before {
+      content: "Strategy guide · sample";
+      display: block;
+      margin-bottom: 2pt;
+      font-size: 8pt;
+      font-weight: 700;
+      color: #2B7BFF !important;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
     }
 
-    /* Page setup — A4-ish, modest margins */
-    @page {
-      size: A4;
-      margin: 18mm 16mm;
+    /* === Typography — magazine-grade hierarchy === */
+    .setup-card h2 {
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: #15181a !important;
+      margin: 0 0 6pt 0;
+    }
+    .setup-card h3,
+    .setup-card .h-card {
+      font-size: 12pt;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #2B7BFF !important;
+      margin: 14pt 0 6pt 0;
+      padding-top: 6pt;
+      border-top: 0.5pt solid #e5e7eb !important;
+      text-transform: uppercase;
+      font-size: 9pt;
+    }
+    /* Restore the 'big' h-card visually for the section bodies */
+    .setup-card h3 + p,
+    .setup-card .h-card + p,
+    .setup-card h3 + ol,
+    .setup-card h3 + ul,
+    .setup-card h3 + .mt-4,
+    .setup-card .h-card + p {
+      margin-top: 4pt !important;
+    }
+    .setup-card .text-body,
+    .setup-card p,
+    .setup-card li {
+      font-size: 10.5pt !important;
+      line-height: 1.55 !important;
+      color: #1f2937 !important;
+    }
+    .setup-card .text-muted,
+    .setup-card .text-muted-faint {
+      color: #4b5563 !important;
     }
 
-    /* Tighter type for print density */
-    .setup-card .text-body { font-size: 11.5pt; line-height: 1.5; }
-    .setup-card h2 { font-size: 22pt; }
-    .setup-card h3, .setup-card .h-card { font-size: 13pt; margin-top: 14pt; }
+    /* Symbol meta line under the title */
+    .setup-card .text-micro {
+      font-size: 8.5pt !important;
+      letter-spacing: 0.16em !important;
+      color: #2B7BFF !important;
+    }
+    .setup-card .text-nano {
+      font-size: 8pt !important;
+      color: #6b7280 !important;
+    }
 
-    /* Recommendation block — keep it visible, monochrome friendly */
-    .setup-rec {
-      background: #fff8e6 !important;
-      border: 1.5pt solid #B57F1A !important;
+    /* === Image / figure block === */
+    .setup-figure {
       page-break-inside: avoid;
+      margin: 8pt 0 12pt 0 !important;
+    }
+    .setup-figure-frame {
+      background: #ffffff !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      border: 0.5pt solid #d1d5db !important;
+      border-radius: 6pt !important;
+    }
+    .setup-figure-stage {
+      background: #ffffff !important;
+      border-radius: 5pt !important;
+      aspect-ratio: 16 / 10 !important;
+    }
+    .setup-figure-tag { display: none !important; }
+    .setup-figure-img { object-fit: contain !important; }
+
+    /* Annotation legend chips — flatten for monochrome PDF clarity */
+    .setup-figure-legend {
+      gap: 6pt !important;
+      margin-top: 8pt !important;
+    }
+    .setup-chip {
+      background: #ffffff !important;
+      border: 0.5pt solid #9ca3af !important;
+      color: #1f2937 !important;
+      font-size: 8.5pt !important;
+      padding: 3pt 8pt !important;
+    }
+    .setup-chip-buy {
+      border-color: #2DBE6D !important;
+      color: #14532d !important;
+    }
+    .setup-chip-target {
+      border-color: #2B7BFF !important;
+      color: #1e40af !important;
+    }
+    .setup-chip-meta {
+      color: #6b7280 !important;
+    }
+
+    /* === Numbered entry list — gold accent === */
+    .setup-card ol {
+      padding-left: 0 !important;
+      margin: 4pt 0 !important;
+    }
+    .setup-card ol li {
+      list-style: none;
+      padding: 4pt 0 !important;
+      border-bottom: 0.25pt dotted #e5e7eb !important;
+    }
+    .setup-card ol li:last-child { border-bottom: none !important; }
+    .setup-card ol li > span:first-child {
+      color: #2B7BFF !important;
+      font-weight: 700 !important;
+      font-family: ui-monospace, "SF Mono", Menlo, monospace !important;
+      font-size: 9.5pt !important;
+    }
+
+    /* === Recommendation block — keep gold treatment, monochrome-friendly === */
+    .setup-rec {
+      background: #fffbe7 !important;
+      border: 1pt solid #d4a04b !important;
+      border-left: 4pt solid #B57F1A !important;
+      page-break-inside: avoid;
+      padding: 10pt 12pt !important;
+      margin: 14pt 0 !important;
+      border-radius: 4pt !important;
     }
     .setup-rec-icon {
       background: #f0c05a !important;
       color: #1a1a1a !important;
+      width: 18pt !important;
+      height: 18pt !important;
+      font-size: 11pt !important;
+    }
+    .setup-rec-title {
+      font-size: 10pt !important;
+      color: #15181a !important;
+    }
+    .setup-rec-text {
+      font-size: 9.5pt !important;
+      color: #1f2937 !important;
     }
 
-    /* Risk table — keep crisp lines */
+    /* === Risk table — crisp banded === */
     .setup-card table {
       border-collapse: collapse !important;
       width: 100% !important;
+      margin: 6pt 0 !important;
+      font-size: 9.5pt !important;
     }
-    .setup-card table th,
-    .setup-card table td {
-      border-bottom: 0.5pt solid #d4d4d4 !important;
+    .setup-card table thead {
+      background: #f3f4f6 !important;
+    }
+    .setup-card table th {
+      text-align: left;
       padding: 6pt 8pt !important;
+      border-bottom: 1pt solid #2B7BFF !important;
+      color: #15181a !important;
+      font-weight: 700 !important;
+      font-size: 8pt !important;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .setup-card table td {
+      padding: 5pt 8pt !important;
+      border-bottom: 0.25pt solid #e5e7eb !important;
+      vertical-align: top;
+    }
+    .setup-card table tbody tr:nth-child(even) td {
+      background: #fafbfc !important;
+    }
+    .setup-card table td:first-child {
+      font-weight: 600;
+      color: #15181a !important;
     }
 
-    /* Force figure to fit page width */
-    .setup-figure { page-break-inside: avoid; }
+    /* === Page setup === */
+    @page {
+      size: A4;
+      margin: 16mm 14mm 18mm 14mm;
+    }
+    /* Margin boxes — branded footer with URL + page number */
+    @page {
+      @bottom-left {
+        content: "EasyTradeSetup · Golden Indicator · Strategy guide";
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        font-size: 8pt;
+        color: #9ca3af;
+      }
+      @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+        font-family: ui-monospace, monospace;
+        font-size: 8pt;
+        color: #9ca3af;
+      }
+      @bottom-center {
+        content: "easytradesetup.com/sample";
+        font-family: ui-monospace, monospace;
+        font-size: 8pt;
+        color: #2B7BFF;
+        font-weight: 600;
+      }
+    }
 
-    /* Avoid splitting key blocks across pages */
-    .setup-card ol, .setup-card ul, .setup-rec { page-break-inside: avoid; }
+    /* === Page-break control === */
+    .setup-card ol,
+    .setup-card ul,
+    .setup-rec,
+    .setup-figure { page-break-inside: avoid; }
+    .setup-card h3,
+    .setup-card .h-card { page-break-after: avoid; }
+
+    /* Educational disclaimer footer — compact, push to bottom feel */
+    .setup-card .hairline-t {
+      border-top: 0.5pt solid #d1d5db !important;
+      padding-top: 8pt !important;
+      margin-top: 14pt !important;
+    }
+    .setup-card .hairline-t + * {
+      font-size: 7.5pt !important;
+      color: #6b7280 !important;
+      line-height: 1.5 !important;
+    }
   }
 }
