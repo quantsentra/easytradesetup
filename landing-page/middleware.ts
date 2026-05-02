@@ -184,7 +184,10 @@ function buildCsp(nonce: string): string {
     // Loader script is `https://www.clarity.ms/tag/<id>` and the SDK posts to
     // `*.clarity.ms` for ingest. script-src already covers the load via
     // 'strict-dynamic'; connect-src needs the explicit allowlist.
-    "connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://api.coingecko.com https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://*.clarity.ms https://c.bing.com",
+    // GA4 (via @next/third-parties) ships hits to www.google-analytics.com
+    // and www.google.com (the latter for Google Ads conversion linker).
+    // Allowlist both connect targets so CSP doesn't block telemetry.
+    "connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://api.coingecko.com https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://*.clarity.ms https://c.bing.com https://www.google-analytics.com https://*.analytics.google.com https://www.google.com",
     "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://hooks.stripe.com",
     "worker-src 'self' blob:",
     "frame-ancestors 'none'",
