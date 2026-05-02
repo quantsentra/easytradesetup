@@ -13,12 +13,13 @@ export const metadata: Metadata = {
 };
 
 const navItems = [
-  { href: "/portal",           label: "Dashboard",   icon: HomeIcon },
-  { href: "/portal/downloads", label: "Indicator",   icon: DownloadIcon },
-  { href: "/portal/docs",      label: "Strategies",  icon: BookIcon },
-  { href: "/portal/updates",   label: "Updates",     icon: NoteIcon },
-  { href: "/portal/support",   label: "Support",     icon: ChatIcon },
-  { href: "/portal/account",   label: "Account",     icon: UserIcon },
+  { href: "/portal",                  label: "Dashboard",        icon: HomeIcon },
+  { href: "/portal/downloads",        label: "Indicator",        icon: DownloadIcon },
+  { href: "/portal/docs",             label: "Strategies",       icon: BookIcon },
+  { href: "/portal/risk-calculator",  label: "Risk Calculator",  icon: ShieldIcon },
+  { href: "/portal/updates",          label: "Updates",          icon: NoteIcon },
+  { href: "/portal/support",          label: "Support",          icon: ChatIcon },
+  { href: "/portal/account",          label: "Account",          icon: UserIcon },
 ];
 
 const mobileNavItems = navItems.map(({ href, label }) => ({ href, label }));
@@ -92,7 +93,7 @@ export default async function PortalLayout({ children }: { children: React.React
           <div className="tz-footer-left">
             <BrandMark size={20} />
             <span>
-              EasyTradeSetup · Golden Indicator <strong>v2.4</strong>
+              EasyTradeSetup · Golden Indicator <strong>v5</strong>
             </span>
           </div>
           <div className="tz-footer-right">
@@ -150,6 +151,14 @@ function UserIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0116 0" />
+    </svg>
+  );
+}
+function ShieldIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z" />
+      <path d="M9 12l2 2 4-4" />
     </svg>
   );
 }
