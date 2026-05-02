@@ -18,8 +18,8 @@ const ROWS: Array<{
     ts: "$58 / month",
   },
   {
-    label: "Multi-market + daily notes",
-    ets: "Included · multi-market",
+    label: "Course + quiz included",
+    ets: "11 lessons · interactive",
     lux: "Not included",
     ts: "Not included",
   },

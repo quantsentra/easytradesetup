@@ -16,7 +16,7 @@ const navItems = [
   { href: "/portal",           label: "Dashboard",   icon: HomeIcon },
   { href: "/portal/downloads", label: "Indicator",   icon: DownloadIcon },
   { href: "/portal/docs",      label: "Strategies",  icon: BookIcon },
-  { href: "/portal/updates",   label: "Market notes", icon: NoteIcon },
+  { href: "/portal/updates",   label: "Updates",     icon: NoteIcon },
   { href: "/portal/support",   label: "Support",     icon: ChatIcon },
   { href: "/portal/account",   label: "Account",     icon: UserIcon },
 ];
@@ -43,7 +43,7 @@ export default async function PortalLayout({ children }: { children: React.React
 
           <Link href="/portal/updates" className="tz-header-link hidden md:inline-flex">
             <span className="tz-header-link-dot" aria-hidden />
-            Today&apos;s notes
+            Updates
           </Link>
 
           {admin && (
