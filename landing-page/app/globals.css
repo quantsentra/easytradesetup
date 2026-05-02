@@ -2828,11 +2828,21 @@
   }
   .tz-rc-btn:hover { color: var(--tz-ink); border-color: var(--tz-border-3, rgba(255,255,255,0.18)); }
   .tz-rc-action-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 11.5px;
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     color: var(--tz-ink-mute);
     text-transform: uppercase;
     letter-spacing: 0.10em;
+  }
+  .tz-rc-saved-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 999px;
+    background: #2DBE6D;
+    box-shadow: 0 0 8px rgba(45, 190, 109, 0.6);
   }
 
   /* Error card */

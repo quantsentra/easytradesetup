@@ -1,6 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+// LocalStorage key — stores the persistent prefs (market, direction,
+// account, risk %). Trade levels (entry / SL / TP) are intentionally
+// NOT persisted — those are per-trade values, not preferences.
+const PREFS_KEY = "ets_rc_prefs_v1";
+
+type Prefs = {
+  market: MarketKey;
+  direction: Direction;
+  account: string;
+  riskPct: string;
+};
 
 // ---- Market specs --------------------------------------------------------
 // Each market carries the metadata the calculator needs to convert a raw
@@ -211,14 +223,59 @@ function fmtNumber(n: number, decimals = 2): string {
 // ---- Component ----------------------------------------------------------
 
 export default function RiskFirewallCalculator() {
-  // Sensible defaults so first render shows a worked example, not blanks.
-  const [accountInput, setAccountInput] = useState("100000");
-  const [riskPctInput, setRiskPctInput] = useState("1");
+  // Defaults render a worked example on first visit. Returning users get
+  // their saved prefs hydrated below in the mount effect.
   const [market, setMarket] = useState<MarketKey>("xauusd");
   const [direction, setDirection] = useState<Direction>("buy");
+  const [accountInput, setAccountInput] = useState("100000");
+  const [riskPctInput, setRiskPctInput] = useState("1");
   const [entryInput, setEntryInput] = useState("4310.00");
   const [stopInput, setStopInput] = useState("4300.00");
   const [targetInput, setTargetInput] = useState("4340.00");
+
+  // Track that we've finished the mount-time hydration. We only start
+  // saving back to localStorage after this — otherwise the very first
+  // render would overwrite the saved value with the SSR default.
+  const [hydrated, setHydrated] = useState(false);
+  const [prefsLoaded, setPrefsLoaded] = useState(false);
+
+  // ---- Load saved prefs on mount ----
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PREFS_KEY);
+      if (raw) {
+        const p = JSON.parse(raw) as Partial<Prefs>;
+        if (p.market && (MARKET_KEYS as MarketKey[]).includes(p.market as MarketKey)) {
+          setMarket(p.market as MarketKey);
+        }
+        if (p.direction === "buy" || p.direction === "sell") {
+          setDirection(p.direction);
+        }
+        if (typeof p.account === "string") setAccountInput(p.account);
+        if (typeof p.riskPct === "string") setRiskPctInput(p.riskPct);
+        setPrefsLoaded(true);
+      }
+    } catch {
+      /* ignored — corrupt prefs blob shouldn't break the calculator */
+    }
+    setHydrated(true);
+  }, []);
+
+  // ---- Persist prefs whenever they change (post-mount only) ----
+  useEffect(() => {
+    if (!hydrated) return;
+    try {
+      const prefs: Prefs = {
+        market,
+        direction,
+        account: accountInput,
+        riskPct: riskPctInput,
+      };
+      localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+    } catch {
+      /* ignored — quota / private mode */
+    }
+  }, [hydrated, market, direction, accountInput, riskPctInput]);
 
   const result = useMemo<CalcResult>(() => {
     return calc({
@@ -235,62 +292,30 @@ export default function RiskFirewallCalculator() {
   const spec = MARKETS[market];
   const ccy = spec.ccy;
 
-  // ---- Reset handler ----
+  // ---- Reset handler — clears trade levels + saved prefs ----
   const onReset = () => {
     setAccountInput("");
     setRiskPctInput("");
     setEntryInput("");
     setStopInput("");
     setTargetInput("");
+    try {
+      localStorage.removeItem(PREFS_KEY);
+    } catch {
+      /* ignored */
+    }
   };
 
   return (
     <div className="tz-rc">
       {/* ============ INPUTS ============ */}
       <section className="tz-rc-grid">
+        {/* Step 01 — pick the market FIRST so account currency + price
+            precision + lot size all derive from a known instrument
+            before the user enters their balance. */}
         <div className="tz-rc-input-card">
           <h2 className="tz-rc-section-title">
             <span className="tz-rc-section-num">01</span>
-            Account &amp; risk
-          </h2>
-
-          <Field
-            label={`Account balance (${ccy === "INR" ? "INR" : "USD"})`}
-            hint={ccy === "INR" ? "e.g. 100,000" : "e.g. 10,000"}
-          >
-            <input
-              type="number"
-              inputMode="decimal"
-              className="tz-rc-input"
-              value={accountInput}
-              onChange={(e) => setAccountInput(e.target.value)}
-              placeholder="0.00"
-              min="0"
-              step="any"
-            />
-          </Field>
-
-          <Field
-            label="Risk per trade (%)"
-            hint="0.5% safe · 1% standard · 2% aggressive · 3%+ danger"
-          >
-            <input
-              type="number"
-              inputMode="decimal"
-              className="tz-rc-input"
-              value={riskPctInput}
-              onChange={(e) => setRiskPctInput(e.target.value)}
-              placeholder="1"
-              min="0"
-              step="0.1"
-            />
-            <RiskTierStrip value={parseFloat(riskPctInput)} />
-          </Field>
-        </div>
-
-        <div className="tz-rc-input-card">
-          <h2 className="tz-rc-section-title">
-            <span className="tz-rc-section-num">02</span>
             Market &amp; direction
           </h2>
 
@@ -329,6 +354,48 @@ export default function RiskFirewallCalculator() {
                 <span aria-hidden>▼</span> Sell / Short
               </button>
             </div>
+          </Field>
+        </div>
+
+        {/* Step 02 — once market is set, account currency label + risk
+            tier strip are correct. */}
+        <div className="tz-rc-input-card">
+          <h2 className="tz-rc-section-title">
+            <span className="tz-rc-section-num">02</span>
+            Account &amp; risk
+          </h2>
+
+          <Field
+            label={`Account balance (${ccy === "INR" ? "INR" : "USD"})`}
+            hint={ccy === "INR" ? "e.g. 100,000" : "e.g. 10,000"}
+          >
+            <input
+              type="number"
+              inputMode="decimal"
+              className="tz-rc-input"
+              value={accountInput}
+              onChange={(e) => setAccountInput(e.target.value)}
+              placeholder="0.00"
+              min="0"
+              step="any"
+            />
+          </Field>
+
+          <Field
+            label="Risk per trade (%)"
+            hint="0.5% safe · 1% standard · 2% aggressive · 3%+ danger"
+          >
+            <input
+              type="number"
+              inputMode="decimal"
+              className="tz-rc-input"
+              value={riskPctInput}
+              onChange={(e) => setRiskPctInput(e.target.value)}
+              placeholder="1"
+              min="0"
+              step="0.1"
+            />
+            <RiskTierStrip value={parseFloat(riskPctInput)} />
           </Field>
         </div>
 
@@ -391,7 +458,16 @@ export default function RiskFirewallCalculator() {
           Reset all
         </button>
         <span className="tz-rc-action-note">
-          Live calc · updates as you type
+          {prefsLoaded ? (
+            <>
+              <span className="tz-rc-saved-dot" aria-hidden /> Prefs restored ·
+              auto-saved
+            </>
+          ) : hydrated ? (
+            <>Live calc · auto-saves your prefs</>
+          ) : (
+            <>Live calc · updates as you type</>
+          )}
         </span>
       </div>
 
