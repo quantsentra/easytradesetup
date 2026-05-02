@@ -23,6 +23,28 @@ const PORTAL_PASSTHROUGH_PREFIXES = [
   "/monitoring", // Sentry tunnel route — must reach Sentry, not the portal app
 ];
 
+// Marketing paths that don't exist under app/portal/* — if a portal-host
+// request hits one (because a portal page links to /checkout etc with a
+// relative href), redirect to the marketing host so the user lands on
+// the real page instead of a 404 from the internal /portal/<slug>
+// rewrite below.
+const PORTAL_TO_MARKETING_PATHS = [
+  "/checkout",
+  "/pricing",
+  "/sample",
+  "/product",
+  "/compare",
+  "/about",
+  "/contact",
+  "/thank-you",
+  "/docs/install",
+  "/docs/faq",
+  "/legal/disclaimer",
+  "/legal/privacy",
+  "/legal/terms",
+  "/legal/refund",
+];
+
 function isPortalHost(host: string | null): boolean {
   return host === PORTAL_HOST;
 }
@@ -74,6 +96,23 @@ function planHostnameRouting(req: NextRequest): RoutedPlan {
       )
     ) {
       return { kind: "passthrough", externalPath: pathname };
+    }
+    // Marketing-only paths on the portal host -> 301 to the www host.
+    // Catches the case where a portal page links to /checkout (etc) with
+    // a relative href and the browser resolves it to portal.domain/
+    // checkout, which has no underlying app/portal/checkout page.
+    if (
+      PORTAL_TO_MARKETING_PATHS.some(
+        (p) => pathname === p || pathname.startsWith(`${p}/`),
+      )
+    ) {
+      return {
+        kind: "redirect",
+        response: NextResponse.redirect(
+          new URL(`${pathname}${search}`, `https://${MARKETING_HOST}`),
+          301,
+        ),
+      };
     }
     // Everything else maps to /portal/foo internally.
     return {
