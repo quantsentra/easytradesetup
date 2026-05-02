@@ -21,12 +21,11 @@ type Task = {
 };
 
 const TIER_META: Record<string, { label: string; color: string; rationale: string }> = {
-  M0: { label: "Pre-launch setup",    color: "#d93b3b", rationale: "One-time wiring that gates the rest. Stripe live, email DKIM, uptime cron, Search Console." },
-  M1: { label: "Content engine · week 1", color: "#2B7BFF", rationale: "Stand up the channels and ship the first artifacts. Shows up = wins half." },
-  M2: { label: "Distribution cadence",   color: "#22D3EE", rationale: "The drip that compounds. Daily X, weekly thread + video, weekly Reddit + LinkedIn." },
-  M3: { label: "SEO + email nurture",    color: "#F0C05A", rationale: "Long-tail traffic + auto-conversion engine for the leads you already have." },
-  M4: { label: "Analytics + optimisation", color: "#8B5CF6", rationale: "Watch the data, fix the leaks. Funnel + UTM + A/B once you have signal." },
-  M5: { label: "Paid acquisition",       color: "#888",    rationale: "Only after organic shows real conversion. Don't spend until the math works." },
+  M0: { label: "Foundation",              color: "#d93b3b", rationale: "One-time wiring that gates the rest. Stripe live, email DKIM, uptime cron, Search Console, founder photo." },
+  M1: { label: "AI content factory",      color: "#2B7BFF", rationale: "Spend one weekend wiring the assembly line. Channels, schedulers, prompt library, first batch queued — then it runs itself." },
+  M2: { label: "Automated distribution",  color: "#22D3EE", rationale: "Weekly 30min batch tops up the queues. AI drafts, you edit, scheduler publishes. Low-touch, compounds." },
+  M3: { label: "SEO autopilot",           color: "#F0C05A", rationale: "Programmatic /indicator pages + AI blog + Resend nurture drips. Set up once, harvests organic traffic for years." },
+  M4: { label: "Measure + iterate",       color: "#8B5CF6", rationale: "Lightweight check 1x/week on Clarity + Search Console. Double down on winners, no A/B until you have signal." },
 };
 
 async function loadTasks(): Promise<Task[]> {
@@ -55,7 +54,7 @@ export default async function MarketingChecklistPage() {
     if (!byTier[t.tier]) byTier[t.tier] = [];
     byTier[t.tier].push(t);
   }
-  const tierOrder = ["M0", "M1", "M2", "M3", "M4", "M5"];
+  const tierOrder = ["M0", "M1", "M2", "M3", "M4"];
 
   return (
     <>
@@ -63,7 +62,7 @@ export default async function MarketingChecklistPage() {
         <div>
           <h1 className="tz-topbar-title">Marketing checklist.</h1>
           <div className="tz-topbar-sub">
-            Post-launch motion. Tick as you ship. M0 first — nothing in M1+ matters until it's clean.
+            Solo + AI-first motion. Free tools only. M0 first — nothing in M1+ matters until it&apos;s clean.
           </div>
         </div>
         <div className="tz-topbar-actions">
@@ -82,8 +81,8 @@ export default async function MarketingChecklistPage() {
             Migration pending
           </h2>
           <p className="text-[13.5px]" style={{ color: "var(--tz-ink-dim)" }}>
-            Run <code>024_marketing_tasks.sql</code> in Supabase SQL editor to seed this checklist. Migration
-            file lives at <code>landing-page/supabase/migrations/024_marketing_tasks.sql</code>.
+            Run <code>025_marketing_tasks_simplified.sql</code> in Supabase SQL editor to seed this checklist.
+            Migration file lives at <code>landing-page/supabase/migrations/025_marketing_tasks_simplified.sql</code>.
           </p>
         </div>
       )}
@@ -190,7 +189,7 @@ export default async function MarketingChecklistPage() {
       })}
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)" }}>
-        Run 024_marketing_tasks.sql to seed · Toggle + notes persist in Supabase · Edit task copy via new migration only
+        Run 025_marketing_tasks_simplified.sql to seed · Toggle + notes persist in Supabase · Edit task copy via new migration only
       </p>
     </>
   );
