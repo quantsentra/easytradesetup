@@ -124,7 +124,7 @@ export default async function ThankYouPage({
         {isStripe && session?.paid && (
           <p className="mt-8 text-caption text-muted">
             Stuck on install? Open a support ticket at{" "}
-            <a href="https://portal.easytradesetup.com/portal/support" className="underline">
+            <a href="https://portal.easytradesetup.com/support" className="underline">
               portal · support
             </a>{" "}
             — human reply within 24h. Or reply to the welcome email.

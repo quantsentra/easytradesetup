@@ -40,7 +40,7 @@ export default function ReturnsPage() {
               Install issues, errors on your TradingView chart, or anything that prevents you from
               using the indicator as documented &mdash; open a support ticket from your portal:
               {" "}
-              <a href="https://portal.easytradesetup.com/portal/support">portal &rarr; support</a>.
+              <a href="https://portal.easytradesetup.com/support">portal &rarr; support</a>.
               A human replies within 24 hours and walks you through the fix.
             </p>
             <p>
@@ -75,7 +75,7 @@ export default function ReturnsPage() {
 
             <h2>Contact</h2>
             <p>
-              Support: <a href="https://portal.easytradesetup.com/portal/support">portal &rarr; support</a>{" "}
+              Support: <a href="https://portal.easytradesetup.com/support">portal &rarr; support</a>{" "}
               (preferred). Or email <a href="mailto:thomas@easytradesetup.com">thomas@easytradesetup.com</a>.
             </p>
           </Prose>

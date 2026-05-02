@@ -18,7 +18,7 @@ const navItems: NavItem[] = [
   { href: "/sample",    label: "Free sample" },
   { href: "/pricing",   label: "Pricing" },
   {
-    href: "https://portal.easytradesetup.com/portal/risk-calculator",
+    href: "https://portal.easytradesetup.com/risk-calculator",
     label: "Risk Calculator",
     external: true,
     badge: "Free",

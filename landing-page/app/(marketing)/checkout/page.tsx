@@ -103,7 +103,7 @@ export default async function CheckoutPage({
           invoice_data: {
             description: "Golden Indicator — Launch price (lifetime access)",
             metadata: { product: "golden-indicator", tier: "launch", user_id: user.id, currency },
-            footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/portal/support",
+            footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/support",
           },
         },
         success_url: `https://www.easytradesetup.com/thank-you?session_id={CHECKOUT_SESSION_ID}`,

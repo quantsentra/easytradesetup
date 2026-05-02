@@ -443,7 +443,7 @@ ${args.hostedInvoiceUrl ? `<a href="${args.hostedInvoiceUrl}" style="display:inl
 
 <tr><td style="padding:20px 32px;background:rgba(43,123,255,0.04);border-top:1px solid rgba(21,24,26,0.06);">
 <div style="font:600 13px -apple-system,'Inter',Arial,sans-serif;color:#15181a;margin-bottom:4px;">Stuck on install or anything else?</div>
-<div style="font-size:13px;color:rgba(21,24,26,0.72);line-height:1.55;">Open a support ticket — <a href="${supportUrl}" style="color:#2B7BFF;text-decoration:underline;">portal.easytradesetup.com/portal/support</a> — and a human replies within 24h. Or just reply to this email.</div>
+<div style="font-size:13px;color:rgba(21,24,26,0.72);line-height:1.55;">Open a support ticket — <a href="${supportUrl}" style="color:#2B7BFF;text-decoration:underline;">portal.easytradesetup.com/support</a> — and a human replies within 24h. Or just reply to this email.</div>
 </td></tr>
 
 <tr><td style="padding:18px 32px 22px;border-top:1px solid rgba(21,24,26,0.06);font-size:11.5px;color:rgba(21,24,26,0.52);line-height:1.6;">
