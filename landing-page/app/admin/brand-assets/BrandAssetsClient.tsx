@@ -392,6 +392,235 @@ function brandTemplateCanvas(opts: {
   );
 }
 
+// YouTube end-screen template — 1920×1080. Standard YT layout reserves
+// the bottom-left ~25% for the auto-injected subscribe button and the
+// right ~40% for two stacked video cards. We draw brand chrome around
+// those reserved zones with dashed guide rectangles so the editor knows
+// exactly where YouTube's auto-overlays will land.
+function ytEndScreenCanvas(): Promise<Blob> {
+  const w = 1920;
+  const h = 1080;
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d")!;
+
+  // Bg
+  const bg = ctx.createLinearGradient(0, 0, w, h);
+  bg.addColorStop(0, C.bg);
+  bg.addColorStop(0.55, C.surface);
+  bg.addColorStop(1, "#0a1224");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  // Radial glow
+  const radial = ctx.createRadialGradient(w / 2, -100, 100, w / 2, h * 0.45, w * 0.55);
+  radial.addColorStop(0, "rgba(43,123,255,0.22)");
+  radial.addColorStop(1, "rgba(43,123,255,0)");
+  ctx.fillStyle = radial;
+  ctx.fillRect(0, 0, w, h);
+
+  // Brand mark + wordmark — top-left
+  const padding = 60;
+  const markSize = 76;
+  const markX = padding;
+  const markY = padding;
+  const mg = ctx.createLinearGradient(markX, markY, markX + markSize, markY + markSize);
+  mg.addColorStop(0, C.blue);
+  mg.addColorStop(1, C.cyan);
+  ctx.fillStyle = mg;
+  ctx.beginPath();
+  ctx.arc(markX + markSize / 2, markY + markSize / 2, markSize / 2, 0, Math.PI * 2);
+  ctx.fill();
+  const mcx = markX + markSize / 2;
+  const mcy = markY + markSize / 2;
+  const mr = markSize / 2;
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = mr * 0.18;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(mcx - mr * 0.4, mcy + mr * 0.05);
+  ctx.lineTo(mcx - mr * 0.05, mcy + mr * 0.35);
+  ctx.lineTo(mcx + mr * 0.5, mcy - mr * 0.30);
+  ctx.stroke();
+  ctx.fillStyle = "#fff";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "left";
+  ctx.font = `700 32px "Space Grotesk", -apple-system, sans-serif`;
+  ctx.fillText("EasyTradeSetup", markX + markSize + 18, markY + markSize / 2);
+
+  // Headline center-left
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#fff";
+  ctx.font = `700 64px "Space Grotesk", -apple-system, sans-serif`;
+  ctx.fillText("Subscribe for setup", padding, 380);
+  ctx.fillText("walkthroughs.", padding, 460);
+
+  // Subscribe zone — YT injects subscribe button here. Center-left at ~y=720.
+  ctx.strokeStyle = "rgba(43,123,255,0.5)";
+  ctx.setLineDash([12, 8]);
+  ctx.lineWidth = 2;
+  const subX = 250;
+  const subY = 600;
+  const subSize = 300;
+  ctx.beginPath();
+  ctx.arc(subX + subSize / 2, subY + subSize / 2, subSize / 2, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "rgba(43,123,255,0.7)";
+  ctx.font = `500 16px "JetBrains Mono", monospace`;
+  ctx.textAlign = "center";
+  ctx.fillText("YT INJECTS SUBSCRIBE", subX + subSize / 2, subY - 16);
+
+  // Video card slots — top-right + bottom-right
+  ctx.strokeStyle = "rgba(34,211,238,0.5)";
+  ctx.setLineDash([12, 8]);
+  const cardW = 600;
+  const cardH = 340;
+  const cardX = w - cardW - padding;
+  const cardYTop = 200;
+  const cardYBot = cardYTop + cardH + 32;
+  ctx.strokeRect(cardX, cardYTop, cardW, cardH);
+  ctx.strokeRect(cardX, cardYBot, cardW, cardH);
+  ctx.setLineDash([]);
+  ctx.fillStyle = "rgba(34,211,238,0.7)";
+  ctx.font = `500 16px "JetBrains Mono", monospace`;
+  ctx.textAlign = "left";
+  ctx.fillText("↑ NEXT VIDEO", cardX + 16, cardYTop - 14);
+  ctx.fillText("↓ MORE TO WATCH", cardX + 16, cardYBot - 14);
+
+  // Domain — bottom-right
+  ctx.fillStyle = C.ink40;
+  ctx.textAlign = "right";
+  ctx.font = `500 22px "JetBrains Mono", monospace`;
+  ctx.fillText("easytradesetup.com", w - padding, h - padding);
+
+  return new Promise((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob failed"))), "image/png"),
+  );
+}
+
+// YouTube thumbnail template — 1280×720 (16:9). Big-text, high-contrast,
+// optimised for mobile thumbnail legibility (most views <300px wide).
+function ytThumbnailCanvas(): Promise<Blob> {
+  const w = 1280;
+  const h = 720;
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d")!;
+
+  // Bg
+  const bg = ctx.createLinearGradient(0, 0, w, h);
+  bg.addColorStop(0, C.bg);
+  bg.addColorStop(1, "#0a1224");
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  // Diagonal accent stripe
+  ctx.save();
+  ctx.translate(w * 0.65, 0);
+  ctx.rotate(0.35);
+  const stripe = ctx.createLinearGradient(0, 0, 0, h);
+  stripe.addColorStop(0, "rgba(43,123,255,0.18)");
+  stripe.addColorStop(1, "rgba(34,211,238,0.05)");
+  ctx.fillStyle = stripe;
+  ctx.fillRect(0, -100, w, h + 200);
+  ctx.restore();
+
+  // Brand mark — top-left
+  const padding = 36;
+  const markSize = 60;
+  const mg = ctx.createLinearGradient(padding, padding, padding + markSize, padding + markSize);
+  mg.addColorStop(0, C.blue);
+  mg.addColorStop(1, C.cyan);
+  ctx.fillStyle = mg;
+  ctx.beginPath();
+  ctx.arc(padding + markSize / 2, padding + markSize / 2, markSize / 2, 0, Math.PI * 2);
+  ctx.fill();
+  const mcx = padding + markSize / 2;
+  const mcy = padding + markSize / 2;
+  const mr = markSize / 2;
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = mr * 0.18;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(mcx - mr * 0.4, mcy + mr * 0.05);
+  ctx.lineTo(mcx - mr * 0.05, mcy + mr * 0.35);
+  ctx.lineTo(mcx + mr * 0.5, mcy - mr * 0.30);
+  ctx.stroke();
+  ctx.fillStyle = "#fff";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "left";
+  ctx.font = `700 24px "Space Grotesk", -apple-system, sans-serif`;
+  ctx.fillText("EasyTradeSetup", padding + markSize + 12, padding + markSize / 2);
+
+  // Headline — two-line bold, center-left
+  ctx.textAlign = "left";
+  ctx.fillStyle = "#fff";
+  ctx.font = `700 92px "Space Grotesk", -apple-system, sans-serif`;
+  ctx.fillText("[ HOOK", padding, h * 0.45);
+  ctx.fillStyle = C.cyan;
+  ctx.fillText("LINE 2 ]", padding, h * 0.45 + 100);
+
+  // Eyebrow
+  ctx.fillStyle = C.amber;
+  ctx.font = `500 22px "JetBrains Mono", monospace`;
+  ctx.fillText("FREE WALKTHROUGH", padding, h * 0.45 - 90);
+
+  // Domain — bottom-right
+  ctx.fillStyle = C.ink60;
+  ctx.textAlign = "right";
+  ctx.font = `500 18px "JetBrains Mono", monospace`;
+  ctx.fillText("easytradesetup.com", w - padding, h - padding);
+
+  return new Promise((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob failed"))), "image/png"),
+  );
+}
+
+// YouTube watermark — 150×150 transparent, mark only with breathing room
+// so YouTube's own white border doesn't crop the gradient circle.
+function ytWatermarkCanvas(): Promise<Blob> {
+  const size = 150;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  ctx.clearRect(0, 0, size, size);
+
+  // Mark with 6% inner padding so YouTube's edge crop doesn't clip the circle
+  const pad = size * 0.06;
+  const r = (size - pad * 2) / 2;
+  const cx = size / 2;
+  const cy = size / 2;
+
+  const grad = ctx.createLinearGradient(pad, pad, size - pad, size - pad);
+  grad.addColorStop(0, C.blue);
+  grad.addColorStop(1, C.cyan);
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = r * 0.20;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx - r * 0.4, cy + r * 0.05);
+  ctx.lineTo(cx - r * 0.05, cy + r * 0.35);
+  ctx.lineTo(cx + r * 0.5, cy - r * 0.30);
+  ctx.stroke();
+
+  return new Promise((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob failed"))), "image/png"),
+  );
+}
+
 type AssetSize = { w: number; h: number; label: string };
 
 function Section({ title, subtitle, children }: {
@@ -630,6 +859,26 @@ export default function BrandAssetsClient() {
     downloadBlob(blob, `easytradesetup-ig-profile-1024.png`);
   };
 
+  const dlYtProfile = async () => {
+    const blob = await markCanvas(800);
+    downloadBlob(blob, `easytradesetup-yt-profile-800.png`);
+  };
+
+  const dlYtWatermark = async () => {
+    const blob = await ytWatermarkCanvas();
+    downloadBlob(blob, `easytradesetup-yt-watermark-150.png`);
+  };
+
+  const dlYtEndScreen = async () => {
+    const blob = await ytEndScreenCanvas();
+    downloadBlob(blob, `easytradesetup-yt-endscreen-1920x1080.png`);
+  };
+
+  const dlYtThumbnail = async () => {
+    const blob = await ytThumbnailCanvas();
+    downloadBlob(blob, `easytradesetup-yt-thumbnail-1280x720.png`);
+  };
+
   return (
     <>
       <div className="tz-topbar">
@@ -672,14 +921,24 @@ export default function BrandAssetsClient() {
       </Section>
 
       <Section
-        title="Social templates — ready-to-edit"
-        subtitle="Pre-branded blank canvas with brand chrome + safe-area guides. Open in Canva / Figma; replace the headline + drop a chart on top."
+        title="YouTube — channel + per-video"
+        subtitle="Everything you need to fill a YouTube channel setup form. Banner, profile, watermark, end-screen overlay, thumbnail template."
       >
         <DownloadButton label="YouTube banner 2560×1440" hint="with safe-area guide" onClick={dlYtBanner} />
-        <DownloadButton label="Instagram carousel 1080×1350" hint="4:5 portrait, slide template" onClick={dlIgCarousel} />
+        <DownloadButton label="YouTube profile 800×800" hint="brand mark · channel pic" onClick={dlYtProfile} />
+        <DownloadButton label="YouTube watermark 150×150" hint="transparent · subscribe overlay" onClick={dlYtWatermark} />
+        <DownloadButton label="YouTube end-screen 1920×1080" hint="last 20s · subscribe + 2 cards" onClick={dlYtEndScreen} />
+        <DownloadButton label="YouTube thumbnail 1280×720" hint="16:9 template · edit headline" onClick={dlYtThumbnail} />
+      </Section>
+
+      <Section
+        title="Instagram — profile + posts"
+        subtitle="Profile picture and ready-to-edit slide templates. Open in Canva / Figma; replace headline + drop a chart."
+      >
+        <DownloadButton label="Instagram profile picture 1024×1024" hint="brand-stacked" onClick={dlIgProfile} />
+        <DownloadButton label="Instagram carousel 1080×1350" hint="4:5 portrait · slide template" onClick={dlIgCarousel} />
         <DownloadButton label="Instagram reel cover 1080×1920" hint="9:16 with safe-area guide" onClick={dlIgReel} />
         <DownloadButton label="Instagram story 1080×1920" hint="9:16 generic" onClick={dlIgStory} />
-        <DownloadButton label="Instagram profile picture 1024×1024" hint="brand-stacked" onClick={dlIgProfile} />
       </Section>
 
       <Section
