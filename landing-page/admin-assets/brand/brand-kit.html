@@ -745,14 +745,40 @@ function SocialSection() {
             )}
           </Card>
 
-          {/* File path */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#070B1A', borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)' }}
-            onClick={() => copyHex(`landing-page/public/brand/${spec.file}`)}
-            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#070B1A', borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer' }}
-          >
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2B7BFF' }}>📁</span>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.55)', flex: 1 }}>landing-page/public/brand/{spec.file}</span>
-            <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em' }}>COPY PATH</span>
+          {/* Download + file path */}
+          <div style={{ display: 'flex', gap: 10, alignItems: 'stretch', flexWrap: 'wrap' }}>
+            <button
+              type="button"
+              onClick={() => window.open('/admin/brand-assets', '_top')}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '10px 16px', borderRadius: 8,
+                border: '1px solid #2B7BFF',
+                background: 'linear-gradient(135deg, rgba(43,123,255,0.18), rgba(34,211,238,0.12))',
+                color: '#fff', cursor: 'pointer',
+                fontFamily: 'Inter Tight', fontSize: 12, fontWeight: 600,
+              }}
+            >
+              <span style={{ fontFamily: 'JetBrains Mono', color: '#22D3EE' }}>↓</span>
+              <span>Download this asset</span>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, opacity: 0.6, letterSpacing: '0.08em' }}>→ /ADMIN/BRAND-ASSETS</span>
+            </button>
+            <div
+              onClick={() => copyHex(`landing-page/admin-assets/brand/${spec.file}`)}
+              style={{
+                flex: 1, minWidth: 200,
+                display: 'flex', alignItems: 'center', gap: 10,
+                padding: '10px 14px', background: '#070B1A',
+                borderRadius: 8, border: '1px solid rgba(255,255,255,0.06)',
+                cursor: 'pointer',
+              }}
+            >
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 10, color: '#2B7BFF' }}>📁</span>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 11, color: 'rgba(255,255,255,0.55)', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                landing-page/admin-assets/brand/{spec.file}
+              </span>
+              <span style={{ fontFamily: 'JetBrains Mono', fontSize: 9, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em' }}>COPY PATH</span>
+            </div>
           </div>
         </div>
       </div>
