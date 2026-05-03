@@ -22,6 +22,9 @@ export default function BrandKitPage() {
           </div>
         </div>
         <div className="tz-topbar-actions">
+          <Link href="/admin/brand-assets" className="tz-btn tz-btn-primary">
+            ↓ Download assets
+          </Link>
           <Link href="/api/admin/brand-kit/brand-kit.html" target="_blank" className="tz-btn">
             ↗ Open in tab
           </Link>

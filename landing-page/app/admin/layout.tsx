@@ -32,8 +32,9 @@ const navSections: Array<{
   {
     title: "Content",
     items: [
-      { href: "/admin/updates",    label: "Updates &amp; notes", icon: NoteIcon },
-      { href: "/admin/brand-kit",  label: "Brand kit",          icon: PaletteIcon },
+      { href: "/admin/updates",       label: "Updates &amp; notes", icon: NoteIcon },
+      { href: "/admin/brand-kit",     label: "Brand kit",          icon: PaletteIcon },
+      { href: "/admin/brand-assets",  label: "Brand assets",       icon: DownloadIcon },
     ],
   },
   {
@@ -192,6 +193,15 @@ function PaletteIcon() {
       <circle cx="12" cy="7.5" r="1.2" fill="currentColor" />
       <circle cx="16.5" cy="10" r="1.2" fill="currentColor" />
       <path d="M12 21a3 3 0 010-6 1.5 1.5 0 001.5-1.5A1.5 1.5 0 0115 12h3" />
+    </svg>
+  );
+}
+function DownloadIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3v12" />
+      <path d="M7 10l5 5 5-5" />
+      <path d="M5 21h14" />
     </svg>
   );
 }
