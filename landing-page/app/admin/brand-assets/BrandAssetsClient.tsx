@@ -381,31 +381,113 @@ function Section({ title, subtitle, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <section className="tz-card mb-4" style={{ padding: 18 }}>
+    <section className="tz-card mb-4" style={{ padding: 20 }}>
       <h3 style={{ font: "600 16px var(--tz-display)", margin: "0 0 4px", color: "var(--tz-ink)" }}>
         {title}
       </h3>
       {subtitle && (
-        <p className="text-[12.5px]" style={{ color: "var(--tz-ink-mute)", margin: "0 0 14px" }}>
+        <p className="text-[12.5px]" style={{ color: "var(--tz-ink-mute)", margin: "0 0 16px", lineHeight: 1.5 }}>
           {subtitle}
         </p>
       )}
-      <div className="flex flex-wrap gap-2">{children}</div>
+      {/* Auto-fit grid keeps every button equal-height + equal-width per row.
+          Cell min 200px so labels never wrap awkwardly; max 1fr so they
+          fill on wide screens. */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          gap: 10,
+        }}
+      >
+        {children}
+      </div>
     </section>
   );
 }
 
-function DownloadButton({ onClick, label, hint }: { onClick: () => void | Promise<void>; label: string; hint?: string }) {
+function DownloadButton({ onClick, label, hint, primary }: {
+  onClick: () => void | Promise<void>;
+  label: string;
+  hint?: string;
+  primary?: boolean;
+}) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className="tz-btn"
-      style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2, padding: "10px 14px", textAlign: "left" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        gap: 4,
+        padding: "12px 14px",
+        minHeight: 64,
+        background: primary
+          ? "linear-gradient(135deg, rgba(43,123,255,0.18), rgba(34,211,238,0.10))"
+          : "var(--tz-surface-2, rgba(255,255,255,0.02))",
+        border: `1px solid ${primary ? "rgba(43,123,255,0.45)" : "var(--tz-border, rgba(255,255,255,0.08))"}`,
+        borderRadius: 8,
+        color: "var(--tz-ink)",
+        cursor: "pointer",
+        textAlign: "left",
+        transition: "border-color .15s, background .15s",
+        font: "inherit",
+        width: "100%",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "var(--tz-cyan, #22D3EE)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = primary
+          ? "rgba(43,123,255,0.45)"
+          : "var(--tz-border, rgba(255,255,255,0.08))";
+      }}
     >
-      <span style={{ fontSize: 12.5, fontWeight: 600 }}>↓ {label}</span>
-      {hint && <span className="font-mono" style={{ fontSize: 10.5, opacity: 0.6 }}>{hint}</span>}
+      <span style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.25 }}>↓ {label}</span>
+      {hint && (
+        <span
+          className="font-mono"
+          style={{
+            fontSize: 10.5,
+            opacity: 0.55,
+            lineHeight: 1.3,
+            letterSpacing: "0.04em",
+          }}
+        >
+          {hint}
+        </span>
+      )}
     </button>
+  );
+}
+
+function ExternalLinkButton({ href, label }: { href: string; label: string }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        gap: 4,
+        padding: "12px 14px",
+        minHeight: 64,
+        background: "var(--tz-surface-2, rgba(255,255,255,0.02))",
+        border: "1px solid var(--tz-border, rgba(255,255,255,0.08))",
+        borderRadius: 8,
+        color: "var(--tz-ink)",
+        textDecoration: "none",
+        transition: "border-color .15s",
+        width: "100%",
+      }}
+    >
+      <span style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.25 }}>↗ {label}</span>
+    </a>
   );
 }
 
@@ -550,14 +632,10 @@ export default function BrandAssetsClient() {
 
       <Section
         title="Generated dynamically — production assets"
-        subtitle="These are live URLs Vercel renders on demand. Right-click → save image."
+        subtitle="Live URLs Vercel renders on demand. Right-click → save image."
       >
-        <a href="/opengraph-image" target="_blank" rel="noopener" className="tz-btn">
-          <span style={{ fontSize: 12.5, fontWeight: 600 }}>↗ OG image (1200×630)</span>
-        </a>
-        <a href="/api/admin/brand-kit/design-tokens.json" target="_blank" rel="noopener" className="tz-btn">
-          <span style={{ fontSize: 12.5, fontWeight: 600 }}>↓ design-tokens.json</span>
-        </a>
+        <ExternalLinkButton href="/opengraph-image" label="OG image (1200×630)" />
+        <ExternalLinkButton href="/api/admin/brand-kit/design-tokens.json" label="design-tokens.json" />
       </Section>
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.6 }}>
