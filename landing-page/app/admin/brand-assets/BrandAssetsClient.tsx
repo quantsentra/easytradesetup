@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 // Brand colors / fonts — kept literal here so the generators don't depend on
 // CSS vars that aren't available off-screen during canvas rasterisation.
@@ -51,28 +52,46 @@ function downloadSvg(svg: string, filename: string) {
   downloadBlob(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }), filename);
 }
 
-// SVG → PNG via offscreen canvas. Returns a promise so callers can await.
-async function svgToPng(svg: string, w: number, h: number): Promise<Blob> {
-  const blob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  try {
-    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const i = new Image();
-      i.onload = () => resolve(i);
-      i.onerror = reject;
-      i.src = url;
-    });
-    const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext("2d")!;
-    ctx.drawImage(img, 0, 0, w, h);
-    return await new Promise<Blob>((resolve, reject) => {
-      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob failed"))), "image/png");
-    });
-  } finally {
-    URL.revokeObjectURL(url);
-  }
+// Direct-canvas brand-mark renderer. Drops the SVG → Image → canvas path
+// entirely — that pipeline was failing silently in some browsers (Safari
+// + some Chrome configs hit "tainted canvas" or never-firing onload on
+// blob: URLs of inline SVG).
+function markCanvas(size: number): Promise<Blob> {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+
+  // Transparent bg
+  ctx.clearRect(0, 0, size, size);
+
+  const cx = size / 2;
+  const cy = size / 2;
+  const r = size / 2;
+
+  // Gradient circle
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, C.blue);
+  grad.addColorStop(1, C.cyan);
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Checkmark
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = r * 0.18;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx - r * 0.4, cy + r * 0.05);
+  ctx.lineTo(cx - r * 0.05, cy + r * 0.35);
+  ctx.lineTo(cx + r * 0.5, cy - r * 0.30);
+  ctx.stroke();
+
+  return new Promise((resolve, reject) =>
+    canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("toBlob failed"))), "image/png"),
+  );
 }
 
 // Fully canvas-rendered wordmark — avoids font-loading races inside the
@@ -406,16 +425,52 @@ function Section({ title, subtitle, children }: {
   );
 }
 
+type DownloadState = "idle" | "loading" | "ok" | "error";
+
 function DownloadButton({ onClick, label, hint, primary }: {
   onClick: () => void | Promise<void>;
   label: string;
   hint?: string;
   primary?: boolean;
 }) {
+  const [state, setState] = useState<DownloadState>("idle");
+  const [err, setErr] = useState<string | null>(null);
+
+  async function handle() {
+    if (state === "loading") return;
+    setState("loading");
+    setErr(null);
+    try {
+      await onClick();
+      setState("ok");
+      setTimeout(() => setState("idle"), 1400);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error("[brand-assets] download failed", msg, e);
+      setErr(msg);
+      setState("error");
+      setTimeout(() => setState("idle"), 3500);
+    }
+  }
+
+  const stateColor =
+    state === "ok"      ? "var(--tz-cyan, #22D3EE)" :
+    state === "error"   ? "var(--tz-loss, #FF4D4F)" :
+    state === "loading" ? "var(--tz-amber, #FFB341)" :
+    primary             ? "rgba(43,123,255,0.45)"   :
+                          "var(--tz-border, rgba(255,255,255,0.08))";
+
+  const prefix =
+    state === "ok"      ? "✓ " :
+    state === "error"   ? "✕ " :
+    state === "loading" ? "… " :
+                          "↓ ";
+
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={handle}
+      disabled={state === "loading"}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -427,38 +482,42 @@ function DownloadButton({ onClick, label, hint, primary }: {
         background: primary
           ? "linear-gradient(135deg, rgba(43,123,255,0.18), rgba(34,211,238,0.10))"
           : "var(--tz-surface-2, rgba(255,255,255,0.02))",
-        border: `1px solid ${primary ? "rgba(43,123,255,0.45)" : "var(--tz-border, rgba(255,255,255,0.08))"}`,
+        border: `1px solid ${stateColor}`,
         borderRadius: 8,
         color: "var(--tz-ink)",
-        cursor: "pointer",
+        cursor: state === "loading" ? "wait" : "pointer",
         textAlign: "left",
         transition: "border-color .15s, background .15s",
         font: "inherit",
         width: "100%",
+        opacity: state === "loading" ? 0.85 : 1,
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = "var(--tz-cyan, #22D3EE)";
+        if (state === "idle") e.currentTarget.style.borderColor = "var(--tz-cyan, #22D3EE)";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = primary
-          ? "rgba(43,123,255,0.45)"
-          : "var(--tz-border, rgba(255,255,255,0.08))";
+        if (state === "idle") {
+          e.currentTarget.style.borderColor = primary
+            ? "rgba(43,123,255,0.45)"
+            : "var(--tz-border, rgba(255,255,255,0.08))";
+        }
       }}
     >
-      <span style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.25 }}>↓ {label}</span>
-      {hint && (
+      <span style={{ fontSize: 13, fontWeight: 600, lineHeight: 1.25 }}>
+        {prefix}{label}
+      </span>
+      {state === "error" && err ? (
+        <span className="font-mono" style={{ fontSize: 10.5, color: "var(--tz-loss, #FF4D4F)", lineHeight: 1.3 }}>
+          {err.length > 60 ? `${err.slice(0, 60)}…` : err}
+        </span>
+      ) : hint ? (
         <span
           className="font-mono"
-          style={{
-            fontSize: 10.5,
-            opacity: 0.55,
-            lineHeight: 1.3,
-            letterSpacing: "0.04em",
-          }}
+          style={{ fontSize: 10.5, opacity: 0.55, lineHeight: 1.3, letterSpacing: "0.04em" }}
         >
           {hint}
         </span>
-      )}
+      ) : null}
     </button>
   );
 }
@@ -502,7 +561,7 @@ export default function BrandAssetsClient() {
 
   const dlMarkSvg = (size: number) => downloadSvg(brandMarkSvg(size), `easytradesetup-mark-${size}.svg`);
   const dlMarkPng = async (size: number) => {
-    const blob = await svgToPng(brandMarkSvg(size), size, size);
+    const blob = await markCanvas(size);
     downloadBlob(blob, `easytradesetup-mark-${size}.png`);
   };
 
