@@ -52,6 +52,95 @@ function downloadSvg(svg: string, filename: string) {
   downloadBlob(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }), filename);
 }
 
+function downloadText(text: string, filename: string) {
+  downloadBlob(new Blob([text], { type: "text/plain;charset=utf-8" }), filename);
+}
+
+// Pulls a file through the admin-gated brand-kit API and triggers a save.
+// Used for static binary assets (fonts) staged in admin-assets/brand/.
+async function downloadFromUrl(url: string, filename: string) {
+  const res = await fetch(url, { credentials: "same-origin" });
+  if (!res.ok) throw new Error(`fetch ${url} -> ${res.status}`);
+  const blob = await res.blob();
+  downloadBlob(blob, filename);
+}
+
+// Opus Clip / Submagic / Vizard accept comma- or newline-separated word
+// lists. Newline-separated is the most universally accepted format.
+const CENSORED_WORDS = [
+  "guaranteed",
+  "guaranteed returns",
+  "guaranteed profits",
+  "assured returns",
+  "assured profits",
+  "risk-free",
+  "riskless",
+  "no risk",
+  "zero risk",
+  "get rich quick",
+  "double your money",
+  "triple your money",
+  "100% accuracy",
+  "100% accurate",
+  "never lose",
+  "always wins",
+  "always profitable",
+  "secret formula",
+  "holy grail",
+  "can't lose",
+  "cant lose",
+  "sure shot",
+  "sure-shot",
+  "jackpot",
+  "tip",
+  "tips",
+  "call",
+  "buy now",
+  "sell now",
+].join("\n");
+
+const BRAND_VOCABULARY = [
+  "EasyTradeSetup",
+  "Golden Indicator",
+  "TradingView",
+  "Pine v5",
+  "indicator",
+  "chart tool",
+  "decision layer",
+  "educational",
+  "not investment advice",
+  "regime",
+  "structure",
+  "key levels",
+  "volume",
+  "price action",
+  "support",
+  "resistance",
+  "setup",
+  "entry",
+  "exit",
+  "stop loss",
+  "take profit",
+  "risk to reward",
+  "R:R",
+  "trade plan",
+  "discipline",
+  "bias",
+  "trend",
+  "range",
+  "breakout",
+  "consolidation",
+  "NIFTY",
+  "BANKNIFTY",
+  "F&O",
+  "options",
+  "futures",
+  "intraday",
+  "swing",
+  "backtest",
+  "journal",
+].join("\n");
+
 // Direct-canvas brand-mark renderer. Drops the SVG → Image → canvas path
 // entirely — that pipeline was failing silently in some browsers (Safari
 // + some Chrome configs hit "tainted canvas" or never-firing onload on
@@ -879,6 +968,44 @@ export default function BrandAssetsClient() {
     downloadBlob(blob, `easytradesetup-yt-thumbnail-1280x720.png`);
   };
 
+  // Opus Clip Asset Library upload bundle. Logo / watermark / wordmark /
+  // palette reuse the canonical canvas generators above so there's only
+  // one source of truth for the brand mark. Fonts are static .ttf files
+  // staged under admin-assets/brand/fonts/ and served via the admin-gated
+  // brand-kit API. Word lists are generated client-side from the constants
+  // declared at the top of this file so editing copy doesn't require a
+  // round-trip to disk.
+  const dlOpusLogo = async () => {
+    const blob = await markCanvas(512);
+    downloadBlob(blob, `easytradesetup-logo-512.png`);
+  };
+  const dlOpusWatermark = async () => {
+    const blob = await ytWatermarkCanvas();
+    downloadBlob(blob, `easytradesetup-watermark-150.png`);
+  };
+  const dlOpusWordmark = async () => {
+    const blob = await wordmarkCanvas(1200, 300);
+    downloadBlob(blob, `easytradesetup-wordmark-1200x300.png`);
+  };
+  const dlOpusPalette = async () => {
+    const blob = await paletteCanvas();
+    downloadBlob(blob, `easytradesetup-palette-1200x800.png`);
+  };
+  const dlOpusFontGrotesk = () =>
+    downloadFromUrl(
+      "/api/admin/brand-kit/fonts/SpaceGrotesk-Variable.ttf",
+      "SpaceGrotesk-Variable.ttf",
+    );
+  const dlOpusFontInter = () =>
+    downloadFromUrl(
+      "/api/admin/brand-kit/fonts/InterTight-Variable.ttf",
+      "InterTight-Variable.ttf",
+    );
+  const dlOpusCensored = () =>
+    downloadText(CENSORED_WORDS, "easytradesetup-censored-words.txt");
+  const dlOpusVocab = () =>
+    downloadText(BRAND_VOCABULARY, "easytradesetup-brand-vocabulary.txt");
+
   return (
     <>
       <div className="tz-topbar">
@@ -894,6 +1021,20 @@ export default function BrandAssetsClient() {
           <a href="/opengraph-image" target="_blank" rel="noopener" className="tz-btn">↗ OG image</a>
         </div>
       </div>
+
+      <Section
+        title="Opus Clip — bundle"
+        subtitle="Drop these straight into Opus Clip → Asset Library. Logo + watermark + wordmark + palette + 2 fonts (max allowed) + censored-words list + brand-vocabulary list. One click each, no resizing needed."
+      >
+        <DownloadButton primary label="Logo PNG 512×512" hint="upload to · Logo" onClick={dlOpusLogo} />
+        <DownloadButton primary label="Watermark 150×150" hint="upload to · Watermark" onClick={dlOpusWatermark} />
+        <DownloadButton primary label="Wordmark 1200×300" hint="upload to · Brand assets" onClick={dlOpusWordmark} />
+        <DownloadButton primary label="Palette 1200×800" hint="upload to · Brand assets" onClick={dlOpusPalette} />
+        <DownloadButton primary label="Space Grotesk .ttf" hint="upload to · Fonts (slot 1)" onClick={dlOpusFontGrotesk} />
+        <DownloadButton primary label="Inter Tight .ttf" hint="upload to · Fonts (slot 2)" onClick={dlOpusFontInter} />
+        <DownloadButton primary label="Censored words .txt" hint="paste into · Censored Words" onClick={dlOpusCensored} />
+        <DownloadButton primary label="Brand vocabulary .txt" hint="paste into · Brand Words" onClick={dlOpusVocab} />
+      </Section>
 
       <Section
         title="Brand mark — gradient circle + checkmark"
