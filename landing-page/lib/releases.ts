@@ -26,6 +26,40 @@ export type Release = {
 
 export const RELEASES: Release[] = [
   {
+    date: "2026-05-08",
+    phase: "Auto-publishing pipeline",
+    title: "Stable build — IG + YT auto-publisher, content queue, SEO research",
+    tag: "v1.2-stable-2026-05-08",
+    commit: "1ada09c",
+    items: [
+      { tone: "milestone", text: "MILESTONE: end-to-end content auto-publishing live. Vercel cron picks pending row from DB → renders branded image → posts to Instagram + YouTube Shorts. Founder time = 0 once queue is seeded." },
+
+      { tone: "ship", text: "/admin/instagram (Auto-publisher) — single dashboard for both platforms. Per-row status + countdown timers showing exact ETA per pending post. Manual Test publish + Retry failed buttons per platform." },
+      { tone: "ship", text: "Migration 027_content_posts — queue table with state machine (pending / publishing / published / failed) for IG. Migration 028 adds parallel yt_* columns so each platform tracks independently." },
+      { tone: "ship", text: "lib/instagram.ts — Instagram Business Login API client (graph.instagram.com). Single image, carousel (2-10 slides), 60-day token refresh." },
+      { tone: "ship", text: "lib/youtube.ts — YouTube Data API v3 client. OAuth refresh-token flow, multipart Shorts upload, post-upload videos.update visibility flip (workaround for testing-mode private-lock)." },
+      { tone: "ship", text: "lib/cloudinary.ts — image-to-video pipeline. Pushes branded PNG through unsigned upload → 10-second H.264 MP4 with Ken Burns zoom for YT. Free 25GB tier covers daily use." },
+
+      { tone: "ship", text: "/admin/seo-keywords — AnswerThePublic research saved as JSON + rendered as headline picks + 10 keyword clusters. Source for blog topics, /indicator/[market] pages, IG / YT hooks." },
+      { tone: "ship", text: "/admin/content-queue — 14-day post queue from JSON with one-click clipboard copy per post (hook, caption, hashtags, visual brief). Sunday batch workflow takes ~5min for 7 posts." },
+      { tone: "ship", text: "Brand assets pipeline — Opus Clip bundle section in /admin/brand-assets with one-click downloads for logo / watermark / wordmark / palette / Space Grotesk + Inter Tight fonts / censored-words + brand-vocabulary .txt files." },
+
+      { tone: "ship", text: "Per-row countdown timers in publisher — live ticking countdown to next cron fire (top of each platform section) + per-pending-row ETA based on serial position. Visual heat (grey > 24h, cyan < 24h, amber < 1h)." },
+      { tone: "ship", text: "Admin proxy routes for both crons — /api/admin/content-posts/run-publish + run-publish-yt fire the cron logic on demand for testing without exposing CRON_SECRET to browser." },
+      { tone: "ship", text: "Retry-failed admin actions — flip failed rows back to pending so the next cron tick picks them up. Separate buttons for IG and YT since each platform fails independently." },
+
+      { tone: "fix", text: "Cloudinary image-to-video URL pattern — /image/upload/<tx>/<id>.mp4 not /video/upload/. Single-image-as-video stays under image/ resource type with .mp4 extension and f_mp4 flag forcing format." },
+      { tone: "fix", text: "YouTube 'Processing abandoned' on uploaded videos — root cause was static 5s hold reading as malformed asset. Fixed with e_zoompan:du_10 (motion + 10s) + vc_h264 codec." },
+      { tone: "fix", text: "YT API 400 'invalid description' on posts containing > or < — sanitiser replaces both with typographic guillemets ‹ › so comparison sense survives." },
+      { tone: "fix", text: "YT testing-mode private-lock — uploads forced private regardless of privacyStatus. Workaround: upload private + immediate videos.update flip with 3s/5s/10s/15s retry backoff." },
+      { tone: "fix", text: "categoryId 27 (Education) rejected by some YT projects — switched to 22 (People & Blogs), universally accepted." },
+
+      { tone: "ops", text: "vercel.json crons — IG publish 03:30 UTC daily (09:00 IST), YT publish 04:30 UTC daily (10:00 IST), IG token refresh weekly Sun 04:00 UTC. One-hour offset between IG and YT avoids simultaneous Cloudinary spikes." },
+      { tone: "ops", text: "5 new env vars to manage: INSTAGRAM_USER_ID + INSTAGRAM_LONG_TOKEN + INSTAGRAM_APP_SECRET + YT_CLIENT_ID/SECRET/REFRESH_TOKEN + CLOUDINARY_CLOUD_NAME + CLOUDINARY_UPLOAD_PRESET. Documented in CLAUDE.md." },
+      { tone: "ops", text: "Meta App + Google Cloud OAuth set up + verified — Instagram Business Login API + YouTube Data API v3 both auth'd. Refresh tokens captured: IG 60-day auto-refresh, YT 7-day testing-mode (1-6 weeks for production audit if needed)." },
+    ],
+  },
+  {
     date: "2026-05-02",
     phase: "Marketing motion + admin tooling",
     title: "Stable build — admin tooling, marketing checklist, brand kit, GA4",

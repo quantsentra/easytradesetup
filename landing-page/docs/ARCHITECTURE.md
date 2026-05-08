@@ -351,6 +351,87 @@ flowchart LR
 
 ---
 
+## 6b. Content auto-publishing pipeline (v1.2, 2026-05-08)
+
+End-to-end automated publishing to Instagram + YouTube Shorts. Single source-of-truth queue → daily cron → live posts.
+
+```mermaid
+flowchart TB
+    subgraph Source["Source of truth"]
+        json["admin-assets/content/14-day-queue.json<br/>14 day queue · hook + caption + slides + image_prompt"]
+        seo["admin-assets/seo/keyword-research.json<br/>10 clusters · 30 keywords (AnswerThePublic)"]
+        seo -.->|drives content| json
+    end
+
+    subgraph SyncStep["Manual sync"]
+        sync_btn["/admin/instagram → Sync queue button<br/>POSTs /api/admin/content-posts/sync"]
+    end
+
+    json --> sync_btn
+
+    subgraph Database["Supabase content_posts table (migrations 027 + 028)"]
+        cp[("content_posts<br/>day, format, hook, caption, slide_outline,<br/>status, ig_*, yt_status, yt_*")]
+    end
+
+    sync_btn -->|upsert idempotent| cp
+
+    subgraph Crons["Vercel cron triggers"]
+        cron_ig["03:30 UTC daily (09:00 IST)<br/>/api/cron/publish-instagram"]
+        cron_yt["04:30 UTC daily (10:00 IST)<br/>/api/cron/publish-youtube"]
+        cron_refresh["Sun 04:00 UTC weekly<br/>/api/cron/refresh-instagram-token"]
+    end
+
+    cp -->|"WHERE status='pending'<br/>ORDER BY day ASC LIMIT 1"| cron_ig
+    cp -->|"WHERE yt_status='pending'<br/>ORDER BY day ASC LIMIT 1"| cron_yt
+
+    subgraph IGFlow["IG flow (graph.instagram.com)"]
+        og_ig["GET /api/og/post/[day]<br/>1080x1350 PNG (next/og edge)"]
+        ig_single["POST /{user-id}/media<br/>image_url + caption"]
+        ig_carousel["POST /{user-id}/media (×N)<br/>+ POST media_publish<br/>media_type=CAROUSEL"]
+        ig_publish["POST /{user-id}/media_publish<br/>creation_id"]
+    end
+
+    cron_ig -->|format=static| og_ig --> ig_single --> ig_publish
+    cron_ig -->|format=carousel| og_ig --> ig_carousel --> ig_publish
+    ig_publish --> ig_live["Live on @easytradesetup IG"]
+
+    subgraph YTFlow["YT flow (Cloudinary + youtube.googleapis.com)"]
+        og_yt["GET /api/og/post/[day]/yt<br/>1080x1920 PNG (next/og edge)"]
+        cloudinary["Cloudinary unsigned upload<br/>+ /image/upload/e_zoompan:du_10,vc_h264,f_mp4/<id>.mp4"]
+        yt_upload["POST upload.googleapis.com/youtube/v3/videos<br/>multipart, snippet+status"]
+        yt_flip["PUT googleapis.com/youtube/v3/videos<br/>privacyStatus: private→public<br/>(retry backoff 3s/5s/10s/15s)"]
+    end
+
+    cron_yt --> og_yt --> cloudinary --> yt_upload --> yt_flip
+    yt_flip --> yt_live["Live on @easytradesetups YT Shorts"]
+
+    cron_refresh -->|"GET /refresh_access_token"| ig_token["IG long-lived token<br/>(60-day extend)"]
+
+    subgraph AdminUI["Admin: /admin/instagram"]
+        countdown["Live countdown timers<br/>Per-row ETA = serial position × daily tick"]
+        actions["Test publish + Retry failed buttons<br/>(per platform)"]
+    end
+
+    cp -.->|read| countdown
+    actions -.->|trigger| cron_ig
+    actions -.->|trigger| cron_yt
+
+    classDef cron fill:#1a1a3e,stroke:#22D3EE,color:#fff
+    classDef live fill:#0e3320,stroke:#22C55E,color:#fff
+    class cron_ig,cron_yt,cron_refresh cron
+    class ig_live,yt_live live
+```
+
+**Why per-platform state machines:** IG and YT can fail independently (Cloudinary outage, YT API quota, IG rate limit). One row carries `status` + `yt_status` so we never block one platform on the other's recovery.
+
+**Why next/og for image generation:** edge runtime, sub-100ms render, Meta + Cloudinary fetch URL on demand — no static asset hosting, no Vercel Blob storage cost. Branded PNG output is deterministic per day number, with optional `?slide=N` query param for carousel slides.
+
+**Why Cloudinary for image-to-video:** YT only accepts video uploads. Cloudinary's `/image/upload/.../<id>.mp4` URL pattern serves single image as MP4 with `e_zoompan:du_10` adding Ken Burns motion (otherwise YT flags as "Processing abandoned" — static-image hold reads as malformed). Free 25GB/month tier covers daily.
+
+**Why post-upload visibility flip:** YT Data API testing-mode projects force private regardless of `privacyStatus` parameter. `videos.update` is unrestricted for owner-initiated changes, so we upload private then immediately flip. Three-attempt backoff because YT's index-after-upload is eventually consistent.
+
+---
+
 ## 7. CI / CD pipeline
 
 ```mermaid
@@ -468,17 +549,64 @@ flowchart LR
 easytradesetup/
 ├─ landing-page/
 │  ├─ app/                    Next.js App Router routes
+│  │  ├─ admin/               20 admin pages — see below
+│  │  ├─ api/
+│  │  │  ├─ admin/            Admin-gated endpoints (sync, retry, run-publish proxies)
+│  │  │  ├─ cron/             Bearer-auth scheduled tasks (uptime, IG/YT publish, IG token refresh)
+│  │  │  └─ og/post/[day]/    Dynamic 1080x1350 IG + 1080x1920 YT brand renderer (next/og edge)
+│  │  └─ ...                  marketing + auth + portal routes
 │  ├─ components/             UI components (sections, nav, ui, auth, analytics, seo)
 │  ├─ lib/                    server helpers + constants
-│  ├─ supabase/migrations/    SQL migrations 001-005
+│  │  ├─ instagram.ts         IG Business Login API client (publish + token refresh)
+│  │  ├─ youtube.ts           YT Data API v3 client (OAuth + multipart upload + makePublic)
+│  │  ├─ cloudinary.ts        Image-to-video pipeline for YT (unsigned upload + e_zoompan)
+│  │  ├─ pricing.ts           Single source for prices + FX anchor
+│  │  ├─ launch.ts            Launch window dates + reservation cap
+│  │  ├─ supabase/            server.ts (admin client + SSR client)
+│  │  └─ ...                  uptime, releases, qa-suite, stripe, etc
+│  ├─ admin-assets/           Internal-only assets (gitignored from public/)
+│  │  ├─ brand/               Brand kit HTML + design-tokens.json + fonts
+│  │  ├─ content/             14-day-queue.json (post queue source of truth)
+│  │  └─ seo/                 keyword-research.json (AnswerThePublic data)
+│  ├─ supabase/migrations/    SQL migrations 001-028
 │  ├─ public/                 static assets
 │  ├─ tests/                  unit (vitest) + e2e (Playwright)
 │  ├─ docs/                   ← this file lives here
 │  ├─ middleware.ts           host-aware routing + auth gate
 │  ├─ tailwind.config.ts      brand tokens (navy + cyan-blue + gold)
 │  ├─ next.config.mjs
-│  └─ vercel.json
+│  └─ vercel.json             ← cron schedule (uptime + IG + YT + IG token refresh)
 ├─ src/pine/                  Golden Indicator Pine v5 source
 ├─ .github/workflows/test.yml CI workflow
+├─ BRAND_KIT.md               Single source for off-platform creative
 └─ CLAUDE.md                  project context for AI assistant
+```
+
+### Admin page inventory (20 pages, sidebar-categorised)
+
+```
+Operations    /admin                      Overview / KPIs
+              /admin/customers            Entitlements + soft-delete
+              /admin/tickets              Support inbox
+
+Content       /admin/updates              Update notes editor
+              /admin/brand-kit            Iframe to brand-kit.html
+              /admin/brand-assets         Canvas-rendered logo/wordmark/palette + Opus Clip bundle
+
+Growth        /admin/marketing            M0-M4 marketing checklist (tier-gated)
+              /admin/seo-keywords         AnswerThePublic research clusters
+              /admin/content-queue        14-day post queue + clipboard copy buttons
+              /admin/instagram            Auto-publisher (IG + YT side-by-side, countdowns)
+              /admin/analytics            Clarity + GA4 deep-link
+
+Insights      /admin/site-health          Uptime probe results
+              /admin/releases             Hand-curated release timeline (lib/releases.ts)
+
+System        /admin/readiness            Launch checklist auto-detect
+              /admin/checklist            MVP task tracker
+              /admin/qa                   50+ automated checks
+              /admin/errors               Sentry + structured error log
+              /admin/stripe-recover       Manual entitlement repair
+              /admin/architecture         This doc rendered as iframe
+              /admin/audit                Admin action audit log
 ```
