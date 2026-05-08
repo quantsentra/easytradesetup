@@ -53,11 +53,16 @@ async function uploadImage(imageBytes: Blob): Promise<{ public_id: string; secur
   return { public_id: body.public_id, secure_url: body.secure_url };
 }
 
-// Step 3 — construct video URL. Cloudinary serves images-as-video at
-// /video/upload/<transformation>/<public_id>.mp4 — du_N forces duration.
+// Step 3 — construct video URL. Single-image-as-video stays under the
+// image/ resource type — the .mp4 file extension on the delivery URL is
+// what tells Cloudinary to render it as video. /video/upload/ is for
+// pre-uploaded video assets only and would 404 here.
+//
+// du_N = duration in seconds. f_mp4 redundantly forces the format in case
+// some clients ignore the extension (also useful when a CDN strips it).
 function videoUrlForImage(publicId: string): string {
   const cloudName = envOrThrow("CLOUDINARY_CLOUD_NAME");
-  return `https://res.cloudinary.com/${cloudName}/video/upload/du_${VIDEO_DURATION_SECONDS}/${publicId}.mp4`;
+  return `https://res.cloudinary.com/${cloudName}/image/upload/du_${VIDEO_DURATION_SECONDS},f_mp4/${publicId}.mp4`;
 }
 
 // Step 4 — fetch MP4 bytes the YT API will upload.
@@ -88,16 +93,25 @@ export async function imageToVideoMp4(imageUrl: string): Promise<Buffer> {
   const { public_id } = await uploadImage(imgBlob);
   const videoUrl = videoUrlForImage(public_id);
 
-  // Cloudinary builds the MP4 lazily on first hit. First fetch can 500 if
-  // we hit too quickly — retry once after 2s on 500/503.
-  try {
-    return await fetchMp4(videoUrl);
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    if (msg.includes("500") || msg.includes("503")) {
-      await new Promise((r) => setTimeout(r, 2_000));
+  // Cloudinary builds the MP4 lazily on first hit — the first request
+  // triggers the transformation, subsequent ones are cached. Lazy-build
+  // can return 423 (Locked, building) or 500 transiently. Poll twice with
+  // backoff before failing.
+  const attempts = [0, 2_000, 5_000];
+  for (let i = 0; i < attempts.length; i++) {
+    if (attempts[i] > 0) await new Promise((r) => setTimeout(r, attempts[i]));
+    try {
       return await fetchMp4(videoUrl);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String(e);
+      const lastTry = i === attempts.length - 1;
+      if (lastTry || (!msg.includes("500") && !msg.includes("503") && !msg.includes("423") && !msg.includes("404"))) {
+        // Surface the actual URL we tried so the operator can paste it
+        // into a browser to diagnose. public_id can include a folder
+        // prefix (e.g. ets-yt/abc123) which makes the URL non-obvious.
+        throw new Error(`${msg} | tried: ${videoUrl}`);
+      }
     }
-    throw e;
   }
+  throw new Error(`Cloudinary fetch unexpectedly fell through for ${videoUrl}`);
 }
