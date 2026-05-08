@@ -40,8 +40,9 @@ const navSections: Array<{
   {
     title: "Growth",
     items: [
-      { href: "/admin/marketing",   label: "Marketing checklist", icon: MegaphoneIcon },
-      { href: "/admin/analytics",   label: "Analytics",           icon: ChartIcon },
+      { href: "/admin/marketing",     label: "Marketing checklist", icon: MegaphoneIcon },
+      { href: "/admin/seo-keywords",  label: "SEO keywords",        icon: SearchIcon    },
+      { href: "/admin/analytics",     label: "Analytics",           icon: ChartIcon     },
     ],
   },
   {
@@ -272,6 +273,14 @@ function ChartIcon() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 3v18h18" />
       <path d="M7 14l4-4 3 3 5-7" />
+    </svg>
+  );
+}
+function SearchIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="7" />
+      <line x1="20" y1="20" x2="16.5" y2="16.5" />
     </svg>
   );
 }

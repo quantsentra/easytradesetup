@@ -1,0 +1,104 @@
+{
+  "source": "AnswerThePublic — Content Studio",
+  "project": "EasyTradeSetup",
+  "captured": "2026-05-06",
+  "notes": "Pulled from AnswerThePublic AI keyword wheel. Use to (a) seed blog topics, (b) target programmatic /indicator pages, (c) write IG / YT hooks. UK-leaning because tool defaulted to .com — re-run with India locale for NSE-flavoured queries when AnswerThePublic exposes regional pivot.",
+  "headlines": [
+    {
+      "keyword": "what trading tools have a lifetime licence with no monthly fee",
+      "type": "best-for-ai-visibility",
+      "opportunity": "high",
+      "why": "High-intent specific-model query. Traders shopping for ownership vs subscription. Direct match for our one-time licence positioning vs LuxAlgo / TradingView Pro recurring fees.",
+      "content_idea": "Buyer's guide — comparing lifetime trading tools against monthly subscription platforms. Highlight cost savings over 12 / 24 months. Position EasyTradeSetup as the ownership pick."
+    },
+    {
+      "keyword": "luxalgo alternative",
+      "type": "best-short-tail",
+      "opportunity": "high",
+      "why": "Competitor-escape keyword. Traders actively shopping cheaper option to LuxAlgo's $39.99/month. Perfect target for our $49 one-time messaging.",
+      "content_idea": "Feature-by-feature comparison vs LuxAlgo. Hammer the pricing math (12 months = $480 vs our $49 once)."
+    }
+  ],
+  "groups": [
+    {
+      "title": "one-time payment vs subscription trading tools",
+      "keywords": [
+        { "keyword": "trading tools one time payment",     "opportunity": "high",   "volume": "niche", "intent": "transactional" },
+        { "keyword": "lifetime trading indicator uk",      "opportunity": "medium", "volume": "niche", "intent": "transactional" },
+        { "keyword": "no subscription trading indicator",  "opportunity": "medium", "volume": "niche", "intent": "transactional" }
+      ]
+    },
+    {
+      "title": "learning to trade with indicators",
+      "keywords": [
+        { "keyword": "trading course for beginners uk", "opportunity": "high",   "volume": "niche", "intent": "informational" },
+        { "keyword": "understand trading signals",      "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "learn to trade indicators",       "opportunity": "medium", "volume": "niche", "intent": "informational" }
+      ]
+    },
+    {
+      "title": "luxalgo vs easytrade setup",
+      "keywords": [
+        { "keyword": "luxalgo alternative",            "opportunity": "high",   "volume": "niche", "intent": "transactional" },
+        { "keyword": "cheap luxalgo alternative",      "opportunity": "high",   "volume": "niche", "intent": "transactional" },
+        { "keyword": "luxalgo vs pine script indicator","opportunity": "medium","volume": "niche", "intent": "comparison"     }
+      ]
+    },
+    {
+      "title": "tradingview free plan vs paid",
+      "keywords": [
+        { "keyword": "tradingview free vs pro",         "opportunity": "medium", "volume": "niche", "intent": "comparison"   },
+        { "keyword": "tradingview pine script free plan","opportunity": "low",   "volume": "niche", "intent": "informational"},
+        { "keyword": "tradingview plans uk",            "opportunity": "medium", "volume": "niche", "intent": "comparison"   }
+      ]
+    },
+    {
+      "title": "best tradingview indicators uk",
+      "keywords": [
+        { "keyword": "best tradingview indicators",       "opportunity": "medium", "volume": "127",   "intent": "comparison" },
+        { "keyword": "tradingview pine script indicators","opportunity": "low",    "volume": "niche", "intent": "informational" },
+        { "keyword": "tradingview uk traders",            "opportunity": "low",    "volume": "niche", "intent": "informational" }
+      ]
+    },
+    {
+      "title": "ftse trading with tradingview",
+      "keywords": [
+        { "keyword": "trading ftse on tradingview", "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "ftse 100 tradingview",        "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "ftse intraday strategy",      "opportunity": "medium", "volume": "niche", "intent": "informational" }
+      ]
+    },
+    {
+      "title": "position sizing for uk traders",
+      "keywords": [
+        { "keyword": "risk management day trading uk", "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "position sizing trading",        "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "r multiple trading",             "opportunity": "medium", "volume": "niche", "intent": "informational" }
+      ]
+    },
+    {
+      "title": "supply and demand zones explained",
+      "keywords": [
+        { "keyword": "how to draw supply demand zones",  "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "supply demand zones tradingview",  "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "supply and demand zones trading",  "opportunity": "medium", "volume": "niche", "intent": "informational" }
+      ]
+    },
+    {
+      "title": "trend regime filters in trading",
+      "keywords": [
+        { "keyword": "regime filter tradingview", "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "trend regime indicator",    "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "trend vs range market",     "opportunity": "medium", "volume": "niche", "intent": "informational" }
+      ]
+    },
+    {
+      "title": "how to read market structure",
+      "keywords": [
+        { "keyword": "trading market structure uk", "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "market structure trading",    "opportunity": "medium", "volume": "niche", "intent": "informational" },
+        { "keyword": "bos choc explained",          "opportunity": "low",    "volume": "niche", "intent": "informational" }
+      ]
+    }
+  ]
+}
