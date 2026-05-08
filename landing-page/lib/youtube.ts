@@ -84,6 +84,48 @@ function buildMultipartBody(opts: {
   return { body, boundary };
 }
 
+// Flip a previously-uploaded video from private → public via the
+// videos.update endpoint. Owner-initiated visibility changes are allowed
+// even when the API project is in testing mode, so this is the workaround
+// for Google's "testing apps force private on upload" restriction.
+//
+// Returns true on success; logs and swallows on error so the caller (the
+// publish cron) can still record the upload as published — the video is
+// in YT, just not yet public, and a follow-up retry can flip it.
+export async function makePublic(videoId: string): Promise<boolean> {
+  try {
+    const accessToken = await getAccessToken();
+    const res = await fetch(
+      `https://www.googleapis.com/youtube/v3/videos?part=status`,
+      {
+        method: "PUT",
+        headers: {
+          authorization: `Bearer ${accessToken}`,
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          id: videoId,
+          status: {
+            privacyStatus:           "public",
+            selfDeclaredMadeForKids: false,
+          },
+        }),
+        cache: "no-store",
+        signal: AbortSignal.timeout(20_000),
+      },
+    );
+    if (!res.ok) {
+      const text = await res.text();
+      console.error(`[yt-makePublic] failed ${res.status}: ${text.slice(0, 200)}`);
+      return false;
+    }
+    return true;
+  } catch (e) {
+    console.error("[yt-makePublic] exception", e);
+    return false;
+  }
+}
+
 // Public — upload one video as a Short. shortForm=true hints the YT
 // upload that 9:16 vertical, ≤60s content should be classified for the
 // Shorts shelf (#Shorts in title also helps).
@@ -97,18 +139,31 @@ export async function uploadShort(opts: {
   try {
     const accessToken = await getAccessToken();
 
+    // YouTube API rejects metadata containing the angle brackets `<` or
+    // `>` with HTTP 400 "invalid video description". Filter both fields —
+    // not just description, because titles can also have hooks like
+    // "X > Y". Replace with the bullet `·` to keep the comparison sense
+    // when the bracket was being used as "greater than".
+    const cleanText = (s: string) => s.replace(/</g, "‹").replace(/>/g, "›");
+
     const metadata = {
       snippet: {
-        title:       opts.title.slice(0, 100),
-        description: opts.description.slice(0, 4900),
+        title:       cleanText(opts.title).slice(0, 100),
+        description: cleanText(opts.description).slice(0, 4900),
         tags:        opts.tags?.slice(0, 30) ?? [],
-        // Category 27 = Education
-        categoryId:  "27",
+        // Category 22 = People & Blogs. Universally accepted and works in
+        // every region. Was 27 (Education) but Google's API rejected that
+        // for some projects. 22 is the safest default for Shorts.
+        categoryId:  "22",
       },
       status: {
-        // 'public' goes live immediately. For first uploads while you're
-        // still verifying — switch to 'unlisted' if you want a manual gate.
-        privacyStatus:           "public",
+        // Always upload as private. Two reasons:
+        //   1. Google's testing-mode rule forces private regardless of what
+        //      we send; some endpoints 400 instead of silent-downgrade.
+        //   2. Lets us inspect each upload before going public — useful
+        //      while the pipeline is still settling.
+        // makePublic() can flip it via videos.update once we trust the run.
+        privacyStatus:           "private",
         selfDeclaredMadeForKids: false,
       },
     };

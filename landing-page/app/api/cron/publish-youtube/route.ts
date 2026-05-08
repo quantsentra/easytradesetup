@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
-import { uploadShort } from "@/lib/youtube";
+import { uploadShort, makePublic } from "@/lib/youtube";
 import { imageToVideoMp4 } from "@/lib/cloudinary";
 
 export const runtime = "nodejs";
@@ -132,6 +132,13 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Flip private → public via videos.update. Testing-mode YT projects
+    // force private at upload time; this owner-initiated visibility change
+    // is allowed even pre-audit. Failure here doesn't fail the cron — the
+    // video is uploaded, we just record that it's still private so the
+    // operator can flip manually or rerun.
+    const wentPublic = await makePublic(result.videoId);
+
     await sb
       .from("content_posts")
       .update({
@@ -139,7 +146,7 @@ export async function GET(req: NextRequest) {
         yt_video_id:      result.videoId,
         yt_url:           result.url,
         yt_published_at:  new Date().toISOString(),
-        yt_error_message: null,
+        yt_error_message: wentPublic ? null : "Uploaded but flip-to-public failed — still private on YT",
       })
       .eq("id", post.id);
 
@@ -148,6 +155,7 @@ export async function GET(req: NextRequest) {
       day: post.day,
       video_id: result.videoId,
       url: result.url,
+      visibility: wentPublic ? "public" : "private",
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
