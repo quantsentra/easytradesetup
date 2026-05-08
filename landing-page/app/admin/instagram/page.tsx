@@ -4,55 +4,66 @@ import { createSupabaseAdmin } from "@/lib/supabase/server";
 import InstagramAdminClient from "./InstagramAdminClient";
 
 export const metadata: Metadata = {
-  title: "Instagram auto-publisher · Admin",
+  title: "Auto-publisher · Admin",
   robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";
 
 type Row = {
-  id:           string;
-  day:          number;
-  date:         string | null;
-  format:       string;
-  hook:         string;
-  status:       string;
-  ig_media_id:  string | null;
-  ig_permalink: string | null;
-  error_message: string | null;
-  attempts:     number;
-  published_at: string | null;
+  id:               string;
+  day:              number;
+  date:             string | null;
+  format:           string;
+  hook:             string;
+  // IG state
+  status:           string;
+  ig_permalink:     string | null;
+  error_message:    string | null;
+  attempts:         number;
+  // YT state
+  yt_status:        string | null;
+  yt_url:           string | null;
+  yt_error_message: string | null;
+  yt_attempts:      number | null;
 };
 
-export default async function InstagramAdminPage() {
+export default async function PublisherAdminPage() {
   const sb = createSupabaseAdmin();
   const { data, error } = await sb
     .from("content_posts")
-    .select("id, day, date, format, hook, status, ig_media_id, ig_permalink, error_message, attempts, published_at")
+    .select("id, day, date, format, hook, status, ig_permalink, error_message, attempts, yt_status, yt_url, yt_error_message, yt_attempts")
     .order("day", { ascending: true });
 
   const rows: Row[] = data ?? [];
-  const counts = {
+
+  const ig = {
     pending:    rows.filter((r) => r.status === "pending").length,
     publishing: rows.filter((r) => r.status === "publishing").length,
     published:  rows.filter((r) => r.status === "published").length,
     failed:     rows.filter((r) => r.status === "failed").length,
-    skipped:    rows.filter((r) => r.status === "skipped").length,
+  };
+  const yt = {
+    pending:    rows.filter((r) => r.yt_status === "pending").length,
+    publishing: rows.filter((r) => r.yt_status === "publishing").length,
+    published:  rows.filter((r) => r.yt_status === "published").length,
+    failed:     rows.filter((r) => r.yt_status === "failed").length,
   };
 
   return (
     <>
       <div className="tz-topbar">
         <div>
-          <h1 className="tz-topbar-title">Instagram auto-publisher.</h1>
+          <h1 className="tz-topbar-title">Auto-publisher.</h1>
           <div className="tz-topbar-sub">
-            Daily Vercel cron picks the next pending post → renders branded image → POSTs to Instagram Graph API.
-            Reels handled separately by Opus Clip.
+            Daily Vercel cron picks the next pending row → renders branded image → posts to Instagram + YouTube Shorts.
+            IG carousels native; YT Shorts via Cloudinary image-to-video pipeline.
           </div>
         </div>
         <div className="tz-topbar-actions">
           <Link href="/admin/content-queue" className="tz-btn">↗ Source queue</Link>
-          <a href="/api/og/post/1" target="_blank" rel="noopener" className="tz-btn">↗ Preview Day 1 image</a>
+          <a href="/api/og/post/1" target="_blank" rel="noopener" className="tz-btn">↗ IG preview</a>
+          <a href="/api/og/post/1/yt" target="_blank" rel="noopener" className="tz-btn">↗ YT preview</a>
         </div>
       </div>
 
@@ -62,18 +73,35 @@ export default async function InstagramAdminPage() {
             DB read failed
           </h3>
           <p className="text-[12.5px]" style={{ color: "var(--tz-ink-mute)", margin: 0 }}>
-            {error.message}. Apply migration <code>027_content_posts.sql</code> first, then click <strong>Sync from JSON</strong>.
+            {error.message}. Apply migrations <code>027_content_posts.sql</code> + <code>028_content_posts_youtube.sql</code> first, then click <strong>Sync from JSON</strong>.
           </p>
         </div>
       ) : null}
 
-      {/* Counts */}
-      <div className="grid gap-3 mb-4" style={{ gridTemplateColumns: "repeat(5, 1fr)" }}>
-        <CountCard label="Pending" value={counts.pending} color="var(--tz-cyan, #22D3EE)" />
-        <CountCard label="Publishing" value={counts.publishing} color="var(--tz-amber, #FFB341)" />
-        <CountCard label="Published" value={counts.published} color="var(--tz-up, #22C55E)" />
-        <CountCard label="Failed" value={counts.failed} color="var(--tz-loss, #FF4D4F)" />
-        <CountCard label="Skipped" value={counts.skipped} color="var(--tz-ink-mute)" />
+      {/* Counts — IG row */}
+      <div className="mb-2">
+        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B9D" }}>
+          Instagram · cron 09:00 IST daily
+        </h2>
+        <div className="grid gap-3 mb-4" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+          <CountCard label="Pending" value={ig.pending} color="var(--tz-cyan, #22D3EE)" />
+          <CountCard label="Publishing" value={ig.publishing} color="var(--tz-amber, #FFB341)" />
+          <CountCard label="Published" value={ig.published} color="var(--tz-up, #22C55E)" />
+          <CountCard label="Failed" value={ig.failed} color="var(--tz-loss, #FF4D4F)" />
+        </div>
+      </div>
+
+      {/* Counts — YT row */}
+      <div className="mb-4">
+        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B6B" }}>
+          YouTube Shorts · cron 10:00 IST daily
+        </h2>
+        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+          <CountCard label="Pending" value={yt.pending} color="var(--tz-cyan, #22D3EE)" />
+          <CountCard label="Publishing" value={yt.publishing} color="var(--tz-amber, #FFB341)" />
+          <CountCard label="Published" value={yt.published} color="var(--tz-up, #22C55E)" />
+          <CountCard label="Failed" value={yt.failed} color="var(--tz-loss, #FF4D4F)" />
+        </div>
       </div>
 
       {/* Actions (client) */}
@@ -89,30 +117,40 @@ export default async function InstagramAdminPage() {
           <thead>
             <tr style={{ borderBottom: "1px solid var(--tz-border, rgba(255,255,255,0.08))", background: "rgba(255,255,255,0.02)" }}>
               <Th>Day</Th>
-              <Th>Date</Th>
               <Th>Format</Th>
               <Th>Hook</Th>
-              <Th>Status</Th>
-              <Th>Try #</Th>
-              <Th>Result</Th>
+              <Th>IG</Th>
+              <Th>IG result</Th>
+              <Th>YT</Th>
+              <Th>YT result</Th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
                 <Td><strong>{r.day}</strong></Td>
-                <Td><span className="font-mono text-[11px]" style={{ color: "var(--tz-ink-mute)" }}>{r.date ?? "—"}</span></Td>
                 <Td><span className="font-mono text-[11px] uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)" }}>{r.format}</span></Td>
                 <Td>{r.hook}</Td>
                 <Td><StatusPill value={r.status} /></Td>
-                <Td><span className="font-mono text-[11px]" style={{ color: "var(--tz-ink-mute)" }}>{r.attempts}</span></Td>
                 <Td>
                   {r.ig_permalink ? (
                     <a href={r.ig_permalink} target="_blank" rel="noopener" className="font-mono text-[11px]" style={{ color: "var(--tz-cyan, #22D3EE)" }}>
                       ↗ live
                     </a>
                   ) : r.error_message ? (
-                    <span className="font-mono text-[11px]" style={{ color: "var(--tz-loss, #FF4D4F)" }}>{r.error_message.slice(0, 60)}{r.error_message.length > 60 ? "…" : ""}</span>
+                    <span className="font-mono text-[11px]" style={{ color: "var(--tz-loss, #FF4D4F)" }}>{r.error_message.slice(0, 50)}{r.error_message.length > 50 ? "…" : ""}</span>
+                  ) : (
+                    <span style={{ color: "var(--tz-ink-mute)" }}>—</span>
+                  )}
+                </Td>
+                <Td><StatusPill value={r.yt_status ?? "pending"} /></Td>
+                <Td>
+                  {r.yt_url ? (
+                    <a href={r.yt_url} target="_blank" rel="noopener" className="font-mono text-[11px]" style={{ color: "var(--tz-cyan, #22D3EE)" }}>
+                      ↗ live
+                    </a>
+                  ) : r.yt_error_message ? (
+                    <span className="font-mono text-[11px]" style={{ color: "var(--tz-loss, #FF4D4F)" }}>{r.yt_error_message.slice(0, 50)}{r.yt_error_message.length > 50 ? "…" : ""}</span>
                   ) : (
                     <span style={{ color: "var(--tz-ink-mute)" }}>—</span>
                   )}
@@ -131,7 +169,7 @@ export default async function InstagramAdminPage() {
       </div>
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.6 }}>
-        Source · 14-day-queue.json · Cron 03:30 UTC daily (09:00 IST) · Reels excluded — handled by Opus Clip
+        Source · 14-day-queue.json · IG cron 03:30 UTC · YT cron 04:30 UTC · Reels handled by Opus Clip
       </p>
     </>
   );

@@ -83,7 +83,11 @@ export default function InstagramAdminClient() {
       <h3 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "var(--tz-cyan, #22D3EE)" }}>
         Actions
       </h3>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+
+      <div className="font-mono text-[10.5px] uppercase tracking-widest mb-2" style={{ color: "var(--tz-ink-mute)" }}>
+        Queue
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 16 }}>
         <ActionButton
           primary
           label="Sync queue from JSON → DB"
@@ -94,16 +98,18 @@ export default function InstagramAdminClient() {
             });
             const body = await res.json();
             if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
-            // Force reload so the table re-fetches.
             location.reload();
           }}
         />
+      </div>
+
+      <div className="font-mono text-[10.5px] uppercase tracking-widest mb-2" style={{ color: "#FF6B9D" }}>
+        Instagram
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 16 }}>
         <ActionButton
-          label="Test publish next post (manual cron run)"
+          label="Test publish IG (manual cron run)"
           onClick={async () => {
-            // Hits the same cron route the scheduler will. Requires CRON_SECRET
-            // in browser-readable form, which we don't expose — so this calls
-            // the admin proxy instead.
             const res = await fetch("/api/admin/content-posts/run-publish", {
               method: "POST",
               credentials: "same-origin",
@@ -114,7 +120,7 @@ export default function InstagramAdminClient() {
           }}
         />
         <ActionButton
-          label="Retry failed → pending"
+          label="Retry failed IG → pending"
           onClick={async () => {
             const res = await fetch("/api/admin/content-posts/retry-failed", {
               method: "POST",
@@ -126,9 +132,40 @@ export default function InstagramAdminClient() {
           }}
         />
       </div>
-      <p className="text-[11.5px] mt-3" style={{ color: "var(--tz-ink-mute)", margin: "12px 0 0", lineHeight: 1.5 }}>
+
+      <div className="font-mono text-[10.5px] uppercase tracking-widest mb-2" style={{ color: "#FF6B6B" }}>
+        YouTube Shorts
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+        <ActionButton
+          label="Test publish YT (manual cron run)"
+          onClick={async () => {
+            const res = await fetch("/api/admin/content-posts/run-publish-yt", {
+              method: "POST",
+              credentials: "same-origin",
+            });
+            const body = await res.json();
+            if (!res.ok || !body.ok) throw new Error(body.error ?? body.message ?? `HTTP ${res.status}`);
+            location.reload();
+          }}
+        />
+        <ActionButton
+          label="Retry failed YT → pending"
+          onClick={async () => {
+            const res = await fetch("/api/admin/content-posts/retry-failed-yt", {
+              method: "POST",
+              credentials: "same-origin",
+            });
+            const body = await res.json();
+            if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
+            location.reload();
+          }}
+        />
+      </div>
+
+      <p className="text-[11.5px] mt-4" style={{ color: "var(--tz-ink-mute)", margin: "16px 0 0", lineHeight: 1.5 }}>
         <strong>Sync</strong> imports new days from <code>14-day-queue.json</code> without overwriting already-published rows.
-        <strong> Test publish</strong> runs the cron logic now (same as 09:00 IST scheduled run).
+        <strong> Test publish</strong> runs the same cron logic the scheduler runs daily.
       </p>
     </div>
   );
