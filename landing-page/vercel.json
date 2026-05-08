@@ -1,5 +1,15 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm test && next build",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "crons": [
+    {
+      "path": "/api/cron/publish-instagram",
+      "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/cron/refresh-instagram-token",
+      "schedule": "0 4 * * 0"
+    }
+  ]
 }
