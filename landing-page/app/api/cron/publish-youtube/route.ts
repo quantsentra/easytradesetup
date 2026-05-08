@@ -33,30 +33,109 @@ type ContentPost = {
   yt_attempts:    number;
 };
 
+// SEO + algo-friendly hashtag pool. Mixes:
+//   - core brand discovery (#easytradesetup)
+//   - sub-niche (#tradingview, #pinescript, #priceaction)
+//   - high-volume India/global trading tags
+//   - Shorts-specific (#Shorts is required for Shorts shelf, #YouTubeShorts boosts)
+// Pick 8-10 per video; YT caps tag total length at ~500 chars.
+const SEO_HASHTAG_POOL = [
+  "#Shorts",
+  "#YouTubeShorts",
+  "#trading",
+  "#daytrading",
+  "#intradaytrading",
+  "#stockmarket",
+  "#stockmarketindia",
+  "#nifty",
+  "#niftytrading",
+  "#banknifty",
+  "#options",
+  "#optionstrading",
+  "#tradingview",
+  "#pinescript",
+  "#priceaction",
+  "#supplyanddemand",
+  "#technicalanalysis",
+  "#riskmanagement",
+  "#tradingstrategy",
+  "#tradingsignals",
+  "#easytradesetup",
+  "#goldenindicator",
+];
+
 // Strip hashtag-only lines + the trailing "Educational. Not advice." we
-// use on IG. YT description gets the cleaner copy.
-function ytDescriptionFromCaption(caption: string, day: number): string {
+// use on IG. YT description gets the cleaner copy + a fresh hashtag block
+// drawn from the SEO pool above (avoids duplicating IG's tag list).
+function ytDescriptionFromCaption(caption: string, day: number, keywordTarget: string | null): string {
   const lines = caption.split("\n").map((l) => l.trim());
   const body = lines.filter((l) => l && !l.startsWith("#") && !l.startsWith("—")).join("\n");
-  const tags = lines.filter((l) => l.startsWith("#")).join(" ");
+
+  const seoTags = pickSeoHashtags(keywordTarget);
+
   return [
     body,
     "",
-    "▼ Free chart sample + risk calculator: https://www.easytradesetup.com",
+    "▼ Free chart sample + risk calculator → https://www.easytradesetup.com",
+    "▼ Lifetime indicator (no monthly fee) → https://www.easytradesetup.com/pricing",
     "",
     "Educational content. Not investment advice.",
     "",
-    `#Shorts ${tags}`,
+    seoTags,
     "",
     `(post-${day})`,
   ].join("\n").slice(0, 4900);
 }
 
-// YT title is capped at 100 chars. Hook is usually fine, but defensively
-// truncate + ensure #Shorts hashtag.
-function ytTitleFromHook(hook: string): string {
-  const base = hook.length > 80 ? `${hook.slice(0, 79)}…` : hook;
-  return `${base} #Shorts`.slice(0, 100);
+// Smarter title: emoji hook + benefit + #Shorts. YT algo penalises
+// titles that are pure hashtag spam, so we keep #Shorts at end + a few
+// keyword tags only when there's space.
+function ytTitleFromHook(hook: string, keywordTarget: string | null): string {
+  // Pick a leading emoji based on keyword target so titles aren't all
+  // identical to algo. Trading-related → 📈, money/value → 💰, default → ⚡
+  const target = (keywordTarget ?? "").toLowerCase();
+  let prefix = "⚡";
+  if (target.includes("price") || target.includes("trend") || target.includes("structure")) prefix = "📈";
+  else if (target.includes("risk") || target.includes("position")) prefix = "🛡️";
+  else if (target.includes("payment") || target.includes("subscription") || target.includes("luxalgo")) prefix = "💰";
+  else if (target.includes("supply") || target.includes("demand") || target.includes("zone")) prefix = "🎯";
+
+  const base = `${prefix} ${hook}`;
+  // Reserve 12 chars for " #Shorts" suffix (with leading space).
+  const truncated = base.length > 88 ? `${base.slice(0, 87)}…` : base;
+  return `${truncated} #Shorts`.slice(0, 100);
+}
+
+// Pick 8 SEO hashtags: always include #Shorts + #easytradesetup + brand,
+// plus keyword-relevant choices from the pool. Returned as a single line
+// space-separated (YT description format).
+function pickSeoHashtags(keywordTarget: string | null): string {
+  const target = (keywordTarget ?? "").toLowerCase();
+  const always = ["#Shorts", "#YouTubeShorts", "#easytradesetup", "#goldenindicator"];
+
+  const conditional: string[] = [];
+  if (target.includes("nifty") || target.includes("indian") || target.includes("india")) {
+    conditional.push("#nifty", "#niftytrading", "#stockmarketindia", "#banknifty");
+  } else {
+    conditional.push("#trading", "#daytrading", "#stockmarket");
+  }
+  if (target.includes("luxalgo") || target.includes("subscription") || target.includes("payment")) {
+    conditional.push("#tradingindicators", "#tradingview", "#pinescript");
+  } else if (target.includes("supply") || target.includes("demand") || target.includes("zone")) {
+    conditional.push("#supplyanddemand", "#priceaction", "#smartmoneyconcepts");
+  } else {
+    conditional.push("#priceaction", "#technicalanalysis", "#tradingstrategy");
+  }
+
+  return [...always, ...conditional].slice(0, 10).join(" ");
+}
+
+// Tag array sent to YT API (separate from description hashtags). Each
+// entry must be plain text, no `#` prefix.
+function ytTagsForVideo(keywordTarget: string | null): string[] {
+  const tags = pickSeoHashtags(keywordTarget).split(" ").map((t) => t.replace(/^#/, ""));
+  // YT prefers some longer-form tags too, not just niche hashtags.
+  return [...tags, "trading education", "stock market", "trading indicator", "tradingview", "easytradesetup"].slice(0, 30);
 }
 
 export async function GET(req: NextRequest) {
@@ -112,9 +191,9 @@ export async function GET(req: NextRequest) {
 
     // Upload to YT.
     const result = await uploadShort({
-      title:       ytTitleFromHook(post.hook),
-      description: ytDescriptionFromCaption(post.caption, post.day),
-      tags:        post.keyword_target ? [post.keyword_target, "trading", "easytradesetup", "shorts"] : ["trading", "easytradesetup"],
+      title:       ytTitleFromHook(post.hook, post.keyword_target),
+      description: ytDescriptionFromCaption(post.caption, post.day, post.keyword_target),
+      tags:        ytTagsForVideo(post.keyword_target),
       videoBytes,
     });
 

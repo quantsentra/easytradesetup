@@ -61,19 +61,25 @@ async function uploadImage(imageBytes: Blob): Promise<{ public_id: string; secur
 // image/ resource type — the .mp4 file extension on the delivery URL is
 // what tells Cloudinary to render it as video.
 //
-// Transformation chain:
-//   du_N        — duration in seconds
-//   e_zoompan   — Ken Burns slow zoom (motion); without it YT flags the
-//                 video as "Processing abandoned" because a static still
-//                 read as a malformed asset
-//   q_auto      — lets Cloudinary pick best quality/file-size tradeoff
-//   vc_h264     — H.264 codec — most widely accepted by YT processing
+// Transformation chain (order matters for Cloudinary):
+//   e_zoompan:du_N  — Ken Burns slow zoom WITH explicit duration. The
+//                     colon-syntax is required when chaining a duration
+//                     onto the effect — bare `du_N,e_zoompan` lets the
+//                     effect's default 4s win, which is what bit us
+//                     before (videos came out 0:04 instead of 0:10).
+//   c_pad,h_1920,w_1080,b_auto:black — pad to exact 9:16 frame so YT
+//                                       Shorts treats it as vertical.
+//   q_auto                          — best quality/file-size tradeoff.
+//   vc_h264                         — H.264 codec, most accepted by YT.
 //
-// f_mp4 / .mp4 extension redundantly force the format in case any CDN
-// hop strips one or the other.
+// f_mp4 / .mp4 extension redundantly force the format.
 function videoUrlForImage(publicId: string): string {
   const cloudName = envOrThrow("CLOUDINARY_CLOUD_NAME");
-  return `https://res.cloudinary.com/${cloudName}/image/upload/du_${VIDEO_DURATION_SECONDS},e_zoompan,q_auto,vc_h264,f_mp4/${publicId}.mp4`;
+  // Single transformation step (comma-separated). Slash-separated chained
+  // transforms 400 here — the c_pad step needed `c_pad,h_,w_,b_` together
+  // and that combination isn't accepted alongside e_zoompan in the same
+  // chain. Source image is already 1080x1920 so padding is unnecessary.
+  return `https://res.cloudinary.com/${cloudName}/image/upload/e_zoompan:du_${VIDEO_DURATION_SECONDS},vc_h264,f_mp4/${publicId}.mp4`;
 }
 
 // Step 4 — fetch MP4 bytes the YT API will upload.

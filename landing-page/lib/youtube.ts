@@ -89,41 +89,59 @@ function buildMultipartBody(opts: {
 // even when the API project is in testing mode, so this is the workaround
 // for Google's "testing apps force private on upload" restriction.
 //
+// Caveat: YouTube needs a few seconds after upload before the video is
+// addressable for update. Calling immediately can return 404 'video not
+// found' even though the upload succeeded. Poll with backoff up to ~30s.
+//
 // Returns true on success; logs and swallows on error so the caller (the
 // publish cron) can still record the upload as published — the video is
 // in YT, just not yet public, and a follow-up retry can flip it.
 export async function makePublic(videoId: string): Promise<boolean> {
-  try {
-    const accessToken = await getAccessToken();
-    const res = await fetch(
-      `https://www.googleapis.com/youtube/v3/videos?part=status`,
-      {
-        method: "PUT",
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-          "content-type": "application/json",
-        },
-        body: JSON.stringify({
-          id: videoId,
-          status: {
-            privacyStatus:           "public",
-            selfDeclaredMadeForKids: false,
+  const delays = [3_000, 5_000, 10_000, 15_000];
+  let lastErr = "";
+
+  for (let attempt = 0; attempt < delays.length; attempt++) {
+    await new Promise((r) => setTimeout(r, delays[attempt]));
+
+    try {
+      const accessToken = await getAccessToken();
+      const res = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=status`,
+        {
+          method: "PUT",
+          headers: {
+            authorization: `Bearer ${accessToken}`,
+            "content-type": "application/json",
           },
-        }),
-        cache: "no-store",
-        signal: AbortSignal.timeout(20_000),
-      },
-    );
-    if (!res.ok) {
+          body: JSON.stringify({
+            id: videoId,
+            status: {
+              privacyStatus:           "public",
+              selfDeclaredMadeForKids: false,
+            },
+          }),
+          cache: "no-store",
+          signal: AbortSignal.timeout(20_000),
+        },
+      );
+      if (res.ok) {
+        return true;
+      }
       const text = await res.text();
-      console.error(`[yt-makePublic] failed ${res.status}: ${text.slice(0, 200)}`);
-      return false;
+      lastErr = `${res.status}: ${text.slice(0, 200)}`;
+      console.error(`[yt-makePublic] attempt ${attempt + 1} failed ${lastErr}`);
+
+      // 404 / 401 may resolve after delay; quota / 403 will not.
+      if (res.status === 403 || res.status === 400) {
+        return false;
+      }
+    } catch (e) {
+      lastErr = e instanceof Error ? e.message : String(e);
+      console.error(`[yt-makePublic] attempt ${attempt + 1} exception`, e);
     }
-    return true;
-  } catch (e) {
-    console.error("[yt-makePublic] exception", e);
-    return false;
   }
+  console.error(`[yt-makePublic] all attempts exhausted, last error: ${lastErr}`);
+  return false;
 }
 
 // Public — upload one video as a Short. shortForm=true hints the YT
