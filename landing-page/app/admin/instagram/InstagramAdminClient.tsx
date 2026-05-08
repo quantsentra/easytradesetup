@@ -113,6 +113,18 @@ export default function InstagramAdminClient() {
             location.reload();
           }}
         />
+        <ActionButton
+          label="Retry failed → pending"
+          onClick={async () => {
+            const res = await fetch("/api/admin/content-posts/retry-failed", {
+              method: "POST",
+              credentials: "same-origin",
+            });
+            const body = await res.json();
+            if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
+            location.reload();
+          }}
+        />
       </div>
       <p className="text-[11.5px] mt-3" style={{ color: "var(--tz-ink-mute)", margin: "12px 0 0", lineHeight: 1.5 }}>
         <strong>Sync</strong> imports new days from <code>14-day-queue.json</code> without overwriting already-published rows.
