@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import PostCard from "./PostCard";
 
 export const metadata: Metadata = {
   title: "Content queue · Admin",
@@ -42,51 +43,6 @@ async function loadQueue(): Promise<Queue> {
   return JSON.parse(raw) as Queue;
 }
 
-function PlatformPill({ value }: { value: Post["platform"] }) {
-  const map = {
-    instagram:       { bg: "rgba(232,67,147,0.15)", fg: "#FF6B9D", label: "Instagram" },
-    youtube_shorts:  { bg: "rgba(255,77,79,0.15)",  fg: "#FF6B6B", label: "YT Short" },
-  } as const;
-  const { bg, fg, label } = map[value];
-  return (
-    <span
-      className="font-mono"
-      style={{
-        display: "inline-block",
-        padding: "2px 8px",
-        background: bg,
-        color: fg,
-        borderRadius: 4,
-        fontSize: 11,
-        letterSpacing: "0.04em",
-        textTransform: "uppercase",
-      }}
-    >
-      {label}
-    </span>
-  );
-}
-
-function FormatPill({ value }: { value: Post["format"] }) {
-  return (
-    <span
-      className="font-mono"
-      style={{
-        display: "inline-block",
-        padding: "2px 8px",
-        background: "rgba(255,255,255,0.04)",
-        color: "var(--tz-ink-mute)",
-        borderRadius: 4,
-        fontSize: 11,
-        letterSpacing: "0.04em",
-        textTransform: "uppercase",
-      }}
-    >
-      {value}
-    </span>
-  );
-}
-
 export default async function ContentQueuePage() {
   const data = await loadQueue();
 
@@ -100,14 +56,35 @@ export default async function ContentQueuePage() {
           <h1 className="tz-topbar-title">Content queue.</h1>
           <div className="tz-topbar-sub">
             14 days · {igCount} Instagram + {ytCount} YouTube Shorts · drafted from SEO keyword research.
-            Sunday 30min: review, paste captions to Meta Business Suite + YT Studio, schedule.
+            Sunday batch: hit Quick-copy buttons → paste into MBS Planner → schedule. ~5min for 7 posts.
           </div>
         </div>
         <div className="tz-topbar-actions">
           <Link href="/admin/seo-keywords" className="tz-btn">↗ SEO keywords</Link>
-          <a href="https://business.facebook.com/" target="_blank" rel="noopener" className="tz-btn">↗ Meta Business Suite</a>
+          <a href="https://business.facebook.com/latest/content_calendar/" target="_blank" rel="noopener" className="tz-btn">↗ MBS Planner</a>
           <a href="https://studio.youtube.com/" target="_blank" rel="noopener" className="tz-btn">↗ YT Studio</a>
         </div>
+      </div>
+
+      {/* Workflow callout — pinned to top so the user sees the pattern every visit */}
+      <div
+        className="tz-card mb-4"
+        style={{
+          padding: 18,
+          background: "linear-gradient(135deg, rgba(43,123,255,0.10), rgba(34,211,238,0.04))",
+          borderColor: "rgba(43,123,255,0.30)",
+        }}
+      >
+        <h3 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "var(--tz-cyan, #22D3EE)" }}>
+          Sunday workflow · ~5min for 7 posts
+        </h3>
+        <ol className="text-[13px]" style={{ color: "var(--tz-ink)", margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>
+          <li>Open Meta Business Suite Planner (button top-right ↗)</li>
+          <li>For each post: hit <strong>Full caption</strong> → paste · hit <strong>Hashtags</strong> → paste at end</li>
+          <li>Drop a chart screenshot or generate visual from <strong>Visual brief</strong> → Canva</li>
+          <li>Set publish date → Schedule. Done.</li>
+          <li>Reels / YT Shorts: feed long-form to Opus Clip → it auto-publishes both platforms</li>
+        </ol>
       </div>
 
       {/* Cadence + voice rules */}
@@ -147,93 +124,12 @@ export default async function ContentQueuePage() {
 
       {/* Posts */}
       <h2 className="text-[13px] font-mono uppercase tracking-widest mb-3" style={{ color: "var(--tz-ink-mute)" }}>
-        14-day queue · paste straight into your scheduler
+        14-day queue · click Quick copy → paste in scheduler
       </h2>
 
       <div className="grid gap-3" style={{ gridTemplateColumns: "1fr" }}>
         {data.queue.map((p) => (
-          <div key={p.day} className="tz-card" style={{ padding: 18 }}>
-            <div className="flex items-center gap-2 mb-2 flex-wrap">
-              <span
-                className="font-mono"
-                style={{
-                  display: "inline-block",
-                  padding: "2px 10px",
-                  background: "rgba(43,123,255,0.18)",
-                  color: "var(--tz-cyan, #22D3EE)",
-                  borderRadius: 4,
-                  fontSize: 11,
-                  letterSpacing: "0.04em",
-                }}
-              >
-                DAY {p.day} · {p.date}
-              </span>
-              <PlatformPill value={p.platform} />
-              <FormatPill value={p.format} />
-              {p.slides && (
-                <span className="font-mono text-[11px]" style={{ color: "var(--tz-ink-mute)" }}>
-                  {p.slides} slides
-                </span>
-              )}
-              {p.duration_seconds && (
-                <span className="font-mono text-[11px]" style={{ color: "var(--tz-ink-mute)" }}>
-                  {p.duration_seconds}s
-                </span>
-              )}
-            </div>
-
-            <h3 className="text-[15px] font-semibold mb-1" style={{ color: "var(--tz-ink)", lineHeight: 1.35 }}>
-              {p.hook}
-            </h3>
-            <p className="font-mono text-[11px] mb-3" style={{ color: "var(--tz-ink-mute)", margin: "0 0 14px" }}>
-              keyword target: <code>{p.keyword_target}</code>  ·  cta: <code>{p.cta}</code>
-            </p>
-
-            {/* Outline / script */}
-            {(p.slide_outline || p.script) && (
-              <div style={{ marginBottom: 14 }}>
-                <h4 className="text-[11px] font-mono uppercase tracking-widest mb-1" style={{ color: "var(--tz-ink-mute)" }}>
-                  {p.slide_outline ? "Slide outline" : "Script"}
-                </h4>
-                <ul className="text-[12.5px]" style={{ color: "var(--tz-ink)", margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
-                  {(p.slide_outline ?? p.script ?? []).map((line, i) => <li key={i}>{line}</li>)}
-                </ul>
-              </div>
-            )}
-
-            {/* Caption — copy-pasteable */}
-            <div style={{ marginBottom: 14 }}>
-              <h4 className="text-[11px] font-mono uppercase tracking-widest mb-1" style={{ color: "var(--tz-ink-mute)" }}>
-                Caption
-              </h4>
-              <pre
-                className="text-[12.5px]"
-                style={{
-                  margin: 0,
-                  padding: 12,
-                  background: "rgba(255,255,255,0.02)",
-                  border: "1px solid var(--tz-border, rgba(255,255,255,0.08))",
-                  borderRadius: 6,
-                  whiteSpace: "pre-wrap",
-                  fontFamily: "inherit",
-                  color: "var(--tz-ink)",
-                  lineHeight: 1.55,
-                }}
-              >
-{p.caption}
-              </pre>
-            </div>
-
-            {/* Image / video brief */}
-            <div>
-              <h4 className="text-[11px] font-mono uppercase tracking-widest mb-1" style={{ color: "var(--tz-ink-mute)" }}>
-                Visual brief · paste into Canva / Midjourney / Opus prompt
-              </h4>
-              <p className="text-[12.5px]" style={{ color: "var(--tz-ink-mute)", margin: 0, lineHeight: 1.55 }}>
-                {p.image_prompt}
-              </p>
-            </div>
-          </div>
+          <PostCard key={p.day} p={p} hashtagPool={data.hashtag_pool} />
         ))}
       </div>
 
