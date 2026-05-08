@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import InstagramAdminClient from "./InstagramAdminClient";
+import CountdownCell from "./CountdownCell";
 
 export const metadata: Metadata = {
   title: "Auto-publisher · Admin",
@@ -28,6 +29,63 @@ type Row = {
   yt_attempts:      number | null;
 };
 
+// Compute the next time (UTC) the cron will fire for a given hour:minute
+// in UTC. If today's slot has already passed, returns tomorrow's.
+function nextCronUtc(hourUtc: number, minuteUtc: number): Date {
+  const now = new Date();
+  const target = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+    hourUtc,
+    minuteUtc,
+    0,
+    0,
+  ));
+  if (target.getTime() <= now.getTime()) {
+    target.setUTCDate(target.getUTCDate() + 1);
+  }
+  return target;
+}
+
+// Build a map: row.id → ISO timestamp when its post is expected to fire.
+// We use queue-position rather than the row's own date field, because the
+// cron picks lowest-day pending serially regardless of the date in JSON
+// (the JSON dates were only for the Sunday-batch workflow we abandoned).
+//
+// Position 0 (next pending) → next cron fire
+// Position 1                → +1 day
+// Position 2                → +2 days
+// etc.
+//
+// publishing/published/failed rows get null (no countdown shown).
+function buildEstimatedTimes(
+  rows: Row[],
+  field: "status" | "yt_status",
+  cronHourUtc: number,
+  cronMinuteUtc: number,
+): Map<string, string | null> {
+  const m = new Map<string, string | null>();
+  const baseFire = nextCronUtc(cronHourUtc, cronMinuteUtc);
+
+  // Sort pending rows by day ascending — same order the cron picks.
+  const pending = rows
+    .filter((r) => r[field] === "pending")
+    .sort((a, b) => a.day - b.day);
+
+  pending.forEach((r, i) => {
+    const fire = new Date(baseFire.getTime() + i * 86_400_000);
+    m.set(r.id, fire.toISOString());
+  });
+
+  // Non-pending rows get null
+  rows.forEach((r) => {
+    if (!m.has(r.id)) m.set(r.id, null);
+  });
+
+  return m;
+}
+
 export default async function PublisherAdminPage() {
   const sb = createSupabaseAdmin();
   const { data, error } = await sb
@@ -50,6 +108,16 @@ export default async function PublisherAdminPage() {
     failed:     rows.filter((r) => r.yt_status === "failed").length,
   };
 
+  // Cron schedules from vercel.json:
+  //   IG: 30 3 * * *   (03:30 UTC = 09:00 IST)
+  //   YT: 30 4 * * *   (04:30 UTC = 10:00 IST)
+  const igTimes = buildEstimatedTimes(rows, "status",    3, 30);
+  const ytTimes = buildEstimatedTimes(rows, "yt_status", 4, 30);
+
+  // Top-of-page banners: countdown to the very next IG and YT runs.
+  const nextIgFire = nextCronUtc(3, 30).toISOString();
+  const nextYtFire = nextCronUtc(4, 30).toISOString();
+
   return (
     <>
       <div className="tz-topbar">
@@ -57,7 +125,7 @@ export default async function PublisherAdminPage() {
           <h1 className="tz-topbar-title">Auto-publisher.</h1>
           <div className="tz-topbar-sub">
             Daily Vercel cron picks the next pending row → renders branded image → posts to Instagram + YouTube Shorts.
-            IG carousels native; YT Shorts via Cloudinary image-to-video pipeline.
+            Per-row countdowns below show when each one will fire.
           </div>
         </div>
         <div className="tz-topbar-actions">
@@ -80,8 +148,12 @@ export default async function PublisherAdminPage() {
 
       {/* Counts — IG row */}
       <div className="mb-2">
-        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B9D" }}>
-          Instagram · cron 09:00 IST daily
+        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B9D", display: "flex", alignItems: "center", gap: 12 }}>
+          <span>Instagram · cron 09:00 IST daily</span>
+          <span style={{ color: "var(--tz-ink-mute)" }}>·</span>
+          <span style={{ color: "var(--tz-cyan, #22D3EE)", textTransform: "none", letterSpacing: 0 }}>
+            next run <CountdownCell target={nextIgFire} />
+          </span>
         </h2>
         <div className="grid gap-3 mb-4" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
           <CountCard label="Pending" value={ig.pending} color="var(--tz-cyan, #22D3EE)" />
@@ -93,8 +165,12 @@ export default async function PublisherAdminPage() {
 
       {/* Counts — YT row */}
       <div className="mb-4">
-        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B6B" }}>
-          YouTube Shorts · cron 10:00 IST daily
+        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B6B", display: "flex", alignItems: "center", gap: 12 }}>
+          <span>YouTube Shorts · cron 10:00 IST daily</span>
+          <span style={{ color: "var(--tz-ink-mute)" }}>·</span>
+          <span style={{ color: "var(--tz-cyan, #22D3EE)", textTransform: "none", letterSpacing: 0 }}>
+            next run <CountdownCell target={nextYtFire} />
+          </span>
         </h2>
         <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
           <CountCard label="Pending" value={yt.pending} color="var(--tz-cyan, #22D3EE)" />
@@ -120,8 +196,10 @@ export default async function PublisherAdminPage() {
               <Th>Format</Th>
               <Th>Hook</Th>
               <Th>IG</Th>
+              <Th>IG ETA</Th>
               <Th>IG result</Th>
               <Th>YT</Th>
+              <Th>YT ETA</Th>
               <Th>YT result</Th>
             </tr>
           </thead>
@@ -132,6 +210,9 @@ export default async function PublisherAdminPage() {
                 <Td><span className="font-mono text-[11px] uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)" }}>{r.format}</span></Td>
                 <Td>{r.hook}</Td>
                 <Td><StatusPill value={r.status} /></Td>
+                <Td>
+                  <CountdownCell target={igTimes.get(r.id) ?? null} />
+                </Td>
                 <Td>
                   {r.ig_permalink ? (
                     <a href={r.ig_permalink} target="_blank" rel="noopener" className="font-mono text-[11px]" style={{ color: "var(--tz-cyan, #22D3EE)" }}>
@@ -144,6 +225,9 @@ export default async function PublisherAdminPage() {
                   )}
                 </Td>
                 <Td><StatusPill value={r.yt_status ?? "pending"} /></Td>
+                <Td>
+                  <CountdownCell target={ytTimes.get(r.id) ?? null} />
+                </Td>
                 <Td>
                   {r.yt_url ? (
                     <a href={r.yt_url} target="_blank" rel="noopener" className="font-mono text-[11px]" style={{ color: "var(--tz-cyan, #22D3EE)" }}>
@@ -159,7 +243,7 @@ export default async function PublisherAdminPage() {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={7} style={{ padding: 24, textAlign: "center", color: "var(--tz-ink-mute)" }}>
+                <td colSpan={9} style={{ padding: 24, textAlign: "center", color: "var(--tz-ink-mute)" }}>
                   No posts in DB yet. Click <strong>Sync from JSON</strong> above.
                 </td>
               </tr>
@@ -169,7 +253,7 @@ export default async function PublisherAdminPage() {
       </div>
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.6 }}>
-        Source · 14-day-queue.json · IG cron 03:30 UTC · YT cron 04:30 UTC · Reels handled by Opus Clip
+        Source · 14-day-queue.json · IG cron 03:30 UTC (09:00 IST) · YT cron 04:30 UTC (10:00 IST) · ETA = serial position × daily cron tick
       </p>
     </>
   );
