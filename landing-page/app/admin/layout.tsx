@@ -40,9 +40,10 @@ const navSections: Array<{
   {
     title: "Growth",
     items: [
-      { href: "/admin/marketing",     label: "Marketing checklist", icon: MegaphoneIcon },
-      { href: "/admin/seo-keywords",  label: "SEO keywords",        icon: SearchIcon    },
-      { href: "/admin/analytics",     label: "Analytics",           icon: ChartIcon     },
+      { href: "/admin/marketing",      label: "Marketing checklist", icon: MegaphoneIcon },
+      { href: "/admin/seo-keywords",   label: "SEO keywords",        icon: SearchIcon    },
+      { href: "/admin/content-queue",  label: "Content queue",       icon: CalendarIcon  },
+      { href: "/admin/analytics",      label: "Analytics",           icon: ChartIcon     },
     ],
   },
   {
@@ -281,6 +282,16 @@ function SearchIcon() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="11" cy="11" r="7" />
       <line x1="20" y1="20" x2="16.5" y2="16.5" />
+    </svg>
+  );
+}
+function CalendarIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+      <line x1="8" y1="3" x2="8" y2="7" />
+      <line x1="16" y1="3" x2="16" y2="7" />
     </svg>
   );
 }

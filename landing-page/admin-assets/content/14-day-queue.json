@@ -1,0 +1,281 @@
+{
+  "generated": "2026-05-06",
+  "horizon_days": 14,
+  "platforms": ["instagram", "youtube_shorts"],
+  "cadence": "1 IG post per day + 2 YT shorts per week",
+  "voice_rules": [
+    "No fake P&L screenshots — SEBI compliance",
+    "No 'guaranteed', 'assured', 'risk-free' — censored words list applies",
+    "Educational > promotional — chart tool, not signal service",
+    "Hindi tagline allowed in IG caption tail (Hinglish where natural)",
+    "Always end with: 'Educational. Not investment advice.' on any post showing setup logic",
+    "CTA rotation: link in bio · free risk calc · free chart sample · DM"
+  ],
+  "hashtag_pool": [
+    "#tradingview",
+    "#pinescript",
+    "#niftytrading",
+    "#banknifty",
+    "#intradaytrading",
+    "#optionstrading",
+    "#priceaction",
+    "#supplyanddemand",
+    "#marketstructure",
+    "#riskmanagement",
+    "#easytradesetup",
+    "#goldenindicator",
+    "#luxalgoalternative",
+    "#tradingindicators",
+    "#daytrading",
+    "#stockmarketindia"
+  ],
+  "queue": [
+    {
+      "day": 1,
+      "date": "2026-05-07",
+      "platform": "instagram",
+      "format": "carousel",
+      "slides": 6,
+      "keyword_target": "luxalgo alternative",
+      "hook": "I cancelled my ₹3,300/month indicator. Here's what I switched to.",
+      "slide_outline": [
+        "Slide 1 — Hook: 'I cancelled my ₹3,300/month indicator.'",
+        "Slide 2 — Math: 12 months × ₹3,300 = ₹39,600. One-time alternative: ₹4,599.",
+        "Slide 3 — What I lost: nothing. Same regime filter, same key levels.",
+        "Slide 4 — What I gained: lifetime updates, no recurring auto-debit.",
+        "Slide 5 — Side-by-side feature checklist (no charts that show P&L)",
+        "Slide 6 — CTA: 'Free chart sample → link in bio'"
+      ],
+      "caption": "Lifetime > monthly. One-time payment indicators are a forgotten category — until you do the math. No tips. No calls. Just a cleaner chart.\n\n— Educational. Not investment advice.\n#luxalgoalternative #tradingview #pinescript #niftytrading",
+      "image_prompt": "Side-by-side TradingView chart screenshots — left labelled 'before' (cluttered, multiple subscription indicators), right labelled 'after' (clean, single Golden Indicator). Brand colours navy bg, electric blue accents. No P&L numbers visible.",
+      "cta": "free chart sample · link in bio"
+    },
+    {
+      "day": 2,
+      "date": "2026-05-08",
+      "platform": "instagram",
+      "format": "carousel",
+      "slides": 7,
+      "keyword_target": "supply and demand zones explained",
+      "hook": "Most traders draw S/D zones wrong. 3 rules to fix it.",
+      "slide_outline": [
+        "Slide 1 — Hook: 'Most S/D zones are drawn wrong.'",
+        "Slide 2 — Rule 1: Mark from candle body close, not wick.",
+        "Slide 3 — Rule 2: Zone is invalid after 2nd successful tap.",
+        "Slide 4 — Rule 3: Lower timeframe zones inside higher timeframe zones = highest probability.",
+        "Slide 5 — Visual example on NIFTY (no entry/exit prices labelled).",
+        "Slide 6 — What kills a zone: aggressive opposing volume on tap.",
+        "Slide 7 — CTA: 'Full setup PDF in the kit · link in bio'"
+      ],
+      "caption": "S/D zones become noise the moment they're drawn from wicks instead of bodies. Three rules keep them clean.\n\n— Educational. Not investment advice.\n#supplyanddemand #priceaction #niftytrading #marketstructure",
+      "image_prompt": "Clean TradingView chart of NIFTY with two highlighted supply/demand zones drawn from candle bodies. Annotations: 'tap 1 — valid', 'tap 2 — last entry'. Brand navy + cyan accents.",
+      "cta": "full kit PDF · link in bio"
+    },
+    {
+      "day": 3,
+      "date": "2026-05-09",
+      "platform": "youtube_shorts",
+      "format": "short",
+      "duration_seconds": 45,
+      "keyword_target": "what is regime filter trading",
+      "hook": "If your indicator works half the time, it's not the indicator. It's the regime.",
+      "script": [
+        "[0-3s] Hook: 'If your indicator works half the time, it's not the indicator. It's the regime.'",
+        "[3-12s] Show two charts side-by-side: trending vs ranging market.",
+        "[12-25s] 'Same indicator. Trending market = wins. Ranging market = chops you up.'",
+        "[25-38s] 'Solution: regime filter on top. Only take signals when market is in trend mode.'",
+        "[38-45s] 'Free chart sample with regime layer pre-built — link in description.'"
+      ],
+      "caption": "Regime > indicator. The same setup behaves differently in trend vs range. Filter first, signal second.\n\n#tradingview #regimefilter #niftytrading #priceaction",
+      "image_prompt": "Vertical 9:16 video. Open with a NIFTY trending chart. Cut to NIFTY ranging chart. Same indicator on both. Text overlays: 'WIN' and 'CHOP'. End card: brand mark + 'easytradesetup.com'.",
+      "cta": "free chart sample · link in description"
+    },
+    {
+      "day": 4,
+      "date": "2026-05-10",
+      "platform": "instagram",
+      "format": "reel",
+      "duration_seconds": 30,
+      "keyword_target": "position sizing trading",
+      "hook": "₹10,000 account. Risk 1%. How many lots? Most traders get this wrong.",
+      "script": [
+        "[0-3s] Hook on screen: '₹10,000 account. 1% risk. How many lots?'",
+        "[3-10s] Show formula: Risk amount ÷ (entry − stop) × lot size = qty.",
+        "[10-20s] Walk through: ₹100 risk ÷ 20 point stop ÷ ₹50 NIFTY tick = 0.1 lot. Round down to 0.",
+        "[20-27s] 'You can't trade NIFTY at ₹10k. Math doesn't lie. Trade BANKNIFTY or wait.'",
+        "[27-30s] 'Free risk calculator on site — does this for you.'"
+      ],
+      "caption": "Position sizing isn't a vibe. It's a calculator. If the math says 0 lots, the answer is 0 lots.\n\n— Educational. Not investment advice.\n#riskmanagement #positionsizing #niftytrading #intradaytrading",
+      "image_prompt": "Vertical 9:16 reel. Phone mockup of risk calc page. Animated counter: account size → risk % → qty output. Brand navy + gold CTA. End card: 'free at easytradesetup.com'.",
+      "cta": "free risk calc · link in bio"
+    },
+    {
+      "day": 5,
+      "date": "2026-05-11",
+      "platform": "instagram",
+      "format": "carousel",
+      "slides": 5,
+      "keyword_target": "tradingview free vs pro",
+      "hook": "TradingView Free vs Pro — what you actually need for indicators.",
+      "slide_outline": [
+        "Slide 1 — Hook: 'TradingView Free vs Pro for indicator users.'",
+        "Slide 2 — Free covers: 1 chart, 2 indicators per chart, 5 alerts.",
+        "Slide 3 — Pro adds: 2 charts, 5 indicators per chart, 20 alerts. Worth it if you stack 3+ indicators.",
+        "Slide 4 — Pro+ adds: 4 charts, 10 indicators. Only for multi-instrument scanners.",
+        "Slide 5 — CTA: 'Our indicator runs on free tier — chart sample link in bio'"
+      ],
+      "caption": "You don't need TradingView Pro to start. Most retail traders waste $14.95/mo on features they never use. Free works fine if your indicator stack is lean.\n\n— Educational. Not investment advice.\n#tradingview #pinescript #tradingindicators",
+      "image_prompt": "Comparison table — 3 columns: Free / Pro / Pro+. Rows: charts, indicators per chart, alerts, replay. Brand navy panels, cyan checkmarks for inclusions. No screenshots of TV interface.",
+      "cta": "free chart sample · link in bio"
+    },
+    {
+      "day": 6,
+      "date": "2026-05-12",
+      "platform": "instagram",
+      "format": "static",
+      "keyword_target": "no subscription trading indicator",
+      "hook": "One-time payment indicators — the dying breed.",
+      "caption": "When did 'lifetime' become a marketing word again?\n\nMost trading tools moved to monthly recurring because the math is better for them. Not for you.\n\nOne-time = own the tool. Stop trading = stop paying. Simple.\n\n— Educational. Not investment advice.\n#tradingtools #lifetimelicence #pinescript #tradingview",
+      "image_prompt": "Static brand poster. Big text: 'LIFETIME · ONCE · DONE'. Below: small caption '₹4,599 once vs ₹3,300/month'. Brand navy bg, gold CTA strip at bottom. No charts.",
+      "cta": "link in bio"
+    },
+    {
+      "day": 7,
+      "date": "2026-05-13",
+      "platform": "instagram",
+      "format": "reel",
+      "duration_seconds": 60,
+      "keyword_target": "how to read market structure",
+      "hook": "Market structure in 60 seconds. Higher highs, higher lows. That's it.",
+      "script": [
+        "[0-3s] Hook: 'Market structure in 60 seconds.'",
+        "[3-15s] Define: HH + HL = uptrend. LH + LL = downtrend. Anything else = range.",
+        "[15-30s] Show NIFTY 15min chart. Mark HH, HL with arrows. 'See it once, see it everywhere.'",
+        "[30-45s] BOS (break of structure) = trend confirms. CHoCH (change of character) = trend warning.",
+        "[45-55s] Rule: only take longs when HH + HL forming. Skip when in range.",
+        "[55-60s] 'Full structure walkthrough on the channel. Link in bio.'"
+      ],
+      "caption": "Structure first. Indicators second. Without HH/HL framing, every signal is just noise on noise.\n\n— Educational. Not investment advice.\n#marketstructure #priceaction #niftytrading #tradingview",
+      "image_prompt": "Vertical reel. NIFTY 15min chart with annotated HH, HL labels. Animated arrows pointing to each. Text overlay: 'BOS' marker at trend continuation. End: brand mark + URL.",
+      "cta": "full walkthrough · link in bio"
+    },
+    {
+      "day": 8,
+      "date": "2026-05-14",
+      "platform": "instagram",
+      "format": "carousel",
+      "slides": 6,
+      "keyword_target": "trading market structure uk",
+      "hook": "5 setups inside Golden Indicator. Pick one. Master it. Skip the rest.",
+      "slide_outline": [
+        "Slide 1 — Hook: '5 setups inside the indicator. Pick 1.'",
+        "Slide 2 — Lifeline (regime filter + key MA combo).",
+        "Slide 3 — Magnetic Zone (S/D + volume confluence).",
+        "Slide 4 — VWAP reclaim (intraday only).",
+        "Slide 5 — CPR fade (NIFTY / BANKNIFTY specialty).",
+        "Slide 6 — Volume Burst (catalyst-driven). CTA: 'Full PDF in the kit'"
+      ],
+      "caption": "Five setups. One indicator. Most traders fail because they try to learn five at once. Pick one for 30 days. Then expand.\n\n— Educational. Not investment advice.\n#tradingsetups #pinescript #niftytrading",
+      "image_prompt": "5-tile grid layout. Each tile = one setup name + abstract chart pattern. Brand navy bg, cyan + gold accents. No real chart screenshots.",
+      "cta": "full kit · link in bio"
+    },
+    {
+      "day": 9,
+      "date": "2026-05-15",
+      "platform": "youtube_shorts",
+      "format": "short",
+      "duration_seconds": 50,
+      "keyword_target": "r multiple trading",
+      "hook": "If your win rate is 40%, you don't have a problem. You have a math opportunity.",
+      "script": [
+        "[0-3s] Hook: '40% win rate? Not a problem. Math opportunity.'",
+        "[3-15s] Show formula: expectancy = (win% × avg win) − (loss% × avg loss).",
+        "[15-30s] Worked example: 40% × 3R win − 60% × 1R loss = +0.6R per trade. Profitable.",
+        "[30-45s] 'Win rate is a vanity metric. R-multiple is the real edge.'",
+        "[45-50s] 'Free risk calc → link in description.'"
+      ],
+      "caption": "R-multiple > win rate. Always.\n\n#riskmanagement #rmultiple #tradingmath #pricing",
+      "image_prompt": "Vertical YT short. Big animated formula on screen: '40% × 3R − 60% × 1R = +0.6R'. End card with brand mark.",
+      "cta": "free risk calc · link in description"
+    },
+    {
+      "day": 10,
+      "date": "2026-05-16",
+      "platform": "instagram",
+      "format": "carousel",
+      "slides": 5,
+      "keyword_target": "trend vs range market",
+      "hook": "Trend vs range. The single decision that decides your strategy.",
+      "slide_outline": [
+        "Slide 1 — Hook: 'Trend or range? Decide first.'",
+        "Slide 2 — Trend signals: ADX > 25, price respecting MA, structure confirming.",
+        "Slide 3 — Range signals: ADX < 20, price oscillating between bands, no structure progression.",
+        "Slide 4 — Why it matters: trend strategies break in range, range strategies break in trend.",
+        "Slide 5 — CTA: 'Our regime filter does this on chart — sample link in bio'"
+      ],
+      "caption": "Choosing the wrong strategy for the regime is the #1 retail killer. Filter first.\n\n— Educational. Not investment advice.\n#regimefilter #trendtrading #rangetrading #niftytrading",
+      "image_prompt": "Two chart panels stacked. Top: clear trend with rising MA. Bottom: range with horizontal bands. Annotations: 'TREND MODE' + 'RANGE MODE'. Brand navy bg.",
+      "cta": "free chart sample · link in bio"
+    },
+    {
+      "day": 11,
+      "date": "2026-05-17",
+      "platform": "instagram",
+      "format": "static",
+      "keyword_target": "tradingview pine script indicators",
+      "hook": "Pine Script v5 — what changed and why your old indicators stopped working.",
+      "caption": "Pine v5 dropped v4 syntax that your free internet indicators were written in. If your favourite TradingView script suddenly throws errors, that's why.\n\nOurs is v5 native. Lifetime updates included.\n\n— Educational. Not investment advice.\n#pinescript #pinescriptv5 #tradingview",
+      "image_prompt": "Code-style poster. Lines crossed out: 'study(...)' → 'indicator(...)'. Lines added: 'request.security' replacements. Brand navy bg, cyan code text. JetBrains Mono font.",
+      "cta": "link in bio"
+    },
+    {
+      "day": 12,
+      "date": "2026-05-18",
+      "platform": "instagram",
+      "format": "reel",
+      "duration_seconds": 45,
+      "keyword_target": "intraday trading strategy",
+      "hook": "1 chart. 1 indicator. 1 setup. Why retail overcomplicates.",
+      "script": [
+        "[0-3s] Hook: 'You don't need 7 indicators.'",
+        "[3-15s] Show messy chart: 6+ overlays, conflicting signals.",
+        "[15-25s] Cut to clean chart: 1 indicator, clear setup.",
+        "[25-40s] 'Decision speed matters more than information volume on intraday.'",
+        "[40-45s] 'Free clean chart sample → link in bio.'"
+      ],
+      "caption": "Intraday traders die from indicator stacking, not from missing info. Less is more.\n\n— Educational. Not investment advice.\n#intradaytrading #tradingview #cleanchart #pinescript",
+      "image_prompt": "Vertical reel. Open with cluttered chart (multiple indicators). Quick cut to clean chart with single Golden Indicator overlay. Brand navy + cyan.",
+      "cta": "free chart sample · link in bio"
+    },
+    {
+      "day": 13,
+      "date": "2026-05-19",
+      "platform": "instagram",
+      "format": "carousel",
+      "slides": 5,
+      "keyword_target": "regime filter tradingview",
+      "hook": "Why most TradingView signals 'repaint' — and what to look for.",
+      "slide_outline": [
+        "Slide 1 — Hook: 'Repainting indicators are a scam.'",
+        "Slide 2 — What it means: signal appears live, disappears after candle closes.",
+        "Slide 3 — Why it happens: future-leaking calculations (lookahead = on).",
+        "Slide 4 — How to spot: replay chart, check if signal stays.",
+        "Slide 5 — CTA: 'Ours uses lookahead = off. Verify on free sample.'"
+      ],
+      "caption": "Repainting is the #1 reason traders lose faith in indicators. Most free TradingView scripts repaint by accident. Replay-test before you trust.\n\n— Educational. Not investment advice.\n#tradingview #pinescript #repainting #tradingindicators",
+      "image_prompt": "Two-panel comparison. Left: chart with green signal that disappears on next candle (red X). Right: chart with green signal that persists (green check). Brand navy bg.",
+      "cta": "free chart sample · link in bio"
+    },
+    {
+      "day": 14,
+      "date": "2026-05-20",
+      "platform": "instagram",
+      "format": "static",
+      "keyword_target": "trading tools one time payment",
+      "hook": "Why I stopped renewing trading subscriptions.",
+      "caption": "₹3,300/mo × 12 months = ₹39,600/year. For one indicator.\n\nOver 5 years that's ₹1.98 lakh — for software that gets one bug fix and one cosmetic update per quarter.\n\nThe ownership math broke at some point. We rebuilt it.\n\n₹4,599. Once. Lifetime updates included. No auto-debit.\n\n— Educational. Not investment advice.\n#tradingtools #lifetimelicence #pinescript",
+      "image_prompt": "Brand poster. Big stacked numbers: '₹39,600/yr' (struck through) and '₹4,599 once' (highlighted gold). Brand navy bg.",
+      "cta": "link in bio"
+    }
+  ]
+}
