@@ -18,7 +18,11 @@
 // crypto.createHash to sign each upload. We use unsigned for simplicity —
 // Cloudinary free tier still rate-limits unsigned to prevent abuse.
 
-const VIDEO_DURATION_SECONDS = 5;
+// 10 seconds is comfortably above YouTube's "real video" heuristic and
+// well within Shorts' 60s cap. 5 seconds was being flagged as "Processing
+// abandoned" because a static-image hold under 6s reads as a malformed
+// asset to YT's pipeline.
+const VIDEO_DURATION_SECONDS = 10;
 
 function envOrThrow(name: string): string {
   const value = process.env[name];
@@ -55,14 +59,21 @@ async function uploadImage(imageBytes: Blob): Promise<{ public_id: string; secur
 
 // Step 3 — construct video URL. Single-image-as-video stays under the
 // image/ resource type — the .mp4 file extension on the delivery URL is
-// what tells Cloudinary to render it as video. /video/upload/ is for
-// pre-uploaded video assets only and would 404 here.
+// what tells Cloudinary to render it as video.
 //
-// du_N = duration in seconds. f_mp4 redundantly forces the format in case
-// some clients ignore the extension (also useful when a CDN strips it).
+// Transformation chain:
+//   du_N        — duration in seconds
+//   e_zoompan   — Ken Burns slow zoom (motion); without it YT flags the
+//                 video as "Processing abandoned" because a static still
+//                 read as a malformed asset
+//   q_auto      — lets Cloudinary pick best quality/file-size tradeoff
+//   vc_h264     — H.264 codec — most widely accepted by YT processing
+//
+// f_mp4 / .mp4 extension redundantly force the format in case any CDN
+// hop strips one or the other.
 function videoUrlForImage(publicId: string): string {
   const cloudName = envOrThrow("CLOUDINARY_CLOUD_NAME");
-  return `https://res.cloudinary.com/${cloudName}/image/upload/du_${VIDEO_DURATION_SECONDS},f_mp4/${publicId}.mp4`;
+  return `https://res.cloudinary.com/${cloudName}/image/upload/du_${VIDEO_DURATION_SECONDS},e_zoompan,q_auto,vc_h264,f_mp4/${publicId}.mp4`;
 }
 
 // Step 4 — fetch MP4 bytes the YT API will upload.
