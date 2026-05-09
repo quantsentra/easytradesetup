@@ -45,12 +45,13 @@
 
 | Action | Allowed paths |
 |---|---|
-| Create new files | `/content/blog/**`, `/content/youtube-shorts/**`, `/content/instagram/**`, `/content/facebook/**`, `/docs/seo/**` |
-| Modify existing files | Same as above + may append to `keyword-bank.md`, `content-calendar.md`, `competitor-watchlist.md` per their schemas |
+| Create new files | `/content/blog/**`, `/content/youtube-shorts/**`, `/content/instagram/**`, `/content/facebook/**`, `/docs/seo/**`, `landing-page/app/(marketing)/blog/**` (article TSX routes), `landing-page/public/blog-images/**` (READMEs only — actual images dropped by the operator) |
+| Modify existing files | Same as above + may append to `keyword-bank.md`, `content-calendar.md`, `competitor-watchlist.md`, `landing-page/lib/blog.ts` (post registry — append only, never edit prior post entries), `landing-page/app/sitemap.ts` (append blog entries), `landing-page/tests/e2e/pages.spec.ts` (smoke test rows) |
 | Read | Anything in repo (read-only is fine for context) |
 | Open issue | `.github/ISSUE_TEMPLATE/seo-task.yml`, label with `seo` + `hermes` |
 | Open PR | Yes, branched from `main`, target `main`, description must include checklist status |
 | Merge PR | **Never.** Only humans merge. |
+| Direct push to `main` | Allowed in current sales-priority shipping mode (operator explicitly authorised). Standard PR mode resumes when operator says so. |
 
 ## Escalation
 

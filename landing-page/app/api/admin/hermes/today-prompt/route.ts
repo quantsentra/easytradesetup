@@ -21,14 +21,30 @@ const PROMPT_TEMPLATE = (issueNumber: number, title: string) =>
 Read the issue body for the brief. Then:
 
 1. Read /docs/seo/brand-voice.md and /docs/seo/publishing-rules.md for tone + checklist
-2. Read landing-page/app/(marketing)/blog/best-indicator-for-nifty-options/page.tsx as a reference for length, structure, and JSON-LD wiring
-3. Write the article TSX at landing-page/app/(marketing)/blog/<slug>/page.tsx
-4. Append entry to landing-page/lib/blog.ts (slug, title, metaTitle, metaDescription, excerpt, hook, primaryKeyword, secondaryKeywords, audienceTier, pillar, datePublished, readMinutes)
-5. Add paper-trail markdown at /content/blog/<slug>.md following _TEMPLATE-blog-article.md
-6. Add smoke test row to landing-page/tests/e2e/pages.spec.ts ({ path: "/blog/<slug>", mustContain: /<keyword regex>/i })
-7. Run: npx tsc --noEmit and npm run build to verify
-8. Commit and push directly to main (sales-priority shipping mode active)
-9. Tell me the live URL and the commit hash
+2. Read landing-page/app/(marketing)/blog/best-indicator-for-nifty-options/page.tsx as a reference for length, structure, JSON-LD wiring, AND mobile responsiveness patterns (sm: breakpoint usage on text sizes, padding, headings)
+3. Pick the hero image:
+   - Read landing-page/public/blog-images/README.md for the folder taxonomy
+   - Map the article topic to a folder:
+       indian       → NIFTY / BANKNIFTY / NSE / Indian equities / India F&O
+       us           → SPX / NASDAQ / DOW / US equities / US options
+       crypto-forex → BTC / ETH / forex pairs (EURUSD etc)
+       gold         → XAU / silver / commodities
+       generic      → cross-market or non-market topics
+   - List files in that folder and pick the MOST RECENT by date in filename
+   - If folder is empty, fall back to landing-page/public/blog-images/generic/
+   - Set the heroImage path on the lib/blog.ts entry (relative to /public, e.g. "/blog-images/indian/NIFTY-baseline.png")
+   - Write a descriptive heroAlt that includes the market name + what the chart shows
+4. Write the article TSX at landing-page/app/(marketing)/blog/<slug>/page.tsx
+   - Read post.heroImage in the metadata.openGraph.images and ArticleJsonLd image
+   - Use post.heroImage + post.heroAlt for the <Image> tag in the hero section
+   - Use sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1024px" on the Image
+   - Wrap the image in max-w-5xl mx-auto so it doesn't dominate desktop
+5. Append entry to landing-page/lib/blog.ts (slug, title, metaTitle, metaDescription, excerpt, hook, primaryKeyword, secondaryKeywords, audienceTier, pillar, datePublished, readMinutes, heroImage, heroAlt)
+6. Add paper-trail markdown at /content/blog/<slug>.md following _TEMPLATE-blog-article.md
+7. Add smoke test row to landing-page/tests/e2e/pages.spec.ts ({ path: "/blog/<slug>", mustContain: /<keyword regex>/i })
+8. Run: npx tsc --noEmit and npm run build to verify
+9. Commit and push directly to main (sales-priority shipping mode active)
+10. Tell me the live URL and the commit hash
 
 Constraints:
 - No banned terms anywhere (guaranteed, secret, 100%, no loss, sure shot)
@@ -38,6 +54,14 @@ Constraints:
 - Sales focus is the indicator — soft CTAs only ("See the sample", "See the bundle", "Lock inaugural")
 - Length 1,000–1,800 words
 - Author field: "EasyTradeSetup Editorial"
+
+Mobile responsiveness (non-negotiable — the user complained about this):
+- Body text: text-[15px] sm:text-[16px], leading-[1.7] sm:leading-[1.75]
+- Section spacing: mt-8 sm:mt-12 not just mt-12
+- Card padding: p-5 sm:p-7 not just p-7
+- H2 headings: mt-7 sm:mt-10 or mt-8 sm:mt-12
+- CTA buttons in flex row: w-full sm:w-auto justify-center on each button so they stack on mobile and lay out side-by-side on desktop
+- All sm: breakpoints for any padding ≥ p-6 or margin ≥ mt-10
 `;
 
 export async function GET() {

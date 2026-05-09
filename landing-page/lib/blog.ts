@@ -26,6 +26,12 @@ export type BlogPost = {
   datePublished:   string;        // YYYY-MM-DD
   dateModified?:   string;        // YYYY-MM-DD
   readMinutes:     number;
+  // Hero image — pick the most recent file from the matching folder
+  // under /public/blog-images/{indian|us|crypto-forex|gold|generic}/.
+  // See landing-page/public/blog-images/README.md for naming + selection
+  // rules. Path is relative to /public — e.g. "/blog-images/indian/NIFTY-baseline.png".
+  heroImage:       string;
+  heroAlt:         string;
 };
 
 export const POSTS: BlogPost[] = [
@@ -48,6 +54,8 @@ export const POSTS: BlogPost[] = [
     pillar:            1,
     datePublished:     "2026-05-09",
     readMinutes:       8,
+    heroImage:         "/blog-images/indian/NIFTY-baseline.png",
+    heroAlt:           "Golden Indicator on a NIFTY 50 chart — regime, structure, and key levels overlaid on price",
   },
 ];
 
