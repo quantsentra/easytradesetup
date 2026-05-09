@@ -57,6 +57,28 @@ export const POSTS: BlogPost[] = [
     heroImage:         "/blog-images/indian/NIFTY_2026-05-09_10-56-54.png",
     heroAlt:           "Golden Indicator on a NIFTY 50 chart — regime, structure, and key levels overlaid on price",
   },
+  {
+    slug:              "are-paid-trading-signals-worth-it",
+    title:             "Are Paid Trading Signals Worth It? Run These 4 Numbers First.",
+    metaTitle:         "Are Paid Trading Signals Worth It? · EasyTradeSetup",
+    metaDescription:   "Four numbers decide your edge — none of which a signal seller can control for you. Honest math on paid trading signals. Educational, not advice.",
+    excerpt:           "Signals optimise the seller's economics, not yours. Four numbers that decide every trader's edge — and why none of them belong on someone else's screen.",
+    hook:              "Four numbers decide your edge. None of them are on a signal seller's screen.",
+    primaryKeyword:    "are paid trading signals worth it",
+    secondaryKeywords: [
+      "paid trading signals review",
+      "trading signal scam",
+      "telegram trading signals",
+      "copy trading worth it",
+      "stop following signals",
+    ],
+    audienceTier:      "T1",
+    pillar:            2,
+    datePublished:     "2026-05-09",
+    readMinutes:       9,
+    heroImage:         "/blog-images/indian/BANKNIFTY_2026-05-09_10-59-08.png",
+    heroAlt:           "Golden Indicator on a BANKNIFTY chart — structural levels and regime classification visible without any external buy/sell signal",
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {

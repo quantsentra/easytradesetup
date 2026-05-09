@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Mermaid from "@/components/admin/Mermaid";
 import PrintButton from "@/components/admin/PrintButton";
+import AgentsOrbit from "@/components/admin/AgentsOrbit";
 
 export const metadata = {
   title: "Architecture · Admin",
@@ -343,6 +344,100 @@ const backlog: Array<{ tier: string; title: string; items: string[]; color: stri
   },
 ];
 
+const agentsChart = `flowchart LR
+    op(["Operator (you)"])
+
+    subgraph AI["AI workers"]
+        cc["Claude Code<br/>(IDE / CLI)"]
+        hermes["Hermes Agent<br/>(external)"]
+    end
+
+    subgraph Sub["Research substrate"]
+        reddit["Reddit Scraper<br/>4 subs · weekly hot"]
+        tm["Topic Miner<br/>cluster + score + dedup"]
+        gh["GitHub Issues + PRs"]
+        imgs["Blog Images<br/>5 folders by market"]
+    end
+
+    subgraph Auto["Automation (Vercel cron)"]
+        ig["IG Auto-Publisher<br/>03:30 UTC daily"]
+        yt["YT Auto-Publisher<br/>04:30 UTC · DORMANT"]
+        rt["IG Token Refresh<br/>Sun 04:00 UTC"]
+        cn["Cloudinary<br/>image-to-video"]
+    end
+
+    subgraph Data["State"]
+        sb[(Supabase)]
+        deploy["Vercel Deploy"]
+    end
+
+    op -- "click Refill" --> reddit
+    op -- "paste prompt" --> cc
+    op -- "drops screenshots" --> imgs
+    op -- "review + merge" --> gh
+
+    reddit --> tm
+    tm --> gh
+    gh -- "polls labels=hermes" --> hermes
+    hermes -- "drafts PR" --> gh
+    cc -- "commit + push" --> deploy
+    gh -- "merge → push" --> deploy
+
+    deploy --> sb
+    imgs --> deploy
+
+    sb --> ig
+    sb --> yt
+    yt -.-> cn
+    rt --> sb`;
+
+const skillsAndAgents: Array<{ category: string; rows: Array<[string, string, string]> }> = [
+  {
+    category: "AI workers (drafts content, opens PRs)",
+    rows: [
+      ["Claude Code",      "manual",  "IDE/CLI session. Operator pastes prompt. Drafts blog TSX, opens PR or pushes."],
+      ["Hermes Agent",     "external", "External 24/7 SEO assistant. Reads /content + /docs/seo. Files PRs only — never merges."],
+    ],
+  },
+  {
+    category: "Research substrate (free, no API spend)",
+    rows: [
+      ["Reddit Scraper",      "active",  "Free public JSON. 4 subreddits. Weekly hot threads. /lib/hermes/reddit.ts"],
+      ["Topic Miner",         "active",  "Cluster + score + dedup. Builds SEO Task brief bodies. /lib/hermes/topic-mining.ts"],
+      ["GitHub API",          "active",  "Backlog + PR + comments via fine-grained PAT. Read+Issues:write only."],
+      ["Blog Image Picker",   "manual",  "5 folders by market (indian/us/crypto-forex/gold/generic). Operator drops screenshots."],
+      ["GSC + Bing Webmaster","active",  "Crawled sitemap. Indexed pages drive impressions metric."],
+    ],
+  },
+  {
+    category: "Content publishers (Vercel cron)",
+    rows: [
+      ["IG Auto-Publisher",      "active",  "Daily 03:30 UTC. Picks lowest-day pending row, posts to IG (single + carousel)."],
+      ["YT Auto-Publisher",      "paused",  "Daily 04:30 UTC. Currently DORMANT — token unset per pause-switch decision."],
+      ["IG Token Refresh",       "active",  "Sun 04:00 UTC. Auto-renews 60-day Instagram token."],
+      ["Cloudinary",             "paused",  "image-to-video pipeline · used by YT cron · idle while YT paused."],
+    ],
+  },
+  {
+    category: "State + deploy",
+    rows: [
+      ["Supabase",        "active",  "Postgres state. content_posts, leads, mvp_tasks, audit_log, etc."],
+      ["Vercel Deploy",   "active",  "Auto-deploy on push to main · ~90s build · ISR for blog routes."],
+      ["Vercel Cron",     "active",  "Scheduler. All daily/weekly tasks fire from here."],
+    ],
+  },
+  {
+    category: "Admin dashboards (operator UI)",
+    rows: [
+      ["/admin/hermes",          "—", "Daily Tasks panel. Refill backlog (button) + Copy prompt (button) + Review PRs (link)."],
+      ["/admin/instagram",       "—", "IG + YT publisher status. Per-row ETAs. Manual run / retry buttons."],
+      ["/admin/content-preview", "—", "Visual gallery of all 100 posts (4:5 IG + 9:16 YT side-by-side)."],
+      ["/admin/seo-keywords",    "—", "AnswerThePublic keyword research clusters."],
+      ["/admin/architecture",    "—", "This page."],
+    ],
+  },
+];
+
 const components: Array<[string, string, string]> = [
   ["Chrome",       "nav/TopNav.tsx",                    "Top nav + BrandMark export"],
   ["",             "nav/Footer.tsx",                    "Site footer"],
@@ -429,6 +524,7 @@ export default function ArchitecturePage() {
             ["#health",   "09 · Health snapshot"],
             ["#backlog",  "10 · Improvement backlog"],
             ["#repo",     "11 · Repository layout"],
+            ["#agents",   "12 · Agents & Skills (animated)"],
           ].map(([href, label]) => (
             <li key={href}>
               <a href={href} style={{
@@ -602,8 +698,87 @@ export default function ArchitecturePage() {
 └─ CLAUDE.md                  Project context for AI assistant`}</pre>
       </Section>
 
+      {/* 12 — Agents & Skills */}
+      <Section id="agents" num="12" title="Agents & Skills · the AI workforce">
+        <p className="section-p">
+          Animated map of every AI worker, automation, and connection in the project — operator at the centre, agents and crons orbiting outward by responsibility.
+          Cyan = active. Gold = manual (operator triggers). Amber = paused (resume anytime). Hover any node for what it does.
+        </p>
+
+        <AgentsOrbit />
+
+        <div className="mt-6 mb-6">
+          <Mermaid chart={agentsChart} title="12-agents-flow" />
+        </div>
+
+        {skillsAndAgents.map((group) => (
+          <div key={group.category} className="tz-card mb-3" style={{ padding: 0, overflow: "hidden" }}>
+            <div
+              style={{
+                padding: "10px 14px",
+                background: "rgba(43,123,255,0.06)",
+                borderBottom: "1px solid var(--tz-border, rgba(255,255,255,0.08))",
+                font: "600 11px var(--tz-mono, ui-monospace, monospace)",
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "var(--tz-cyan, #22D3EE)",
+              }}
+            >
+              {group.category}
+            </div>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12.5 }}>
+              <tbody>
+                {group.rows.map(([name, status, note]) => (
+                  <tr key={name} style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+                    <td style={{ padding: "10px 14px", fontWeight: 600, color: "var(--tz-ink, #fff)", whiteSpace: "nowrap", verticalAlign: "top" }}>
+                      {name}
+                    </td>
+                    <td style={{ padding: "10px 8px", verticalAlign: "top" }}>
+                      <span
+                        className="font-mono"
+                        style={{
+                          fontSize: 10,
+                          padding: "2px 7px",
+                          borderRadius: 4,
+                          letterSpacing: "0.04em",
+                          textTransform: "uppercase",
+                          background:
+                            status === "active" ? "rgba(34,211,238,0.16)" :
+                            status === "manual" ? "rgba(240,192,90,0.18)" :
+                            status === "paused" ? "rgba(255,179,65,0.16)" :
+                            status === "external" ? "rgba(139,92,246,0.18)" :
+                                                    "rgba(255,255,255,0.06)",
+                          color:
+                            status === "active" ? "#22D3EE" :
+                            status === "manual" ? "#F0C05A" :
+                            status === "paused" ? "#FFB341" :
+                            status === "external" ? "#A78BFA" :
+                                                    "rgba(255,255,255,0.55)",
+                        }}
+                      >
+                        {status}
+                      </span>
+                    </td>
+                    <td style={{ padding: "10px 14px", color: "var(--tz-ink-dim)", verticalAlign: "top" }}>
+                      {note}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+
+        <p className="text-[12px] mt-4" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.6 }}>
+          Why no API-driven autopilot? The operator&apos;s Claude Code subscription handles drafting interactively — no Anthropic API spend.
+          Hermes Agent is wired and ready (operating rules in <code>/docs/seo/hermes-agent-operating-rules.md</code>) but not running yet —
+          activate when API budget materialises. Until then the Daily Tasks panel at <Link href="/admin/hermes" style={{ color: "var(--tz-cyan, #22D3EE)" }}>/admin/hermes</Link>{" "}
+          collapses the loop to <strong>2 clicks + 1 paste</strong> per article.
+        </p>
+      </Section>
+
       <p className="mt-8 text-[11px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)" }}>
-        Generated 2026-04-26 · Edit landing-page/docs/ARCHITECTURE.md and this page in lockstep.
+        Generated 2026-04-26 · Section 12 added 2026-05-09 · Edit landing-page/docs/ARCHITECTURE.md and this page in lockstep.
       </p>
     </>
   );
