@@ -130,4 +130,10 @@ class TicketOut(BaseModel):
     status: str
     llm_provider: str
     llm_error: Optional[str] = None
+
+    # External helpdesk integration (Freshdesk, etc.)
+    external_ticket_id: Optional[str] = None
+    external_ticket_status: str = "pending"
+    external_error_message: Optional[str] = None
+
     created_at: datetime

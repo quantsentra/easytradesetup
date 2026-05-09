@@ -11,8 +11,12 @@ This repo intentionally stays small:
 - No Kubernetes
 - No SaaS plumbing
 
-It is a single FastAPI service plus a pluggable LLM extractor (OpenAI,
-Anthropic, or a deterministic mock).
+It is a single FastAPI service plus two pluggable layers:
+
+- **LLM extractor** — OpenAI, Anthropic, or a deterministic mock.
+- **Ticket destination** — local SQLite only, or local + Freshdesk forwarding.
+
+Local SQLite is *always* the source of truth.
 
 ## Project layout
 
@@ -51,8 +55,8 @@ uvicorn app.main:app --reload --port 8000
 
 Open http://localhost:8000/docs for interactive Swagger UI.
 
-> **Upgrading from v0.1.0?** Delete `backend/voicedesk.db` before starting —
-> the schema added several columns and there are no migrations yet.
+> **Upgrading from a previous version?** Delete `backend/voicedesk.db` before
+> starting — the schema added new columns and there are no migrations yet.
 
 ## LLM providers
 
@@ -82,6 +86,31 @@ ticket. The fallback ticket:
 - records the original error in the `llm_error` column.
 
 The transcript is never lost, even when the LLM is down.
+
+## Ticket destinations
+
+Local SQLite is *always* written. `TICKET_PROVIDER` adds optional forwarding
+to a third-party helpdesk on top of that:
+
+| Provider    | Behaviour                                                              | Required env                                   |
+| ----------- | ---------------------------------------------------------------------- | ---------------------------------------------- |
+| `local`     | Local DB only. `external_ticket_status="skipped"`.                     | none                                           |
+| `freshdesk` | Local DB + push via `POST /api/v2/tickets`. Falls back if API errors.  | `FRESHDESK_DOMAIN`, `FRESHDESK_API_KEY`        |
+
+`FRESHDESK_DOMAIN` is the subdomain only — for `acme.freshdesk.com` set it to
+`acme`. Auth is HTTP Basic (api_key:X) per Freshdesk's spec.
+
+### External push outcomes
+
+Each ticket row carries three external_* columns:
+
+- `external_ticket_id` — the helpdesk's ticket id on success, `null` otherwise.
+- `external_ticket_status` — one of `skipped` | `success` | `failed`.
+- `external_error_message` — populated only when status is `failed`.
+
+If Freshdesk is unreachable, returns 4xx/5xx, or the response is malformed,
+the local ticket is still created with status `failed` and the error captured.
+The local DB stays authoritative; you can replay failed pushes later.
 
 ## Endpoints
 
@@ -123,6 +152,9 @@ The transcript is never lost, even when the LLM is down.
   "status": "open",
   "llm_provider": "anthropic",
   "llm_error": null,
+  "external_ticket_id": "12345",
+  "external_ticket_status": "success",
+  "external_error_message": null,
   "created_at": "2026-05-09T10:23:14.512345+00:00"
 }
 ```

@@ -23,6 +23,12 @@ class Settings(BaseSettings):
     # Optional model override. Empty → provider-specific default.
     llm_model: str = ""
 
+    # External ticket provider: "local" | "freshdesk"
+    # Local SQLite is *always* written; this only controls extra forwarding.
+    ticket_provider: str = "local"
+    freshdesk_domain: str = ""
+    freshdesk_api_key: str = ""
+
     # Logging level for the app. DEBUG / INFO / WARNING / ERROR.
     log_level: str = "INFO"
 

@@ -26,10 +26,11 @@ def _configure_logging() -> None:
 async def lifespan(_: FastAPI):
     _configure_logging()
     logging.getLogger(__name__).info(
-        "Starting %s (env=%s, llm_provider=%s)",
+        "Starting %s (env=%s, llm_provider=%s, ticket_provider=%s)",
         settings.app_name,
         settings.app_env,
         settings.llm_provider,
+        settings.ticket_provider,
     )
     init_db()
     yield
@@ -37,7 +38,7 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(
     title=settings.app_name,
-    version="0.2.0",
+    version="0.3.0",
     description="Local-first MVP that turns support call transcripts into structured IT tickets.",
     lifespan=lifespan,
 )
