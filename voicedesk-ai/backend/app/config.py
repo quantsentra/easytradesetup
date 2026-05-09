@@ -15,9 +15,16 @@ class Settings(BaseSettings):
     app_name: str = "VoiceDesk AI"
     app_env: str = "local"
 
-    # LLM provider (placeholder — mock service ignores these for now)
+    # LLM provider: "openai" | "anthropic" | "mock"
     llm_provider: str = "mock"
+    # Generic API key. Provider clients also accept their native env var
+    # (OPENAI_API_KEY / ANTHROPIC_API_KEY) when this is empty.
     llm_api_key: str = ""
+    # Optional model override. Empty → provider-specific default.
+    llm_model: str = ""
+
+    # Logging level for the app. DEBUG / INFO / WARNING / ERROR.
+    log_level: str = "INFO"
 
     model_config = SettingsConfigDict(
         env_file=".env",
