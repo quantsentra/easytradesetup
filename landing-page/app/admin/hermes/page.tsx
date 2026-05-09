@@ -11,6 +11,7 @@ import {
   type GhCommit,
 } from "@/lib/hermes/github";
 import HermesAdminClient from "./HermesAdminClient";
+import HermesDailyTasks from "./HermesDailyTasks";
 
 export const metadata: Metadata = {
   title: "Hermes Agent · Admin",
@@ -52,6 +53,19 @@ export default async function HermesAdminPage() {
   const totalDrafts = drafts.reduce((acc, d) => acc + d.files.filter((f) => f.type === "file" && !f.name.startsWith("_")).length, 0);
   const totalTemplates = drafts.reduce((acc, d) => acc + d.files.filter((f) => f.type === "file" && f.name.startsWith("_")).length, 0);
 
+  // Daily-task state derivation. Stateless — derived from the same GH
+  // data we already fetched. No DB writes needed for "did I do today's
+  // refill" — just check whether any auto-mined issue was created in
+  // the last 24h.
+  const now24h = Date.now() - 24 * 60 * 60 * 1000;
+  const refillDoneToday = issues.some((i) =>
+    i.labels.some((l) => l.name === "auto-mined") &&
+    new Date(i.created_at).getTime() > now24h,
+  );
+  const oldestOpen = issues.length > 0
+    ? [...issues].sort((a, b) => a.number - b.number)[0]
+    : null;
+
   return (
     <>
       <div className="tz-topbar">
@@ -81,6 +95,13 @@ export default async function HermesAdminPage() {
               <Stat label="Recent commits"   value={commits.length} accent="#2DBE6D" />
             </div>
           </div>
+
+          {/* Daily Tasks — the click-driven routine */}
+          <HermesDailyTasks
+            refillDoneToday={refillDoneToday}
+            openIssueCount={issues.length}
+            oldestOpenIssue={oldestOpen ? { number: oldestOpen.number, title: oldestOpen.title, html_url: oldestOpen.html_url } : null}
+          />
 
           {/* Loop diagram */}
           <div className="tz-card mb-4" style={{ padding: 18 }}>
