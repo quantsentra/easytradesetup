@@ -45,6 +45,7 @@ const navSections: Array<{
       { href: "/admin/content-queue",  label: "Content queue",       icon: CalendarIcon  },
       { href: "/admin/content-preview",label: "Content preview",     icon: GalleryIcon   },
       { href: "/admin/instagram",      label: "Instagram publisher", icon: InstagramIcon },
+      { href: "/admin/hermes",         label: "Hermes Agent",        icon: HermesIcon    },
       { href: "/admin/analytics",      label: "Analytics",           icon: ChartIcon     },
     ],
   },
@@ -313,6 +314,15 @@ function InstagramIcon() {
       <rect x="3" y="3" width="18" height="18" rx="5" />
       <circle cx="12" cy="12" r="4" />
       <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+function HermesIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3l3 4h-2v6h-2V7H9z" />
+      <path d="M5 13a7 7 0 0014 0" />
+      <circle cx="12" cy="20" r="1.4" />
     </svg>
   );
 }

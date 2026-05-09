@@ -52,6 +52,21 @@ Live, gated, interactive version: <https://portal.easytradesetup.com/admin/archi
 
 Live MVP checklist (toggle done + notes): <https://portal.easytradesetup.com/admin/checklist>
 
+## Hermes Agent SEO Workflow
+
+This repo is wired for **Hermes Agent** — an external 24/7 agentic SEO and marketing assistant. Hermes does not run inside the application. It reads this repo, drafts content, and proposes changes via GitHub issues + PRs.
+
+The loop:
+
+1. **Hermes researches and drafts.** New content drafts land in [`/content/blog/`](content/blog/), [`/content/youtube-shorts/`](content/youtube-shorts/), [`/content/instagram/`](content/instagram/), [`/content/facebook/`](content/facebook/). Strategy and rules live in [`/docs/seo/`](docs/seo/). Hermes opens GitHub issues using the [`SEO Task`](.github/ISSUE_TEMPLATE/seo-task.yml) template.
+2. **Claude Code implements.** Once a brief or task is approved, Claude Code wires the route, meta, JSON-LD, sitemap entry, and tests inside `landing-page/`. Hermes does not modify application code, payments, auth, or production secrets.
+3. **Human approves.** Every PR requires a human reviewer. Pre-merge gate is the checklist in [`/docs/seo/publishing-rules.md`](docs/seo/publishing-rules.md). No auto-merge.
+4. **Deployment happens only after review.** Vercel deploys on push to `main` — which only happens after the PR is merged by a human.
+
+Operating rules and allowed-paths boundary: [`/docs/seo/hermes-agent-operating-rules.md`](docs/seo/hermes-agent-operating-rules.md).
+
+Operator dashboard: [portal.easytradesetup.com/admin/hermes](https://portal.easytradesetup.com/admin/hermes) — see drafts, open issues, file new tasks, observe the feedback loop.
+
 ## Discipline rules
 
 - **Frozen MVP scope.** P0 → P5 backlog in `mvp_tasks` is the only task list. New ideas go in note fields, not new rows. New rows require a migration commit, not an admin UI insert.

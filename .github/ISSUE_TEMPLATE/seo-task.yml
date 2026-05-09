@@ -1,0 +1,170 @@
+name: SEO Task
+description: An SEO/content task for Hermes Agent or Claude Code to action.
+title: "[SEO] "
+labels: ["seo", "hermes"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for any SEO-driven content or website task.
+
+        Hermes files these autonomously. Humans review before merge. See `/docs/seo/hermes-agent-operating-rules.md`.
+
+  - type: input
+    id: target_keyword
+    attributes:
+      label: Target keyword
+      description: Primary keyword this task targets. Lowercase, exact phrase.
+      placeholder: "best indicator for nifty options"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: search_intent
+    attributes:
+      label: Search intent
+      options:
+        - informational
+        - commercial
+        - comparison
+        - how-to
+        - branded
+        - navigational
+    validations:
+      required: true
+
+  - type: dropdown
+    id: page_type
+    attributes:
+      label: Page / content type
+      options:
+        - blog post (new)
+        - blog post (refresh)
+        - product page edit
+        - landing page (new)
+        - landing page edit
+        - meta-only fix (title/description)
+        - internal-link improvement
+        - JSON-LD / schema fix
+        - sitemap / canonical fix
+        - YouTube Short
+        - Instagram caption / carousel
+        - Facebook post
+        - keyword research
+        - competitor analysis
+        - other
+    validations:
+      required: true
+
+  - type: input
+    id: suggested_title
+    attributes:
+      label: Suggested title (H1 / hook)
+      description: Working title. Final approval still needed.
+      placeholder: "Most traders draw S/D zones wrong. 3 rules to fix it."
+    validations:
+      required: true
+
+  - type: input
+    id: meta_title
+    attributes:
+      label: Meta title
+      description: Maximum 60 characters. Primary keyword in first 30 char if possible.
+      placeholder: "S/D Zones the Right Way · EasyTradeSetup"
+    validations:
+      required: true
+
+  - type: textarea
+    id: meta_description
+    attributes:
+      label: Meta description
+      description: Maximum 155 characters.
+      placeholder: "Most retail traders draw supply/demand zones wrong. Three rules from a price-action playbook to fix it. Educational, not investment advice."
+    validations:
+      required: true
+
+  - type: textarea
+    id: internal_links
+    attributes:
+      label: Internal links
+      description: List 3-6 internal pages this content should link to.
+      placeholder: |
+        - /product
+        - /sample
+        - /compare
+        - /docs/faq
+    validations:
+      required: true
+
+  - type: input
+    id: cta
+    attributes:
+      label: CTA
+      description: Soft CTA the content should land on. Per `/docs/seo/brand-voice.md` — never "Buy now!".
+      placeholder: "See the sample → /sample"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: disclaimer_required
+    attributes:
+      label: Risk disclaimer required
+      description: Required if the content discusses any setup, P&L, indicator behaviour, or specific market commentary.
+      options:
+        - "Yes — inline callout + footer"
+        - "Yes — footer only"
+        - "No — pure tooling / brand content"
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation_notes
+    attributes:
+      label: Implementation notes for Claude Code
+      description: |
+        Specific files, routes, tests, or sitemap entries that need to change. List every file Claude Code should touch. Include any out-of-bounds note (e.g. "do not modify pricing.ts").
+      placeholder: |
+        - New route: `landing-page/app/blog/<slug>/page.tsx`
+        - Add to `landing-page/app/sitemap.ts` (priority 0.6)
+        - Smoke test row in `landing-page/tests/e2e/pages.spec.ts`
+        - JSON-LD: `Article` via `components/seo/JsonLd.tsx`
+        - Author field: "EasyTradeSetup Editorial"
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale / source data
+      description: Why is this task worth doing? Link to keyword-bank row, GSC query, SERP screenshot, or competitor snapshot.
+      placeholder: "From keyword-bank.md cluster B. SERP top 3 don't address rule-based S/D zone construction. We have angle from Trade Logic PDF section 3."
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - p0 - urgent (blocking launch / regression)
+        - p1 - this sprint
+        - p2 - backlog
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: hermes_compliance
+    attributes:
+      label: Hermes compliance check
+      description: Filed-by-Hermes tasks must satisfy all of these.
+      options:
+        - label: This task only modifies files under `/content/**` or `/docs/seo/**`, OR it's a meta/copy proposal for Claude Code / human to implement
+          required: true
+        - label: No banned terms (no "guaranteed", "100%", "no loss", "secret") in any proposed copy
+          required: true
+        - label: Risk disclaimer plan stated above
+          required: true
+        - label: No specific stock / strike / price-target recommendation
+          required: true
+        - label: No fabricated quotes, testimonials, or P&L screenshots will be introduced
+          required: true
