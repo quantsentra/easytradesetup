@@ -43,6 +43,7 @@ const navSections: Array<{
       { href: "/admin/marketing",      label: "Marketing checklist", icon: MegaphoneIcon },
       { href: "/admin/seo-keywords",   label: "SEO keywords",        icon: SearchIcon    },
       { href: "/admin/content-queue",  label: "Content queue",       icon: CalendarIcon  },
+      { href: "/admin/content-preview",label: "Content preview",     icon: GalleryIcon   },
       { href: "/admin/instagram",      label: "Instagram publisher", icon: InstagramIcon },
       { href: "/admin/analytics",      label: "Analytics",           icon: ChartIcon     },
     ],
@@ -293,6 +294,16 @@ function CalendarIcon() {
       <line x1="3" y1="10" x2="21" y2="10" />
       <line x1="8" y1="3" x2="8" y2="7" />
       <line x1="16" y1="3" x2="16" y2="7" />
+    </svg>
+  );
+}
+function GalleryIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
     </svg>
   );
 }
