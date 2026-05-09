@@ -124,6 +124,52 @@ export function ProductJsonLd() {
 }
 
 /**
+ * Article schema — eligible for the article rich result + top-stories
+ * carousel in some niches. Per blog post.
+ */
+export function ArticleJsonLd({
+  title,
+  description,
+  slug,
+  datePublished,
+  dateModified,
+  image,
+  keywords,
+}: {
+  title: string;
+  description: string;
+  slug: string;
+  datePublished: string;        // YYYY-MM-DD
+  dateModified?: string;        // YYYY-MM-DD
+  image?: string;               // absolute URL
+  keywords?: string[];
+}) {
+  const url = `${SITE_URL}/blog/${slug}`;
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: title,
+    description,
+    url,
+    datePublished,
+    dateModified: dateModified ?? datePublished,
+    inLanguage: "en",
+    image: image ?? `${SITE_URL}/opengraph-image`,
+    author: {
+      "@type": "Organization",
+      name: "EasyTradeSetup Editorial",
+      url: SITE_URL,
+    },
+    publisher: { "@id": `${SITE_URL}#org` },
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    ...(keywords?.length ? { keywords: keywords.join(", ") } : {}),
+    isAccessibleForFree: true,
+  };
+  return <Script data={data} id="ld-article" />;
+}
+
+/**
  * SoftwareApplication schema for the indicator. Google treats this richer
  * than plain Product for software listings — eligible for the "App"
  * rich result and shows up better in shopping/software-specific search.

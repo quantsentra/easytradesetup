@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { allPostsSorted } from "@/lib/blog";
 
 const base = "https://www.easytradesetup.com";
 
@@ -18,6 +19,8 @@ const priorityMap: Array<[string, number, CF]> = [
   ["/indicator/gold",      0.8,  "monthly"],
   ["/indicator/btc",       0.8,  "monthly"],
   ["/compare",            0.7, "monthly"],
+  // Blog — index hub + each article from lib/blog.ts.
+  ["/blog",               0.7, "weekly"],
   ["/docs/install",       0.6, "monthly"],
   ["/docs/faq",           0.6, "monthly"],
   ["/about",              0.6, "monthly"],
@@ -30,10 +33,19 @@ const priorityMap: Array<[string, number, CF]> = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
-  return priorityMap.map(([p, priority, changeFrequency]) => ({
+  const staticEntries = priorityMap.map(([p, priority, changeFrequency]) => ({
     url: `${base}${p}`,
     lastModified: now,
     changeFrequency,
     priority,
   }));
+  // Each blog article gets priority 0.6, lastModified = its actual publish/edit
+  // date so Google sees freshness without a global stamp on every URL.
+  const blogEntries: MetadataRoute.Sitemap = allPostsSorted().map((p) => ({
+    url:            `${base}/blog/${p.slug}`,
+    lastModified:   new Date(p.dateModified ?? p.datePublished),
+    changeFrequency: "monthly" as CF,
+    priority:       0.6,
+  }));
+  return [...staticEntries, ...blogEntries];
 }
