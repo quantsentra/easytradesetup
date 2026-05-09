@@ -118,6 +118,19 @@ export default async function PublisherAdminPage() {
   const nextIgFire = nextCronUtc(3, 30).toISOString();
   const nextYtFire = nextCronUtc(4, 30).toISOString();
 
+  // YT pause state — mirrors the early-bail logic in
+  // /api/cron/publish-youtube/route.ts. We surface it here so the
+  // operator sees "dormant" instead of wondering why the queue stopped
+  // moving. Two ways to dormant: explicit YT_PAUSED flag, or simply
+  // unset YT_REFRESH_TOKEN (matches the "drop YT for now" workflow).
+  const ytPaused =
+    process.env.YT_PAUSED === "1" ||
+    process.env.YT_PAUSED === "true" ||
+    !process.env.YT_REFRESH_TOKEN;
+  const ytPauseReason = !process.env.YT_REFRESH_TOKEN
+    ? "YT_REFRESH_TOKEN env var unset"
+    : "YT_PAUSED=1 env flag";
+
   return (
     <>
       <div className="tz-topbar">
@@ -165,19 +178,43 @@ export default async function PublisherAdminPage() {
 
       {/* Counts — YT row */}
       <div className="mb-4">
-        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B6B", display: "flex", alignItems: "center", gap: 12 }}>
+        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B6B", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <span>YouTube Shorts · cron 10:00 IST daily</span>
           <span style={{ color: "var(--tz-ink-mute)" }}>·</span>
-          <span style={{ color: "var(--tz-cyan, #22D3EE)", textTransform: "none", letterSpacing: 0 }}>
-            next run <CountdownCell target={nextYtFire} />
-          </span>
+          {ytPaused ? (
+            <span
+              className="font-mono"
+              style={{
+                color: "#FFB341",
+                textTransform: "none",
+                letterSpacing: 0,
+                background: "rgba(255,179,65,0.12)",
+                border: "1px solid rgba(255,179,65,0.45)",
+                padding: "2px 8px",
+                borderRadius: 4,
+                fontSize: 10.5,
+              }}
+              title={ytPauseReason}
+            >
+              ⏸ DORMANT · queue intact · {ytPauseReason}
+            </span>
+          ) : (
+            <span style={{ color: "var(--tz-cyan, #22D3EE)", textTransform: "none", letterSpacing: 0 }}>
+              next run <CountdownCell target={nextYtFire} />
+            </span>
+          )}
         </h2>
-        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, 1fr)" }}>
+        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, 1fr)", opacity: ytPaused ? 0.55 : 1 }}>
           <CountCard label="Pending" value={yt.pending} color="var(--tz-cyan, #22D3EE)" />
           <CountCard label="Publishing" value={yt.publishing} color="var(--tz-amber, #FFB341)" />
           <CountCard label="Published" value={yt.published} color="var(--tz-up, #22C55E)" />
           <CountCard label="Failed" value={yt.failed} color="var(--tz-loss, #FF4D4F)" />
         </div>
+        {ytPaused && (
+          <p className="text-[11.5px] mt-2" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.55 }}>
+            Cron still fires daily but no-ops without claiming a row. The {yt.pending} pending posts stay queued — set <code>YT_REFRESH_TOKEN</code> in Vercel and the next tick resumes from where it stopped. To explicitly pause without touching the token, set <code>YT_PAUSED=1</code>.
+          </p>
+        )}
       </div>
 
       {/* Actions (client) */}

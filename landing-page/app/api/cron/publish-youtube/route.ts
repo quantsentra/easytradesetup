@@ -145,6 +145,25 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 
+  // Pause switch. Two ways to dormant the YT pipeline without removing
+  // the cron entry from vercel.json:
+  //   1. Set YT_PAUSED=1   — explicit pause flag
+  //   2. Leave YT_REFRESH_TOKEN empty — token-driven pause (matches the
+  //      "drop YT for now" workflow without losing queue state)
+  // In both cases we no-op cleanly. We do NOT claim the row, so as soon
+  // as the operator restores the token / unsets the flag, the same row
+  // is still pending and gets picked up on the next cron tick.
+  const paused      = process.env.YT_PAUSED === "1" || process.env.YT_PAUSED === "true";
+  const noToken     = !process.env.YT_REFRESH_TOKEN;
+  if (paused || noToken) {
+    return NextResponse.json({
+      ok:      true,
+      paused:  true,
+      reason:  paused ? "YT_PAUSED env flag" : "YT_REFRESH_TOKEN empty",
+      message: "YT publisher dormant — no row claimed, queue intact",
+    });
+  }
+
   const sb = createSupabaseAdmin();
 
   const { data: candidate, error: pickErr } = await sb
