@@ -113,6 +113,40 @@ async function createCarouselParent(opts: {
   return id;
 }
 
+// Step 1d — poll container status until FINISHED. Required especially for
+// carousels: the parent container needs all children resolved before
+// media_publish will accept it. Without this poll we hit:
+//   "IG API 400: Media ID is not available"
+// because we tried to publish a still-IN_PROGRESS container.
+//
+// status_code values: IN_PROGRESS | FINISHED | ERROR | EXPIRED | PUBLISHED
+async function waitForContainerReady(
+  containerId: string,
+  opts: { maxWaitMs?: number; intervalMs?: number } = {},
+): Promise<void> {
+  const { token } = igConfig();
+  const maxWaitMs  = opts.maxWaitMs  ?? 60_000;
+  const intervalMs = opts.intervalMs ?? 3_000;
+  const deadline   = Date.now() + maxWaitMs;
+
+  while (Date.now() < deadline) {
+    const params = new URLSearchParams({
+      fields:       "status_code",
+      access_token: token,
+    });
+    const body = await igFetch(
+      `${API_BASE}/${API_VERSION}/${containerId}?${params.toString()}`,
+    );
+    const status = body.status_code;
+    if (status === "FINISHED") return;
+    if (status === "ERROR" || status === "EXPIRED") {
+      throw new Error(`IG container ${containerId} status=${status}`);
+    }
+    await new Promise((r) => setTimeout(r, intervalMs));
+  }
+  throw new Error(`IG container ${containerId} not ready within ${maxWaitMs}ms`);
+}
+
 // Step 2 — publish a previously-created container. Returns the live post id.
 async function publishContainer(containerId: string): Promise<string> {
   const { userId, token } = igConfig();
@@ -136,6 +170,7 @@ export async function publishSingleImage(opts: {
 }): Promise<IgPublishResult> {
   try {
     const containerId = await createSingleContainer(opts);
+    await waitForContainerReady(containerId);
     const mediaId = await publishContainer(containerId);
     const permalink = await tryFetchPermalink(mediaId);
     return { ok: true, mediaId, permalink };
@@ -151,7 +186,11 @@ export async function publishCarousel(opts: {
 }): Promise<IgPublishResult> {
   try {
     const childIds = await Promise.all(opts.imageUrls.map(createCarouselChild));
+    // Each child must be FINISHED before the parent will resolve cleanly.
+    await Promise.all(childIds.map((id) => waitForContainerReady(id)));
     const parentId = await createCarouselParent({ childIds, caption: opts.caption });
+    // Parent itself also needs a moment to bind to its children.
+    await waitForContainerReady(parentId);
     const mediaId = await publishContainer(parentId);
     const permalink = await tryFetchPermalink(mediaId);
     return { ok: true, mediaId, permalink };
