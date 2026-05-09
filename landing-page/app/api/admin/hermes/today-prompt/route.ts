@@ -55,13 +55,19 @@ Constraints:
 - Length 1,000–1,800 words
 - Author field: "EasyTradeSetup Editorial"
 
-Mobile responsiveness (non-negotiable — the user complained about this):
-- Body text: text-[15px] sm:text-[16px], leading-[1.7] sm:leading-[1.75]
-- Section spacing: mt-8 sm:mt-12 not just mt-12
-- Card padding: p-5 sm:p-7 not just p-7
-- H2 headings: mt-7 sm:mt-10 or mt-8 sm:mt-12
-- CTA buttons in flex row: w-full sm:w-auto justify-center on each button so they stack on mobile and lay out side-by-side on desktop
-- All sm: breakpoints for any padding ≥ p-6 or margin ≥ mt-10
+Layout standard (international blog typography — non-negotiable):
+- Body text MUST be wrapped in <div className="blog-prose">. This class lives in app/globals.css and handles font sizes, line height, h2/h3 spacing, lists, links, code, and the .risk-note callout. Do NOT inline text-[16px] / leading-[1.75] / space-y-* in the prose body.
+- Hero title block + image + TL;DR + body all sit in container-wide with explicit max-w containers:
+    Title block: <div className="mx-auto" style={{ maxWidth: 760 }}>
+    Hero image:  <div className="mx-auto" style={{ maxWidth: 1024 }}>
+    TL;DR + body + footer disclaimer + meta: <div className="mx-auto" style={{ maxWidth: 680 }}>  (or use .blog-prose which sets max-width 680 internally)
+    In-body CTA card + read-next: <div className="mx-auto" style={{ maxWidth: 760 }}>
+- Risk callouts in body use <div className="risk-note"><strong>Risk note</strong>...</div> — styled by globals.css.
+- Hero title uses inline clamp() font size, NOT h-display class:
+    <h1 className="font-display font-semibold text-ink leading-[1.1] tracking-tight" style={{ fontSize: "clamp(2rem, 5.5vw, 3.5rem)" }}>
+- Image uses figure + figcaption pattern with sizes attribute.
+- CTA buttons in flex row: w-full sm:w-auto justify-center so they stack on mobile and lay out side-by-side on desktop.
+- Reference the live first article at landing-page/app/(marketing)/blog/best-indicator-for-nifty-options/page.tsx for the exact pattern. Copy its structure, just change the content.
 `;
 
 export async function GET() {

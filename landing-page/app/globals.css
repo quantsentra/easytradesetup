@@ -162,6 +162,142 @@
     color: var(--c-ink-60);
   }
 
+  /* International blog reading layout — long-form article typography.
+   * Reading width capped at 680px (≈ 65–75 chars per line, optimal).
+   * Vertical rhythm via consistent margins on h2/h3/p/ul/blockquote.
+   * Mobile-first sizes scale up at sm: breakpoint.
+   *
+   * Apply on the body wrapper of any blog article TSX:
+   *   <div className="blog-prose">{...content...}</div>
+   *
+   * The wrapper itself controls width — no inline max-w-* needed.
+   */
+  .blog-prose {
+    @apply mx-auto;
+    max-width: 680px;
+    color: var(--c-ink-80);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+  @screen sm {
+    .blog-prose {
+      font-size: 18px;
+      line-height: 1.8;
+    }
+  }
+  .blog-prose > * + * {
+    margin-top: 1.4em;
+  }
+  .blog-prose p {
+    color: var(--c-ink-80);
+  }
+  .blog-prose strong {
+    color: var(--c-ink);
+    font-weight: 600;
+  }
+  .blog-prose em {
+    font-style: italic;
+  }
+  .blog-prose code {
+    font-family: var(--tz-mono, ui-monospace, monospace);
+    font-size: 0.875em;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--c-ink);
+    border: 1px solid var(--c-rule);
+  }
+  .blog-prose h2 {
+    @apply font-display font-semibold text-ink;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-top: 2.25em;
+    margin-bottom: 0.6em;
+  }
+  @screen sm {
+    .blog-prose h2 {
+      font-size: 32px;
+      margin-top: 2.5em;
+    }
+  }
+  .blog-prose h3 {
+    @apply font-display font-semibold text-ink;
+    font-size: 19px;
+    line-height: 1.3;
+    margin-top: 1.6em;
+    margin-bottom: 0.4em;
+  }
+  @screen sm {
+    .blog-prose h3 {
+      font-size: 21px;
+    }
+  }
+  .blog-prose ul, .blog-prose ol {
+    padding-left: 1.4em;
+  }
+  .blog-prose ul { list-style-type: disc; }
+  .blog-prose ol { list-style-type: decimal; }
+  .blog-prose li {
+    margin-top: 0.5em;
+  }
+  .blog-prose li > p {
+    margin: 0;
+  }
+  .blog-prose a {
+    color: #22D3EE;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+  .blog-prose a:hover {
+    color: #fff;
+  }
+  .blog-prose blockquote {
+    border-left: 3px solid #22D3EE;
+    padding: 0.4em 0 0.4em 1.2em;
+    margin-left: 0;
+    color: var(--c-ink-60);
+    font-style: italic;
+  }
+  /* Risk-note callout — distinct from blockquote */
+  .blog-prose .risk-note {
+    border-left: 2px solid #FFB341;
+    padding: 14px 18px;
+    margin-top: 1.6em;
+    background: rgba(255, 179, 65, 0.05);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.92em;
+    line-height: 1.6;
+    color: var(--c-ink-60);
+  }
+  .blog-prose .risk-note strong {
+    display: block;
+    font-family: var(--tz-mono, ui-monospace, monospace);
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--c-ink-40);
+    margin-bottom: 4px;
+  }
+  /* Inline images sit at the prose width — full-bleed images use
+   * .blog-prose-figure-wide outside the prose div. */
+  .blog-prose figure {
+    margin: 2em 0;
+  }
+  .blog-prose figure img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  .blog-prose figcaption {
+    margin-top: 0.6em;
+    font-size: 0.82em;
+    color: var(--c-ink-40);
+    text-align: center;
+  }
+
   /* Eyebrow */
   .eye {
     @apply inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.14em];

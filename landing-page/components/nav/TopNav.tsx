@@ -17,6 +17,7 @@ const navItems: NavItem[] = [
   { href: "/product",   label: "Features" },
   { href: "/sample",    label: "Free sample" },
   { href: "/pricing",   label: "Pricing" },
+  { href: "/blog",      label: "Blog" },
   {
     href: "https://portal.easytradesetup.com/risk-calculator",
     label: "Risk Calculator",

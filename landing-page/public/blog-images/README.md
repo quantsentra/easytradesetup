@@ -14,17 +14,21 @@ Drop indicator screenshots here. Claude Code picks the right one when drafting b
 
 ## Naming convention
 
-`<TICKER>-<YYYY-MM-DD>.png`
+Either format works — both are date-sortable:
+
+- `<TICKER>-<YYYY-MM-DD>.png` (simple, one per day)
+- `<TICKER>_<YYYY-MM-DD>_<HH-MM-SS>.png` (multiple per day, e.g. TradingView screenshot exports)
 
 Examples:
 - `indian/NIFTY-2026-05-09.png`
-- `indian/BANKNIFTY-2026-05-09.png`
-- `us/SPX-2026-05-12.png`
-- `crypto-forex/BTC-2026-05-09.png`
-- `gold/XAU-2026-05-09.png`
+- `indian/NIFTY_2026-05-09_10-56-54.png`
+- `indian/BANKNIFTY_2026-05-09_10-57-23.png`
+- `us/US30_2026-05-09_11-02-41.png`
+- `crypto-forex/BTCUSDT_2026-05-09_11-01-58.png`
+- `gold/XAUUSD_2026-05-09_10-59-45.png`
 - `generic/decision-grade-2026-05-01.png`
 
-The date should be the date the screenshot was taken — Claude Code prefers the most recent one in the matching folder.
+Claude Code picks the most recent file alphabetically (which equals chronologically because the date is at the start). Both formats sort cleanly.
 
 ## Specs
 

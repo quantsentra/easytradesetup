@@ -7,26 +7,31 @@ import Price from "@/components/ui/Price";
 
 const SLUG = "best-indicator-for-nifty-options";
 const post = getPost(SLUG)!;
+const SITE = "https://www.easytradesetup.com";
 
 export const metadata: Metadata = {
   title: post.metaTitle,
   description: post.metaDescription,
   keywords: [post.primaryKeyword, ...post.secondaryKeywords],
-  alternates: { canonical: `https://www.easytradesetup.com/blog/${SLUG}` },
+  alternates: { canonical: `${SITE}/blog/${SLUG}` },
   openGraph: {
     title:       post.title,
     description: post.metaDescription,
     type:        "article",
-    url:         `https://www.easytradesetup.com/blog/${SLUG}`,
+    url:         `${SITE}/blog/${SLUG}`,
     publishedTime: post.datePublished,
     authors:     ["EasyTradeSetup Editorial"],
     images:      [{ url: post.heroImage, width: 1200, height: 630, alt: post.heroAlt }],
   },
-  twitter: { card: "summary_large_image", title: post.title, description: post.metaDescription, images: [post.heroImage] },
+  twitter: {
+    card:        "summary_large_image",
+    title:       post.title,
+    description: post.metaDescription,
+    images:      [post.heroImage],
+  },
 };
 
 export default function Page() {
-  const SITE = "https://www.easytradesetup.com";
   return (
     <>
       <ArticleJsonLd
@@ -46,34 +51,42 @@ export default function Page() {
         ]}
       />
 
-      <article className="above-bg">
-        {/* Hero */}
-        <header className="container-wide pt-8 sm:pt-12 md:pt-16">
-          <nav className="font-mono text-[10.5px] sm:text-[11px] uppercase tracking-widest text-ink-40 mb-4 sm:mb-5">
+      <article>
+        {/* HERO — title block, single column, centered max-width 760 */}
+        <header className="container-wide pt-8 sm:pt-14 md:pt-20">
+          <nav className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40 mb-6">
             <Link href="/" className="hover:text-ink-60">Home</Link>
             <span className="mx-2 text-ink-40/60">/</span>
             <Link href="/blog" className="hover:text-ink-60">Blog</Link>
           </nav>
 
-          <div className="max-w-3xl">
-            <span className="eye"><span className="eye-dot" /> Indicator literacy · NIFTY F&amp;O</span>
-            <h1 className="h-display mt-3 sm:mt-4">
+          <div className="mx-auto" style={{ maxWidth: 760 }}>
+            <div className="font-mono text-[11px] uppercase tracking-widest mb-4" style={{ color: "var(--tz-cyan, #22D3EE)" }}>
+              Indicator literacy &middot; NIFTY F&amp;O
+            </div>
+            <h1 className="font-display font-semibold text-ink leading-[1.1] tracking-tight" style={{ fontSize: "clamp(2rem, 5.5vw, 3.5rem)" }}>
               Best indicator for NIFTY options? <span className="grad-text">Four questions decide it.</span>
             </h1>
-            <p className="mt-4 sm:mt-5 text-caption text-ink-60 leading-relaxed">
+            <p className="mt-6 text-ink-60 leading-relaxed" style={{ fontSize: "clamp(1.05rem, 2.2vw, 1.25rem)" }}>
               Most NIFTY indicators paint signals on every bar and call it analysis.
               Use these four questions to separate a decision-grade tool from a colourful liability.
             </p>
-            <div className="mt-4 sm:mt-5 font-mono text-[10.5px] sm:text-[11px] uppercase tracking-widest text-ink-40">
-              {post.datePublished} · {post.readMinutes} min read · Educational, not advice
+            <div className="mt-7 pb-6 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[11px] uppercase tracking-widest text-ink-40 border-b border-rule">
+              <span>EasyTradeSetup Editorial</span>
+              <span aria-hidden>&middot;</span>
+              <time dateTime={post.datePublished}>{formatDate(post.datePublished)}</time>
+              <span aria-hidden>&middot;</span>
+              <span>{post.readMinutes} min read</span>
+              <span aria-hidden>&middot;</span>
+              <span style={{ color: "var(--tz-amber, #FFB341)" }}>Educational, not advice</span>
             </div>
           </div>
         </header>
 
-        {/* Hero image — sourced from lib/blog.ts heroImage */}
-        <div className="container-wide mt-6 sm:mt-8">
-          <div className="max-w-5xl mx-auto">
-            <div className="glass-card p-1.5 sm:p-3">
+        {/* HERO IMAGE — wider than prose for visual breathing room, capped */}
+        <figure className="container-wide mt-8 sm:mt-10">
+          <div className="mx-auto" style={{ maxWidth: 1024 }}>
+            <div className="rounded-lg overflow-hidden" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--c-rule, rgba(255,255,255,0.08))" }}>
               <Image
                 src={post.heroImage}
                 alt={post.heroAlt}
@@ -81,20 +94,29 @@ export default function Page() {
                 height={900}
                 priority
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1024px"
-                className="w-full h-auto rounded-md block"
+                className="w-full h-auto block"
               />
             </div>
+            <figcaption className="mt-3 text-center font-mono text-[10.5px] uppercase tracking-widest text-ink-40">
+              Golden Indicator on a NIFTY chart &middot; regime, structure, and key levels in one view
+            </figcaption>
           </div>
-        </div>
+        </figure>
 
-        {/* TL;DR */}
-        <section className="container-wide mt-8 sm:mt-10">
-          <div className="max-w-3xl">
-            <div className="glass-card-soft p-5 sm:p-6 border-l-4" style={{ borderLeftColor: "var(--tz-cyan, #22D3EE)" }}>
+        {/* TL;DR — pulled out of body, styled as a callout */}
+        <section className="container-wide mt-10 sm:mt-14">
+          <div className="mx-auto" style={{ maxWidth: 680 }}>
+            <div
+              className="px-5 py-4 sm:px-6 sm:py-5 rounded-md"
+              style={{
+                borderLeft: "3px solid var(--tz-cyan, #22D3EE)",
+                background: "rgba(34, 211, 238, 0.05)",
+              }}
+            >
               <div className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40 mb-2">
                 TL;DR
               </div>
-              <p className="text-[14px] sm:text-[15px] text-ink leading-[1.6]">
+              <p className="text-[14.5px] sm:text-[15.5px] text-ink leading-[1.65] m-0">
                 The &quot;best indicator for NIFTY options&quot; is the one that answers four questions cleanly:
                 does it classify the regime, does it stay sealed and consistent, does it ship with rules and risk math, and does it cost you a subscription forever?
                 Most paid indicators fail on at least two of the four. We built ours around all four.
@@ -103,9 +125,9 @@ export default function Page() {
           </div>
         </section>
 
-        {/* Body */}
-        <section className="container-wide mt-8 sm:mt-12">
-          <div className="max-w-3xl space-y-6 sm:space-y-8 text-[15px] sm:text-[16px] text-ink-80 leading-[1.7] sm:leading-[1.75]">
+        {/* BODY — international blog typography via .blog-prose */}
+        <section className="container-wide mt-10 sm:mt-14">
+          <div className="blog-prose">
             <p>
               You have NIFTY 50 up on TradingView. The list of indicators on the marketplace is long.
               Half of them paint arrows on every candle. The other half slap a 30-line dashboard onto your chart.
@@ -120,7 +142,7 @@ export default function Page() {
               Four questions. Run any indicator you&apos;re looking at — paid or free, Indian or global — through these. If it fails two, walk away. If it passes all four, it has earned the chart space.
             </p>
 
-            <h2 className="h-tile mt-8 sm:mt-12">1. Does it classify the regime, or paint signals on every bar?</h2>
+            <h2>1. Does it classify the regime, or paint signals on every bar?</h2>
 
             <p>
               NIFTY trades in three modes most days: an opening expansion, a midday drift, and an end-of-day expiry pull. Same chart, three different probability distributions. A single setup that works in expansion gets stopped out in drift and reverses against you in the expiry pull.
@@ -131,13 +153,13 @@ export default function Page() {
             </p>
 
             <p>
-              Tell to look for: does the indicator say "trending up", "ranging", "compressed" — and stop you from forcing trend trades inside a range? If it can&apos;t answer that, it&apos;s a signal generator, not a regime tool.
+              Tell to look for: does the indicator say &quot;trending up&quot;, &quot;ranging&quot;, &quot;compressed&quot; — and stop you from forcing trend trades inside a range? If it can&apos;t answer that, it&apos;s a signal generator, not a regime tool.
             </p>
 
-            <h2 className="h-tile mt-7 sm:mt-10">2. Does it stay sealed and consistent, or repaint?</h2>
+            <h2>2. Does it stay sealed and consistent, or repaint?</h2>
 
             <p>
-              Repaint is the silent killer. An indicator paints a green arrow at 9:35. By 10:05 the arrow has moved to 9:50, two candles later, and now your "winning trade" was actually a loss. The indicator looks great on the historical chart and ruins your live trades.
+              Repaint is the silent killer. An indicator paints a green arrow at 9:35. By 10:05 the arrow has moved to 9:50, two candles later, and now your &quot;winning trade&quot; was actually a loss. The indicator looks great on the historical chart and ruins your live trades.
             </p>
 
             <p>
@@ -148,26 +170,20 @@ export default function Page() {
               The NIFTY-specific cost of repaint is brutal. NIFTY weekly options decay faster than equities. A repainted entry signal that takes you in 12 minutes late on Tuesday afternoon is a 15-20% premium loss before the move even develops.
             </p>
 
-            <div className="glass-flat p-5 mt-6 border-l-2" style={{ borderLeftColor: "var(--tz-amber, #FFB341)" }}>
-              <div className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40 mb-2">
-                Risk note
-              </div>
-              <p className="text-[14px] text-ink-60 leading-[1.6] m-0">
-                Repaint behaviour is impossible to verify from screenshots. The only honest test: load the indicator on a live chart, take a screenshot at 9:30, take another at 10:30, compare the markers. If anything moved, the indicator repaints.
-              </p>
+            <div className="risk-note">
+              <strong>Risk note</strong>
+              Repaint behaviour is impossible to verify from screenshots. The only honest test: load the indicator on a live chart, take a screenshot at 9:30, take another at 10:30, compare the markers. If anything moved, the indicator repaints.
             </div>
 
-            <h2 className="h-tile mt-7 sm:mt-10">3. Does it ship with rules and risk math, or just colours?</h2>
+            <h2>3. Does it ship with rules and risk math, or just colours?</h2>
 
             <p>
               Indicators are decision aids. They are not strategies. The difference matters because retail traders routinely buy a colourful tool and then ad-lib the rules, the stops, and the sizing — and lose money following an indicator that was technically &quot;right&quot;.
             </p>
 
-            <p>
-              A serious indicator ships with the rules a serious trader actually needs:
-            </p>
+            <p>A serious indicator ships with the rules a serious trader actually needs:</p>
 
-            <ul className="list-disc pl-6 space-y-2">
+            <ul>
               <li>What the entry trigger is, in plain language, in writing.</li>
               <li>Where the stop goes — structurally, not by ATR-multiplier guess.</li>
               <li>How much to size — given your account, the volatility on the day, and the stop distance.</li>
@@ -180,10 +196,10 @@ export default function Page() {
 
             <p>
               We bundled the rules with our indicator on purpose. The Trade Logic PDF lays out eight setups with explicit triggers, stops, and exits. The risk calculator does the lot-sizing maths. The indicator isn&apos;t the deliverable on its own — the decision system is.
-              See <Link href="/product" className="text-cyan hover:underline">what's inside the bundle</Link>.
+              See <Link href="/product">what&apos;s inside the bundle</Link>.
             </p>
 
-            <h2 className="h-tile mt-7 sm:mt-10">4. Does it cost you a subscription forever, or pay once?</h2>
+            <h2>4. Does it cost you a subscription forever, or pay once?</h2>
 
             <p>
               The economics of a subscription indicator make sense for the seller, not the buyer. The seller wants recurring revenue. The buyer wants a tool that works. These are not the same incentive.
@@ -198,14 +214,12 @@ export default function Page() {
             </p>
 
             <p>
-              Our pricing reflects this. <Link href="/pricing" className="text-cyan hover:underline">Inaugural <Price variant="amount" /> · lifetime updates</Link>. No tier. No upsell. The retail price after launch is $149/₹13,999, also one-time. We don&apos;t have a monthly plan because we don&apos;t want one.
+              Our pricing reflects this. <Link href="/pricing">Inaugural <Price variant="amount" /> &middot; lifetime updates</Link>. No tier. No upsell. The retail price after launch is $149/₹13,999, also one-time. We don&apos;t have a monthly plan because we don&apos;t want one.
             </p>
 
-            <h2 className="h-tile mt-8 sm:mt-12">A worked example — NIFTY opening range, 6 February 2026</h2>
+            <h2>A worked example — NIFTY opening range, Thursday weekly expiry</h2>
 
-            <p>
-              Educational. Past performance does not predict future results.
-            </p>
+            <p>Educational. Past performance does not predict future results.</p>
 
             <p>
               NIFTY opens at 22,140 on a Thursday — weekly expiry day. A subscription-tier indicator paints a green buy arrow at 9:21. A retail trader without a regime tool follows the signal and buys 22,200 CE at premium ₹38.
@@ -219,107 +233,57 @@ export default function Page() {
               The same chart, run through a regime-aware tool, would have flagged the open as &quot;compressed range, expiry Thursday, low expansion probability&quot; — and the trader would have skipped the setup entirely. The avoided trade is the trade.
             </p>
 
-            <div className="glass-flat p-5 mt-6 border-l-2" style={{ borderLeftColor: "var(--tz-amber, #FFB341)" }}>
-              <div className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40 mb-2">
-                Risk note
-              </div>
-              <p className="text-[14px] text-ink-60 leading-[1.6] m-0">
-                The example above is illustrative. Specific dates, levels, and premiums shown are approximations for teaching and not a recommendation to trade NIFTY weekly options or any specific strike. Trading options carries risk of substantial loss including total capital. Past performance does not predict future results.
-              </p>
+            <div className="risk-note">
+              <strong>Risk note</strong>
+              The example above is illustrative. Specific dates, levels, and premiums shown are approximations for teaching and not a recommendation to trade NIFTY weekly options or any specific strike. Trading options carries risk of substantial loss including total capital. Past performance does not predict future results.
             </div>
 
-            <h2 className="h-tile mt-7 sm:mt-10">Common mistakes when picking a NIFTY indicator</h2>
+            <h2>Common mistakes when picking a NIFTY indicator</h2>
 
-            <ul className="list-disc pl-6 space-y-3">
+            <ul>
               <li>
-                <strong className="text-ink">Buying based on backtest screenshots.</strong> Past chart screenshots are the easiest thing in the world to cherry-pick. Demand a live walkthrough on a current chart. If the seller can&apos;t show one, the screenshots aren&apos;t real edge.
+                <strong>Buying based on backtest screenshots.</strong> Past chart screenshots are the easiest thing in the world to cherry-pick. Demand a live walkthrough on a current chart. If the seller can&apos;t show one, the screenshots aren&apos;t real edge.
               </li>
               <li>
-                <strong className="text-ink">Equating "more features" with "better tool".</strong> Twelve overlapping signals on one chart is not insight, it&apos;s noise. The best indicators are the ones you can read in three seconds.
+                <strong>Equating &quot;more features&quot; with &quot;better tool&quot;.</strong> Twelve overlapping signals on one chart is not insight, it&apos;s noise. The best indicators are the ones you can read in three seconds.
               </li>
               <li>
-                <strong className="text-ink">Ignoring the platform tier.</strong> Some indicators only work on TradingView Premium or Ultimate (which is ₹$60-100/month). Cheap indicator + expensive tier = expensive indicator. We built ours to run on the free tier — see the <Link href="/sample" className="text-cyan hover:underline">free chart sample</Link>.
+                <strong>Ignoring the platform tier.</strong> Some indicators only work on TradingView Premium or Ultimate. Cheap indicator + expensive tier = expensive indicator. We built ours to run on the free tier — see the <Link href="/sample">free chart sample</Link>.
               </li>
               <li>
-                <strong className="text-ink">Confusing signals with strategy.</strong> An indicator paints lines and zones. A strategy says when to enter, when to exit, and how much to size. If your indicator is doing the second job for you, you&apos;re probably overpaying for the first.
+                <strong>Confusing signals with strategy.</strong> An indicator paints lines and zones. A strategy says when to enter, when to exit, and how much to size. If your indicator is doing the second job for you, you&apos;re probably overpaying for the first.
               </li>
             </ul>
 
-            <h2 className="h-tile mt-8 sm:mt-12">FAQ</h2>
+            <h2>FAQ</h2>
 
-            <div className="space-y-6">
-              <div>
-                <h3 className="text-[15px] sm:text-[16px] font-semibold text-ink mb-2">
-                  What&apos;s the single most important feature in a NIFTY indicator?
-                </h3>
-                <p className="m-0">
-                  Regime classification. Everything else — entries, exits, stops — depends on knowing whether the market is expanding, ranging, or compressing. Without regime, you&apos;re solving for direction in the wrong market state.
-                </p>
-              </div>
+            <h3>What&apos;s the single most important feature in a NIFTY indicator?</h3>
+            <p>
+              Regime classification. Everything else — entries, exits, stops — depends on knowing whether the market is expanding, ranging, or compressing. Without regime, you&apos;re solving for direction in the wrong market state.
+            </p>
 
-              <div>
-                <h3 className="text-[15px] sm:text-[16px] font-semibold text-ink mb-2">
-                  Do I need TradingView Premium for a good NIFTY indicator?
-                </h3>
-                <p className="m-0">
-                  No. Multi-timeframe access is helpful but not required. Bar-close-only indicators work fine on the free tier. The Golden Indicator runs on TradingView Free — you don&apos;t need to upgrade your plan to use it.
-                </p>
-              </div>
+            <h3>Do I need TradingView Premium for a good NIFTY indicator?</h3>
+            <p>
+              No. Multi-timeframe access is helpful but not required. Bar-close-only indicators work fine on the free tier. The Golden Indicator runs on TradingView Free — you don&apos;t need to upgrade your plan to use it.
+            </p>
 
-              <div>
-                <h3 className="text-[15px] sm:text-[16px] font-semibold text-ink mb-2">
-                  How do I know if an indicator repaints without buying it?
-                </h3>
-                <p className="m-0">
-                  Ask for the source. If it&apos;s open-source Pine, look for <code>lookahead_on</code> in the <code>request.security</code> calls and any <code>barstate.isrealtime</code>-conditional plotting. If the seller refuses to share the source, treat the question as answered — assume it repaints.
-                </p>
-              </div>
+            <h3>How do I know if an indicator repaints without buying it?</h3>
+            <p>
+              Ask for the source. If it&apos;s open-source Pine, look for <code>lookahead_on</code> in the <code>request.security</code> calls and any <code>barstate.isrealtime</code>-conditional plotting. If the seller refuses to share the source, treat the question as answered — assume it repaints.
+            </p>
 
-              <div>
-                <h3 className="text-[15px] sm:text-[16px] font-semibold text-ink mb-2">
-                  Is one indicator enough, or do I need a stack?
-                </h3>
-                <p className="m-0">
-                  One properly designed indicator is enough. Stacking three or four signal generators that disagree with each other is how retail traders confuse themselves into freezing on every entry. Pick one decision tool, learn it cold, trade it for 60 days, then evaluate.
-                </p>
-              </div>
+            <h3>Is one indicator enough, or do I need a stack?</h3>
+            <p>
+              One properly designed indicator is enough. Stacking three or four signal generators that disagree with each other is how retail traders confuse themselves into freezing on every entry. Pick one decision tool, learn it cold, trade it for 60 days, then evaluate.
+            </p>
 
-              <div>
-                <h3 className="text-[15px] sm:text-[16px] font-semibold text-ink mb-2">
-                  Will this work for BANKNIFTY too?
-                </h3>
-                <p className="m-0">
-                  Same script, every market. The Golden Indicator is the same Pine v5 file whether you load it on NIFTY, BANKNIFTY, SPX 500, NASDAQ, gold, silver, or BTC. Levels redraw, regime resets, the playbook holds.
-                  See the <Link href="/indicator/banknifty" className="text-cyan hover:underline">BANKNIFTY landing page</Link> for the expiry-day specifics.
-                </p>
-              </div>
-            </div>
+            <h3>Will this work for BANKNIFTY too?</h3>
+            <p>
+              Same script, every market. The Golden Indicator is the same Pine v5 file whether you load it on NIFTY, BANKNIFTY, SPX 500, NASDAQ, gold, silver, or BTC. Levels redraw, regime resets, the playbook holds.
+              See the <Link href="/indicator/banknifty">BANKNIFTY landing page</Link> for the expiry-day specifics.
+            </p>
 
-            {/* In-body CTA card */}
-            <div className="glass-card p-5 sm:p-7 mt-10 sm:mt-12">
-              <div className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40 mb-2">
-                The indicator behind the essay
-              </div>
-              <h3 className="text-[18px] sm:text-[20px] font-semibold leading-[1.3] text-ink mb-3">
-                Golden Indicator — one bar-close engine. Lifetime.
-              </h3>
-              <p className="text-[13.5px] sm:text-[14.5px] text-ink-60 leading-[1.6] mb-5">
-                Regime classification, market structure (BOS / CHoCH), key levels (PDH / PDL / PWH / PWL), supply &amp; demand zones — all in one Pine v5 script.
-                Bundle includes the Trade Logic PDF (8 setups, explicit rules), risk calculator, daily market notes, and lifetime updates.
-                One-time payment. Works on TradingView Free.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:flex-wrap">
-                <Link href="/sample" className="btn btn-outline w-full sm:w-auto justify-center">Skim the free sample</Link>
-                <Link href="/product" className="btn btn-primary w-full sm:w-auto justify-center">
-                  See the bundle <span className="arrow" aria-hidden>→</span>
-                </Link>
-                <Link href="/checkout" className="btn btn-ghost w-full sm:w-auto justify-center">
-                  Lock <Price variant="amount" /> inaugural →
-                </Link>
-              </div>
-            </div>
-
-            <h2 className="h-tile mt-8 sm:mt-12">Closing</h2>
+            <h2>Closing</h2>
 
             <p>
               The honest answer to &quot;what&apos;s the best indicator for NIFTY options&quot; depends less on the indicator and more on the four questions above. Most paid indicators fail at least two. The free ones often fail all four.
@@ -330,43 +294,87 @@ export default function Page() {
             </p>
 
             <p>
-              If that&apos;s the kind of tool you&apos;re looking for, the <Link href="/sample" className="text-cyan hover:underline">free chart sample</Link> is the lowest-friction way to try it.
-              If you want to compare it line-by-line against what you&apos;re using today, the <Link href="/compare" className="text-cyan hover:underline">comparison page</Link> lays it out.
+              If that&apos;s the kind of tool you&apos;re looking for, the <Link href="/sample">free chart sample</Link> is the lowest-friction way to try it.
+              If you want to compare it line-by-line against what you&apos;re using today, the <Link href="/compare">comparison page</Link> lays it out.
               Either way — make the decision yourself. That&apos;s the whole point.
             </p>
+          </div>
+        </section>
 
-            <div className="mt-8 pt-6 border-t border-rule font-mono text-[10.5px] uppercase tracking-widest text-ink-40">
-              Last reviewed: {post.datePublished} · Author: EasyTradeSetup Editorial
+        {/* IN-BODY CTA CARD — wider than prose for visual emphasis */}
+        <section className="container-wide mt-12 sm:mt-16">
+          <div className="mx-auto" style={{ maxWidth: 760 }}>
+            <div className="glass-card p-6 sm:p-8">
+              <div className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40 mb-2">
+                The indicator behind the essay
+              </div>
+              <h3 className="font-display font-semibold leading-[1.25] text-ink mb-3" style={{ fontSize: "clamp(1.25rem, 2.5vw, 1.5rem)" }}>
+                Golden Indicator — one bar-close engine. Lifetime.
+              </h3>
+              <p className="text-[14px] sm:text-[15px] text-ink-60 leading-[1.6] mb-5">
+                Regime classification, market structure (BOS / CHoCH), key levels (PDH / PDL / PWH / PWL), supply &amp; demand zones — all in one Pine v5 script.
+                Bundle includes the Trade Logic PDF (8 setups, explicit rules), risk calculator, daily market notes, and lifetime updates.
+                One-time payment. Works on TradingView Free.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
+                <Link href="/sample" className="btn btn-outline w-full sm:w-auto justify-center">Skim the free sample</Link>
+                <Link href="/product" className="btn btn-primary w-full sm:w-auto justify-center">
+                  See the bundle <span className="arrow" aria-hidden>→</span>
+                </Link>
+                <Link href="/checkout" className="btn btn-ghost w-full sm:w-auto justify-center">
+                  Lock <Price variant="amount" /> inaugural →
+                </Link>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Footer disclaimer block */}
-        <section className="container-wide mt-10 sm:mt-12 mb-10 sm:mb-16">
-          <div className="max-w-3xl glass-flat p-5 sm:p-6">
-            <div className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40 mb-2">
-              Disclaimer
-            </div>
-            <p className="text-[12px] sm:text-[12.5px] text-ink-60 leading-[1.6] m-0">
-              Educational content. Not investment advice. Trading carries risk of substantial loss including total capital.
-              EasyTradeSetup is not a SEBI-registered research analyst.
-              Past results do not predict future performance.
-              Specific dates, levels, and premiums referenced in worked examples are illustrative for teaching and not recommendations to trade NIFTY options or any specific strike.
-            </p>
+        {/* AUTHOR / META FOOTER */}
+        <section className="container-wide mt-12 sm:mt-16">
+          <div className="mx-auto pt-6 border-t border-rule font-mono text-[10.5px] uppercase tracking-widest text-ink-40 flex flex-wrap gap-x-4 gap-y-1" style={{ maxWidth: 680 }}>
+            <span>Last reviewed: {formatDate(post.datePublished)}</span>
+            <span aria-hidden>&middot;</span>
+            <span>Author: EasyTradeSetup Editorial</span>
+            <span aria-hidden>&middot;</span>
+            <span>Reviewed monthly</span>
           </div>
         </section>
 
-        {/* Read next */}
+        {/* FOOTER DISCLAIMER */}
+        <section className="container-wide mt-8 sm:mt-10 mb-10 sm:mb-14">
+          <div className="mx-auto" style={{ maxWidth: 680 }}>
+            <div className="glass-flat p-5 sm:p-6">
+              <div className="font-mono text-[10.5px] font-bold uppercase tracking-widest text-ink-40 mb-2">
+                Disclaimer
+              </div>
+              <p className="text-[12px] sm:text-[13px] text-ink-60 leading-[1.6] m-0">
+                Educational content. Not investment advice. Trading carries risk of substantial loss including total capital.
+                EasyTradeSetup is not a SEBI-registered research analyst.
+                Past results do not predict future performance.
+                Specific dates, levels, and premiums referenced in worked examples are illustrative for teaching and not recommendations to trade NIFTY options or any specific strike.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* READ NEXT */}
         <section className="container-wide pb-12 sm:pb-20">
-          <div className="max-w-3xl">
+          <div className="mx-auto" style={{ maxWidth: 760 }}>
             <div className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40 mb-3">Read next</div>
-            <Link href="/blog" className="glass-card-soft p-5 block hover:-translate-y-0.5 transition-transform" style={{ textDecoration: "none" }}>
+            <Link href="/blog" className="glass-card-soft p-5 sm:p-6 block hover:-translate-y-0.5 transition-transform" style={{ textDecoration: "none" }}>
               <div className="font-mono text-[10.5px] uppercase tracking-widest text-ink-40 mb-2">Blog index</div>
-              <div className="text-[15px] sm:text-[16px] text-ink font-semibold">All essays — indicator literacy, risk math, market structure</div>
+              <div className="text-[15px] sm:text-[17px] text-ink font-semibold">
+                All essays — indicator literacy, risk math, market structure
+              </div>
             </Link>
           </div>
         </section>
       </article>
     </>
   );
+}
+
+function formatDate(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }

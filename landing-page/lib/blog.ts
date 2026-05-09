@@ -54,7 +54,7 @@ export const POSTS: BlogPost[] = [
     pillar:            1,
     datePublished:     "2026-05-09",
     readMinutes:       8,
-    heroImage:         "/blog-images/indian/NIFTY-baseline.png",
+    heroImage:         "/blog-images/indian/NIFTY_2026-05-09_10-56-54.png",
     heroAlt:           "Golden Indicator on a NIFTY 50 chart — regime, structure, and key levels overlaid on price",
   },
 ];
