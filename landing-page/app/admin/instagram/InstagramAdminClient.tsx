@@ -164,7 +164,7 @@ export default function InstagramAdminClient() {
       </div>
 
       <p className="text-[11.5px] mt-4" style={{ color: "var(--tz-ink-mute)", margin: "16px 0 0", lineHeight: 1.5 }}>
-        <strong>Sync</strong> imports new days from <code>14-day-queue.json</code> without overwriting already-published rows.
+        <strong>Sync</strong> imports new days from <code>100-day-queue.json</code> without overwriting already-published rows.
         <strong> Test publish</strong> runs the same cron logic the scheduler runs daily.
       </p>
     </div>

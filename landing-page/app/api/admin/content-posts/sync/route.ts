@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getUser } from "@/lib/auth-server";
 import { isAdmin } from "@/lib/admin";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
-import queueData from "@/admin-assets/content/14-day-queue.json";
+import queueData from "@/admin-assets/content/100-day-queue.json";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

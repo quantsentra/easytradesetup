@@ -38,7 +38,7 @@ type Queue = {
 };
 
 async function loadQueue(): Promise<Queue> {
-  const file = path.join(process.cwd(), "admin-assets", "content", "14-day-queue.json");
+  const file = path.join(process.cwd(), "admin-assets", "content", "100-day-queue.json");
   const raw = await readFile(file, "utf8");
   return JSON.parse(raw) as Queue;
 }
@@ -134,7 +134,7 @@ export default async function ContentQueuePage() {
       </div>
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.6 }}>
-        Source · landing-page/admin-assets/content/14-day-queue.json · Regenerate weekly with Claude using the SEO keyword research as input · Re-runs idempotent
+        Source · landing-page/admin-assets/content/100-day-queue.json · Regenerate weekly with Claude using the SEO keyword research as input · Re-runs idempotent
       </p>
     </>
   );

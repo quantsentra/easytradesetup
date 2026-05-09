@@ -79,7 +79,30 @@ function videoUrlForImage(publicId: string): string {
   // transforms 400 here — the c_pad step needed `c_pad,h_,w_,b_` together
   // and that combination isn't accepted alongside e_zoompan in the same
   // chain. Source image is already 1080x1920 so padding is unnecessary.
-  return `https://res.cloudinary.com/${cloudName}/image/upload/e_zoompan:du_${VIDEO_DURATION_SECONDS},vc_h264,f_mp4/${publicId}.mp4`;
+  //
+  // Audio overlay: if CLOUDINARY_AUDIO_TRACK_ID env var is set (you
+  // uploaded a royalty-free track to Cloudinary's video resource type
+  // with that public_id), it gets layered over the video for the full
+  // duration. Mixkit / Pixabay / FreeSound have plenty of free trading-
+  // appropriate tracks. Without this env var, video stays silent.
+  //
+  // Cloudinary audio-overlay syntax in chained transformations:
+  //   First step:  base video (image-as-video)
+  //   Second step: l_video:<id>,fl_layer_apply,so_0,du_N — adds audio
+  // We use l_video: because audio assets are stored as video resources
+  // in Cloudinary's API. e_volume controls perceived loudness so the
+  // music doesn't dominate (background, not foreground).
+  const baseTx = `e_zoompan:du_${VIDEO_DURATION_SECONDS},vc_h264,f_mp4`;
+
+  const audioId = process.env.CLOUDINARY_AUDIO_TRACK_ID;
+  if (audioId) {
+    // Two-step chained transformation. First creates the base zoom video,
+    // then overlays the audio at 60% volume so it sits behind any text.
+    const audioTx = `l_video:${audioId},fl_layer_apply,so_0,du_${VIDEO_DURATION_SECONDS},e_volume:-30`;
+    return `https://res.cloudinary.com/${cloudName}/image/upload/${baseTx}/${audioTx}/${publicId}.mp4`;
+  }
+
+  return `https://res.cloudinary.com/${cloudName}/image/upload/${baseTx}/${publicId}.mp4`;
 }
 
 // Step 4 — fetch MP4 bytes the YT API will upload.

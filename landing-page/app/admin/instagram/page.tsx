@@ -253,7 +253,7 @@ export default async function PublisherAdminPage() {
       </div>
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.6 }}>
-        Source · 14-day-queue.json · IG cron 03:30 UTC (09:00 IST) · YT cron 04:30 UTC (10:00 IST) · ETA = serial position × daily cron tick
+        Source · 100-day-queue.json · IG cron 03:30 UTC (09:00 IST) · YT cron 04:30 UTC (10:00 IST) · ETA = serial position × daily cron tick
       </p>
     </>
   );

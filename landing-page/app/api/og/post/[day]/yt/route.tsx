@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
-import queueData from "@/admin-assets/content/14-day-queue.json";
+import queueData from "@/admin-assets/content/100-day-queue.json";
 
 export const runtime = "edge";
 
