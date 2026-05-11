@@ -10,6 +10,7 @@ const routes: Array<{ path: string; mustContain: RegExp }> = [
   { path: "/blog", mustContain: /indicator literacy|risk math|essays/i },
   { path: "/blog/best-indicator-for-nifty-options", mustContain: /four questions|nifty.*regime|decision-grade/i },
   { path: "/blog/are-paid-trading-signals-worth-it", mustContain: /four numbers|win rate|signal seller|drawdown/i },
+  { path: "/blog/trend-vs-range-trading", mustContain: /trend.*range|regime|expansion|compress/i },
   { path: "/docs/install", mustContain: /install/i },
   { path: "/docs/faq", mustContain: /asked.*answered|faq/i },
   { path: "/contact", mustContain: /contact|hello@easytradesetup/i },

@@ -79,6 +79,28 @@ export const POSTS: BlogPost[] = [
     heroImage:         "/blog-images/indian/BANKNIFTY_2026-05-09_10-59-08.png",
     heroAlt:           "Golden Indicator on a BANKNIFTY chart — structural levels and regime classification visible without any external buy/sell signal",
   },
+  {
+    slug:              "trend-vs-range-trading",
+    title:             "Trend vs Range Trading — the Decision Behind Every Other Decision",
+    metaTitle:         "Trend vs Range Trading · Read the Regime First",
+    metaDescription:   "Most retail traders misread the regime — and lose money on the wrong setup. Three tells that decide whether the market is trending or ranging. Educational.",
+    excerpt:           "Same chart, three regimes — and every setup behaves differently in each. Three tells that classify the regime, plus why sizing breaks when the regime read is wrong.",
+    hook:              "The single decision that decides every other decision in a trade.",
+    primaryKeyword:    "trend vs range trading",
+    secondaryKeywords: [
+      "how to identify market regime",
+      "trending vs ranging market",
+      "trend following vs mean reversion",
+      "market structure indicator",
+      "regime classification trading",
+    ],
+    audienceTier:      "T2",
+    pillar:            3,
+    datePublished:     "2026-05-12",
+    readMinutes:       9,
+    heroImage:         "/blog-images/indian/NIFTY_2026-05-09_10-56-36.png",
+    heroAlt:           "Golden Indicator on a NIFTY chart — regime classification, structural levels, and supply/demand zones in a single bar-close view",
+  },
 ];
 
 export function getPost(slug: string): BlogPost | undefined {
