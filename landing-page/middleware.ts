@@ -1,11 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import {
-  CURRENCY_COOKIE,
-  CURRENCY_COOKIE_MAX_AGE,
-  isValidCurrency,
-  resolveCurrency,
-} from "@/lib/currency";
 
 const PORTAL_HOST = "portal.easytradesetup.com";
 const MARKETING_HOST = "www.easytradesetup.com";
@@ -245,35 +239,6 @@ export async function middleware(req: NextRequest) {
   // iframe-scoped CSP and would otherwise be overridden here.
   if (!isBrandKitAsset) {
     res.headers.set("Content-Security-Policy", csp);
-  }
-
-  // Currency cookie — geo-aware default, ?ccy= manual override.
-  // Re-resolved every request so the cookie self-heals if it goes stale,
-  // but writes only when the value actually changes (avoids burning Set-Cookie
-  // headers on every request).
-  const queryCcy = req.nextUrl.searchParams.get("ccy");
-  const existingCcy = req.cookies.get(CURRENCY_COOKIE)?.value;
-  const ipCountry = req.headers.get("x-vercel-ip-country");
-  const desiredCcy = resolveCurrency({
-    query: queryCcy,
-    // Only honour the existing cookie if no explicit query override —
-    // ?ccy= is sticky once set.
-    cookie: queryCcy && isValidCurrency(queryCcy.toLowerCase()) ? null : existingCcy,
-    ipCountry,
-  });
-  if (existingCcy !== desiredCcy) {
-    res.cookies.set(CURRENCY_COOKIE, desiredCcy, {
-      path: "/",
-      maxAge: CURRENCY_COOKIE_MAX_AGE,
-      sameSite: "lax",
-      // Marketing host writes a domain-scoped cookie so the same toggle
-      // applies on portal subdomain too. Skip the domain attr in
-      // localhost / preview deploys where set-cookie domain mismatches
-      // are rejected by browsers.
-      ...(req.headers.get("host") === MARKETING_HOST || req.headers.get("host") === PORTAL_HOST
-        ? { domain: ".easytradesetup.com" }
-        : {}),
-    });
   }
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;

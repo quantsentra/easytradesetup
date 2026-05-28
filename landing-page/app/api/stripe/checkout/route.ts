@@ -1,11 +1,9 @@
 import "server-only";
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { OFFER_USD, OFFER_INR, RETAIL_USD, RETAIL_INR } from "@/lib/pricing";
+import { OFFER_USD, RETAIL_USD } from "@/lib/pricing";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { getUser } from "@/lib/auth-server";
-import { CURRENCY_COOKIE, resolveCurrency } from "@/lib/currency";
-import { cookies } from "next/headers";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,12 +16,7 @@ export const dynamic = "force-dynamic";
 // reached, but we double-check here. Anonymous purchases are rejected so
 // every entitlement maps to a real Supabase user_id from the start.
 //
-// CURRENCY: Body accepts { currency: "usd" | "inr" }. INR is the bridge
-// for India until the UPI gateway lands. Stripe accepts INR via cross-border
-// charging for international accounts. Defaults to country-derived choice
-// from the x-vercel-ip-country header, falling back to USD.
-
-type Body = { currency?: string };
+// Pricing is USD-only.
 
 export async function POST(req: Request) {
   const user = await getUser();
@@ -42,32 +35,12 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: Body = {};
-  try {
-    if ((req.headers.get("content-length") || "0") !== "0") {
-      body = (await req.json()) as Body;
-    }
-  } catch {
-    // Empty body is fine — falls through to default currency selection.
-  }
-
-  // Currency resolution: explicit body → ets_ccy cookie → IP geo → USD.
-  // Cookie path stays the canonical source so a user who toggled in the
-  // header switcher gets billed in the currency they were quoted, not
-  // whatever their IP says.
-  const cookieStore = await cookies();
-  const cookieCcy = cookieStore.get(CURRENCY_COOKIE)?.value;
-  const currency = resolveCurrency({
-    query: body.currency || null,
-    cookie: cookieCcy,
-    ipCountry: req.headers.get("x-vercel-ip-country"),
-  });
-
-  const offer = currency === "inr" ? OFFER_INR : OFFER_USD;
-  const retail = currency === "inr" ? RETAIL_INR : RETAIL_USD;
-  const symbol = currency === "inr" ? "₹" : "$";
-  const formattedOffer = currency === "inr" ? offer.toLocaleString("en-IN") : String(offer);
-  const formattedRetail = currency === "inr" ? retail.toLocaleString("en-IN") : String(retail);
+  const currency = "usd";
+  const offer = OFFER_USD;
+  const retail = RETAIL_USD;
+  const symbol = "$";
+  const formattedOffer = String(offer);
+  const formattedRetail = String(retail);
 
   const email = (user.email || "").trim().toLowerCase();
   const origin =

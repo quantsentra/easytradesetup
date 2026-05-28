@@ -1,14 +1,11 @@
 "use client";
-import { useEffect, useState } from "react";
-import { USD_SET, INR_SET, format, type PriceSet } from "@/lib/pricing";
-import { readCurrencyCookieClient } from "@/lib/currency";
+import { USD_SET, format } from "@/lib/pricing";
 
-// Client-only currency-aware price. Used by sticky / banner / portal
-// surfaces that already have to be client components for their own
-// reasons. Pages and server-rendered sections should import the default
-// <Price /> (server component) instead — that variant SSRs the correct
-// currency from the ets_ccy cookie so SEO crawlers and OG previews see
-// the right price without waiting for hydration.
+// USD-only client price. Pricing is a single global USD figure, so this no
+// longer reads a currency cookie — it renders the same on server and client,
+// so there's no hydration flash. Kept as a separate client export only
+// because its callers (StickyBuyBar, OfferBanner) are already client
+// components; server surfaces should import the default <Price /> instead.
 
 type Variant =
   | "amount"
@@ -19,40 +16,8 @@ type Variant =
   | "cta";
 
 export default function PriceClient({ variant = "amount" }: { variant?: Variant }) {
-  const [inIndia, setInIndia] = useState(false);
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    setInIndia(readCurrencyCookieClient() === "inr");
-    setReady(true);
-
-    function recheck() {
-      setInIndia(readCurrencyCookieClient() === "inr");
-    }
-    document.addEventListener("visibilitychange", recheck);
-    return () => document.removeEventListener("visibilitychange", recheck);
-  }, []);
-
-  const set: PriceSet = inIndia ? INR_SET : USD_SET;
-  const offer = format(set, set.offer);
-  const retail = format(set, set.retail);
-
-  if (!ready) {
-    // Variant-aware placeholder. Even if invisible, the text content is
-    // what crawlers / share-card scrapers see — so render the right shape.
-    const placeholder =
-      variant === "retail" ? format(USD_SET, USD_SET.retail)
-      : variant === "strike-offer" ? `${format(USD_SET, USD_SET.retail)} ${format(USD_SET, USD_SET.offer)}`
-      : variant === "amount-once" ? `${format(USD_SET, USD_SET.offer)} once`
-      : variant === "amount-suffix" ? `${format(USD_SET, USD_SET.offer)} one-time`
-      : variant === "cta" ? `Get Golden Indicator — ${format(USD_SET, USD_SET.offer)} →`
-      : format(USD_SET, USD_SET.offer);
-    return (
-      <span aria-hidden className="opacity-0 inline-block">
-        {placeholder}
-      </span>
-    );
-  }
+  const offer = format(USD_SET, USD_SET.offer);
+  const retail = format(USD_SET, USD_SET.retail);
 
   if (variant === "retail") return <>{retail}</>;
   if (variant === "strike-offer") return <StrikeOffer retail={retail} offer={offer} />;

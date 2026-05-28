@@ -13,7 +13,7 @@ test.describe("Home page — marketing integrity", () => {
   });
 
   test("hero CTA links point to checkout + sample", async ({ page }) => {
-    const buy = page.getByRole("link", { name: /buy.*\$49|buy.*₹4,599|buy golden indicator/i }).first();
+    const buy = page.getByRole("link", { name: /buy.*\$49|buy golden indicator/i }).first();
     await expect(buy).toBeVisible();
     await expect(buy).toHaveAttribute("href", "/checkout");
 

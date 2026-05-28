@@ -1,4 +1,4 @@
-import { OFFER_USD, OFFER_INR, RETAIL_USD } from "@/lib/pricing";
+import { OFFER_USD, RETAIL_USD } from "@/lib/pricing";
 
 const SITE_URL = "https://www.easytradesetup.com";
 
@@ -102,14 +102,6 @@ export function ProductJsonLd() {
         url: `${SITE_URL}/checkout`,
         seller: { "@type": "Organization", name: "EasyTradeSetup" },
       },
-      {
-        "@type": "Offer",
-        priceCurrency: "INR",
-        price: OFFER_INR,
-        availability: "https://schema.org/InStock",
-        url: `${SITE_URL}/checkout`,
-        seller: { "@type": "Organization", name: "EasyTradeSetup" },
-      },
     ],
     additionalProperty: [
       { "@type": "PropertyValue", name: "Retail price (USD)", value: `$${RETAIL_USD}` },
@@ -195,13 +187,6 @@ export function SoftwareApplicationJsonLd() {
         "@type": "Offer",
         priceCurrency: "USD",
         price: OFFER_USD,
-        availability: "https://schema.org/InStock",
-        url: `${SITE_URL}/checkout`,
-      },
-      {
-        "@type": "Offer",
-        priceCurrency: "INR",
-        price: OFFER_INR,
         availability: "https://schema.org/InStock",
         url: `${SITE_URL}/checkout`,
       },

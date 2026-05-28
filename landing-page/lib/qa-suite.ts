@@ -1,11 +1,8 @@
 import "server-only";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import {
-  USD_TO_INR,
   RETAIL_USD,
-  RETAIL_INR,
   OFFER_USD,
-  OFFER_INR,
 } from "@/lib/pricing";
 
 // Comprehensive QA suite — runs ~50 checks across 8 dimensions and returns
@@ -715,59 +712,15 @@ const databaseSteps = (): Step[] => [
 
 const pricingSteps = (): Step[] => [
   {
-    id: "price.fx-retail",
-    category: "Pricing",
-    name: "Retail INR within ±20% of FX-implied",
-    run: async () => {
-      const implied = RETAIL_USD * USD_TO_INR;
-      const drift = Math.abs(RETAIL_INR - implied) / implied;
-      const ok = drift <= 0.20;
-      return {
-        id: "price.fx-retail", category: "Pricing", name: "Retail INR within ±20% of FX-implied",
-        status: ok ? "pass" : "warn",
-        detail: `${RETAIL_USD} USD ≈ ${Math.round(implied).toLocaleString("en-IN")} INR · listed ₹${RETAIL_INR.toLocaleString("en-IN")} · drift ${(drift * 100).toFixed(1)}%`,
-        fix: ok ? undefined : "Refresh USD_TO_INR or adjust RETAIL_INR in lib/pricing.ts",
-      };
-    },
-  },
-  {
-    id: "price.fx-offer",
-    category: "Pricing",
-    name: "Offer INR within ±20% of FX-implied",
-    run: async () => {
-      const implied = OFFER_USD * USD_TO_INR;
-      const drift = Math.abs(OFFER_INR - implied) / implied;
-      const ok = drift <= 0.20;
-      return {
-        id: "price.fx-offer", category: "Pricing", name: "Offer INR within ±20% of FX-implied",
-        status: ok ? "pass" : "warn",
-        detail: `${OFFER_USD} USD ≈ ${Math.round(implied).toLocaleString("en-IN")} INR · listed ₹${OFFER_INR.toLocaleString("en-IN")} · drift ${(drift * 100).toFixed(1)}%`,
-      };
-    },
-  },
-  {
     id: "price.offer-lt-retail",
     category: "Pricing",
-    name: "Offer price < retail price (USD + INR)",
+    name: "Offer price < retail price",
     run: async () => {
-      const ok = OFFER_USD < RETAIL_USD && OFFER_INR < RETAIL_INR;
+      const ok = OFFER_USD < RETAIL_USD;
       return {
-        id: "price.offer-lt-retail", category: "Pricing", name: "Offer price < retail price (USD + INR)",
+        id: "price.offer-lt-retail", category: "Pricing", name: "Offer price < retail price",
         status: ok ? "pass" : "fail",
-        detail: ok ? `$${OFFER_USD} < $${RETAIL_USD} · ₹${OFFER_INR} < ₹${RETAIL_INR}` : "Offer pricing must be below retail",
-      };
-    },
-  },
-  {
-    id: "price.fx-anchor-fresh",
-    category: "Pricing",
-    name: "FX anchor sane (60–95 INR/USD)",
-    run: async () => {
-      const ok = USD_TO_INR >= 60 && USD_TO_INR <= 95;
-      return {
-        id: "price.fx-anchor-fresh", category: "Pricing", name: "FX anchor sane (60–95 INR/USD)",
-        status: ok ? "pass" : "warn",
-        detail: `USD_TO_INR = ${USD_TO_INR}`,
+        detail: ok ? `$${OFFER_USD} < $${RETAIL_USD}` : "Offer pricing must be below retail",
       };
     },
   },

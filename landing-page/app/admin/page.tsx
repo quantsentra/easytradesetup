@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { listAllUsers } from "@/lib/auth-server";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
-import { OFFER_USD, OFFER_INR, format, USD_SET } from "@/lib/pricing";
+import { OFFER_USD, format, USD_SET } from "@/lib/pricing";
 import Sparkline from "@/components/admin/Sparkline";
 
 type EntRow = {
@@ -77,17 +77,12 @@ async function loadOverview() {
 
   // Treat any non-refund entitlement as a "purchase order"
   const orders = entitlements.filter((e) => e.source !== "refund");
-  const india = orders.filter((e) => e.source === "razorpay");
-  const global = orders.filter((e) => e.source === "stripe");
-  const paid = [...india, ...global];
+  const paid = orders.filter((e) => e.source !== "manual");
   const manual = orders.filter((e) => e.source === "manual");
   const activeCount = orders.filter((e) => e.active).length;
 
-  // Revenue: paid orders × launch price. Manual grants excluded.
+  // Revenue: paid orders × launch price (USD). Manual grants excluded.
   const revenueUsd = paid.length * OFFER_USD;
-  const revenueInr = paid.length * OFFER_INR;
-  const indiaRevenueInr = india.length * OFFER_INR;
-  const globalRevenueUsd = global.length * OFFER_USD;
 
   // Joins: customer email + name
   const usersById = new Map(users.map((u) => [u.id, u]));
@@ -162,22 +157,15 @@ async function loadOverview() {
     users,
     activeCount,
     orders,
-    india,
-    global,
     paid,
     manual,
     revenueUsd,
-    revenueInr,
-    indiaRevenueInr,
-    globalRevenueUsd,
     openTickets,
     downloads,
     recent,
     today: orders.filter((e) => inRange(e.granted_at, "today")).length,
     week: orders.filter((e) => inRange(e.granted_at, "week")).length,
     month: orders.filter((e) => inRange(e.granted_at, "month")).length,
-    indiaWeek: india.filter((e) => inRange(e.granted_at, "week")).length,
-    globalWeek: global.filter((e) => inRange(e.granted_at, "week")).length,
     signupsToday: users.filter((u) => inRange(u.createdAt, "today")).length,
     signupsWeek: users.filter((u) => inRange(u.createdAt, "week")).length,
     pvToday: pvToday.length,
@@ -250,62 +238,13 @@ export default async function AdminOverview() {
             />
           </div>
           <div className="tz-kpi-delta">
-            ≈ ₹{d.revenueInr.toLocaleString("en-IN")} · 14d
+            {d.paid.length} paid · {format(USD_SET, OFFER_USD)} per order
           </div>
         </div>
         <div className="tz-kpi">
           <div className="tz-kpi-label">Active licenses</div>
           <div className="tz-kpi-value tz-num">{d.activeCount}</div>
           <div className="tz-kpi-delta">Currently entitled</div>
-        </div>
-      </div>
-
-      {/* Geo split — India vs Global */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
-        <div className="tz-kpi" style={{
-          background: "linear-gradient(135deg, rgba(34,211,238,0.06) 0%, transparent 60%), var(--tz-surface)",
-          borderColor: "rgba(34,211,238,0.22)",
-        }}>
-          <div className="flex items-center justify-between">
-            <div className="tz-kpi-label" style={{ color: "var(--tz-cyan-dim)" }}>
-              India · Razorpay
-            </div>
-            <span className="tz-chip tz-chip-cyan">IN</span>
-          </div>
-          <div className="flex items-baseline gap-3 mt-2">
-            <div className="tz-num" style={{ font: "700 28px var(--tz-display)", letterSpacing: "-0.02em" }}>
-              {d.india.length}
-            </div>
-            <div className="tz-num text-[14px]" style={{ color: "var(--tz-ink-dim)" }}>
-              ₹{d.indiaRevenueInr.toLocaleString("en-IN")}
-            </div>
-          </div>
-          <div className="tz-kpi-delta">
-            +{d.indiaWeek} this week · ₹{OFFER_INR.toLocaleString("en-IN")} per order
-          </div>
-        </div>
-
-        <div className="tz-kpi" style={{
-          background: "linear-gradient(135deg, rgba(43,123,255,0.06) 0%, transparent 60%), var(--tz-surface)",
-          borderColor: "rgba(43,123,255,0.22)",
-        }}>
-          <div className="flex items-center justify-between">
-            <div className="tz-kpi-label" style={{ color: "var(--tz-acid-dim)" }}>
-              Global · Stripe
-            </div>
-            <span className="tz-chip tz-chip-acid">USD</span>
-          </div>
-          <div className="flex items-baseline gap-3 mt-2">
-            <div className="tz-num" style={{ font: "700 28px var(--tz-display)", letterSpacing: "-0.02em" }}>
-              {d.global.length}
-            </div>
-            <div className="tz-num text-[14px]" style={{ color: "var(--tz-ink-dim)" }}>
-              {format(USD_SET, d.globalRevenueUsd)}
-            </div>
-          </div>
-          <div className="tz-kpi-delta">
-            +{d.globalWeek} this week · {format(USD_SET, OFFER_USD)} per order
-          </div>
         </div>
       </div>
 
@@ -505,9 +444,9 @@ export default async function AdminOverview() {
               ) : (
                 d.recent.map((r) => {
                   const region =
-                    r.source === "razorpay" ? { label: "India", chip: "tz-chip-cyan", amount: `₹${OFFER_INR.toLocaleString("en-IN")}` } :
-                    r.source === "stripe"   ? { label: "Global", chip: "tz-chip-acid", amount: format(USD_SET, OFFER_USD) } :
-                    { label: "—", chip: "", amount: "—" };
+                    r.source === "stripe" || r.source === "razorpay"
+                      ? { label: "Paid", chip: "tz-chip-acid", amount: format(USD_SET, OFFER_USD) }
+                      : { label: "—", chip: "", amount: "—" };
                   return (
                     <tr key={`${r.user_id}-${r.granted_at}`}>
                       <td>

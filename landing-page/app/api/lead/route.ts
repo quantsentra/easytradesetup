@@ -4,7 +4,7 @@ import { Resend } from "resend";
 import { checkBotId } from "botid/server";
 import { rateLimit, clientIp } from "@/lib/rate-limit";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
-import { OFFER_USD, OFFER_INR } from "@/lib/pricing";
+import { OFFER_USD } from "@/lib/pricing";
 
 export const runtime = "nodejs";
 
@@ -185,7 +185,7 @@ export async function POST(req: Request) {
 
   // 2. Send Resend emails (best-effort, non-blocking).
   if (resend) {
-    const offerLabel = `$${OFFER_USD} / ₹${OFFER_INR.toLocaleString("en-IN")}`;
+    const offerLabel = `$${OFFER_USD}`;
     Promise.allSettled([
       // Welcome / confirmation to lead
       resend.emails.send({

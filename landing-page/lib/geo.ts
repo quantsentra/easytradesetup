@@ -1,17 +1,12 @@
-import { cookies, headers } from "next/headers";
-import { CURRENCY_COOKIE, isValidCurrency } from "@/lib/currency";
+import { headers } from "next/headers";
 
 // Marketing pages need a coarse "home market" signal so they can lead with
 // content the visitor recognises. India sees NIFTY first; everyone else
-// sees SPX / NAS first. Same cookie + IP fallback that drives currency.
+// sees SPX / NAS first. Pricing is USD-only globally now, so this is a
+// pure IP-country read (no currency cookie behind it).
 export type HomeMarket = "in" | "global";
 
 export async function resolveHomeMarket(): Promise<HomeMarket> {
-  const store = await cookies();
-  const cookieVal = store.get(CURRENCY_COOKIE)?.value?.toLowerCase();
-  if (isValidCurrency(cookieVal)) {
-    return cookieVal === "inr" ? "in" : "global";
-  }
   const h = await headers();
   const country = h.get("x-vercel-ip-country")?.toUpperCase();
   return country === "IN" ? "in" : "global";

@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { OFFER_USD, OFFER_INR, RETAIL_USD, RETAIL_INR } from "@/lib/pricing";
+import { OFFER_USD, RETAIL_USD } from "@/lib/pricing";
 
 export const runtime = "edge";
 export const alt =
@@ -161,19 +161,6 @@ export default async function OG() {
             }}
           >
             <span>${OFFER_USD}</span>
-            <span
-              style={{
-                fontSize: 44,
-                color: "rgba(255,255,255,0.40)",
-                fontWeight: 600,
-              }}
-            >
-              ·
-            </span>
-            {/* "INR" prefix instead of ₹ — the rupee glyph triggers a
-                runtime dynamic-font fetch in @vercel/og that intermittently
-                fails with a 400. ASCII keeps the OG render deterministic. */}
-            <span>INR {OFFER_INR.toLocaleString("en-IN")}</span>
           </div>
           <div
             style={{
@@ -188,8 +175,6 @@ export default async function OG() {
             }}
           >
             <span>${RETAIL_USD}</span>
-            <span>·</span>
-            <span>INR {RETAIL_INR.toLocaleString("en-IN")}</span>
           </div>
         </div>
 

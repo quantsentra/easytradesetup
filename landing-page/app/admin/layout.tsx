@@ -7,7 +7,7 @@ import AccountMenu from "@/components/auth/AccountMenu";
 import { BrandMark } from "@/components/nav/TopNav";
 import PortalMobileNav from "@/components/nav/PortalMobileNav";
 import BackToTop from "@/components/ui/BackToTop";
-import { OFFER_USD, OFFER_INR } from "@/lib/pricing";
+import { OFFER_USD } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Admin",
@@ -146,7 +146,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </span>
           </div>
           <div className="tz-footer-right">
-            <span>Launch price · always {OFFER_USD === 49 ? "$49" : `$${OFFER_USD}`} / ₹{OFFER_INR.toLocaleString("en-IN")}</span>
+            <span>Launch price · always ${OFFER_USD}</span>
             <span className="tz-footer-dot" aria-hidden>·</span>
             <Link href="/portal" className="tz-footer-link">Portal</Link>
             <span className="tz-footer-dot" aria-hidden>·</span>

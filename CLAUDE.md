@@ -26,14 +26,16 @@ Target traders: NSE F&O (intraday NIFTY / BANKNIFTY, weekly expiries), US indice
 
 Single source of truth: `landing-page/lib/pricing.ts`.
 
-| | USD | INR |
-|---|---|---|
-| Retail | $149 | ₹13,999 |
-| Inaugural offer | $49 | ₹4,599 |
+**USD only.** Single global price — no INR, no geo-aware currency switch, no FX anchor.
 
-FX anchor: `USD_TO_INR = 93.17` (captured 2026-04-21).
+| | USD |
+|---|---|
+| Retail | $149 |
+| Launch offer | $49 |
 
-**Never hardcode a price elsewhere.** Always import from `@/lib/pricing`. Update INR amounts in lockstep with USD × FX (unit test `tests/unit/pricing.test.ts` enforces ±20%).
+**Never hardcode a price elsewhere.** Always import from `@/lib/pricing` (`OFFER_USD`, `RETAIL_USD`, `USD_SET`, `format`). Unit test `tests/unit/pricing.test.ts` asserts offer < retail and the discount stays in the honest 50–80% band.
+
+History: INR pricing + the geo-aware `<Price />` currency switch + the Razorpay rail were removed 2026-05-28 when the business refocused on US / UAE / international. `lib/currency.ts` was deleted; payments are Stripe-USD only.
 
 Launch window source: `landing-page/lib/launch.ts` — `LAUNCH_END_DATE`, `RESERVATION_CAP` (500). Surface wires through `<ReservationNotice />` and `<LaunchCountdown />`.
 
@@ -45,7 +47,7 @@ Launch window source: `landing-page/lib/launch.ts` — `LAUNCH_END_DATE`, `RESER
 - **Styling:** Tailwind 3.4, custom tokens in `landing-page/tailwind.config.ts`, global CSS in `landing-page/app/globals.css`
 - **Analytics:** @vercel/analytics
 - **Hosting:** Vercel, auto-deploy from `main` on push
-- **Payments (planned):** Razorpay (INR), Stripe (USD) — not live yet
+- **Payments (planned):** Stripe (USD) — not live yet
 - **Email capture:** `app/api/lead/route.ts` — logs to console today, TODO wire to Resend + Sheet
 
 All code lives in `landing-page/`. The root of the repo is reserved for the Pine script (`src/pine/`), research notes, and CLAUDE memory.
@@ -72,10 +74,10 @@ Motion: all animations behind `motion-safe:`. Global `prefers-reduced-motion` ov
 ## Content & messaging discipline
 
 - **No fake testimonials.** Customer quotes appear only post-launch with written permission and verifiable purchase records. `Principles.tsx` explicitly promises this.
-- **No SEBI-registered research language.** We are not a registered research analyst. Indian users see the SEBI disclaimer on checkout.
+- **No registered-adviser language.** We are not a registered investment adviser or research analyst in any jurisdiction. Keep the jurisdiction-neutral disclaimer site-wide (esp. on checkout + any page with hypothetical outcomes) — it is protective precisely because retained NIFTY/BANKNIFTY SEO content still draws Indian organic traffic.
 - **"Educational, not investment advice"** callout must be on every page that shows hypothetical trade outcomes (case studies, sample, checkout).
 - **Claims must be verifiable from code or public listing.** Compare page gets a monthly review date in the footnote.
-- **India-first but global.** Keep Hindi tagline in TrustStrip, maintain NSE-specific examples, keep INR equal-citizen status with USD (geo-aware `<Price />` component in `components/ui/Price.tsx`).
+- **US / UAE / international focus (since 2026-05-28).** USD-only pricing. India is no longer a sales-targeted market: no INR, no Hindi tagline, no India-first positioning. BUT NIFTY/BANKNIFTY educational blogs + `/indicator/nifty` + `/indicator/banknifty` are **retained for SEO** — they pull global + Indian organic traffic and NIFTY traders worldwide. Don't delete that content; just don't sell/price to India. `resolveHomeMarket()` (`lib/geo.ts`) still shows NIFTY-first to IN IPs as a content nicety.
 
 ---
 
@@ -208,8 +210,8 @@ Safety tags:
 
 - **Founder identity is placeholder "TS".** Real name + photo + LinkedIn pending — owner will fill. Do not fabricate. **Recommended:** real photo + real name (avatar trust signal is poor in trader/finance niche).
 - **No live customer testimonials yet.** Placeholder footnote in `Principles.tsx`. Do not invent.
-- **No Hindi full-site translation.** Only the TrustStrip tagline line. A full localization pass is explicitly out of scope until revenue justifies it.
-- **Payments not live.** Checkout captures reservations (email → `/api/lead`), not money. Do not wire Razorpay / Stripe credentials without explicit go-ahead.
+- **No Hindi / localization.** Site is English, USD-only. India sales positioning was removed 2026-05-28; the old TrustStrip Hindi tagline is being retired in the copy-reposition pass.
+- **Payments not live.** Checkout captures reservations (email → `/api/lead`), not money. Stripe-USD only (Razorpay/INR removed). Do not wire Stripe credentials without explicit go-ahead.
 - **No A/B framework.** Changes to home copy are manual. If we add GrowthBook or similar, document the wiring here.
 - **YouTube auto-publish in API testing mode.** YT_REFRESH_TOKEN expires every 7 days until OAuth project clears Google's compliance audit (1-6 weeks). Workaround: re-do OAuth Playground flow weekly. Token refresh = 3min effort.
 - **Static slides → YT Shorts limitation.** YT algo deprioritises slideshow content. Real videos (Opus Clip / phone recordings / AI-generated via Veo / Kling) outperform our auto-published slides. Continue both pipelines: auto-published static for daily presence, manual rich-video uploads weekly for quality.

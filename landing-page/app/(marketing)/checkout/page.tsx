@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { BotIdClient } from "botid/client";
 import PageHeader from "@/components/ui/PageHeader";
@@ -8,18 +7,14 @@ import StripeBuyButton from "@/components/checkout/StripeBuyButton";
 import {
   OFFER_LABEL,
   OFFER_USD,
-  OFFER_INR,
   RETAIL_USD,
-  RETAIL_INR,
 } from "@/lib/pricing";
 import { getUser } from "@/lib/auth-server";
-import { cookies } from "next/headers";
-import { CURRENCY_COOKIE, resolveCurrency } from "@/lib/currency";
 
 export const metadata: Metadata = {
   title: "Buy Golden Indicator — launch price, 67% off retail",
   description:
-    "Buy Golden Indicator at the launch price. $49 / ₹4,599 one-time, lifetime access — 67% off retail, always. Stripe checkout for global cards + INR. UPI via Razorpay coming.",
+    "Buy Golden Indicator at the launch price. $49 one-time, lifetime access — 67% off retail, always. Secure Stripe checkout for cards worldwide.",
   alternates: { canonical: "/checkout" },
 };
 
@@ -30,11 +25,10 @@ const PORTAL_ORIGIN = "https://portal.easytradesetup.com";
 export default async function CheckoutPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ cancelled?: string; ccy?: string }>;
+  searchParams?: Promise<{ cancelled?: string }>;
 }) {
   const sp = (await searchParams) || {};
   const cancelled = sp.cancelled === "1";
-  const ccyOverride = (sp.ccy || "").toLowerCase();
 
   // Login-first: anonymous purchases create orphan entitlements. Send
   // unauthed visitors to sign-in and bring them back here on success.
@@ -45,23 +39,9 @@ export default async function CheckoutPage({
   }
   const userEmail = user.email || "";
 
-  // Currency resolution: ?ccy= → ets_ccy cookie → IN geo → USD default.
-  // Middleware writes the cookie so this page sees whatever the visitor
-  // last picked (or their initial geo verdict).
-  const h = await headers();
-  const cookieStore = await cookies();
-  const cookieCcy = cookieStore.get(CURRENCY_COOKIE)?.value;
-  const currency = resolveCurrency({
-    query: ccyOverride,
-    cookie: cookieCcy,
-    ipCountry: h.get("x-vercel-ip-country"),
-  });
-
-  const offerAmount = currency === "inr" ? OFFER_INR : OFFER_USD;
-  const retailAmount = currency === "inr" ? RETAIL_INR : RETAIL_USD;
-  const symbol = currency === "inr" ? "₹" : "$";
-  const offerLabel = currency === "inr" ? `₹${OFFER_INR.toLocaleString("en-IN")}` : `$${OFFER_USD}`;
-  const retailLabel = currency === "inr" ? `₹${RETAIL_INR.toLocaleString("en-IN")}` : `$${RETAIL_USD}`;
+  const offerAmount = OFFER_USD;
+  const offerLabel = `$${OFFER_USD}`;
+  const retailLabel = `$${RETAIL_USD}`;
 
   // 1-click flow: signed-in buyer who arrived from a "Buy" CTA elsewhere
   // expects to land on Stripe directly, not see another preview page. We
@@ -78,7 +58,7 @@ export default async function CheckoutPage({
           {
             quantity: 1,
             price_data: {
-              currency,
+              currency: "usd",
               unit_amount: offerAmount * 100,
               product_data: {
                 name: "Golden Indicator — Launch price",
@@ -96,18 +76,18 @@ export default async function CheckoutPage({
           product: "golden-indicator",
           tier: "launch",
           offer_amount: String(offerAmount),
-          currency,
+          currency: "usd",
         },
         invoice_creation: {
           enabled: true,
           invoice_data: {
             description: "Golden Indicator — Launch price (lifetime access)",
-            metadata: { product: "golden-indicator", tier: "launch", user_id: user.id, currency },
+            metadata: { product: "golden-indicator", tier: "launch", user_id: user.id, currency: "usd" },
             footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/support",
           },
         },
         success_url: `https://www.easytradesetup.com/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `https://www.easytradesetup.com/checkout?cancelled=1${currency === "inr" ? "&ccy=inr" : ""}`,
+        cancel_url: `https://www.easytradesetup.com/checkout?cancelled=1`,
         expires_at: Math.floor(Date.now() / 1000) + 30 * 60,
         allow_promotion_codes: true,
         billing_address_collection: "auto",
@@ -138,7 +118,7 @@ export default async function CheckoutPage({
       <PageHeader
         eyebrow="Buy · Launch price"
         title={<>Buy Golden Indicator.</>}
-        lede={`One-time payment, lifetime access. Pay ${symbol}${currency === "inr" ? offerAmount.toLocaleString("en-IN") : offerAmount} via Stripe — 67% off retail, always. India: full UPI gateway via Razorpay landing soon; Stripe accepts INR via Indian + international cards in the meantime.`}
+        lede={`One-time payment, lifetime access. Pay ${offerLabel} via Stripe — 67% off retail, always. Cards accepted worldwide.`}
       />
 
       <section className="bg-surface">
@@ -163,8 +143,8 @@ export default async function CheckoutPage({
             <div className="text-caption leading-relaxed text-amber-200">
               <strong className="font-semibold">Educational tool, not investment advice.</strong> Golden Indicator is a
               chart tool, not a signal service. You decide every trade. Past performance does not guarantee future
-              results. Trading in financial instruments involves substantial risk of loss. Indian users — we are not
-              SEBI-registered. Read our full{" "}
+              results. Trading in financial instruments involves substantial risk of loss. We are not a registered
+              investment adviser or research analyst in any jurisdiction. Read our full{" "}
               <Link href="/legal/disclaimer" className="underline">trading disclaimer</Link> before purchase.
             </div>
           </div>
@@ -185,26 +165,7 @@ export default async function CheckoutPage({
               </p>
 
               <div className="mt-8">
-                <StripeBuyButton currency={currency} label={`Pay ${offerLabel} →`} />
-              </div>
-
-              {/* Currency switcher — manual override when geo-detect is wrong */}
-              <div className="mt-4 text-caption text-muted-faint">
-                {currency === "inr" ? (
-                  <>
-                    Showing INR pricing.{" "}
-                    <Link href="/checkout?ccy=usd" className="underline">
-                      Switch to USD ${OFFER_USD}
-                    </Link>
-                  </>
-                ) : (
-                  <>
-                    Showing USD pricing.{" "}
-                    <Link href="/checkout?ccy=inr" className="underline">
-                      Switch to INR ₹{OFFER_INR.toLocaleString("en-IN")}
-                    </Link>
-                  </>
-                )}
+                <StripeBuyButton label={`Pay ${offerLabel} →`} />
               </div>
 
               <ul className="mt-8 space-y-2 text-caption text-muted">
@@ -232,16 +193,8 @@ export default async function CheckoutPage({
                 </div>
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-caption text-muted">
                   <span className="inline-flex items-center gap-1.5">
-                    <span className="font-semibold text-ink">Stripe USD</span>
-                    <span className="text-muted-faint">· cards · live · ${OFFER_USD}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="font-semibold text-ink">Stripe INR</span>
-                    <span className="text-muted-faint">· cards · live · ₹{OFFER_INR.toLocaleString("en-IN")}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="font-semibold text-muted-faint">UPI · India</span>
-                    <span className="text-muted-faint">· coming via Razorpay</span>
+                    <span className="font-semibold text-ink">Stripe</span>
+                    <span className="text-muted-faint">· cards worldwide · Apple Pay · Google Pay · live</span>
                   </span>
                 </div>
               </div>
