@@ -1,51 +1,48 @@
 import "server-only";
-import { cookies } from "next/headers";
-import { createServerClient } from "@supabase/ssr";
+import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
 
-/**
- * Supabase server-side auth helper. Reads the session cookie, validates
- * with Supabase Auth, and returns the user (or null).
- *
- * Use this in Server Components, Route Handlers, and Server Actions.
- * The returned user.id is a UUID — store it in the same `user_id text`
- * columns we used for Clerk IDs; the shape is different but compatible.
- */
-export async function getUser() {
-  const cookieStore = await cookies();
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !anon) return null;
+// Server-side auth helper, backed by Clerk. The rest of the app consumes
+// auth only through these functions, so swapping the provider stays local
+// to this file. `getUser()` returns a minimal { id, email } shape — the
+// same fields call sites read off the old Supabase user object — so
+// downstream code is unchanged.
+//
+// `id` is the Clerk user id (e.g. "user_2abc…"), stored as-is in the
+// `user_id text` columns the schema already uses.
 
-  const supa = createServerClient(url, anon, {
-    cookies: {
-      getAll() {
-        return cookieStore.getAll();
-      },
-      setAll(cookiesToSet) {
-        try {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options),
-          );
-        } catch {
-          // Server Component path — cookie mutations are a no-op here.
-        }
-      },
-    },
-  });
+export type AppUser = { id: string; email: string | null; name: string | null };
 
-  const { data } = await supa.auth.getUser();
-  return data.user || null;
+function primaryEmail(u: {
+  primaryEmailAddressId?: string | null;
+  emailAddresses?: Array<{ id: string; emailAddress: string }>;
+}): string | null {
+  const list = u.emailAddresses ?? [];
+  const primary = list.find((e) => e.id === u.primaryEmailAddressId);
+  return (primary ?? list[0])?.emailAddress ?? null;
 }
 
-/** Convenience: returns the Supabase user id, or null if no session. */
+/** Current signed-in user, or null. Use in Server Components / Route Handlers. */
+export async function getUser(): Promise<AppUser | null> {
+  const { userId } = await auth();
+  if (!userId) return null;
+  const u = await currentUser();
+  if (!u) return { id: userId, email: null, name: null };
+  return {
+    id: u.id,
+    email: primaryEmail(u),
+    name: [u.firstName, u.lastName].filter(Boolean).join(" ") || null,
+  };
+}
+
+/** Current Clerk user id, or null. Cheaper than getUser() — no profile fetch. */
 export async function getUserId(): Promise<string | null> {
-  const u = await getUser();
-  return u?.id || null;
+  const { userId } = await auth();
+  return userId ?? null;
 }
 
 /**
- * Pull a Supabase auth user by ID using the service-role key.
- * Used by admin screens to resolve customer emails and names.
+ * Resolve a single user by Clerk id. Used by admin screens to show customer
+ * email + name next to an entitlement / ticket row.
  */
 export async function getUserById(id: string): Promise<{
   id: string;
@@ -54,30 +51,20 @@ export async function getUserById(id: string): Promise<{
   createdAt: string | null;
 } | null> {
   try {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !service) return null;
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { createClient } = require("@supabase/supabase-js");
-    const admin = createClient(url, service, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-    const { data, error } = await admin.auth.admin.getUserById(id);
-    if (error || !data?.user) return null;
+    const client = await clerkClient();
+    const u = await client.users.getUser(id);
     return {
-      id: data.user.id,
-      email: data.user.email ?? null,
-      fullName: (data.user.user_metadata?.full_name as string | undefined) ?? null,
-      createdAt: data.user.created_at ?? null,
+      id: u.id,
+      email: primaryEmail(u),
+      fullName: [u.firstName, u.lastName].filter(Boolean).join(" ") || null,
+      createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
     };
   } catch {
     return null;
   }
 }
 
-/**
- * List Supabase auth users. For /admin/customers.
- */
+/** List users for /admin/customers. */
 export async function listAllUsers(limit = 200): Promise<
   Array<{
     id: string;
@@ -87,26 +74,13 @@ export async function listAllUsers(limit = 200): Promise<
   }>
 > {
   try {
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const service = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!url || !service) return [];
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { createClient } = require("@supabase/supabase-js");
-    const admin = createClient(url, service, {
-      auth: { persistSession: false, autoRefreshToken: false },
-    });
-    const { data, error } = await admin.auth.admin.listUsers({ perPage: limit });
-    if (error || !data?.users) return [];
-    return data.users.map((u: {
-      id: string;
-      email?: string | null;
-      user_metadata?: { full_name?: string };
-      created_at?: string;
-    }) => ({
+    const client = await clerkClient();
+    const res = await client.users.getUserList({ limit });
+    return res.data.map((u) => ({
       id: u.id,
-      email: u.email ?? null,
-      fullName: (u.user_metadata?.full_name as string | undefined) ?? null,
-      createdAt: u.created_at ?? null,
+      email: primaryEmail(u),
+      fullName: [u.firstName, u.lastName].filter(Boolean).join(" ") || null,
+      createdAt: u.createdAt ? new Date(u.createdAt).toISOString() : null,
     }));
   } catch {
     return [];
@@ -114,17 +88,21 @@ export async function listAllUsers(limit = 200): Promise<
 }
 
 /**
- * Bulk-resolve email addresses for a list of user IDs. Used by the admin
- * tickets inbox to show who opened each ticket without N round-trips.
+ * Bulk-resolve emails for a list of user ids. Used by the admin tickets
+ * inbox to label rows without N round-trips.
  */
 export async function emailsByUserIds(ids: string[]): Promise<Map<string, string>> {
   const out = new Map<string, string>();
   if (ids.length === 0) return out;
-  const all = await listAllUsers(500);
-  const byId = new Map(all.map((u) => [u.id, u.email || u.id]));
-  for (const id of ids) {
-    const email = byId.get(id);
-    if (email) out.set(id, email);
+  try {
+    const client = await clerkClient();
+    const res = await client.users.getUserList({ userId: ids, limit: Math.min(ids.length, 500) });
+    for (const u of res.data) {
+      const email = primaryEmail(u);
+      if (email) out.set(u.id, email);
+    }
+  } catch {
+    // best-effort — empty map just means labels fall back to the raw id
   }
   return out;
 }

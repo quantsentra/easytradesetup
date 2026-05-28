@@ -15,6 +15,7 @@
     "test:all": "npm run test && npm run test:e2e"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.4.2",
     "@next/third-parties": "^16.2.4",
     "@sentry/nextjs": "^10.50.0",
     "@supabase/ssr": "^0.10.2",

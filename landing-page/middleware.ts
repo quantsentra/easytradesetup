@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
 const PORTAL_HOST = "portal.easytradesetup.com";
 const MARKETING_HOST = "www.easytradesetup.com";
@@ -181,8 +181,11 @@ function buildCsp(nonce: string): string {
     // GA4 (via @next/third-parties) ships hits to www.google-analytics.com
     // and www.google.com (the latter for Google Ads conversion linker).
     // Allowlist both connect targets so CSP doesn't block telemetry.
-    "connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://api.coingecko.com https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://*.clarity.ms https://c.bing.com https://www.google-analytics.com https://*.analytics.google.com https://www.google.com",
-    "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://hooks.stripe.com",
+    // Clerk Frontend API + clerkjs load over *.clerk.accounts.dev (dev) and
+    // clerk.* / *.clerk.com (prod). connect-src needs them for token + user
+    // calls; frame-src for the hosted components / Turnstile bot challenge.
+    "connect-src 'self' https://vitals.vercel-insights.com https://vercel.live https://api.coingecko.com https://*.supabase.co wss://*.supabase.co https://api.stripe.com https://*.stripe.com https://*.clarity.ms https://c.bing.com https://www.google-analytics.com https://*.analytics.google.com https://www.google.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.easytradesetup.com",
+    "frame-src 'self' https://challenges.cloudflare.com https://js.stripe.com https://hooks.stripe.com https://*.clerk.accounts.dev https://*.clerk.com",
     "worker-src 'self' blob:",
     "frame-ancestors 'none'",
     "base-uri 'self'",
@@ -194,7 +197,7 @@ function buildCsp(nonce: string): string {
     .join("; ");
 }
 
-export async function middleware(req: NextRequest) {
+export default clerkMiddleware(async (clerkAuth, req) => {
   const plan = planHostnameRouting(req);
 
   if (plan.kind === "redirect") {
@@ -225,8 +228,8 @@ export async function middleware(req: NextRequest) {
     requestHeaders.set("Content-Security-Policy", csp);
   }
 
-  // Build the response we'll eventually return. Cookie mutations from
-  // Supabase auth attach here regardless of rewrite vs next.
+  // Build the response we'll eventually return (rewrite for portal-host
+  // path mapping, otherwise next).
   const res =
     plan.kind === "rewrite"
       ? NextResponse.rewrite(new URL(plan.to, req.url), {
@@ -241,45 +244,21 @@ export async function middleware(req: NextRequest) {
     res.headers.set("Content-Security-Policy", csp);
   }
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anon = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-  // Without Supabase env vars, don't crash public pages; just 404 protected
-  // routes so operators notice the missing config.
-  if (!url || !anon) {
-    if (needsAuth(logicalPath)) {
-      return NextResponse.rewrite(new URL("/404", req.url));
+  // Auth gate — Clerk owns the session. Protected logical paths (/portal,
+  // /admin) require a signed-in user; everything else passes through.
+  if (needsAuth(logicalPath)) {
+    const { userId } = await clerkAuth();
+    if (!userId) {
+      const signIn = req.nextUrl.clone();
+      signIn.pathname = "/sign-in";
+      // Redirect back to the cosmetic URL the user typed, not the internal one.
+      signIn.search = `?redirect=${encodeURIComponent(plan.externalPath + (req.nextUrl.search || ""))}`;
+      return NextResponse.redirect(signIn);
     }
-    return res;
-  }
-
-  const supa = createServerClient(url, anon, {
-    cookies: {
-      getAll() {
-        return req.cookies.getAll();
-      },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => {
-          res.cookies.set(name, value, options);
-        });
-      },
-    },
-  });
-
-  const {
-    data: { user },
-  } = await supa.auth.getUser();
-
-  if (!user && needsAuth(logicalPath)) {
-    const signIn = req.nextUrl.clone();
-    signIn.pathname = "/sign-in";
-    // Redirect back to the cosmetic URL the user typed, not the internal one.
-    signIn.search = `?redirect=${encodeURIComponent(plan.externalPath + (req.nextUrl.search || ""))}`;
-    return NextResponse.redirect(signIn);
   }
 
   return res;
-}
+});
 
 export const config = {
   matcher: [

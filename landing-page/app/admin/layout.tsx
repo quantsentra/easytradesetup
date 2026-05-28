@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { UserButton } from "@clerk/nextjs";
 import { getUser } from "@/lib/auth-server";
 import { isAdmin } from "@/lib/admin";
-import AccountMenu from "@/components/auth/AccountMenu";
 import { BrandMark } from "@/components/nav/TopNav";
 import PortalMobileNav from "@/components/nav/PortalMobileNav";
 import BackToTop from "@/components/ui/BackToTop";
@@ -77,8 +77,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const admin = await isAdmin(user?.id);
   if (!admin) notFound();
 
-  const email = user?.email || "";
-
   return (
     <div className="tz-shell min-h-screen flex flex-col">
       {/* TOP HEADER */}
@@ -105,7 +103,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             ↗ Site
           </a>
 
-          <AccountMenu email={email} size={32} />
+          <UserButton
+            appearance={{ variables: { colorPrimary: "#2B7BFF", colorBackground: "#0E1530", colorText: "#E6ECFF" } }}
+          />
 
           <PortalMobileNav items={mobileNavItems} isAdmin />
         </div>

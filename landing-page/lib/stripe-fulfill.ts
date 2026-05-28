@@ -1,6 +1,7 @@
 import "server-only";
 import type Stripe from "stripe";
 import { Resend } from "resend";
+import { clerkClient } from "@clerk/nextjs/server";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
 import { getStripe } from "@/lib/stripe";
 
@@ -104,8 +105,10 @@ export async function fulfillCheckoutSession(
     warnings.push("could not resolve user_id; entitlement skipped");
   }
 
-  // Magic link only when we have an email — without one we can't deliver.
-  const magicLink = email ? await generateMagicLink(email) : null;
+  // Clerk owns sign-in; we don't mint provider magic links here. The buyer
+  // email CTA falls back to the portal /sign-in page, where they authenticate
+  // with the same email (or Google) they purchased with.
+  const magicLink = null;
 
   // Fetch the Stripe-hosted invoice + PDF link so we can include them in
   // the welcome email. Stripe finalises invoices asynchronously; usually
@@ -163,40 +166,30 @@ export async function revokeForCharge(charge: Stripe.Charge): Promise<{ ok: bool
   return { ok: true, email };
 }
 
-// ---- Supabase helpers -------------------------------------------------------
+// ---- Identity helpers (Clerk) -----------------------------------------------
+// Identity is owned by Clerk; entitlement rows below are keyed to the Clerk
+// user id. The authoritative path is session.metadata.user_id (set at
+// checkout, which requires sign-in) — these are fallbacks for recovery.
 
 async function findUserByEmail(email: string): Promise<string | null> {
-  let supa;
   try {
-    supa = createSupabaseAdmin();
+    const client = await clerkClient();
+    const res = await client.users.getUserList({ emailAddress: [email], limit: 1 });
+    return res.data[0]?.id || null;
   } catch {
     return null;
   }
-  const { data: list } = await supa.auth.admin.listUsers({ page: 1, perPage: 1000 });
-  const target = list?.users?.find(
-    (u: { email?: string | null; id: string }) =>
-      (u.email || "").toLowerCase() === email.toLowerCase(),
-  );
-  return target?.id || null;
 }
 
 async function createUser(email: string): Promise<string | null> {
-  let supa;
   try {
-    supa = createSupabaseAdmin();
-  } catch {
+    const client = await clerkClient();
+    const created = await client.users.createUser({ emailAddress: [email] });
+    return created.id;
+  } catch (e) {
+    console.error("[stripe-fulfill] createUser failed", email, e instanceof Error ? e.message : e);
     return null;
   }
-  const { data: created, error } = await supa.auth.admin.createUser({
-    email,
-    email_confirm: true,
-    user_metadata: { source: "stripe_purchase" },
-  });
-  if (error || !created.user) {
-    console.error("[stripe-fulfill] createUser failed", email, error?.message);
-    return null;
-  }
-  return created.user.id;
 }
 
 async function entitlementExists(userId: string, sessionId: string): Promise<boolean> {
@@ -297,26 +290,6 @@ async function fetchInvoiceLinks(session: Stripe.Checkout.Session): Promise<Invo
   } catch (e) {
     console.error("[stripe-fulfill] invoice retrieve failed", e);
     return empty;
-  }
-}
-
-async function generateMagicLink(email: string): Promise<string | null> {
-  let supa;
-  try {
-    supa = createSupabaseAdmin();
-  } catch {
-    return null;
-  }
-  try {
-    const { data, error } = await supa.auth.admin.generateLink({
-      type: "magiclink",
-      email,
-      options: { redirectTo: `${PORTAL_ORIGIN}/portal` },
-    });
-    if (error) return null;
-    return data.properties?.action_link || null;
-  } catch {
-    return null;
   }
 }
 

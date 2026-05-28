@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { UserButton } from "@clerk/nextjs";
 import { getUser } from "@/lib/auth-server";
 import { isAdmin } from "@/lib/admin";
-import AccountMenu from "@/components/auth/AccountMenu";
 import { BrandMark } from "@/components/nav/TopNav";
 import PortalMobileNav from "@/components/nav/PortalMobileNav";
 import BackToTop from "@/components/ui/BackToTop";
@@ -26,7 +26,6 @@ const mobileNavItems = navItems.map(({ href, label }) => ({ href, label }));
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const user = await getUser();
-  const email = user?.email || "";
   const admin = await isAdmin(user?.id);
 
   return (
@@ -62,7 +61,9 @@ export default async function PortalLayout({ children }: { children: React.React
             ↗ Site
           </a>
 
-          <AccountMenu email={email} size={32} />
+          <UserButton
+            appearance={{ variables: { colorPrimary: "#2B7BFF", colorBackground: "#0E1530", colorText: "#E6ECFF" } }}
+          />
 
           <PortalMobileNav items={mobileNavItems} isAdmin={admin} />
         </div>

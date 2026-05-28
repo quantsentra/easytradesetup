@@ -3,8 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { supabaseBrowser } from "@/lib/supabase/browser";
-import AccountMenu from "@/components/auth/AccountMenu";
 
 type NavItem = {
   href: string;
@@ -35,30 +33,10 @@ function isActive(pathname: string | null, href: string): boolean {
 
 export default function TopNav() {
   const [open, setOpen] = useState(false);
-  const [email, setEmail] = useState<string | null>(null);
-  const [loaded, setLoaded] = useState(false);
   const pathname = usePathname();
 
-  useEffect(() => {
-    let alive = true;
-    const supa = supabaseBrowser();
-    (async () => {
-      const res = await supa.auth.getUser();
-      if (!alive) return;
-      setEmail(res.data.user?.email ?? null);
-      setLoaded(true);
-    })();
-    const sub = supa.auth.onAuthStateChange((_event, session) => {
-      if (!alive) return;
-      setEmail(session?.user?.email ?? null);
-    });
-    return () => {
-      alive = false;
-      sub.data.subscription.unsubscribe();
-    };
-  }, []);
-
-  const isSignedIn = !!email;
+  // Auth lives on the portal subdomain (Clerk); this marketing nav just links
+  // there to sign in / sign up and does not reflect session state.
 
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
@@ -119,33 +97,18 @@ export default function TopNav() {
         </nav>
 
         <div className="hidden lg:flex items-center gap-2.5 flex-shrink-0">
-          {loaded && !isSignedIn && (
-            <>
-              <a
-                href="https://portal.easytradesetup.com/sign-in"
-                className="text-[13px] px-2 text-ink-60 hover:text-ink transition-colors"
-              >
-                Login
-              </a>
-              <a
-                href="https://portal.easytradesetup.com/sign-up"
-                className="btn btn-primary"
-              >
-                Sign up <span className="arrow" aria-hidden>→</span>
-              </a>
-            </>
-          )}
-          {loaded && isSignedIn && (
-            <>
-              <a
-                href="https://portal.easytradesetup.com/"
-                className="text-[13px] px-2 text-ink hover:text-cyan transition-colors font-medium"
-              >
-                Portal
-              </a>
-              <AccountMenu email={email || ""} size={28} />
-            </>
-          )}
+          <a
+            href="https://portal.easytradesetup.com/sign-in"
+            className="text-[13px] px-2 text-ink-60 hover:text-ink transition-colors"
+          >
+            Login
+          </a>
+          <a
+            href="https://portal.easytradesetup.com/sign-up"
+            className="btn btn-primary"
+          >
+            Sign up <span className="arrow" aria-hidden>→</span>
+          </a>
         </div>
 
         <div className="lg:hidden flex items-center gap-2">
@@ -207,33 +170,22 @@ export default function TopNav() {
                 </Link>
               );
             })}
-            {loaded && !isSignedIn && (
-              <div className="grid grid-cols-2 gap-3 mt-6">
-                <a
-                  href="https://portal.easytradesetup.com/sign-in"
-                  onClick={() => setOpen(false)}
-                  className="btn btn-outline btn-lg justify-center"
-                >
-                  Login
-                </a>
-                <a
-                  href="https://portal.easytradesetup.com/sign-up"
-                  onClick={() => setOpen(false)}
-                  className="btn btn-primary btn-lg justify-center"
-                >
-                  Sign up <span className="arrow" aria-hidden>→</span>
-                </a>
-              </div>
-            )}
-            {loaded && isSignedIn && (
+            <div className="grid grid-cols-2 gap-3 mt-6">
               <a
-                href="https://portal.easytradesetup.com/"
+                href="https://portal.easytradesetup.com/sign-in"
                 onClick={() => setOpen(false)}
-                className="nav-link-mobile hairline-b"
+                className="btn btn-outline btn-lg justify-center"
               >
-                Portal
+                Login
               </a>
-            )}
+              <a
+                href="https://portal.easytradesetup.com/sign-up"
+                onClick={() => setOpen(false)}
+                className="btn btn-primary btn-lg justify-center"
+              >
+                Sign up <span className="arrow" aria-hidden>→</span>
+              </a>
+            </div>
           </div>
         </div>
       )}

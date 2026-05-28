@@ -1,18 +1,23 @@
 import type { Metadata } from "next";
-import SignInForm from "@/components/auth/SignInForm";
+import { SignUp } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Sign up",
   robots: { index: false, follow: false },
 };
 
-export default async function SignUpPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ redirect?: string; error?: string; msg?: string }>;
-}) {
-  const sp = await searchParams;
-  const redirect = sp.redirect || "/portal";
+const appearance = {
+  variables: {
+    colorPrimary: "#2B7BFF",
+    colorBackground: "#0E1530",
+    colorText: "#E6ECFF",
+    colorInputBackground: "#0B1024",
+    colorInputText: "#E6ECFF",
+    borderRadius: "0.6rem",
+  },
+};
+
+export default function SignUpPage() {
   return (
     <section className="above-bg min-h-[calc(100vh-12rem)]">
       <div className="container-wide py-16 sm:py-20">
@@ -26,18 +31,17 @@ export default async function SignUpPage({
               Get your portal.
             </h1>
             <p className="mt-2 text-[14px] text-ink-60">
-              Sign up with Google or get a one-time link by email. No password.
+              Sign up with Google or email. Lifetime access on purchase.
             </p>
           </div>
 
-          <SignInForm redirectTo={redirect} error={sp.error} msg={sp.msg} mode="sign-up" />
-
-          <p className="mt-8 text-center text-[13px] text-ink-60">
-            Already have an account?{" "}
-            <a href="/sign-in" className="text-cyan hover:underline">
-              Sign in →
-            </a>
-          </p>
+          <div className="flex justify-center">
+            <SignUp
+              appearance={appearance}
+              signInUrl="/sign-in"
+              fallbackRedirectUrl="/"
+            />
+          </div>
         </div>
       </div>
     </section>

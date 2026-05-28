@@ -4,7 +4,7 @@ import { getEntitlement } from "@/lib/entitlements";
 export default async function AccountPage() {
   const user = await getUser();
   const email = user?.email || "";
-  const fullName = (user?.user_metadata?.full_name as string | undefined) || "";
+  const fullName = user?.name || "";
   const entitlement = await getEntitlement(user?.id);
   const active = entitlement?.active === true;
 

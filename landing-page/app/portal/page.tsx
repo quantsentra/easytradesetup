@@ -6,7 +6,7 @@ import { fetchLatestUpdates, countUpdatesSince } from "@/lib/updates";
 
 export default async function PortalDashboard() {
   const user = await getUser();
-  const fullName = (user?.user_metadata?.full_name as string | undefined) || "";
+  const fullName = user?.name || "";
   const firstName = fullName.split(" ")[0] || user?.email?.split("@")[0] || "trader";
   const entitlement = await getEntitlement(user?.id);
   const active = entitlement?.active === true;
