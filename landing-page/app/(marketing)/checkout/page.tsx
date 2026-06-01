@@ -20,8 +20,6 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-const PORTAL_ORIGIN = "https://portal.easytradesetup.com";
-
 export default async function CheckoutPage({
   searchParams,
 }: {
@@ -30,14 +28,12 @@ export default async function CheckoutPage({
   const sp = (await searchParams) || {};
   const cancelled = sp.cancelled === "1";
 
-  // Login-first: anonymous purchases create orphan entitlements. Send
-  // unauthed visitors to sign-in and bring them back here on success.
+  // Guest checkout: no login wall. Signed-in buyers get their email
+  // prefilled + user_id attached; guests pay first and the webhook
+  // (fulfillCheckoutSession) creates/links their Clerk account from the
+  // Stripe email. The old sign-in redirect was the biggest conversion leak.
   const user = await getUser();
-  if (!user) {
-    const redirectUrl = `${PORTAL_ORIGIN}/sign-in?redirect=${encodeURIComponent("https://www.easytradesetup.com/checkout")}`;
-    redirect(redirectUrl);
-  }
-  const userEmail = user.email || "";
+  const userEmail = user?.email || "";
 
   const offerAmount = OFFER_USD;
   const offerLabel = `$${OFFER_USD}`;
@@ -68,11 +64,11 @@ export default async function CheckoutPage({
             },
           },
         ],
-        customer_email: userEmail,
+        ...(userEmail ? { customer_email: userEmail } : {}),
         customer_creation: "always",
-        client_reference_id: user.id,
+        ...(user ? { client_reference_id: user.id } : {}),
         metadata: {
-          user_id: user.id,
+          ...(user ? { user_id: user.id } : {}),
           product: "golden-indicator",
           tier: "launch",
           offer_amount: String(offerAmount),
@@ -82,7 +78,7 @@ export default async function CheckoutPage({
           enabled: true,
           invoice_data: {
             description: "Golden Indicator — Launch price (lifetime access)",
-            metadata: { product: "golden-indicator", tier: "launch", user_id: user.id, currency: "usd" },
+            metadata: { product: "golden-indicator", tier: "launch", ...(user ? { user_id: user.id } : {}), currency: "usd" },
             footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/support",
           },
         },
@@ -156,12 +152,15 @@ export default async function CheckoutPage({
               </div>
               <h2 className="mt-3 h-tile">One tap. {offerLabel}. Lifetime access.</h2>
               <p className="mt-4 text-body text-muted leading-relaxed">
-                Signed in as <strong className="text-ink">{userEmail}</strong>.
+                {userEmail ? (
+                  <>Signed in as <strong className="text-ink">{userEmail}</strong>. </>
+                ) : null}
                 Tap the button — Stripe handles the rest. Apple Pay, Google Pay,
                 or card on the next screen. Pay{" "}
                 <strong className="text-ink">{offerLabel}</strong> (retail{" "}
-                <span className="line-through decoration-muted-faint/60">{retailLabel}</span>),
-                bounce straight to your portal — your license unlocks instantly.
+                <span className="line-through decoration-muted-faint/60">{retailLabel}</span>).
+                Your license unlocks the moment payment confirms — we email your
+                portal access{userEmail ? "" : " to the address you pay with"}.
               </p>
 
               <div className="mt-8">

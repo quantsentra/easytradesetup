@@ -12,20 +12,16 @@ export const dynamic = "force-dynamic";
 // checkout URL the client redirects to. The URL is single-use and scoped to
 // this purchase — webhook fires `checkout.session.completed` on payment.
 //
-// LOGIN-REQUIRED: The /checkout page enforces auth before this endpoint is
-// reached, but we double-check here. Anonymous purchases are rejected so
-// every entitlement maps to a real Supabase user_id from the start.
+// GUEST CHECKOUT: login is NOT required. If the buyer is signed in we attach
+// their Clerk user_id so fulfilment maps the entitlement directly. If they're
+// anonymous, Stripe collects the email and the webhook (fulfillCheckoutSession)
+// creates/links the Clerk user from that email — no orphan entitlements. The
+// login wall was the #1 conversion leak; this removes it.
 //
 // Pricing is USD-only.
 
 export async function POST(req: Request) {
   const user = await getUser();
-  if (!user) {
-    return NextResponse.json(
-      { ok: false, error: "Sign in first — purchases require an account.", needsAuth: true },
-      { status: 401 },
-    );
-  }
 
   const limit = rateLimit(`stripe:${clientIp(req)}`, { max: 5, windowMs: 60_000 });
   if (!limit.allowed) {
@@ -42,7 +38,7 @@ export async function POST(req: Request) {
   const formattedOffer = String(offer);
   const formattedRetail = String(retail);
 
-  const email = (user.email || "").trim().toLowerCase();
+  const email = (user?.email || "").trim().toLowerCase();
   const origin =
     req.headers.get("origin") ||
     `https://${req.headers.get("host") || "www.easytradesetup.com"}`;
@@ -77,11 +73,16 @@ export async function POST(req: Request) {
           },
         },
       ],
+      // Signed in → prefill + lock the email so it can't drift from the
+      // account. Guest → let Stripe collect it (required for the receipt);
+      // the webhook links/creates the Clerk user from it.
       ...(email ? { customer_email: email } : {}),
       customer_creation: "always",
-      client_reference_id: user.id,
+      ...(user ? { client_reference_id: user.id } : {}),
       metadata: {
-        user_id: user.id,
+        // user_id only present for signed-in buyers; guests resolve by email
+        // in fulfillCheckoutSession.
+        ...(user ? { user_id: user.id } : {}),
         product: "golden-indicator",
         tier: "launch",
         offer_amount: String(offer),
@@ -94,7 +95,7 @@ export async function POST(req: Request) {
           metadata: {
             product: "golden-indicator",
             tier: "launch",
-            user_id: user.id,
+            ...(user ? { user_id: user.id } : {}),
             currency,
           },
           footer: "EasyTradeSetup · Educational tool, not investment advice. Support: portal.easytradesetup.com/support",
