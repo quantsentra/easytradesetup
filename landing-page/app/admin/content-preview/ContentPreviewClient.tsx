@@ -217,12 +217,6 @@ export default function ContentPreviewClient({ posts }: { posts: Post[] }) {
                   rel="noopener"
                   className="tz-btn"
                 >↗ Open IG image</a>
-                <a
-                  href={`/api/og/post/${openPost.day}/yt`}
-                  target="_blank"
-                  rel="noopener"
-                  className="tz-btn"
-                >↗ Open YT image</a>
                 <button
                   type="button"
                   onClick={() => setOpenDay(null)}
@@ -240,16 +234,6 @@ export default function ContentPreviewClient({ posts }: { posts: Post[] }) {
                   src={`/api/og/post/${openPost.day}`}
                   alt={`IG · Day ${openPost.day}`}
                   style={{ width: "100%", borderRadius: 8, display: "block" }}
-                />
-              </div>
-              <div>
-                <div className="font-mono text-[10.5px] mb-2" style={{ color: "var(--tz-ink-mute)", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-                  YT Short · 1080×1920 (9:16)
-                </div>
-                <img
-                  src={`/api/og/post/${openPost.day}/yt`}
-                  alt={`YT · Day ${openPost.day}`}
-                  style={{ width: "100%", maxWidth: 320, borderRadius: 8, display: "block" }}
                 />
               </div>
             </div>

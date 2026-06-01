@@ -22,11 +22,6 @@ type Row = {
   ig_permalink:     string | null;
   error_message:    string | null;
   attempts:         number;
-  // YT state
-  yt_status:        string | null;
-  yt_url:           string | null;
-  yt_error_message: string | null;
-  yt_attempts:      number | null;
 };
 
 // Compute the next time (UTC) the cron will fire for a given hour:minute
@@ -55,13 +50,10 @@ function nextCronUtc(hourUtc: number, minuteUtc: number): Date {
 //
 // Position 0 (next pending) → next cron fire
 // Position 1                → +1 day
-// Position 2                → +2 days
-// etc.
-//
-// publishing/published/failed rows get null (no countdown shown).
+// etc. publishing/published/failed rows get null (no countdown shown).
 function buildEstimatedTimes(
   rows: Row[],
-  field: "status" | "yt_status",
+  field: "status",
   cronHourUtc: number,
   cronMinuteUtc: number,
 ): Map<string, string | null> {
@@ -90,7 +82,7 @@ export default async function PublisherAdminPage() {
   const sb = createSupabaseAdmin();
   const { data, error } = await sb
     .from("content_posts")
-    .select("id, day, date, format, hook, status, ig_permalink, error_message, attempts, yt_status, yt_url, yt_error_message, yt_attempts")
+    .select("id, day, date, format, hook, status, ig_permalink, error_message, attempts")
     .order("day", { ascending: true });
 
   const rows: Row[] = data ?? [];
@@ -101,35 +93,12 @@ export default async function PublisherAdminPage() {
     published:  rows.filter((r) => r.status === "published").length,
     failed:     rows.filter((r) => r.status === "failed").length,
   };
-  const yt = {
-    pending:    rows.filter((r) => r.yt_status === "pending").length,
-    publishing: rows.filter((r) => r.yt_status === "publishing").length,
-    published:  rows.filter((r) => r.yt_status === "published").length,
-    failed:     rows.filter((r) => r.yt_status === "failed").length,
-  };
 
-  // Cron schedules from vercel.json:
-  //   IG: 30 3 * * *   (03:30 UTC = 09:00 IST)
-  //   YT: 30 4 * * *   (04:30 UTC = 10:00 IST)
-  const igTimes = buildEstimatedTimes(rows, "status",    3, 30);
-  const ytTimes = buildEstimatedTimes(rows, "yt_status", 4, 30);
+  // Cron schedule from vercel.json:  IG: 30 3 * * *  (03:30 UTC = 09:00 IST)
+  const igTimes = buildEstimatedTimes(rows, "status", 3, 30);
 
-  // Top-of-page banners: countdown to the very next IG and YT runs.
+  // Top-of-page banner: countdown to the very next IG run.
   const nextIgFire = nextCronUtc(3, 30).toISOString();
-  const nextYtFire = nextCronUtc(4, 30).toISOString();
-
-  // YT pause state — mirrors the early-bail logic in
-  // /api/cron/publish-youtube/route.ts. We surface it here so the
-  // operator sees "dormant" instead of wondering why the queue stopped
-  // moving. Two ways to dormant: explicit YT_PAUSED flag, or simply
-  // unset YT_REFRESH_TOKEN (matches the "drop YT for now" workflow).
-  const ytPaused =
-    process.env.YT_PAUSED === "1" ||
-    process.env.YT_PAUSED === "true" ||
-    !process.env.YT_REFRESH_TOKEN;
-  const ytPauseReason = !process.env.YT_REFRESH_TOKEN
-    ? "YT_REFRESH_TOKEN env var unset"
-    : "YT_PAUSED=1 env flag";
 
   return (
     <>
@@ -137,14 +106,13 @@ export default async function PublisherAdminPage() {
         <div>
           <h1 className="tz-topbar-title">Auto-publisher.</h1>
           <div className="tz-topbar-sub">
-            Daily Vercel cron picks the next pending row → renders branded image → posts to Instagram + YouTube Shorts.
+            Daily Vercel cron picks the next pending row → renders branded image → posts to Instagram.
             Per-row countdowns below show when each one will fire.
           </div>
         </div>
         <div className="tz-topbar-actions">
           <Link href="/admin/content-queue" className="tz-btn">↗ Source queue</Link>
           <a href="/api/og/post/1" target="_blank" rel="noopener" className="tz-btn">↗ IG preview</a>
-          <a href="/api/og/post/1/yt" target="_blank" rel="noopener" className="tz-btn">↗ YT preview</a>
         </div>
       </div>
 
@@ -154,13 +122,13 @@ export default async function PublisherAdminPage() {
             DB read failed
           </h3>
           <p className="text-[12.5px]" style={{ color: "var(--tz-ink-mute)", margin: 0 }}>
-            {error.message}. Apply migrations <code>027_content_posts.sql</code> + <code>028_content_posts_youtube.sql</code> first, then click <strong>Sync from JSON</strong>.
+            {error.message}. Apply migration <code>027_content_posts.sql</code> first, then click <strong>Sync from JSON</strong>.
           </p>
         </div>
       ) : null}
 
       {/* Counts — IG row */}
-      <div className="mb-2">
+      <div className="mb-4">
         <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B9D", display: "flex", alignItems: "center", gap: 12 }}>
           <span>Instagram · cron 09:00 IST daily</span>
           <span style={{ color: "var(--tz-ink-mute)" }}>·</span>
@@ -174,47 +142,6 @@ export default async function PublisherAdminPage() {
           <CountCard label="Published" value={ig.published} color="var(--tz-up, #22C55E)" />
           <CountCard label="Failed" value={ig.failed} color="var(--tz-loss, #FF4D4F)" />
         </div>
-      </div>
-
-      {/* Counts — YT row */}
-      <div className="mb-4">
-        <h2 className="text-[12px] font-mono uppercase tracking-widest mb-2" style={{ color: "#FF6B6B", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-          <span>YouTube Shorts · cron 10:00 IST daily</span>
-          <span style={{ color: "var(--tz-ink-mute)" }}>·</span>
-          {ytPaused ? (
-            <span
-              className="font-mono"
-              style={{
-                color: "#FFB341",
-                textTransform: "none",
-                letterSpacing: 0,
-                background: "rgba(255,179,65,0.12)",
-                border: "1px solid rgba(255,179,65,0.45)",
-                padding: "2px 8px",
-                borderRadius: 4,
-                fontSize: 10.5,
-              }}
-              title={ytPauseReason}
-            >
-              ⏸ DORMANT · queue intact · {ytPauseReason}
-            </span>
-          ) : (
-            <span style={{ color: "var(--tz-cyan, #22D3EE)", textTransform: "none", letterSpacing: 0 }}>
-              next run <CountdownCell target={nextYtFire} />
-            </span>
-          )}
-        </h2>
-        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(4, 1fr)", opacity: ytPaused ? 0.55 : 1 }}>
-          <CountCard label="Pending" value={yt.pending} color="var(--tz-cyan, #22D3EE)" />
-          <CountCard label="Publishing" value={yt.publishing} color="var(--tz-amber, #FFB341)" />
-          <CountCard label="Published" value={yt.published} color="var(--tz-up, #22C55E)" />
-          <CountCard label="Failed" value={yt.failed} color="var(--tz-loss, #FF4D4F)" />
-        </div>
-        {ytPaused && (
-          <p className="text-[11.5px] mt-2" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.55 }}>
-            Cron still fires daily but no-ops without claiming a row. The {yt.pending} pending posts stay queued — set <code>YT_REFRESH_TOKEN</code> in Vercel and the next tick resumes from where it stopped. To explicitly pause without touching the token, set <code>YT_PAUSED=1</code>.
-          </p>
-        )}
       </div>
 
       {/* Actions (client) */}
@@ -235,9 +162,6 @@ export default async function PublisherAdminPage() {
               <Th>IG</Th>
               <Th>IG ETA</Th>
               <Th>IG result</Th>
-              <Th>YT</Th>
-              <Th>YT ETA</Th>
-              <Th>YT result</Th>
             </tr>
           </thead>
           <tbody>
@@ -256,22 +180,13 @@ export default async function PublisherAdminPage() {
                       ↗ live
                     </a>
                   ) : r.error_message ? (
-                    <span className="font-mono text-[11px]" style={{ color: "var(--tz-loss, #FF4D4F)" }}>{r.error_message.slice(0, 50)}{r.error_message.length > 50 ? "…" : ""}</span>
-                  ) : (
-                    <span style={{ color: "var(--tz-ink-mute)" }}>—</span>
-                  )}
-                </Td>
-                <Td><StatusPill value={r.yt_status ?? "pending"} /></Td>
-                <Td>
-                  <CountdownCell target={ytTimes.get(r.id) ?? null} />
-                </Td>
-                <Td>
-                  {r.yt_url ? (
-                    <a href={r.yt_url} target="_blank" rel="noopener" className="font-mono text-[11px]" style={{ color: "var(--tz-cyan, #22D3EE)" }}>
-                      ↗ live
-                    </a>
-                  ) : r.yt_error_message ? (
-                    <span className="font-mono text-[11px]" style={{ color: "var(--tz-loss, #FF4D4F)" }}>{r.yt_error_message.slice(0, 50)}{r.yt_error_message.length > 50 ? "…" : ""}</span>
+                    <span
+                      title={r.error_message}
+                      className="font-mono text-[11px] cursor-help"
+                      style={{ color: "var(--tz-loss, #FF4D4F)" }}
+                    >
+                      {r.error_message.slice(0, 50)}{r.error_message.length > 50 ? "…" : ""}
+                    </span>
                   ) : (
                     <span style={{ color: "var(--tz-ink-mute)" }}>—</span>
                   )}
@@ -280,7 +195,7 @@ export default async function PublisherAdminPage() {
             ))}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={9} style={{ padding: 24, textAlign: "center", color: "var(--tz-ink-mute)" }}>
+                <td colSpan={6} style={{ padding: 24, textAlign: "center", color: "var(--tz-ink-mute)" }}>
                   No posts in DB yet. Click <strong>Sync from JSON</strong> above.
                 </td>
               </tr>
@@ -290,7 +205,7 @@ export default async function PublisherAdminPage() {
       </div>
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.6 }}>
-        Source · 100-day-queue.json · IG cron 03:30 UTC (09:00 IST) · YT cron 04:30 UTC (10:00 IST) · ETA = serial position × daily cron tick
+        Source · 100-day-queue.json · IG cron 03:30 UTC (09:00 IST) · ETA = serial position × daily cron tick
       </p>
     </>
   );

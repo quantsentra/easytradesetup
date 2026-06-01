@@ -40,9 +40,7 @@ const NODES: Node[] = [
 
   // OUTER — automation
   { key: "ig-publisher", label: "IG Auto-Publisher", ring: "outer", angle: 175, status: "active", icon: "IG", hint: "Vercel cron 03:30 UTC daily · 100-day queue" },
-  { key: "yt-publisher", label: "YT Auto-Publisher", ring: "outer", angle: 215, status: "paused", icon: "YT", hint: "Vercel cron 04:30 UTC daily · DORMANT (token unset)" },
   { key: "ig-refresh", label: "IG Token Refresh", ring: "outer", angle: 280, status: "active", icon: "rt", hint: "Vercel cron Sun 04:00 UTC weekly · auto-renews 60d token" },
-  { key: "cloudinary", label: "Cloudinary", ring: "outer", angle: 340, status: "paused", icon: "cn", hint: "Image-to-video pipeline · used by YT (currently paused)" },
   { key: "vercel-cron", label: "Vercel Cron", ring: "outer", angle: 25, status: "active", icon: "vc", hint: "Scheduler · all daily/weekly tasks fire from here" },
   { key: "supabase", label: "Supabase", ring: "outer", angle: 75, status: "active", icon: "sb", hint: "Postgres state for content_posts, leads, subscriptions" },
   { key: "vercel-deploy", label: "Vercel Deploy", ring: "outer", angle: 120, status: "active", icon: "vd", hint: "Auto-deploy on push to main · ~90s build" },

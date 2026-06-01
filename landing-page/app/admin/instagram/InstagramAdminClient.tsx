@@ -133,36 +133,6 @@ export default function InstagramAdminClient() {
         />
       </div>
 
-      <div className="font-mono text-[10.5px] uppercase tracking-widest mb-2" style={{ color: "#FF6B6B" }}>
-        YouTube Shorts
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-        <ActionButton
-          label="Test publish YT (manual cron run)"
-          onClick={async () => {
-            const res = await fetch("/api/admin/content-posts/run-publish-yt", {
-              method: "POST",
-              credentials: "same-origin",
-            });
-            const body = await res.json();
-            if (!res.ok || !body.ok) throw new Error(body.error ?? body.message ?? `HTTP ${res.status}`);
-            location.reload();
-          }}
-        />
-        <ActionButton
-          label="Retry failed YT → pending"
-          onClick={async () => {
-            const res = await fetch("/api/admin/content-posts/retry-failed-yt", {
-              method: "POST",
-              credentials: "same-origin",
-            });
-            const body = await res.json();
-            if (!res.ok || !body.ok) throw new Error(body.error ?? `HTTP ${res.status}`);
-            location.reload();
-          }}
-        />
-      </div>
-
       <p className="text-[11.5px] mt-4" style={{ color: "var(--tz-ink-mute)", margin: "16px 0 0", lineHeight: 1.5 }}>
         <strong>Sync</strong> imports new days from <code>100-day-queue.json</code> without overwriting already-published rows.
         <strong> Test publish</strong> runs the same cron logic the scheduler runs daily.

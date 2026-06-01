@@ -95,7 +95,7 @@ export default function ContentPreviewPage() {
       <ContentPreviewClient posts={queue} />
 
       <p className="mt-6 text-[10.5px] font-mono uppercase tracking-widest" style={{ color: "var(--tz-ink-mute)", lineHeight: 1.6 }}>
-        Tiles render via /api/og/post/[day] (4:5 IG) and /api/og/post/[day]/yt (9:16 YT) — the same edge route the cron uses to publish · Lazy-loaded
+        Tiles render via /api/og/post/[day] (4:5 IG) — the same edge route the cron uses to publish · Lazy-loaded
       </p>
     </>
   );
