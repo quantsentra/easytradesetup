@@ -1,0 +1,126 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © EasyTradeSetup
+//
+// ════════════════════════════════════════════════════════════════════════
+//  Golden Indicator (Free) — Key Levels + CPR · EasyTradeSetup
+// ════════════════════════════════════════════════════════════════════════
+//  A free, standalone decision aid: the Central Pivot Range (CPR), the key
+//  levels every intraday trader watches (prior-day & prior-week high/low),
+//  and a single trend read (the Lifeline, a McGinley Dynamic). Bar-close,
+//  no-repaint. Works on any symbol and timeframe, light or dark theme.
+//
+//  HOW TO READ IT
+//   • CPR (3 gold lines + shaded band) — the prior session compressed into a
+//     pivot + top/bottom central band. Price above the band = bullish bias;
+//     below = bearish; inside the band = balance / chop (lower-conviction).
+//     A NARROW band hints a trending day may follow; a WIDE band hints a
+//     rangebound day. (Hint, not a signal.)
+//   • Key levels — PDH/PDL (prior-day high/low) and PWH/PWL (prior-week
+//     high/low). Reaction magnets; where stops cluster and moves pause.
+//   • Lifeline — one trend line. Price holding above = constructive; below =
+//     defensive. It is context, not an entry trigger.
+//
+//  WHAT THIS FREE VERSION IS NOT
+//   This is the "key levels" layer only. The full Golden Indicator adds the
+//   decision layer this leaves out: automatic regime classification (trend /
+//   range / compression), market-structure breaks (BOS / CHoCH), reactive
+//   supply & demand zones, a sealed signal model, eight documented setups
+//   with explicit triggers/stops/exits, alerts, and daily multi-market notes.
+//   → https://www.easytradesetup.com
+//
+//  Educational tool, not investment advice. No performance is promised or
+//  implied. You decide every trade. Trading carries risk of substantial loss
+//  including total capital. EasyTradeSetup is not a registered investment
+//  adviser or research analyst in any jurisdiction.
+// ════════════════════════════════════════════════════════════════════════
+
+//@version=5
+indicator("Golden Indicator (Free) — Key Levels + CPR · EasyTradeSetup", shorttitle="GI Free · Levels+CPR", overlay=true, max_lines_count=60)
+
+// ───────────────────────────── Inputs ─────────────────────────────
+gC   = "Central Pivot Range (CPR)"
+show_cpr   = input.bool(true,  "Show CPR (pivot + central band)", group=gC)
+cprBandCol = input.color(#F0C05A, "CPR colour", group=gC)
+
+gL   = "Key Levels"
+show_pdhl  = input.bool(true,  "Prior-day high / low (PDH / PDL)", group=gL)
+show_pwhl  = input.bool(true,  "Prior-week high / low (PWH / PWL)", group=gL)
+pdCol = input.color(#2B7BFF, "Prior-day colour", group=gL)
+pwCol = input.color(#8B5CF6, "Prior-week colour", group=gL)
+
+gT   = "Lifeline (trend read)"
+show_life  = input.bool(true,  "Show Lifeline (McGinley Dynamic)", group=gT)
+life_len   = input.int(14, "Lifeline length", minval=2, group=gT)
+
+gP   = "Panel"
+show_panel = input.bool(true, "Show info panel (top-right)", group=gP)
+panelSize  = input.string("Normal", "Panel text size", options=["Small","Normal","Large"], group=gP)
+
+// Theme-aware contrast colour: black on light theme, white on dark theme.
+themeFg = chart.fg_color
+
+// ───────────────────────── Lifeline (McGinley) ─────────────────────────
+var float life = na
+life := na(life[1]) ? close : life[1] + (close - life[1]) / (life_len * math.pow(close / life[1], 4))
+plot(show_life ? life : na, "Lifeline", color=themeFg, linewidth=2)
+
+// ─────────────────── Prior-period levels (no-repaint) ───────────────────
+// [1] + lookahead_on is the canonical idiom for the *previous completed*
+// higher-timeframe value — it pulls a settled number, so nothing redraws
+// intrabar. Never use lookahead_on without the [1] offset.
+f_day(_e)  => request.security(syminfo.tickerid, "D", _e[1], lookahead=barmerge.lookahead_on)
+f_week(_e) => request.security(syminfo.tickerid, "W", _e[1], lookahead=barmerge.lookahead_on)
+
+pdH = f_day(high)
+pdL = f_day(low)
+pdC = f_day(close)
+pwH = f_week(high)
+pwL = f_week(low)
+
+// CPR from the prior day's H/L/C.
+pivot = (pdH + pdL + pdC) / 3.0
+bcRaw = (pdH + pdL) / 2.0
+tcRaw = 2.0 * pivot - bcRaw
+// TC is always the upper line, BC the lower, regardless of formula order.
+cprTop = math.max(bcRaw, tcRaw)
+cprBot = math.min(bcRaw, tcRaw)
+cprWidthPct = pivot != 0 ? (cprTop - cprBot) / pivot * 100.0 : na
+
+// ───────────────────────────── Plots ─────────────────────────────
+// CPR — pivot solid, top/bottom dotted, shaded no-trade band between.
+pPivot = plot(show_cpr ? pivot  : na, "CPR Pivot", color=cprBandCol, linewidth=2)
+pTop   = plot(show_cpr ? cprTop : na, "CPR Top (TC)", color=color.new(cprBandCol, 30), style=plot.style_circles, linewidth=1)
+pBot   = plot(show_cpr ? cprBot : na, "CPR Bottom (BC)", color=color.new(cprBandCol, 30), style=plot.style_circles, linewidth=1)
+fill(pTop, pBot, color=show_cpr ? color.new(cprBandCol, 88) : na, title="CPR band (balance / chop)")
+
+// Key levels.
+plot(show_pdhl ? pdH : na, "PDH", color=color.new(pdCol, 0),  style=plot.style_linebr, linewidth=1)
+plot(show_pdhl ? pdL : na, "PDL", color=color.new(pdCol, 0),  style=plot.style_linebr, linewidth=1)
+plot(show_pwhl ? pwH : na, "PWH", color=color.new(pwCol, 20), style=plot.style_linebr, linewidth=1)
+plot(show_pwhl ? pwL : na, "PWL", color=color.new(pwCol, 20), style=plot.style_linebr, linewidth=1)
+
+// ─────────────────────────── Info panel ───────────────────────────
+// Bias from CPR position.
+bias = close > cprTop ? "BULLISH bias" : close < cprBot ? "BEARISH bias" : "BALANCE / chop"
+biasCol = close > cprTop ? #2DBE6D : close < cprBot ? #FF4D4F : #8B949E
+// Day-type hint from CPR width (standard heuristic; educational, not a signal).
+dayType = na(cprWidthPct) ? "—" : cprWidthPct < 0.40 ? "Narrow → trend day?" : cprWidthPct > 0.80 ? "Wide → range day?" : "Normal"
+trend   = close > life ? "ABOVE Lifeline" : "BELOW Lifeline"
+trendCol = close > life ? #2DBE6D : #FF4D4F
+
+txtSize = panelSize == "Small" ? size.small : panelSize == "Large" ? size.large : size.normal
+
+if show_panel and barstate.islast
+    var table t = table.new(position.top_right, 2, 6, border_width=1, frame_color=color.new(themeFg, 70), frame_width=1)
+    table.cell(t, 0, 0, "Golden Indicator", text_color=#05070F, bgcolor=#F0C05A, text_size=txtSize)
+    table.cell(t, 1, 0, "FREE", text_color=#05070F, bgcolor=#F0C05A, text_size=txtSize)
+    table.cell(t, 0, 1, "CPR bias", text_color=themeFg, text_size=txtSize)
+    table.cell(t, 1, 1, bias, text_color=biasCol, text_size=txtSize)
+    table.cell(t, 0, 2, "Day type", text_color=themeFg, text_size=txtSize)
+    table.cell(t, 1, 2, dayType, text_color=themeFg, text_size=txtSize)
+    table.cell(t, 0, 3, "Trend", text_color=themeFg, text_size=txtSize)
+    table.cell(t, 1, 3, trend, text_color=trendCol, text_size=txtSize)
+    table.cell(t, 0, 4, "CPR width", text_color=themeFg, text_size=txtSize)
+    table.cell(t, 1, 4, na(cprWidthPct) ? "—" : str.tostring(cprWidthPct, "0.00") + "%", text_color=themeFg, text_size=txtSize)
+    table.cell(t, 0, 5, "Full version", text_color=themeFg, text_size=txtSize)
+    table.cell(t, 1, 5, "easytradesetup.com", text_color=#22D3EE, text_size=txtSize)
