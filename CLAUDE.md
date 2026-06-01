@@ -47,7 +47,7 @@ Launch window source: `landing-page/lib/launch.ts` — `LAUNCH_END_DATE`, `RESER
 - **Styling:** Tailwind 3.4, custom tokens in `landing-page/tailwind.config.ts`, global CSS in `landing-page/app/globals.css`
 - **Analytics:** @vercel/analytics
 - **Hosting:** Vercel, auto-deploy from `main` on push
-- **Payments (planned):** Stripe (USD) — not live yet
+- **Payments:** Stripe (USD) — **LIVE** (`cs_live`). **Guest checkout** — no login wall; anon buyers pay first, the webhook (`lib/stripe-fulfill.ts`) creates/links the Clerk user from the Stripe email + grants the entitlement. `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` confirmed set in prod (2026-06-01).
 - **Email capture:** `app/api/lead/route.ts` — logs to console today, TODO wire to Resend + Sheet
 
 All code lives in `landing-page/`. The root of the repo is reserved for the Pine script (`src/pine/`), research notes, and CLAUDE memory.
@@ -156,8 +156,9 @@ NEXT_PUBLIC_SITE_URL          (used by cron to construct image URLs)
 
 **Cron schedule** (`landing-page/vercel.json`):
 - `30 3 * * *` — IG publish (09:00 IST)
-- `30 4 * * *` — YT publish (10:00 IST)
 - `0 4 * * 0` — IG token refresh (Sun 09:30 IST)
+
+> **YouTube pipeline removed 2026-06-01.** Recurring API issues (7-day OAuth token + Cloudinary image-to-video). Deleted: `publish-youtube` cron, `/api/og/post/[day]/yt`, `run-publish-yt` + `retry-failed-yt` routes, `lib/youtube.ts`, `lib/cloudinary.ts`, and all YT UI in the auto-publisher dashboard. **IG is the sole channel.** `content_posts.yt_*` columns are left in the DB (harmless, droppable later). If YT is revived, restore from git history before this date.
 
 **Refresh tokens / auth notes:**
 - IG long-lived token: 60 days, auto-refreshed weekly via cron. No manual rotation required unless cron silently fails for >60 days.
@@ -211,11 +212,9 @@ Safety tags:
 - **Founder identity is placeholder "TS".** Real name + photo + LinkedIn pending — owner will fill. Do not fabricate. **Recommended:** real photo + real name (avatar trust signal is poor in trader/finance niche).
 - **No live customer testimonials yet.** Placeholder footnote in `Principles.tsx`. Do not invent.
 - **No Hindi / localization.** Site is English, USD-only. India sales positioning was removed 2026-05-28; the old TrustStrip Hindi tagline is being retired in the copy-reposition pass.
-- **Payments not live.** Checkout captures reservations (email → `/api/lead`), not money. Stripe-USD only (Razorpay/INR removed). Do not wire Stripe credentials without explicit go-ahead.
+- **Payments LIVE + guest checkout (2026-06-01).** Stripe-USD only (Razorpay/INR removed). Anon buyers pay first; webhook creates/links the Clerk user from the Stripe email + grants the entitlement. Login wall removed (was the #1 conversion leak). `STRIPE_SECRET_KEY` + `STRIPE_WEBHOOK_SECRET` set in prod. Stripe webhook must stay registered → `https://www.easytradesetup.com/api/webhook/stripe` (event `checkout.session.completed`).
 - **No A/B framework.** Changes to home copy are manual. If we add GrowthBook or similar, document the wiring here.
-- **YouTube auto-publish in API testing mode.** YT_REFRESH_TOKEN expires every 7 days until OAuth project clears Google's compliance audit (1-6 weeks). Workaround: re-do OAuth Playground flow weekly. Token refresh = 3min effort.
-- **Static slides → YT Shorts limitation.** YT algo deprioritises slideshow content. Real videos (Opus Clip / phone recordings / AI-generated via Veo / Kling) outperform our auto-published slides. Continue both pipelines: auto-published static for daily presence, manual rich-video uploads weekly for quality.
-- **Multi-slide carousel YT videos + audio overlays not wired.** Each YT short is one slide × 10s with motion. Stitching multiple slides into one video + adding background music = next iteration, gated on engagement results from current static pipeline.
+- **YouTube auto-publish REMOVED (2026-06-01).** Was failing on API issues; pipeline deleted, IG-only now. See the YT-removed note in the pipeline section. Don't re-add without addressing the 7-day OAuth-token problem first.
 
 ---
 
@@ -226,5 +225,5 @@ Safety tags:
 3. Run `npm test` + `npm run test:e2e` locally before pushing anything that touches the home page.
 4. When adding a new public page, add it to `app/sitemap.ts` and a smoke row in `tests/e2e/pages.spec.ts`.
 5. When adding a new section to the home page, register it in `app/page.tsx` and add at least one assertion in `tests/e2e/home.spec.ts`.
-6. Touching the auto-publishing pipeline? Read `lib/instagram.ts`, `lib/youtube.ts`, `lib/cloudinary.ts` + the cron routes under `app/api/cron/publish-*/`. State lives in `content_posts` table (migrations 027 + 028). Source data is `admin-assets/content/14-day-queue.json`.
+6. Touching the auto-publishing pipeline? IG-only since 2026-06-01 (YT removed). Read `lib/instagram.ts` + the cron route `app/api/cron/publish-instagram/`. State lives in `content_posts` table (migrations 027 + 028). Source data is `admin-assets/content/100-day-queue.json`.
 7. Adding a new admin page? Wire it into `app/admin/layout.tsx` `navSections` array under the right category (Operations / Content / Growth / Insights / System) — the sidebar is data-driven.
