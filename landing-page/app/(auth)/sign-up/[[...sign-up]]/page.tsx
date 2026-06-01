@@ -1,20 +1,10 @@
 import type { Metadata } from "next";
 import { SignUp } from "@clerk/nextjs";
+import { clerkAppearance } from "@/lib/clerk-appearance";
 
 export const metadata: Metadata = {
   title: "Sign up",
   robots: { index: false, follow: false },
-};
-
-const appearance = {
-  variables: {
-    colorPrimary: "#2B7BFF",
-    colorBackground: "#0E1530",
-    colorText: "#E6ECFF",
-    colorInputBackground: "#0B1024",
-    colorInputText: "#E6ECFF",
-    borderRadius: "0.6rem",
-  },
 };
 
 export default function SignUpPage() {
@@ -37,7 +27,7 @@ export default function SignUpPage() {
 
           <div className="flex justify-center">
             <SignUp
-              appearance={appearance}
+              appearance={clerkAppearance}
               signInUrl="/sign-in"
               fallbackRedirectUrl="/"
             />

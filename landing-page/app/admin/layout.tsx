@@ -103,9 +103,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             ↗ Site
           </a>
 
-          <UserButton
-            appearance={{ variables: { colorPrimary: "#2B7BFF", colorBackground: "#0E1530", colorText: "#E6ECFF" } }}
-          />
+          <UserButton />
 
           <PortalMobileNav items={mobileNavItems} isAdmin />
         </div>

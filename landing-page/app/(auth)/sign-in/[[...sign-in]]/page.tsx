@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SignIn } from "@clerk/nextjs";
+import { clerkAppearance } from "@/lib/clerk-appearance";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -8,17 +9,7 @@ export const metadata: Metadata = {
 
 // Clerk path-routed sign-in. Lives on the portal host (portal.easytradesetup.com
 // /sign-in). After sign-in, fallback to "/" which the middleware maps to the
-// portal dashboard.
-const appearance = {
-  variables: {
-    colorPrimary: "#2B7BFF",
-    colorBackground: "#0E1530",
-    colorText: "#E6ECFF",
-    colorInputBackground: "#0B1024",
-    colorInputText: "#E6ECFF",
-    borderRadius: "0.6rem",
-  },
-};
+// portal dashboard. Styling comes from the shared light-theme appearance.
 
 export default function SignInPage() {
   return (
@@ -40,7 +31,7 @@ export default function SignInPage() {
 
           <div className="flex justify-center">
             <SignIn
-              appearance={appearance}
+              appearance={clerkAppearance}
               signUpUrl="/sign-up"
               fallbackRedirectUrl="/"
             />

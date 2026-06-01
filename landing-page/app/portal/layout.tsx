@@ -61,9 +61,7 @@ export default async function PortalLayout({ children }: { children: React.React
             ↗ Site
           </a>
 
-          <UserButton
-            appearance={{ variables: { colorPrimary: "#2B7BFF", colorBackground: "#0E1530", colorText: "#E6ECFF" } }}
-          />
+          <UserButton />
 
           <PortalMobileNav items={mobileNavItems} isAdmin={admin} />
         </div>

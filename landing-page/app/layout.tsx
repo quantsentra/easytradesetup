@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
+import { clerkAppearance } from "@/lib/clerk-appearance";
 import { Inter_Tight, Space_Grotesk, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
@@ -151,7 +152,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider afterSignOutUrl="/sign-in">
+    <ClerkProvider afterSignOutUrl="/sign-in" appearance={clerkAppearance}>
       <html lang="en" className={`${interTight.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
         <head />
         <body>
