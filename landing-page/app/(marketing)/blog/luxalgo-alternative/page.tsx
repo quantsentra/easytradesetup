@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ArticleJsonLd, BreadcrumbJsonLd } from "@/components/seo/JsonLd";
 import { getPost } from "@/lib/blog";
 import Price from "@/components/ui/Price";
+import { TRADINGVIEW_FREE_URL } from "@/lib/external";
 
 const SLUG = "luxalgo-alternative";
 const post = getPost(SLUG)!;
@@ -345,7 +346,13 @@ export default function Page() {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
                 <Link href="/sample" className="btn btn-outline w-full sm:w-auto justify-center">Skim the free sample</Link>
-                <Link href="/compare" className="btn btn-outline w-full sm:w-auto justify-center">See the full comparison</Link>
+                {TRADINGVIEW_FREE_URL ? (
+                  <a href={TRADINGVIEW_FREE_URL} target="_blank" rel="noopener" className="btn btn-outline w-full sm:w-auto justify-center">
+                    Try the free version on TradingView
+                  </a>
+                ) : (
+                  <Link href="/compare" className="btn btn-outline w-full sm:w-auto justify-center">See the full comparison</Link>
+                )}
                 <Link href="/checkout" className="btn btn-primary w-full sm:w-auto justify-center">
                   Lock <Price variant="amount" /> inaugural →
                 </Link>
