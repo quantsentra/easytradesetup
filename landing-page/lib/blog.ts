@@ -36,6 +36,28 @@ export type BlogPost = {
 
 export const POSTS: BlogPost[] = [
   {
+    slug:              "luxalgo-alternative",
+    title:             "LuxAlgo Alternative — Stop Renting Your Indicator (4 Questions)",
+    metaTitle:         "LuxAlgo Alternative · One-Time vs Subscription · EasyTradeSetup",
+    metaDescription:   "A subscription means you pay forever. Four honest questions to compare a LuxAlgo-style subscription against a one-time, editable, no-repaint indicator. Educational.",
+    excerpt:           "A monthly subscription charges you for as long as you trade. Four questions — cost, editability, repaint, and what it actually decides — that compare a subscription indicator against an owned one-time licence.",
+    hook:              "Stop renting your indicator. Four questions decide a subscription vs a one-time licence.",
+    primaryKeyword:    "luxalgo alternative",
+    secondaryKeywords: [
+      "one-time payment trading indicator",
+      "lifetime licence indicator no monthly fee",
+      "luxalgo vs",
+      "tradingview indicator no subscription",
+      "no repaint indicator alternative",
+    ],
+    audienceTier:      "T1",
+    pillar:            2,
+    datePublished:     "2026-06-01",
+    readMinutes:       8,
+    heroImage:         "/blog-images/generic/decision-grade-baseline.png",
+    heroAlt:           "Golden Indicator decision layer — regime, structure, and key levels on a chart, owned outright rather than rented by subscription",
+  },
+  {
     slug:              "best-indicator-for-nifty-options",
     title:             "Best Indicator for NIFTY Options — 4 Questions That Decide It",
     metaTitle:         "Best Indicator for NIFTY Options · EasyTradeSetup",

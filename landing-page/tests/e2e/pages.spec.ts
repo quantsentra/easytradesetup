@@ -8,6 +8,7 @@ const routes: Array<{ path: string; mustContain: RegExp }> = [
   { path: "/compare", mustContain: /compare|alternatives|side by side/i },
   { path: "/sample", mustContain: /free sample|chapter/i },
   { path: "/blog", mustContain: /indicator literacy|risk math|essays/i },
+  { path: "/blog/luxalgo-alternative", mustContain: /luxalgo|subscription|one-time|repaint|rent/i },
   { path: "/blog/best-indicator-for-nifty-options", mustContain: /four questions|nifty.*regime|decision-grade/i },
   { path: "/blog/are-paid-trading-signals-worth-it", mustContain: /four numbers|win rate|signal seller|drawdown/i },
   { path: "/blog/trend-vs-range-trading", mustContain: /trend.*range|regime|expansion|compress/i },
