@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createSupabaseAdmin } from "@/lib/supabase/server";
+import { igTokenHealth } from "@/lib/instagram";
 import InstagramAdminClient from "./InstagramAdminClient";
 import CountdownCell from "./CountdownCell";
 
@@ -87,6 +88,10 @@ export default async function PublisherAdminPage() {
 
   const rows: Row[] = data ?? [];
 
+  // Live IG token/connection health — surfaces the root cause (missing env,
+  // expired token, permission) without attempting a publish.
+  const igHealth = await igTokenHealth();
+
   const ig = {
     pending:    rows.filter((r) => r.status === "pending").length,
     publishing: rows.filter((r) => r.status === "publishing").length,
@@ -114,6 +119,34 @@ export default async function PublisherAdminPage() {
           <Link href="/admin/content-queue" className="tz-btn">↗ Source queue</Link>
           <a href="/api/og/post/1" target="_blank" rel="noopener" className="tz-btn">↗ IG preview</a>
         </div>
+      </div>
+
+      {/* IG connection health */}
+      <div
+        className="tz-card mb-4"
+        style={{
+          padding: 16,
+          borderColor: igHealth.ok ? "rgba(34,197,94,0.45)" : "rgba(255,77,79,0.55)",
+          background: igHealth.ok ? "rgba(34,197,94,0.06)" : "rgba(255,77,79,0.06)",
+        }}
+      >
+        <div className="font-mono text-[10.5px] uppercase tracking-widest mb-1" style={{ color: igHealth.ok ? "var(--tz-up, #22C55E)" : "var(--tz-loss, #FF4D4F)" }}>
+          {igHealth.ok ? "● Instagram connected" : "✕ Instagram NOT publishing"}
+        </div>
+        {igHealth.ok ? (
+          <p className="text-[12.5px]" style={{ color: "var(--tz-ink-dim)", margin: 0, lineHeight: 1.55 }}>
+            Token valid · posting as <strong>@{igHealth.username}</strong> (user id {igHealth.userId}).
+            The daily cron can publish.
+          </p>
+        ) : (
+          <p className="text-[12.5px]" style={{ color: "var(--tz-ink-dim)", margin: 0, lineHeight: 1.55 }}>
+            <strong style={{ color: "var(--tz-loss, #FF4D4F)" }}>{igHealth.error}</strong>
+            <br />
+            Fix: set/refresh <code>INSTAGRAM_LONG_TOKEN</code> + <code>INSTAGRAM_USER_ID</code> in Vercel
+            env (Production), then redeploy. Long-lived tokens last ~60 days; regenerate via Meta /
+            Graph API Explorer if expired.
+          </p>
+        )}
       </div>
 
       {error ? (

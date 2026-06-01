@@ -32,6 +32,35 @@ function igConfig() {
   };
 }
 
+// Read-only token health probe — calls /me with the configured token so the
+// admin dashboard can show the root cause (missing env / expired token /
+// permission) at a glance, WITHOUT attempting a publish. Never throws.
+export async function igTokenHealth(): Promise<
+  | { ok: true; userId: string; username: string }
+  | { ok: false; error: string }
+> {
+  let cfg: { userId: string; token: string };
+  try {
+    cfg = igConfig();
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : "config error" };
+  }
+  try {
+    const params = new URLSearchParams({
+      fields: "user_id,username",
+      access_token: cfg.token,
+    });
+    const body = await igFetch(`${API_BASE}/${API_VERSION}/me?${params.toString()}`);
+    return {
+      ok: true,
+      userId: String(body.user_id ?? body.id ?? cfg.userId),
+      username: String(body.username ?? "—"),
+    };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : String(e) };
+  }
+}
+
 // Wraps one Meta call with timeout + JSON parsing.
 async function igFetch(url: string, init: RequestInit = {}) {
   const res = await fetch(url, {
@@ -44,11 +73,63 @@ async function igFetch(url: string, init: RequestInit = {}) {
   try { body = JSON.parse(text); } catch { /* keep raw */ }
 
   if (!res.ok) {
-    const errMsg =
-      (body as { error?: { message?: string } } | null)?.error?.message ?? text;
-    throw new Error(`IG API ${res.status}: ${errMsg}`);
+    // Meta wraps real cause in error.{code,error_subcode,error_user_msg,
+    // fbtrace_id}. Raw .message is often the generic ("API access blocked",
+    // "Application request limit reached"), so capture the structured fields
+    // to know whether it's a token (190 / sub 458,463,467), a permission
+    // (10), a rate limit (4,17,32), or an account-state issue (368).
+    const err = (body as { error?: {
+      message?: string;
+      code?: number;
+      error_subcode?: number;
+      error_user_msg?: string;
+      fbtrace_id?: string;
+      type?: string;
+    } } | null)?.error;
+    const code     = err?.code;
+    const subcode  = err?.error_subcode;
+    const message  = err?.error_user_msg ?? err?.message ?? text.slice(0, 200);
+    const trace    = err?.fbtrace_id;
+
+    // Log the full error body so it lands in Vercel logs for postmortem.
+    console.error("[ig-api] non-ok response", {
+      status: res.status,
+      code,
+      subcode,
+      type: err?.type,
+      message,
+      fbtrace_id: trace,
+      url: url.split("?")[0],
+    });
+
+    // Map known codes to runbook hints so the admin dashboard error column
+    // tells the operator exactly what to do.
+    const hint = igRunbookHint(code, subcode);
+    const codeStr = code != null ? ` code=${code}${subcode != null ? `/${subcode}` : ""}` : "";
+    throw new Error(`IG API ${res.status}${codeStr}: ${message}${hint ? ` — ${hint}` : ""}`);
   }
   return body as Record<string, unknown>;
+}
+
+// Translates Meta error code/subcode into a one-liner runbook hint.
+// Reference: https://developers.facebook.com/docs/graph-api/guides/error-handling
+function igRunbookHint(code?: number, subcode?: number): string | undefined {
+  if (code === 190) {
+    if (subcode === 463) return "long-lived token expired — regenerate INSTAGRAM_LONG_TOKEN";
+    if (subcode === 467) return "token invalidated (password change / logout) — regenerate INSTAGRAM_LONG_TOKEN";
+    if (subcode === 458) return "user has not authorized the app — re-authorize in Meta Business Suite";
+    return "access token problem — regenerate INSTAGRAM_LONG_TOKEN";
+  }
+  if (code === 10 || code === 200 || code === 803) {
+    return "permission/access denied — check app permissions (instagram_content_publish) + business verification";
+  }
+  if (code === 4 || code === 17 || code === 32) {
+    return "rate limited — back off, will resume next cron tick";
+  }
+  if (code === 368) {
+    return "account temporarily blocked by Meta — check Instagram app for warnings";
+  }
+  return undefined;
 }
 
 // Step 1 — create a single-image media container.
