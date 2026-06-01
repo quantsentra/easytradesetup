@@ -42,6 +42,7 @@ const navSections: Array<{
     items: [
       { href: "/admin/marketing",      label: "Marketing checklist", icon: MegaphoneIcon },
       { href: "/admin/seo-keywords",   label: "SEO keywords",        icon: SearchIcon    },
+      { href: "/admin/seo-automation", label: "SEO automation",      icon: RocketIcon    },
       { href: "/admin/content-queue",  label: "Content queue",       icon: CalendarIcon  },
       { href: "/admin/content-preview",label: "Content preview",     icon: GalleryIcon   },
       { href: "/admin/instagram",      label: "Instagram publisher", icon: InstagramIcon },

@@ -73,10 +73,19 @@ Voice: working price-action trader. Sharp, rules-based, non-hype. No emojis in b
 
 ---
 
-## 5. Hero image
+## 5. Hero image — be resourceful, stay honest
 
-Pick the most recent real file from the market-matching folder under `public/blog-images/`:
-`indian/` (NIFTY/BANKNIFTY), `us/` (SPX/NASDAQ/DOW), `gold/` (XAU), `crypto-forex/` (BTC/forex), `generic/` (everything else). Never invent a filename — list the folder and use one that exists. `heroAlt` describes the Golden Indicator on that chart (regime/structure/levels).
+Don't limit yourself to one screenshot per market. Pick the image that makes the post most compelling and click-worthy, in this priority:
+
+1. **Real Golden Indicator screenshots** (best — authentic product proof). Browse ALL folders under `public/blog-images/`, not just the market-matching one: `indian/` (NIFTY/BANKNIFTY), `us/` (SPX/NASDAQ/DOW), `gold/` (XAU), `crypto-forex/` (BTC/forex), `generic/`. Use whichever real chart best fits the article's angle. List the folder and use a filename that exists — never invent one.
+2. **Generate a new on-brand graphic** when no screenshot fits the topic (e.g. a comparison/concept post). You MAY create and commit a new asset to `public/blog-images/generic/` — a branded title card, a concept diagram, or a simple SVG built with code, using the brand palette (navy `#05070F`, electric blue `#2B7BFF`, cyan `#22D3EE`, gold `#F0C05A`). This is encouraged to make posts varied and shareable. Keep it lightweight and text-legible at small sizes (it doubles as the OG/social share image).
+
+**Hard image rules (never break):**
+- **No copyrighted, stock, or web-scraped images.** Only real product screenshots already in the repo, or original graphics you generate. If you can't source a safe image, fall back to `generic/decision-grade-baseline.png`.
+- **Caption + `heroAlt` must match what the image actually is.** Only call it "Golden Indicator on a <market> chart" if it IS a real product screenshot. A generated concept graphic gets an honest caption ("regime / structure / key-levels decision layer", etc.) — never imply a generated card is a live trade or a real chart.
+- No fabricated P&L, no fake "results" overlays, no broker screenshots.
+
+Goal: richer, more varied, more shareable imagery that pulls clicks — without a single misleading or unlicensed picture.
 
 ---
 
