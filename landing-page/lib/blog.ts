@@ -36,6 +36,28 @@ export type BlogPost = {
 
 export const POSTS: BlogPost[] = [
   {
+    slug:              "trading-tools-one-time-payment",
+    title:             "Trading Tools One-Time Payment — The Owner's Checklist",
+    metaTitle:         "Trading Tools One-Time Payment vs Subscription · EasyTradeSetup",
+    metaDescription:   "Subscription indicators charge you every month forever. Five questions that decide whether a one-time trading tool is worth more than its sticker. Educational.",
+    excerpt:           "A subscription at $40/month costs over $1,400 across three years. Five questions separate the one-time licences worth owning from the ones that recreate subscription risk under a different name.",
+    hook:              "Five questions before you buy any trading tool. The sticker price is the easiest part.",
+    primaryKeyword:    "trading tools one time payment",
+    secondaryKeywords: [
+      "lifetime trading indicator no monthly fee",
+      "no subscription trading indicator",
+      "tradingview indicator one time purchase",
+      "pine script one time licence",
+      "best trading tools one time payment",
+    ],
+    audienceTier:      "T1",
+    pillar:            2,
+    datePublished:     "2026-06-02",
+    readMinutes:       9,
+    heroImage:         "/blog-images/us/US30_2026-05-09_11-02-41.png",
+    heroAlt:           "Golden Indicator on a US30 chart — decision-grade regime and structure context, no subscription required",
+  },
+  {
     slug:              "luxalgo-alternative",
     title:             "LuxAlgo Alternative — Stop Renting Your Indicator (4 Questions)",
     metaTitle:         "LuxAlgo Alternative · One-Time vs Subscription · EasyTradeSetup",
