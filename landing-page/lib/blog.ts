@@ -36,6 +36,28 @@ export type BlogPost = {
 
 export const POSTS: BlogPost[] = [
   {
+    slug:              "trading-course-for-beginners",
+    title:             "Trading Course for Beginners — Five Concepts Before You Look at a Signal",
+    metaTitle:         "Trading Course for Beginners · Five Concepts First",
+    metaDescription:   "Most trading courses skip market context. Five foundational concepts that decide whether any signal is worth taking. Educational.",
+    excerpt:           "Most beginner trading courses teach entries. None teach context — the regime, structure, and key levels that decide whether the entry belongs on the chart.",
+    hook:              "Five concepts before you look at a signal. Context is the course no one teaches.",
+    primaryKeyword:    "trading course for beginners",
+    secondaryKeywords: [
+      "trading course for beginners uk",
+      "learn to trade indicators",
+      "how to start trading",
+      "trading for beginners",
+      "understand trading indicators",
+    ],
+    audienceTier:      "T3",
+    pillar:            4,
+    datePublished:     "2026-06-03",
+    readMinutes:       10,
+    heroImage:         "/blog-images/indian/NIFTY_2026-05-09_10-56-17.png",
+    heroAlt:           "Golden Indicator on a NIFTY chart — regime classification and structural levels visible at a glance for beginner traders",
+  },
+  {
     slug:              "trading-tools-one-time-payment",
     title:             "Trading Tools One-Time Payment — The Owner's Checklist",
     metaTitle:         "Trading Tools One-Time Payment vs Subscription · EasyTradeSetup",

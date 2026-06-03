@@ -14,6 +14,7 @@ const routes: Array<{ path: string; mustContain: RegExp }> = [
   { path: "/blog/are-paid-trading-signals-worth-it", mustContain: /four numbers|win rate|signal seller|drawdown/i },
   { path: "/blog/trend-vs-range-trading", mustContain: /trend.*range|regime|expansion|compress/i },
   { path: "/blog/how-to-trade-spx-overnight-gaps", mustContain: /spx|gap-and-go|gap-fill|overnight|opening range/i },
+  { path: "/blog/trading-course-for-beginners", mustContain: /entries without context|five concepts|regime.*entry|context before signals/i },
   { path: "/docs/install", mustContain: /install/i },
   { path: "/docs/faq", mustContain: /asked.*answered|faq/i },
   { path: "/contact", mustContain: /contact|hello@easytradesetup/i },
