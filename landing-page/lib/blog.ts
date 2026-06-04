@@ -36,6 +36,28 @@ export type BlogPost = {
 
 export const POSTS: BlogPost[] = [
   {
+    slug:              "how-to-draw-supply-demand-zones",
+    title:             "How to Draw Supply and Demand Zones — The Three-Part Structure Every Valid Zone Needs",
+    metaTitle:         "How to Draw Supply and Demand Zones · EasyTradeSetup",
+    metaDescription:   "Supply and demand zones are drawn at the base consolidation before the impulse, not the reversal tip. Three-part IBI structure, boundary rules, freshness grading. Educational.",
+    excerpt:           "Most traders draw S&D zones at the wrong candle. The zone is the base consolidation before the impulse, not the reversal tip. IBI structure, boundary placement, freshness grading, and regime alignment — four steps to draw zones that hold.",
+    hook:              "The zone is not the reversal tip. It is the base before the impulse. Get that right and the levels stop moving.",
+    primaryKeyword:    "how to draw supply demand zones",
+    secondaryKeywords: [
+      "supply demand zones tradingview",
+      "supply and demand zones trading",
+      "supply demand zone indicator",
+      "identify supply demand zones",
+      "supply demand zones strategy",
+    ],
+    audienceTier:      "T2",
+    pillar:            3,
+    datePublished:     "2026-06-04",
+    readMinutes:       10,
+    heroImage:         "/blog-images/indian/BANKNIFTY_2026-05-09_10-57-23.png",
+    heroAlt:           "Golden Indicator on a BANKNIFTY chart — supply and demand zones auto-tagged at reactive structural levels",
+  },
+  {
     slug:              "trading-course-for-beginners",
     title:             "Trading Course for Beginners — Five Concepts Before You Look at a Signal",
     metaTitle:         "Trading Course for Beginners · Five Concepts First",
