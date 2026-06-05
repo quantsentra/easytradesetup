@@ -36,6 +36,28 @@ export type BlogPost = {
 
 export const POSTS: BlogPost[] = [
   {
+    slug:              "position-sizing-trading",
+    title:             "Position Sizing in Trading — The R-Multiple Method for Consistent Risk",
+    metaTitle:         "Position Sizing in Trading · R-Multiple · EasyTradeSetup",
+    metaDescription:   "Position sizing is the one variable you control. R-multiple framework in three steps — stop placement, risk amount, size calculation. Educational.",
+    excerpt:           "Most traders optimise entries. Position sizing is the variable that actually decides whether they survive losing streaks. The R-multiple framework converts 'how much?' from a feeling into a three-step formula.",
+    hook:              "The one trading variable you actually control. Get it wrong and a good strategy still wipes you out.",
+    primaryKeyword:    "position sizing trading",
+    secondaryKeywords: [
+      "r multiple trading",
+      "risk management day trading",
+      "how to size a trade",
+      "trading risk per trade",
+      "atr stop loss trading",
+    ],
+    audienceTier:      "T2",
+    pillar:            4,
+    datePublished:     "2026-06-05",
+    readMinutes:       9,
+    heroImage:         "/blog-images/indian/BANKNIFTY_2026-05-09_10-57-50.png",
+    heroAlt:           "Golden Indicator on a BANKNIFTY chart — swing highs and lows marked at structural levels, used as stop reference points for position sizing",
+  },
+  {
     slug:              "how-to-draw-supply-demand-zones",
     title:             "How to Draw Supply and Demand Zones — The Three-Part Structure Every Valid Zone Needs",
     metaTitle:         "How to Draw Supply and Demand Zones · EasyTradeSetup",
