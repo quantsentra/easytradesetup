@@ -36,6 +36,28 @@ export type BlogPost = {
 
 export const POSTS: BlogPost[] = [
   {
+    slug:              "trading-tools-lifetime-licence",
+    title:             "Trading Tools With a Lifetime Licence — The No-Monthly-Fee Shortlist",
+    metaTitle:         "Trading Tools With a Lifetime Licence · EasyTradeSetup",
+    metaDescription:   "Most chart tools charge monthly forever. A shortlist of trading tools with genuine lifetime licences, what they include, and four tests to buy right.",
+    excerpt:           "The word 'lifetime' in trading software means at least four different things, and only one is the deal you think you are getting. The shortlist is short; the four tests are fast.",
+    hook:              "Most tools that call themselves 'lifetime' are annual plans in disguise. Four tests that separate ownership from subscription repackaged.",
+    primaryKeyword:    "what trading tools have a lifetime licence with no monthly fee",
+    secondaryKeywords: [
+      "lifetime trading indicator no monthly fee",
+      "trading tools one time purchase",
+      "no subscription trading indicator",
+      "best one time trading indicator",
+      "ownership vs subscription indicator",
+    ],
+    audienceTier:      "T1",
+    pillar:            2,
+    datePublished:     "2026-06-06",
+    readMinutes:       9,
+    heroImage:         "/blog-images/us/US30_2026-05-09_11-03-29.png",
+    heroAlt:           "Golden Indicator on a US30 chart — regime classification, structural levels, and key zones in a single bar-close view",
+  },
+  {
     slug:              "position-sizing-trading",
     title:             "Position Sizing in Trading — The R-Multiple Method for Consistent Risk",
     metaTitle:         "Position Sizing in Trading · R-Multiple · EasyTradeSetup",

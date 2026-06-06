@@ -16,6 +16,7 @@ const routes: Array<{ path: string; mustContain: RegExp }> = [
   { path: "/blog/how-to-trade-spx-overnight-gaps", mustContain: /spx|gap-and-go|gap-fill|overnight|opening range/i },
   { path: "/blog/how-to-draw-supply-demand-zones", mustContain: /supply.*demand|proximal|distal|impulse.*base|freshness|IBI/i },
   { path: "/blog/trading-course-for-beginners", mustContain: /entries without context|five concepts|regime.*entry|context before signals/i },
+  { path: "/blog/trading-tools-lifetime-licence", mustContain: /lifetime licence|no monthly fee|ownership|bar-close|no repaint/i },
   { path: "/blog/position-sizing-trading", mustContain: /r-multiple|position sizing|risk per trade|stop distance|three-step/i },
   { path: "/docs/install", mustContain: /install/i },
   { path: "/docs/faq", mustContain: /asked.*answered|faq/i },
