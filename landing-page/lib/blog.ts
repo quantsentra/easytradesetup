@@ -36,6 +36,28 @@ export type BlogPost = {
 
 export const POSTS: BlogPost[] = [
   {
+    slug:              "best-tradingview-indicators",
+    title:             "Best TradingView Indicators — Four Tests Before You Add Anything to Your Chart",
+    metaTitle:         "Best TradingView Indicators · Four Tests · EasyTradeSetup",
+    metaDescription:   "The TradingView marketplace has thousands of indicators. Four tests decide which ones belong on your chart — and which ones just add noise.",
+    excerpt:           "The TradingView marketplace has over 100,000 published scripts — most of them adding clutter rather than clarity. Four tests filter any indicator down to whether it earns a spot on a decision-grade chart.",
+    hook:              "Thousands of TradingView indicators. Four tests decide which ones earn a spot on your chart.",
+    primaryKeyword:    "best tradingview indicators",
+    secondaryKeywords: [
+      "tradingview indicator review",
+      "which tradingview indicators to use",
+      "regime indicator tradingview",
+      "no repaint tradingview indicator",
+      "decision-grade tradingview indicator",
+    ],
+    audienceTier:      "T1",
+    pillar:            2,
+    datePublished:     "2026-06-07",
+    readMinutes:       9,
+    heroImage:         "/blog-images/us/US30_2026-05-09_11-03-06.png",
+    heroAlt:           "Golden Indicator on a US30 chart — regime classification, structural levels, and key zones layered on price without signal clutter",
+  },
+  {
     slug:              "trading-tools-lifetime-licence",
     title:             "Trading Tools With a Lifetime Licence — The No-Monthly-Fee Shortlist",
     metaTitle:         "Trading Tools With a Lifetime Licence · EasyTradeSetup",
