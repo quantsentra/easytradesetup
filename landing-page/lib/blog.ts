@@ -36,6 +36,28 @@ export type BlogPost = {
 
 export const POSTS: BlogPost[] = [
   {
+    slug:              "cheap-luxalgo-alternative",
+    title:             "Cheap LuxAlgo Alternative — The Break-Even Maths That Change the Decision",
+    metaTitle:         "Cheap LuxAlgo Alternative · Break-Even Maths · EasyTradeSetup",
+    metaDescription:   "LuxAlgo charges ~$480/yr. The break-even maths for a one-time alternative that passes four indicator tests. Educational, not a purchase recommendation.",
+    excerpt:           "A LuxAlgo subscription costs more in month two than most one-time indicators cost ever. Break-even maths, four indicator tests, and a three-year cost comparison — educational, not a purchase recommendation.",
+    hook:              "Run the break-even maths before you subscribe. Month two of a LuxAlgo subscription costs more than most one-time licences total.",
+    primaryKeyword:    "cheap luxalgo alternative",
+    secondaryKeywords: [
+      "luxalgo vs one time indicator",
+      "luxalgo subscription cost",
+      "no subscription trading indicator",
+      "tradingview indicator one time payment",
+      "regime indicator no monthly fee",
+    ],
+    audienceTier:      "T1",
+    pillar:            2,
+    datePublished:     "2026-06-08",
+    readMinutes:       9,
+    heroImage:         "/blog-images/gold/XAUUSD_2026-05-09_11-00-07.png",
+    heroAlt:           "Golden Indicator on XAU/USD chart — regime classification, structural levels, and key zones on a real chart, owned outright on a one-time licence",
+  },
+  {
     slug:              "best-tradingview-indicators",
     title:             "Best TradingView Indicators — Four Tests Before You Add Anything to Your Chart",
     metaTitle:         "Best TradingView Indicators · Four Tests · EasyTradeSetup",
